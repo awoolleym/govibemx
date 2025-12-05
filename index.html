@@ -128,7 +128,7 @@ import {
   LayoutDashboard, MapPin, MessageCircle, Phone, Mail, DollarSign, 
   Settings, Lock, AlertCircle, Plus, Edit2, Save, Armchair, Info, 
   Wifi, Coffee, CreditCard, Loader2, AlertTriangle, HelpCircle, Send, Home, Timer, 
-  Bell, BellOff, Users2
+  Bell, BellOff
 } from 'lucide-react';
 
 // --- CONFIG ---
@@ -215,6 +215,7 @@ const launchPopup = (e, url) => {
         alert("Please allow popups for this site to open WhatsApp chat.");
     }
 };
+
 
 function App() {
     // --- STATE ---
@@ -575,11 +576,11 @@ function App() {
 
             {showBookingModal && <div className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"><div className="bg-slate-800 w-full max-w-md rounded-2xl border border-slate-700 p-6 relative"><button onClick={() => setShowBookingModal(false)} className="absolute top-4 right-4"><XCircle className="text-slate-400 hover:text-white" /></button><h3 className="text-xl font-bold mb-4">{editingBookingId ? 'Edit' : 'Confirm'}</h3><form onSubmit={handleSave} className="space-y-4">
                 {submitError && <div className="bg-red-900/30 border border-red-500 text-red-200 text-xs p-2 rounded">{submitError}</div>}
-                <div className="bg-slate-900/50 p-3 rounded border border-slate-700 text-sm flex justify-between"><span>Seats: {isPrivateMode ? 'ALL' : (selectedSeats.length > 0 ? selectedSeats.join(',') : 'Full Van (Group)')}</span><span className="text-cyan-400 font-bold">${quote.total}</span></div>
+                <div className="bg-slate-900/50 p-3 rounded border border-slate-700 text-sm flex justify-between"><span>Seats: {isPrivateMode ? 'ALL' : selectedSeats.join(',')}</span><span className="text-cyan-400 font-bold">${quote.total}</span></div>
                 {!editingBookingId && <div className="flex gap-2 bg-indigo-900/20 border border-indigo-500/30 p-2 rounded"><input type="checkbox" checked={isPrivateMode} onChange={e => {setIsPrivateMode(e.target.checked); if(!e.target.checked) setSelectedSeats([]);}} /><div className="text-sm"><strong>Private Tour</strong><p className="text-xs text-slate-400">Full van ${config.privatePrice}</p></div></div>}
                 <div><label className="text-xs text-slate-400 block mb-1">Full Name</label><input required name="name" value={formData.name} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Name" /></div>
                 <div className="grid grid-cols-2 gap-2">
-                   <div><label className="text-xs text-slate-400 block mb-1">Preferred Contact</label><select name="contactMethod" value={formData.contactMethod} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2"><option>WhatsApp</option><option>Phone</option><option>Email</option></select></div>
+                   <div><label className="text-xs text-slate-400 block mb-1">Preferred Contact Method</label><select name="contactMethod" value={formData.contactMethod} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2"><option>WhatsApp</option><option>Phone</option><option>Email</option></select></div>
                    <div><label className="text-xs text-slate-400 block mb-1">Phone</label><input required name="phone" value={formData.phone} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Phone" /></div>
                 </div>
                 <div><label className="text-xs text-slate-400 block mb-1">Pickup Location</label><input name="location" value={formData.location} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Pickup / Hotel" /></div>
