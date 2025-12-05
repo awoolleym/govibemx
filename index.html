@@ -128,7 +128,7 @@ import {
   LayoutDashboard, MapPin, MessageCircle, Phone, Mail, DollarSign, 
   Settings, Lock, AlertCircle, Plus, Edit2, Save, Armchair, Info, 
   Wifi, Coffee, CreditCard, Loader2, AlertTriangle, HelpCircle, Send, Home, Timer, 
-  Bell, BellOff, Users2
+  Bell, BellOff
 } from 'lucide-react';
 
 // --- CONFIG ---
@@ -396,10 +396,14 @@ function App() {
 
         setSelectedSeats(prev => {
             const n = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
+            
+            // AUTO-PRIVATE PROMPT LOGIC RESTORED
             if (n.length === 6 && !isPrivateMode) {
-                // Note: We don't force private here, we leave it to the checkbox
-                // but we could prompt.
+                if (confirm("You selected all 6 seats. Would you like to book this tour as a private experience?")) {
+                    setIsPrivateMode(true);
+                }
             }
+            
             return n;
         });
     };
