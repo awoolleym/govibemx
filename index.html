@@ -258,8 +258,8 @@ function App() {
         privateOverridePrice: 0, // Manual override if > 0
         // DEFAULT GROUP DISCOUNTS
         discounts: { 2: 5, 3: 10, 4: 12, 5: 15, 6: 20 },
-        // UPDATED: MINIMUM PP TABLE 
-        minPerPerson: { 1: 3700, 2: 1850, 3: 1250, 4: 925, 5: 740, 6: 620 },
+        // UPDATED: MINIMUM PP TABLE (Sums to 6000 for 4+)
+        minPerPerson: { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 },
         
         tripName: 'TEOTIHUACÁN ☀️',
         tripDate: 'Saturday 8:00 AM',
@@ -378,20 +378,7 @@ function App() {
     const quote = useMemo(() => {
         if (isPrivateMode) {
             // PRIVATE PRICING LOGIC: Uses Table unless overridden
-            // Count for private mode is always 6 seats booked, but for pricing logic we use "user count" or default 1? 
-            // Actually, private tour price is usually flat.
-            // Requirement: "For 1 pax → use the “minimum PP price for 1 pax” × 1"
-            // But we don't ask pax count in private mode yet.
-            // Let's assume user selected specific seats to indicate pax count, or just default to 6 pax logic?
-            // "When the user selects “Make this tour private,” calculate the private tour price using the existing minimum-per-person values"
-            // If they are on the map and select 2 seats then click private, we use count=2. 
-            // If they just check private without selecting, we might assume 6?
-            // Better: Use selectedSeats.length. If 0, assume 1 pax for pricing base or show minimum.
-            
             const paxCount = selectedSeats.length > 0 ? selectedSeats.length : 1; 
-            // If user checked private but didn't select seats, we assume 1 person booking private? 
-            // Or usually private means they book the whole van.
-            // Logic: "For 2 pax → use the “minimum PP price for 2 pax” × 2"
             
             const minPP = config.minPerPerson ? parseInt(config.minPerPerson[paxCount] || 0) : 0;
             let calcPrivateTotal = minPP * paxCount;
