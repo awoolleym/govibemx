@@ -259,7 +259,7 @@ function App() {
         privateOverridePrice: 0, 
         // DEFAULT GROUP DISCOUNTS
         discounts: { 2: 5, 3: 10, 4: 12, 5: 15, 6: 20 },
-        // UPDATED: MINIMUM PP TABLE 
+        // UPDATED: MINIMUM PP TABLE (Sums to 6000 for 4+)
         minPerPerson: { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 },
         
         tripName: 'TEOTIHUACÁN ☀️',
@@ -393,7 +393,8 @@ function App() {
     const quote = useMemo(() => {
         if (isPrivateMode) {
             // PRIVATE PRICING LOGIC
-            const paxCount = selectedSeats.length > 0 ? selectedSeats.length : 1; 
+            // Fix: Default to 6 pax (Full Van) if no specific seats selected to close loophole
+            const paxCount = selectedSeats.length > 0 ? selectedSeats.length : 6; 
             const minPP = config.minPerPerson ? parseInt(config.minPerPerson[paxCount] || 0) : 0;
             let calcPrivateTotal = minPP * paxCount;
             
@@ -474,7 +475,7 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
-            // Safety check
+            // Safety check: Can't book private if seats occupied
             if (isPrivateMode && hasActiveBookings && !editingBookingId) {
                 throw new Error("Cannot book private tour: Seats are already occupied.");
             }
@@ -762,7 +763,7 @@ function App() {
                            <div>Labor<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.laborCost} onChange={e => setConfig({...config, laborCost: e.target.value})} /></div>
                            <div>Vehicle<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.vehicleCost} onChange={e => setConfig({...config, vehicleCost: e.target.value})} /></div>
                         </div>
-                        <button onClick={() => update(ref(db, 'config'), config).then(() => alert('Saved'))} className="w-full bg-green-600 p-2 rounded font-bold mt-4"><Save className="w-4 h-4 inline" /> Save Configuration</button></div>) : viewMode === 'inquiries' ? (<div className="space-y-4">{inquiries.length === 0 ? <div className="text-center text-slate-500">No Inquiries</div> : inquiries.map(i => <div key={i.id} className="bg-slate-800 p-4 rounded border border-slate-700"><div className="flex justify-between"><div><h4 className="font-bold">{i.name} <span className="text-[10px] bg-slate-600 px-1 rounded">{i.status}</span></h4><p className="text-sm text-slate-400">{i.message}</p><div className="text-xs text-slate-500 mt-1">{new Date(i.timestamp).toLocaleString()} • {i.phone}</div></div><div className="flex gap-2"><button onClick={() => openWhatsApp({ ...i, tripName: i.source, totalPrice: '-', seats: [], isPrivate: false })} className="bg-green-600 p-2 rounded text-white"><MessageCircle className="w-4 h-4" /></button>{i.status === 'NEW' && <button onClick={() => update(ref(db, `inquiries/${i.id}`), { status: 'READ' })} className="bg-slate-600 p-2 rounded text-xs">Read</button>}</div></div></div>)}</div>) : (<>
+                        <button onClick={() => update(ref(db, 'config'), config).then(() => alert('Saved'))} className="w-full bg-green-600 p-2 rounded font-bold mt-4"><Save className="w-4 h-4 inline" /> Save Configuration</button></div>) : viewMode === 'inquiries' ? (<div className="space-y-4">{inquiries.length === 0 ? <div className="text-center text-slate-500">No Inquiries</div> : inquiries.map(i => <div key={i.id} className="bg-slate-800 p-4 rounded border border-slate-700"><div className="flex justify-between"><div><h4 className="font-bold">{i.name} <span className="text-[10px] bg-slate-600 px-1 rounded">{i.status}</span></h4><p className="text-sm text-slate-400">{i.message}</p><div className="text-xs text-slate-500 mt-1">{new Date(i.timestamp).toLocaleString()} • {i.phone}</div></div><div className="flex gap-2"><button onClick={() => openInquiryWhatsApp(i)} className="bg-green-600 p-2 rounded text-white"><MessageCircle className="w-4 h-4" /></button>{i.status === 'NEW' && <button onClick={() => update(ref(db, `inquiries/${i.id}`), { status: 'READ' })} className="bg-slate-600 p-2 rounded text-xs">Read</button>}</div></div></div>)}</div>) : (<>
                         <div className="flex gap-2 mb-4 text-xs">
                            {['ALL', 'confirmed', 'pending', 'pending_review', 'cancelled'].map(s => (
                              <button key={s} onClick={() => setFilterStatus(s)} className={`px-3 py-1 rounded border ${filterStatus === s ? 'bg-white text-slate-900' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>{s.toUpperCase().replace('_', ' ')}</button>
