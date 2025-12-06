@@ -412,7 +412,6 @@ function App() {
             const ppTable = config.minPerPerson || defaults;
             
             // UNIFIED LOGIC: Use Table Calculation for ALL group sizes (1-6)
-            // This ensures if admin changes 4 pax to 1250pp, it calculates to 5000 total, not forced 6000.
             const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
             let calcPrivateTotal = minPP * paxCount;
             
@@ -497,7 +496,7 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
-            // Safety check: Can't book private if seats occupied
+            // Safety check
             if (isPrivateMode && hasActiveBookings && !editingBookingId) {
                 throw new Error("Cannot book private tour: Seats are already occupied.");
             }
@@ -523,7 +522,6 @@ function App() {
                  } else {
                      if (quote.total < stats.baseCost) {
                          bookingStatus = 'needs_more_pax';
-                         // setSuccessMsg("On Hold: Needs More Passengers"); -> Handled below
                      }
                  }
             } 
@@ -623,8 +621,13 @@ function App() {
         }
 
         const t = `Hello ${r.name}, thank you for reserving with GoVibeMX! 🚐\n\nWe're confirming your request:\n• Trip: ${r.tripName}\n• Date: ${r.tripDate}\n• Pick-up: ${r.location}\n• Seats: ${r.isPrivate ? 'PRIVATE' : r.seats?.join(', ')}\n• Total: $${r.totalPrice}${statusMsg}`;
-        window.top.location.href = `https://api.whatsapp.com/send?phone=${r.phone.replace(/\D/g, '')}&text=${encodeURIComponent(t)}`;
+        window.open(`https://api.whatsapp.com/send?phone=${r.phone.replace(/\D/g, '')}&text=${encodeURIComponent(t)}`, 'WhatsApp', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes');
     };
+    
+    const openInquiryWhatsApp = (i) => {
+         const url = `https://api.whatsapp.com/send?phone=${i.phone.replace(/\D/g,'')}&text=${encodeURIComponent(`Hi ${i.name}, regarding your inquiry about ${i.source}:`)}`;
+         window.open(url, 'WhatsApp', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes');
+    }
 
     const startEdit = (r) => {
         setEditingBookingId(r.id);
@@ -691,6 +694,9 @@ function App() {
 
     // --- CALC TOTAL OP COST ---
     const totalOpCost = Number(config.fuelCost) + Number(config.tollCost) + Number(config.parkingCost) + Number(config.amenitiesCost) + Number(config.laborCost) + Number(config.vehicleCost) + Number(config.otherCost);
+    const totalRev = reservations.filter(r => r.status === 'confirmed').reduce((a, c) => a + (c.totalPrice || 0), 0);
+    const netProfit = totalRev - totalOpCost;
+    const profitClass = netProfit < 0 ? 'text-red-500' : 'text-green-500';
 
     if (loading) {
         return (
@@ -860,7 +866,21 @@ function App() {
                              <button key={s} onClick={() => setFilterStatus(s)} className={`px-3 py-1 rounded border ${filterStatus === s ? 'bg-white text-slate-900' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>{s.toUpperCase().replace('_', ' ')}</button>
                            ))}
                         </div>
-                        <div className="space-y-3">{reservations.filter(r => filterStatus === 'ALL' || r.status === filterStatus).map(r => {
+                        <div className="space-y-3">
+                            <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg mb-4 flex justify-between items-center">
+                               <div>
+                                  <p className="text-slate-400 text-xs uppercase">Total Revenue</p>
+                                  <h3 className="text-2xl font-bold text-white">${reservations.filter(r => r.status === 'confirmed').reduce((a, c) => a + (c.totalPrice || 0), 0)}</h3>
+                               </div>
+                               <div className="text-right">
+                                  <p className="text-slate-400 text-xs uppercase">Net Profit</p>
+                                  <h3 className={`text-2xl font-bold ${(reservations.filter(r => r.status === 'confirmed').reduce((a, c) => a + (c.totalPrice || 0), 0) - totalOpCost) < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                     ${reservations.filter(r => r.status === 'confirmed').reduce((a, c) => a + (c.totalPrice || 0), 0) - totalOpCost}
+                                  </h3>
+                               </div>
+                            </div>
+
+                            {reservations.filter(r => filterStatus === 'ALL' || r.status === filterStatus).map(r => {
                              const stats = getProfitStats(r.totalPrice);
                              let borderClass = stats.status === 'loss' ? 'border-l-red-500' : stats.status === 'low' ? 'border-l-yellow-500' : 'border-l-green-500';
                              if (r.status === 'needs_more_pax') borderClass = 'border-l-amber-500';
