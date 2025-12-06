@@ -394,17 +394,23 @@ function App() {
     const quote = useMemo(() => {
         if (isPrivateMode) {
             // PRIVATE PRICING LOGIC
-            // Use privatePaxCount if set (from modal), otherwise default to selected seats or 6
+            // Use privatePaxCount which is set by the dropdown/initial selection
             const paxCount = privatePaxCount; 
             
             const defaults = { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 };
             const ppTable = config.minPerPerson || defaults;
             
-            // UNIFIED LOGIC: Always use table calculation for flexibility
-            const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
-            let calcPrivateTotal = minPP * paxCount;
+            // NEW LOGIC: If 4+ Pax, ignore table and use Flat Private Price
+            let calcPrivateTotal = 0;
+            if (paxCount >= 4) {
+                calcPrivateTotal = parseInt(config.privatePrice || 6000);
+            } else {
+                // 1-3 Pax: Use the PP table
+                const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
+                calcPrivateTotal = minPP * paxCount;
+            }
             
-            // Check for Override
+            // Check for Manual Override (overrides everything)
             if (config.privateOverridePrice > 0) {
                 calcPrivateTotal = parseInt(config.privateOverridePrice);
             }
@@ -465,7 +471,7 @@ function App() {
         setSelectedSeats(prev => {
             const n = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
             
-            // AUTO-PRIVATE PROMPT LOGIC RESTORED
+            // AUTO-PRIVATE PROMPT LOGIC
             if (n.length === 6 && !isPrivateMode) {
                 if (confirm("You selected all 6 seats. Would you like to book this tour as a private experience?")) {
                     setIsPrivateMode(true);
@@ -485,7 +491,7 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
-            // Safety check: Can't book private if seats occupied
+            // Safety check
             if (isPrivateMode && hasActiveBookings && !editingBookingId) {
                 throw new Error("Cannot book private tour: Seats are already occupied.");
             }
@@ -506,9 +512,9 @@ function App() {
                  if (confirm(`For groups of ${currentCount}, we recommend upgrading to a Private Tour ($${privPrice}) to guarantee departure.\n\nUpgrade now?`)) {
                      finalPrivate = true;
                      finalTotal = privPrice;
+                     // Important: Set private pax count here if upgrading
+                     setPrivatePaxCount(currentCount);
                  } else {
-                     // They declined. Submit, but it might be low profit. 
-                     // Check against base cost.
                      if (quote.total < stats.baseCost) {
                          bookingStatus = 'pending_review';
                          alert("Note: Your booking revenue is below the minimum operating cost. It has been submitted for ADMIN REVIEW.");
@@ -690,7 +696,7 @@ function App() {
                         <div className="bg-slate-900/50 p-4 rounded border border-slate-700/50"><p className="text-sm whitespace-pre-wrap">{config.noticeText}</p></div>
                         <div className="flex gap-4 text-xs text-slate-400 pt-2"><span className="flex gap-1"><Wifi className="w-4 h-4" /> WiFi</span><span className="flex gap-1"><Coffee className="w-4 h-4" /> Snacks</span><span className="flex gap-1"><CreditCard className="w-4 h-4" /> Cards</span></div>
                         <button onClick={() => setShowInquiryModal(true)} className="w-full border border-slate-600 text-slate-300 py-2 rounded text-sm hover:bg-slate-800 flex items-center justify-center gap-2"><HelpCircle className="w-4 h-4" /> Inquire Here</button>
-                        <div className="mt-6 p-6 bg-slate-900 rounded border border-slate-700 text-center relative overflow-hidden"><div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>{quote.count > 0 || isPrivateMode ? (<div className="price-badge"><div className="text-slate-400 text-xs uppercase">{isPrivateMode ? "PRIVATE" : "Total"}</div><div className="flex justify-center items-center gap-2">{!isPrivateMode && quote.disc > 0 && <span className="line-through text-slate-500">${quote.base}</span>}<div className="text-3xl font-bold text-cyan-400">${quote.total}</div></div>{isPrivateMode ? <div className="text-xs text-indigo-400 font-bold">FULL VAN ({quote.count} PAX)</div> : (quote.disc > 0 && <div className="text-xs text-green-400">SAVED {quote.disc}%</div>)}</div>) : <div className="text-slate-500 text-sm">Select seats</div>}</div>
+                        <div className="mt-6 p-6 bg-slate-900 rounded border border-slate-700 text-center relative overflow-hidden"><div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>{quote.count > 0 || isPrivateMode ? (<div className="price-badge"><div className="text-slate-400 text-xs uppercase">{isPrivateMode ? "PRIVATE" : "Total"}</div><div className="flex justify-center items-center gap-2">{!isPrivateMode && quote.disc > 0 && <span className="line-through text-slate-500">${quote.base}</span>}<div className="text-3xl font-bold text-cyan-400">${quote.total}</div></div>{isPrivateMode ? <div className="text-xs text-indigo-400 font-bold">FULL VAN (UP TO {quote.count} PAX)</div> : (quote.disc > 0 && <div className="text-xs text-green-400">SAVED {quote.disc}%</div>)}</div>) : <div className="text-slate-500 text-sm">Select seats</div>}</div>
                     </div>
                     <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl order-1 md:order-2">
                         <Map ia={!isPrivateMode} />
@@ -782,10 +788,7 @@ function App() {
 
                         {/* PRIVATE & COSTS */}
                         <h3 className="font-bold border-b pb-2 pt-4">Operational Costs & Private</h3>
-                        <div className="grid grid-cols-2 gap-3 mb-2">
-                           <div><label className="text-xs text-slate-400 block mb-1">Private Tour Price Override (Optional)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-indigo-400" value={config.privateOverridePrice} onChange={e => setConfig({...config, privateOverridePrice: e.target.value})} /></div>
-                           <div className="text-right pt-4"><span className="text-sm text-slate-400">Total Operating Cost:</span> <span className="text-lg font-bold text-white">${Number(config.fuelCost) + Number(config.tollCost) + Number(config.parkingCost) + Number(config.amenitiesCost) + Number(config.laborCost) + Number(config.vehicleCost) + Number(config.otherCost)}</span></div>
-                        </div>
+                        <div className="grid grid-cols-2 gap-3 mb-2"><div><label className="text-xs text-slate-400 block mb-1">Private Tour Price Override (Optional)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-indigo-400" value={config.privateOverridePrice} onChange={e => setConfig({...config, privateOverridePrice: e.target.value})} /></div></div>
                         <div className="grid grid-cols-3 gap-2 text-xs text-slate-400">
                            <div>Fuel<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.fuelCost} onChange={e => setConfig({...config, fuelCost: e.target.value})} /></div>
                            <div>Tolls<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.tollCost} onChange={e => setConfig({...config, tollCost: e.target.value})} /></div>
