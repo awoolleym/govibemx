@@ -394,7 +394,7 @@ function App() {
     const quote = useMemo(() => {
         if (isPrivateMode) {
             // PRIVATE PRICING LOGIC
-            // Use privatePaxCount which is set by the dropdown/initial selection
+            // Use privatePaxCount if set (from modal), otherwise default to selected seats or 6
             const paxCount = privatePaxCount; 
             
             const defaults = { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 };
@@ -471,7 +471,7 @@ function App() {
         setSelectedSeats(prev => {
             const n = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
             
-            // AUTO-PRIVATE PROMPT LOGIC
+            // AUTO-PRIVATE PROMPT LOGIC RESTORED
             if (n.length === 6 && !isPrivateMode) {
                 if (confirm("You selected all 6 seats. Would you like to book this tour as a private experience?")) {
                     setIsPrivateMode(true);
@@ -491,7 +491,7 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
-            // Safety check
+            // Safety check: Can't book private if seats occupied
             if (isPrivateMode && hasActiveBookings && !editingBookingId) {
                 throw new Error("Cannot book private tour: Seats are already occupied.");
             }
@@ -722,8 +722,7 @@ function App() {
                        <div className="text-sm">
                           <strong>Private Tour</strong>
                           <p className="text-xs text-slate-400">
-                            {/* DYNAMIC TEXT UPDATE */}
-                            Upgrade to Private for ${quote.total} ({quote.count} Pax)
+                             Upgrade to Private Tour
                           </p>
                        </div>
                     </div>
