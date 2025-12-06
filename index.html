@@ -311,7 +311,21 @@ function App() {
         });
 
         onValue(ref(db, ".info/connected"), snap => setIsConnected(!!snap.val()));
-        onValue(ref(db, "config"), snap => { if (snap.val()) setConfig(prev => ({...prev, ...snap.val()})); });
+        
+        // CONFIG LOADING WITH MIGRATION FIX
+        onValue(ref(db, "config"), snap => { 
+            if (snap.val()) {
+                let loadedConfig = snap.val();
+                // AUTO-FIX: If old low values exist for 4-6 pax, overwrite them with new logic (6000 total)
+                if (loadedConfig.minPerPerson && loadedConfig.minPerPerson[4] < 1000) {
+                    console.log("Migrating old pricing structure...");
+                    loadedConfig.minPerPerson[4] = 1500;
+                    loadedConfig.minPerPerson[5] = 1200;
+                    loadedConfig.minPerPerson[6] = 1000;
+                }
+                setConfig(prev => ({...prev, ...loadedConfig}));
+            }
+        });
         
         onValue(ref(db, 'bookings'), snap => {
             const data = snap.val();
@@ -386,17 +400,11 @@ function App() {
             const defaults = { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 };
             const ppTable = config.minPerPerson || defaults;
             
-            // NEW LOGIC: If 4+ Pax, ignore table and use Flat Private Price
-            let calcPrivateTotal = 0;
-            if (paxCount >= 4) {
-                calcPrivateTotal = parseInt(config.privatePrice || 6000);
-            } else {
-                // 1-3 Pax: Use the PP table
-                const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
-                calcPrivateTotal = minPP * paxCount;
-            }
+            // UNIFIED LOGIC: Always use table calculation for flexibility
+            const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
+            let calcPrivateTotal = minPP * paxCount;
             
-            // Check for Manual Override (overrides everything)
+            // Check for Override
             if (config.privateOverridePrice > 0) {
                 calcPrivateTotal = parseInt(config.privateOverridePrice);
             }
@@ -579,7 +587,6 @@ function App() {
         setEditingBookingId(r.id);
         setSelectedSeats(r.seats || []);
         setIsPrivateMode(r.isPrivate || false);
-        setPrivatePaxCount(6); // Default to 6 for edit if not stored, logic will adapt
         setFormData({ name: r.name || '', phone: r.phone || '', email: r.email || '', location: r.location || '', contactMethod: r.contactMethod || 'WhatsApp', hasWhatsApp: r.hasWhatsApp, notes: r.notes || '' });
         setViewMode('widget');
     };
@@ -588,7 +595,6 @@ function App() {
         setEditingBookingId(null);
         setSelectedSeats([]);
         setIsPrivateMode(false);
-        setPrivatePaxCount(6);
         setFormData({ name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '' });
         setViewMode('widget'); 
     };
@@ -707,7 +713,13 @@ function App() {
                   <div className="flex flex-col gap-2 bg-indigo-900/20 border border-indigo-500/30 p-2 rounded">
                     <div className="flex gap-2 items-center">
                        <input type="checkbox" checked={isPrivateMode} onChange={e => {setIsPrivateMode(e.target.checked); if(!e.target.checked) setSelectedSeats([]); else setPrivatePaxCount(selectedSeats.length || 6);}} />
-                       <div className="text-sm"><strong>Private Tour</strong><p className="text-xs text-slate-400">Full van ${config.privatePrice}</p></div>
+                       <div className="text-sm">
+                          <strong>Private Tour</strong>
+                          <p className="text-xs text-slate-400">
+                            {/* DYNAMIC TEXT UPDATE */}
+                            Upgrade to Private for ${quote.total} ({quote.count} Pax)
+                          </p>
+                       </div>
                     </div>
                     {isPrivateMode && (
                        <div className="mt-1 pl-6">
