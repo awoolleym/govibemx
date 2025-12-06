@@ -255,10 +255,10 @@ function App() {
         vipPrice: 1250,
         windowPrice: 1100,
         middlePrice: 950,
-        privatePrice: 6000,
+        privateOverridePrice: 0, // Manual override if > 0
         // DEFAULT GROUP DISCOUNTS
         discounts: { 2: 5, 3: 10, 4: 12, 5: 15, 6: 20 },
-        // NEW MINIMUM PP TABLE (1-6)
+        // UPDATED: MINIMUM PP TABLE 
         minPerPerson: { 1: 3700, 2: 1850, 3: 1250, 4: 925, 5: 740, 6: 620 },
         
         tripName: 'TEOTIHUACÁN ☀️',
@@ -377,8 +377,33 @@ function App() {
 
     const quote = useMemo(() => {
         if (isPrivateMode) {
-            return { base: config.privatePrice, disc: 0, total: parseInt(config.privatePrice), count: 6, isPriv: true };
+            // PRIVATE PRICING LOGIC: Uses Table unless overridden
+            // Count for private mode is always 6 seats booked, but for pricing logic we use "user count" or default 1? 
+            // Actually, private tour price is usually flat.
+            // Requirement: "For 1 pax → use the “minimum PP price for 1 pax” × 1"
+            // But we don't ask pax count in private mode yet.
+            // Let's assume user selected specific seats to indicate pax count, or just default to 6 pax logic?
+            // "When the user selects “Make this tour private,” calculate the private tour price using the existing minimum-per-person values"
+            // If they are on the map and select 2 seats then click private, we use count=2. 
+            // If they just check private without selecting, we might assume 6?
+            // Better: Use selectedSeats.length. If 0, assume 1 pax for pricing base or show minimum.
+            
+            const paxCount = selectedSeats.length > 0 ? selectedSeats.length : 1; 
+            // If user checked private but didn't select seats, we assume 1 person booking private? 
+            // Or usually private means they book the whole van.
+            // Logic: "For 2 pax → use the “minimum PP price for 2 pax” × 2"
+            
+            const minPP = config.minPerPerson ? parseInt(config.minPerPerson[paxCount] || 0) : 0;
+            let calcPrivateTotal = minPP * paxCount;
+            
+            // Check for Override
+            if (config.privateOverridePrice > 0) {
+                calcPrivateTotal = parseInt(config.privateOverridePrice);
+            }
+            
+            return { base: calcPrivateTotal, disc: 0, total: calcPrivateTotal, count: paxCount, isPriv: true };
         }
+
         let b = 0;
         selectedSeats.forEach(id => {
             if (['seat2', 'seat3'].includes(id)) b += parseInt(config.vipPrice);
@@ -393,15 +418,13 @@ function App() {
     // PROFITABILITY CALC
     const getProfitStats = (revenue) => {
         const baseCost = Number(config.fuelCost) + Number(config.tollCost) + Number(config.parkingCost) + Number(config.amenitiesCost) + Number(config.laborCost) + Number(config.vehicleCost) + Number(config.otherCost);
-        // Base cost is 1200. Target is 2500.
-        // Min Revenue to break even = baseCost.
-        // Target Revenue = baseCost + TargetProfit.
+        const minRev = baseCost; 
         const targetRev = baseCost + Number(config.targetProfit);
         const profit = revenue - baseCost;
         
         let status = 'good'; // Green (>= Target)
         if (revenue < baseCost) status = 'loss'; // Red (Below cost)
-        else if (revenue < targetRev) status = 'low'; // Yellow (Cost covered, but below target)
+        else if (revenue < targetRev) status = 'low'; // Yellow
 
         return { baseCost, targetRev, profit, status };
     };
@@ -450,29 +473,28 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
+            // Safety check
             if (isPrivateMode && hasActiveBookings && !editingBookingId) {
                 throw new Error("Cannot book private tour: Seats are already occupied.");
             }
 
-            // NEW PROFITABILITY / MINIMUM LOGIC
+            // Profitability Logic
             const stats = getProfitStats(quote.total);
             let bookingStatus = isAdmin ? 'confirmed' : 'pending';
             let finalPrivate = isPrivateMode;
             let finalTotal = quote.total;
             let currentCount = quote.count;
 
-            // Get minimum Per-Person price for this group size from config
             const minPP = config.minPerPerson ? parseInt(config.minPerPerson[currentCount] || 0) : 0;
-            const actualPP = quote.total / currentCount;
+            const actualPP = currentCount > 0 ? quote.total / currentCount : 0;
 
             // Scenario A: 1-2 Passengers (Suggest Private)
-            if (!isPrivateMode && !isAdmin && currentCount <= 2 && actualPP < minPP) {
-                 if (confirm(`For groups of ${currentCount}, we highly recommend upgrading to a Private Tour for $${config.privatePrice} to guarantee the trip.\n\nWould you like to upgrade?`)) {
+            if (!isPrivateMode && !isAdmin && currentCount > 0 && currentCount <= 2 && actualPP < minPP) {
+                 const privPrice = minPP * currentCount; // Suggested private price based on table
+                 if (confirm(`For groups of ${currentCount}, we recommend upgrading to a Private Tour ($${privPrice}) to guarantee departure.\n\nUpgrade now?`)) {
                      finalPrivate = true;
-                     finalTotal = parseInt(config.privatePrice);
+                     finalTotal = privPrice;
                  } else {
-                     // They declined. Submit, but it might be low profit. 
-                     // Check against base cost.
                      if (quote.total < stats.baseCost) {
                          bookingStatus = 'pending_review';
                          alert("Note: Your booking revenue is below the minimum operating cost. It has been submitted for ADMIN REVIEW.");
@@ -482,15 +504,13 @@ function App() {
             // Scenario B: 3+ Passengers (Check Minimum PP)
             else if (!isPrivateMode && !isAdmin && currentCount >= 3) {
                  if (actualPP < minPP) {
-                     // Below target per person -> Flag as Review
                      bookingStatus = 'pending_review';
                      alert("Your booking has been submitted for review. We will verify availability and contact you shortly.");
                  }
             }
 
-            // Absolute floor check
             if (finalTotal < stats.baseCost && bookingStatus !== 'pending_review' && !isAdmin) {
-                bookingStatus = 'pending_review'; // Always review if losing money
+                bookingStatus = 'pending_review';
             }
 
             const d = {
@@ -732,7 +752,7 @@ function App() {
 
                         {/* PRIVATE & COSTS */}
                         <h3 className="font-bold border-b pb-2 pt-4">Operational Costs & Private</h3>
-                        <div className="grid grid-cols-2 gap-3 mb-2"><div><label className="text-xs text-slate-400 block mb-1">Private Tour Price</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-indigo-400" value={config.privatePrice} onChange={e => setConfig({...config, privatePrice: e.target.value})} /></div></div>
+                        <div className="grid grid-cols-2 gap-3 mb-2"><div><label className="text-xs text-slate-400 block mb-1">Private Tour Price Override (Optional)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-indigo-400" value={config.privateOverridePrice} onChange={e => setConfig({...config, privateOverridePrice: e.target.value})} /></div></div>
                         <div className="grid grid-cols-3 gap-2 text-xs text-slate-400">
                            <div>Fuel<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.fuelCost} onChange={e => setConfig({...config, fuelCost: e.target.value})} /></div>
                            <div>Tolls<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.tollCost} onChange={e => setConfig({...config, tollCost: e.target.value})} /></div>
@@ -741,7 +761,7 @@ function App() {
                            <div>Labor<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.laborCost} onChange={e => setConfig({...config, laborCost: e.target.value})} /></div>
                            <div>Vehicle<input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.vehicleCost} onChange={e => setConfig({...config, vehicleCost: e.target.value})} /></div>
                         </div>
-                        <button onClick={() => update(ref(db, 'config'), config).then(() => alert('Saved'))} className="w-full bg-green-600 p-2 rounded font-bold mt-4"><Save className="w-4 h-4 inline" /> Save Configuration</button></div>) : viewMode === 'inquiries' ? (<div className="space-y-4">{inquiries.length === 0 ? <div className="text-center text-slate-500">No Inquiries</div> : inquiries.map(i => <div key={i.id} className="bg-slate-800 p-4 rounded border border-slate-700"><div className="flex justify-between"><div><h4 className="font-bold">{i.name} <span className="text-[10px] bg-slate-600 px-1 rounded">{i.status}</span></h4><p className="text-sm text-slate-400">{i.message}</p><div className="text-xs text-slate-500 mt-1">{new Date(i.timestamp).toLocaleString()} • {i.phone}</div></div><div className="flex gap-2"><button onClick={() => openWhatsApp({ ...i, tripName: i.source, totalPrice: '-', seats: [], isPrivate: false })} className="bg-green-600 p-2 rounded text-white"><MessageCircle className="w-4 h-4" /></button>{i.status === 'NEW' && <button onClick={() => update(ref(db, `inquiries/${i.id}`), { status: 'READ' })} className="bg-slate-600 p-2 rounded text-xs">Read</button>}</div></div></div>)}</div>) : (<>
+                        <button onClick={() => update(ref(db, 'config'), config).then(() => alert('Saved'))} className="w-full bg-green-600 p-2 rounded font-bold mt-4"><Save className="w-4 h-4 inline" /> Save Configuration</button></div>) : viewMode === 'inquiries' ? (<div className="space-y-4">{inquiries.length === 0 ? <div className="text-center text-slate-500">No Inquiries</div> : inquiries.map(i => <div key={i.id} className="bg-slate-800 p-4 rounded border border-slate-700"><div className="flex justify-between"><div><h4 className="font-bold">{i.name} <span className="text-[10px] bg-slate-600 px-1 rounded">{i.status}</span></h4><p className="text-sm text-slate-400">{i.message}</p><div className="text-xs text-slate-500 mt-1">{new Date(i.timestamp).toLocaleString()} • {i.phone}</div></div><div className="flex gap-2"><button onClick={() => openInquiryWhatsApp(i)} className="bg-green-600 p-2 rounded text-white"><MessageCircle className="w-4 h-4" /></button>{i.status === 'NEW' && <button onClick={() => update(ref(db, `inquiries/${i.id}`), { status: 'READ' })} className="bg-slate-600 p-2 rounded text-xs">Read</button>}</div></div></div>)}</div>) : (<>
                         <div className="flex gap-2 mb-4 text-xs">
                            {['ALL', 'confirmed', 'pending', 'pending_review', 'cancelled'].map(s => (
                              <button key={s} onClick={() => setFilterStatus(s)} className={`px-3 py-1 rounded border ${filterStatus === s ? 'bg-white text-slate-900' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>{s.toUpperCase().replace('_', ' ')}</button>
