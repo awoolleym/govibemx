@@ -128,7 +128,7 @@ import {
   LayoutDashboard, MapPin, MessageCircle, Phone, Mail, DollarSign, 
   Settings, Lock, AlertCircle, Plus, Edit2, Save, Armchair, Info, 
   Wifi, Coffee, CreditCard, Loader2, AlertTriangle, HelpCircle, Send, Home, Timer, 
-  Bell, BellOff, Info as InfoIcon
+  Bell, BellOff
 } from 'lucide-react';
 
 // --- CONFIG ---
@@ -191,19 +191,13 @@ const playAlertSound = () => {
 
 // --- WHATSAPP LINK BUILDERS ---
 const getWhatsAppUrl = (r) => {
-    let statusMsg = "";
-    if (r.status === 'needs_more_pax') {
-        statusMsg = `\n\n⚠️ IMPORTANT: This is a shared tour which requires 2 passengers minimum to operate. Your reservation is currently ON HOLD. Once a second passenger joins, the tour will be confirmed. You can also upgrade to a Private Tour to guarantee the date immediately.`;
-    }
-
     const message = `Hello ${r.name}, thank you for reserving with GoVibeMX! 🚐\n\n` +
                     `We're confirming your request:\n` +
                     `• Trip: ${r.tripName || 'GoVibe Tour'}\n` +
                     `• Date: ${r.tripDate || 'Upcoming'}\n` +
                     `• Pick-up: ${r.location || "Not specified"}\n` +
                     `• Seats: ${r.isPrivate ? 'PRIVATE VAN (All Seats)' : r.seats?.join(', ')}\n` +
-                    `• Total: $${r.totalPrice}\n` +
-                    `${statusMsg}\n` +
+                    `• Total: $${r.totalPrice}\n\n` +
                     `We will be with you shortly to confirm details!`;
     return `https://api.whatsapp.com/send?phone=${r.phone.replace(/\D/g, '')}&text=${encodeURIComponent(message)}`;
 };
@@ -243,7 +237,7 @@ function App() {
     // App Data
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [isPrivateMode, setIsPrivateMode] = useState(false);
-    const [privatePaxCount, setPrivatePaxCount] = useState(6); 
+    const [privatePaxCount, setPrivatePaxCount] = useState(6); // NEW: Track pax for private mode
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [showInquiryModal, setShowInquiryModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -252,7 +246,7 @@ function App() {
     const [editingBookingId, setEditingBookingId] = useState(null);
     const [infoData, setInfoData] = useState(null);
     const [confirmData, setConfirmData] = useState(null);
-    const [successMsg, setSuccessMsg] = useState("Reservation Received!"); // Dynamic success msg
+    const [successMsg, setSuccessMsg] = useState("Reservation Received!");
     
     // Alarm
     const [isMuted, setIsMuted] = useState(true);
@@ -267,7 +261,7 @@ function App() {
         privateOverridePrice: 0, 
         // DEFAULT GROUP DISCOUNTS
         discounts: { 2: 5, 3: 10, 4: 12, 5: 15, 6: 20 },
-        // UPDATED: MINIMUM PP TABLE 
+        // UPDATED: MINIMUM PP TABLE (Sums to 6000 for 4+)
         minPerPerson: { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 },
         
         tripName: 'TEOTIHUACÁN ☀️',
@@ -275,7 +269,7 @@ function App() {
         tripTimestamp: getNextSaturday(),
         noticeText: 'Meeting: Angel (15m early).\n(Premium Leather)',
         
-        sharedMinPax: 2, // New shared min setting
+        sharedMinPax: 2,
         
         // UPDATED OPERATING COSTS (1200 Total)
         fuelCost: 200,
@@ -325,6 +319,7 @@ function App() {
         onValue(ref(db, "config"), snap => { 
             if (snap.val()) {
                 let loadedConfig = snap.val();
+                // AUTO-FIX: If old low values exist for 4-6 pax, overwrite them with new logic (6000 total)
                 if (loadedConfig.minPerPerson && loadedConfig.minPerPerson[4] < 1000) {
                     console.log("Migrating old pricing structure...");
                     loadedConfig.minPerPerson[4] = 1500;
@@ -410,13 +405,30 @@ function App() {
 
     const quote = useMemo(() => {
         if (isPrivateMode) {
+            // PRIVATE PRICING LOGIC
             const paxCount = privatePaxCount; 
+            
             const defaults = { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 };
             const ppTable = config.minPerPerson || defaults;
-            const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
-            let calcPrivateTotal = minPP * paxCount;
-            if (config.privateOverridePrice > 0) calcPrivateTotal = parseInt(config.privateOverridePrice);
+            
+            // NEW LOGIC: If 4+ Pax, ignore table and use Flat Private Price
+            let calcPrivateTotal = 0;
+            if (paxCount >= 4) {
+                calcPrivateTotal = parseInt(config.privatePrice || 6000);
+            } else {
+                // 1-3 Pax: Use the PP table
+                const minPP = parseInt(ppTable[paxCount] || defaults[paxCount] || 0);
+                calcPrivateTotal = minPP * paxCount;
+            }
+            
+            // Check for Manual Override (overrides everything)
+            if (config.privateOverridePrice > 0) {
+                calcPrivateTotal = parseInt(config.privateOverridePrice);
+            }
+            
+            // Final Safety Net
             if (calcPrivateTotal === 0) calcPrivateTotal = 6000;
+
             return { base: calcPrivateTotal, disc: 0, total: calcPrivateTotal, count: paxCount, isPriv: true };
         }
 
@@ -437,9 +449,11 @@ function App() {
         const minRev = baseCost; 
         const targetRev = baseCost + Number(config.targetProfit);
         const profit = revenue - baseCost;
-        let status = 'good'; 
-        if (revenue < baseCost) status = 'loss'; 
-        else if (revenue < targetRev) status = 'low'; 
+        
+        let status = 'good'; // Green (>= Target)
+        if (revenue < baseCost) status = 'loss'; // Red (Below cost)
+        else if (revenue < targetRev) status = 'low'; // Yellow
+
         return { baseCost, targetRev, profit, status };
     };
 
@@ -467,12 +481,15 @@ function App() {
 
         setSelectedSeats(prev => {
             const n = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
+            
+            // AUTO-PRIVATE PROMPT LOGIC RESTORED
             if (n.length === 6 && !isPrivateMode) {
                 if (confirm("You selected all 6 seats. Would you like to book this tour as a private experience?")) {
                     setIsPrivateMode(true);
                     setPrivatePaxCount(6);
                 }
             }
+            
             return n;
         });
     };
@@ -485,10 +502,12 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
+            // Safety check
             if (isPrivateMode && hasActiveBookings && !editingBookingId) {
                 throw new Error("Cannot book private tour: Seats are already occupied.");
             }
 
+            // Profitability Logic
             const stats = getProfitStats(quote.total);
             let bookingStatus = isAdmin ? 'confirmed' : 'pending';
             let finalPrivate = isPrivateMode;
@@ -501,14 +520,14 @@ function App() {
             // Scenario A: 1-2 Passengers (Suggest Private)
             if (!isPrivateMode && !isAdmin && currentCount > 0 && currentCount <= 2 && actualPP < minPP) {
                  const privPrice = minPP * currentCount; 
-                 if (confirm(`For groups of ${currentCount}, we recommend upgrading to a Private Tour ($${privPrice}) to guarantee departure.\n\nUpgrade now?`)) {
+                 if (confirm(`For groups of ${currentCount}, we recommend upgrading to a Private Tour ($${privPrice}) to guarantee departure immediately.\n\n• Click OK to UPGRADE to Private (Confirmed immediately).\n• Click Cancel to STAY Shared (Your seats will be ON HOLD until another passenger joins).`)) {
                      finalPrivate = true;
                      finalTotal = privPrice;
                      setPrivatePaxCount(currentCount);
                  } else {
                      if (quote.total < stats.baseCost) {
-                         bookingStatus = 'pending_review';
-                         alert("Note: Your booking revenue is below the minimum operating cost. It has been submitted for ADMIN REVIEW.");
+                         bookingStatus = 'needs_more_pax';
+                         // setSuccessMsg("On Hold: Needs More Passengers"); -> Handled below
                      }
                  }
             } 
@@ -520,8 +539,8 @@ function App() {
                  }
             }
 
-            if (finalTotal < stats.baseCost && bookingStatus !== 'pending_review' && !isAdmin) {
-                bookingStatus = 'pending_review';
+            if (finalTotal < stats.baseCost && bookingStatus !== 'needs_more_pax' && !isAdmin) {
+                bookingStatus = 'needs_more_pax';
             }
 
             // SHARED MIN PAX LOGIC (Status Override)
@@ -529,26 +548,23 @@ function App() {
                 const newTotalPax = currentSharedPaxCount + currentCount;
                 if (newTotalPax < (config.sharedMinPax || 2)) {
                     bookingStatus = 'needs_more_pax';
-                    setSuccessMsg("On Hold: Needs More Passengers");
-                    // alert("Shared Tour: This tour requires a minimum of 2 passengers to operate. Your booking is ON HOLD until another passenger joins.");
+                    setSuccessMsg("On Hold: Waiting for Group");
                 } else {
-                    // We hit the threshold! 
-                    // Update this booking to 'confirmed' (default)
                     bookingStatus = 'confirmed';
                     setSuccessMsg("Tour Confirmed!");
                     
-                    // OPTIONAL: Update previous 'needs_more_pax' bookings to 'confirmed'
-                    // This is done server-side ideally, but we can do a simple client-side sweep for this demo
                     const waitingBookings = reservations.filter(r => r.status === 'needs_more_pax');
                     waitingBookings.forEach(wb => {
                          update(ref(db, `bookings/${wb.id}`), { status: 'confirmed' });
                     });
                 }
+            } else if (bookingStatus === 'needs_more_pax') {
+                setSuccessMsg("On Hold: Waiting for Group");
             } else {
                 setSuccessMsg(finalPrivate ? "Private Tour Confirmed!" : "Reservation Received!");
             }
 
-            if(finalPrivate) bookingStatus = 'confirmed'; // Private is always confirmed immediately
+            if(finalPrivate) bookingStatus = 'confirmed'; 
 
             const d = {
                 ...formData,
@@ -570,6 +586,7 @@ function App() {
             } else {
                 await set(push(ref(db, 'bookings')), { ...d, status: bookingStatus, createdAt: Date.now(), createdBy: u.uid });
                 if(bookingStatus !== 'pending_review') setShowSuccessModal(true);
+                else alert("Your booking has been submitted for ADMIN REVIEW. We will contact you shortly.");
             }
             setShowBookingModal(false);
             setSelectedSeats([]);
@@ -730,7 +747,7 @@ function App() {
                             {currentSharedPaxCount >= 2 && <div className="text-green-400 font-bold flex items-center gap-2"><CheckCircle className="w-3 h-3"/> {currentSharedPaxCount} Passengers Confirmed - Trip is ON!</div>}
                         </div>
 
-                        <div className="mt-6 p-6 bg-slate-900 rounded border border-slate-700 text-center relative overflow-hidden"><div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>{quote.count > 0 || isPrivateMode ? (<div className="price-badge"><div className="text-slate-400 text-xs uppercase">{isPrivateMode ? "PRIVATE" : "Total"}</div><div className="flex justify-center items-center gap-2">{!isPrivateMode && quote.disc > 0 && <span className="line-through text-slate-500">${quote.base}</span>}<div className="text-3xl font-bold text-cyan-400">${quote.total}</div></div>{isPrivateMode ? <div className="text-xs text-indigo-400 font-bold">FULL VAN (UP TO {quote.count} PAX)</div> : (quote.disc > 0 && <div className="text-xs text-green-400">SAVED {quote.disc}%</div>)}</div>) : <div className="text-slate-500 text-sm">Select seats</div>}</div>
+                        <div className="mt-6 p-6 bg-slate-900 rounded border border-slate-700 text-center relative overflow-hidden"><div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>{quote.count > 0 || isPrivateMode ? (<div className="price-badge"><div className="text-slate-400 text-xs uppercase">{isPrivateMode ? "PRIVATE" : "Total"}</div><div className="flex justify-center items-center gap-2">{!isPrivateMode && quote.disc > 0 && <span className="line-through text-slate-500">${quote.base}</span>}<div className="text-3xl font-bold text-cyan-400">${quote.total}</div></div>{isPrivateMode ? <div className="text-xs text-indigo-400 font-bold">PRIVATE ({quote.count} PAX)</div> : (quote.disc > 0 && <div className="text-xs text-green-400">SAVED {quote.disc}%</div>)}</div>) : <div className="text-slate-500 text-sm">Select seats</div>}</div>
                     </div>
                     <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl order-1 md:order-2">
                         <div className="mb-2 text-xs font-bold text-center text-slate-400 uppercase tracking-widest flex justify-between px-4">
@@ -858,7 +875,7 @@ function App() {
                                <div key={r.id} className={`bg-slate-800 rounded p-4 border shadow-sm flex flex-col md:flex-row justify-between gap-4 border-l-4 ${borderClass}`}>
                                 <div className="flex-1"><div className="flex items-center gap-2 mb-1"><h3 className="font-bold">{r.name}</h3>{r.status === 'pending_review' ? <span className="text-[10px] bg-orange-600 px-2 rounded text-white animate-pulse">REVIEW NEEDED</span> : (r.status === 'needs_more_pax' ? <span className="text-[10px] bg-amber-600 px-2 rounded text-white animate-pulse">WAITING FOR PAX</span> : (r.isPrivate ? <span className="text-[10px] bg-indigo-600 px-2 rounded text-white">PRIVATE</span> : <span className="text-[10px] bg-slate-700 px-2 rounded uppercase">{r.status}</span>))}</div><div className="text-sm text-slate-400 grid grid-cols-2 gap-2"><span>{r.isPrivate ? 'ALL' : r.seats?.join(',')}</span><span className="text-green-400">${r.totalPrice}</span><span>{r.phone}</span><span className="truncate">{r.location}</span></div>
                                 <div className="mt-2 text-[10px] flex gap-2 bg-slate-900 p-1 rounded w-fit"><span>Cost: ${stats.baseCost}</span> <span className={stats.profit < 0 ? 'text-red-400' : 'text-green-400'}>Profit: ${stats.profit}</span></div>
-                                {r.hasWhatsApp && <div className="mt-2"><button onClick={() => openWhatsApp(r)} className="inline-flex items-center gap-2 bg-green-600 px-3 py-1 rounded text-xs font-bold"><MessageCircle className="w-3 h-3" /> WhatsApp</button></div>}</div><div className="flex gap-2 items-center"><button onClick={() => setInfoData(r)} className="p-2 text-blue-400 border border-blue-900/50 rounded bg-blue-900/20"><Info className="w-4 h-4" /></button><button onClick={() => startEdit(r)} className="p-2 text-amber-400 border border-amber-900/50 rounded bg-amber-900/20"><Edit2 className="w-4 h-4" /></button>{r.status === 'pending_review' ? <><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'confirmed' })} className="p-2 text-green-400 border border-green-500 rounded">Approve</button><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'cancelled' })} className="p-2 text-red-400 border border-red-500 rounded">Reject</button></> : (r.status === 'pending' && <><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'confirmed' })} className="p-2 text-green-400"><CheckCircle /></button><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'cancelled' })} className="p-2 text-slate-500"><XCircle /></button></>)}{(r.status === 'confirmed' || r.status === 'cancelled' || r.status === 'needs_more_pax') && <button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'pending' })} className="p-2 text-slate-500"><RefreshCw className="w-4 h-4" /></button>}<button onClick={() => setConfirmData({ type: 'del', id: r.id, title: "Delete?" })} className="p-2 text-red-500"><Trash2 className="w-4 h-4" /></button></div></div>
+                                {r.hasWhatsApp && <div className="mt-2"><button onClick={() => openWhatsApp(r)} className="inline-flex items-center gap-2 bg-green-600 px-3 py-1 rounded text-xs font-bold"><MessageCircle className="w-3 h-3" /> WhatsApp</button></div>}</div><div className="flex gap-2 items-center"><button onClick={() => setInfoData(r)} className="p-2 text-blue-400 border border-blue-900/50 rounded bg-blue-900/20"><Info className="w-4 h-4" /></button><button onClick={() => startEdit(r)} className="p-2 text-amber-400 border border-amber-900/50 rounded bg-amber-900/20"><Edit2 className="w-4 h-4" /></button>{r.status === 'pending_review' ? <><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'confirmed' })} className="p-2 text-green-400 border border-green-500 rounded">Approve</button><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'cancelled' })} className="p-2 text-red-400 border border-red-500 rounded">Reject</button></> : (r.status === 'pending' && <><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'confirmed' })} className="p-2 text-green-400"><CheckCircle /></button><button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'cancelled' })} className="p-2 text-slate-500"><XCircle /></button></>)}{(r.status === 'confirmed' || r.status === 'cancelled') && <button onClick={() => update(ref(db, `bookings/${r.id}`), { status: 'pending' })} className="p-2 text-slate-500"><RefreshCw className="w-4 h-4" /></button>}<button onClick={() => setConfirmData({ type: 'del', id: r.id, title: "Delete?" })} className="p-2 text-red-500"><Trash2 className="w-4 h-4" /></button></div></div>
                              );
                         })}</div>
                     </>)}</main>)}
