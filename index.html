@@ -56,6 +56,10 @@
 .seat-vip { border-color: #a855f7 !important; color: #a855f7 !important; }
 .seat-vip strong { color: #d8b4fe !important; }
 
+/* FRONT: Gold Scheme */
+.seat-front { border-color: #eab308 !important; color: #eab308 !important; }
+.seat-front strong { color: #fde047 !important; }
+
 /* STANDARD: Green Scheme */
 .seat-standard { border-color: #10b981 !important; color: #10b981 !important; }
 
@@ -118,7 +122,7 @@
 
 <!-- MAIN APP SCRIPT -->
 <script type="text/babel" data-type="module">
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -128,7 +132,7 @@ import {
   LayoutDashboard, MapPin, MessageCircle, Phone, Mail, DollarSign, 
   Settings, Lock, AlertCircle, Plus, Edit2, Save, Armchair, Info, 
   Wifi, Coffee, CreditCard, Loader2, AlertTriangle, HelpCircle, Send, Home, Timer, 
-  Bell, BellOff
+  Bell, BellOff, Users2
 } from 'lucide-react';
 
 // --- CONFIG ---
@@ -191,13 +195,19 @@ const playAlertSound = () => {
 
 // --- WHATSAPP LINK BUILDERS ---
 const getWhatsAppUrl = (r) => {
+    let statusMsg = "";
+    if (r.status === 'needs_more_pax') {
+        statusMsg = `\n\n⚠️ NOTE: This Shared Tour requires 2 passengers to operate. You are currently the only booking. We will confirm once another passenger joins.`;
+    }
+
     const message = `Hello ${r.name}, thank you for reserving with GoVibeMX! 🚐\n\n` +
                     `We're confirming your request:\n` +
                     `• Trip: ${r.tripName || 'GoVibe Tour'}\n` +
                     `• Date: ${r.tripDate || 'Upcoming'}\n` +
                     `• Pick-up: ${r.location || "Not specified"}\n` +
                     `• Seats: ${r.isPrivate ? 'PRIVATE VAN (All Seats)' : r.seats?.join(', ')}\n` +
-                    `• Total: $${r.totalPrice}\n\n` +
+                    `• Total: $${r.totalPrice}\n` +
+                    `${statusMsg}\n` +
                     `We will be with you shortly to confirm details!`;
     return `https://api.whatsapp.com/send?phone=${r.phone.replace(/\D/g, '')}&text=${encodeURIComponent(message)}`;
 };
@@ -252,16 +262,21 @@ function App() {
     const [isMuted, setIsMuted] = useState(true);
     const [hasPending, setHasPending] = useState(false);
 
+    // Refs for live data safety
+    const occupiedSeatsRef = useRef({});
+
     const [config, setConfig] = useState({
         // DEFAULT NEW PRICING
-        vipPrice: 1250,
+        frontPrice: 1350, 
+        captainPrice: 1250, // Renamed from vipPrice
         windowPrice: 1100,
         middlePrice: 950,
         privatePrice: 6000,
-        privateOverridePrice: 0, 
+        privateOverridePrice: 0,
+        promoDiscount: 0, 
         // DEFAULT GROUP DISCOUNTS
         discounts: { 2: 5, 3: 10, 4: 12, 5: 15, 6: 20 },
-        // UPDATED: MINIMUM PP TABLE (Sums to 6000 for 4+)
+        // UPDATED: MINIMUM PP TABLE 
         minPerPerson: { 1: 3700, 2: 1850, 3: 1250, 4: 1500, 5: 1200, 6: 1000 },
         
         tripName: 'TEOTIHUACÁN ☀️',
@@ -283,7 +298,7 @@ function App() {
     });
 
     const [formData, setFormData] = useState({
-        name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '', message: ''
+        name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '', manualDiscount: 0, message: ''
     });
 
     const [timeLeft, setTimeLeft] = useState("");
@@ -319,6 +334,11 @@ function App() {
         onValue(ref(db, "config"), snap => { 
             if (snap.val()) {
                 let loadedConfig = snap.val();
+                
+                // MIGRATION: Ensure new fields exist
+                if(!loadedConfig.frontPrice) loadedConfig.frontPrice = 1350;
+                if(!loadedConfig.promoDiscount) loadedConfig.promoDiscount = 0;
+                
                 // AUTO-FIX: If old low values exist for 4-6 pax, overwrite them with new logic (6000 total)
                 if (loadedConfig.minPerPerson && loadedConfig.minPerPerson[4] < 1000) {
                     console.log("Migrating old pricing structure...");
@@ -389,6 +409,10 @@ function App() {
 
             if (Array.isArray(r.seats)) r.seats.forEach(id => map[id] = { status: s, name: r.name, id: r.id });
         });
+        
+        // Update REF for safety check
+        occupiedSeatsRef.current = map;
+        
         return map;
     }, [reservations, editingBookingId]);
 
@@ -423,19 +447,32 @@ function App() {
             // Final Safety Net
             if (calcPrivateTotal === 0) calcPrivateTotal = 6000;
 
+             // Apply manual discount if editing
+            if (formData.manualDiscount > 0) {
+                calcPrivateTotal = Math.round(calcPrivateTotal * (1 - formData.manualDiscount / 100));
+            }
+
             return { base: calcPrivateTotal, disc: 0, total: calcPrivateTotal, count: paxCount, isPriv: true };
         }
 
         let b = 0;
         selectedSeats.forEach(id => {
-            if (['seat2', 'seat3'].includes(id)) b += parseInt(config.vipPrice);
+            if (id === 'seat1') b += parseInt(config.frontPrice || 1350); 
+            else if (['seat2', 'seat3'].includes(id)) b += parseInt(config.captainPrice || 1250); // Renamed to captainPrice
             else if (id === 'seat5') b += parseInt(config.middlePrice);
             else b += parseInt(config.windowPrice);
         });
         const c = selectedSeats.length;
         let d = c >= 6 ? (config.discounts?.[6] || 20) : (config.discounts?.[c] || 0);
+        
+        // ADD GLOBAL PROMO DISCOUNT
+        if (config.promoDiscount > 0) d += parseInt(config.promoDiscount);
+        
+        // ADD MANUAL ADMIN DISCOUNT
+        if (formData.manualDiscount > 0) d += parseInt(formData.manualDiscount);
+
         return { base: b, disc: d, total: Math.round(b * (1 - d / 100)), count: c, isPriv: false };
-    }, [selectedSeats, config, isPrivateMode, privatePaxCount]);
+    }, [selectedSeats, config, isPrivateMode, privatePaxCount, formData.manualDiscount]);
 
     // PROFITABILITY CALC
     const getProfitStats = (revenue) => {
@@ -496,9 +533,10 @@ function App() {
             let u = user;
             if (!u) { const c = await signInAnonymously(auth); u = c.user; setUser(u); }
             
-            // Safety check
-            if (isPrivateMode && hasActiveBookings && !editingBookingId) {
-                throw new Error("Cannot book private tour: Seats are already occupied.");
+            // Safety check: Can't book private if seats occupied (CHECK LIVE REF)
+            const currentOccupied = Object.keys(occupiedSeatsRef.current).length > 0;
+            if (isPrivateMode && currentOccupied && !editingBookingId) {
+                throw new Error("Cannot book private tour: Seats were just occupied by another user.");
             }
 
             // Profitability Logic
@@ -512,7 +550,7 @@ function App() {
             const actualPP = currentCount > 0 ? quote.total / currentCount : 0;
 
             // Scenario A: 1-2 Passengers (Suggest Private)
-            // IMPORTANT FIX: Check !hasActiveBookings to ensure we don't steal a shared trip
+            // IMPORTANT FIX: Check !hasActiveBookings (and live ref) to ensure we don't steal a shared trip
             if (!isPrivateMode && !isAdmin && !hasActiveBookings && currentCount > 0 && currentCount <= 2 && actualPP < minPP) {
                  const privPrice = minPP * currentCount; 
                  if (confirm(`For groups of ${currentCount}, we recommend upgrading to a Private Tour ($${privPrice}) to guarantee departure immediately.\n\n• Click OK to UPGRADE to Private (Confirmed immediately).\n• Click Cancel to STAY Shared (Your seats will be ON HOLD until another passenger joins).`)) {
@@ -522,6 +560,7 @@ function App() {
                  } else {
                      if (quote.total < stats.baseCost) {
                          bookingStatus = 'needs_more_pax';
+                         // setSuccessMsg("On Hold: Needs More Passengers"); -> Handled below
                      }
                  }
             } 
@@ -587,7 +626,7 @@ function App() {
             setShowBookingModal(false);
             setSelectedSeats([]);
             setIsPrivateMode(false);
-            setFormData({ name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '' });
+            setFormData({ name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '', manualDiscount: 0 });
         } catch (x) {
             setSubmitError(x.message);
         } finally {
@@ -633,7 +672,7 @@ function App() {
         setEditingBookingId(r.id);
         setSelectedSeats(r.seats || []);
         setIsPrivateMode(r.isPrivate || false);
-        setFormData({ name: r.name || '', phone: r.phone || '', email: r.email || '', location: r.location || '', contactMethod: r.contactMethod || 'WhatsApp', hasWhatsApp: r.hasWhatsApp, notes: r.notes || '' });
+        setFormData({ name: r.name || '', phone: r.phone || '', email: r.email || '', location: r.location || '', contactMethod: r.contactMethod || 'WhatsApp', hasWhatsApp: r.hasWhatsApp, notes: r.notes || '', manualDiscount: r.discount || 0 });
         setViewMode('widget');
     };
 
@@ -641,7 +680,7 @@ function App() {
         setEditingBookingId(null);
         setSelectedSeats([]);
         setIsPrivateMode(false);
-        setFormData({ name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '' });
+        setFormData({ name: '', phone: '', email: '', location: '', contactMethod: 'WhatsApp', hasWhatsApp: true, notes: '', manualDiscount: 0 });
         setViewMode('widget'); 
     };
 
@@ -670,7 +709,9 @@ function App() {
         if (isAdmin && viewMode === 'dashboard') c += ' cursor-pointer ring-2 ring-white';
         
         let pr = 0;
-        if (['seat2', 'seat3'].includes(id)) pr = config.vipPrice;
+        // UPDATED SEAT PRICING LOGIC
+        if (id === 'seat1') pr = config.frontPrice || 1350; 
+        else if (['seat2', 'seat3'].includes(id)) pr = config.captainPrice || 1250;
         else if (id === 'seat5') pr = config.middlePrice;
         else pr = config.windowPrice;
 
@@ -685,7 +726,7 @@ function App() {
     const Map = ({ ia = true }) => (
         <>
             <div className="text-center mb-2 text-[10px] text-slate-500 uppercase">Front</div>
-            <div className="flex justify-center gap-4 mb-4"><div className="gv-seat seat-driver"><span className="text-[10px] text-indigo-200 font-bold">DRIVER</span></div><Seat id="seat1" label="#1" sub="Co-Pilot" type="standard" ia={ia} /></div>
+            <div className="flex justify-center gap-4 mb-4"><div className="gv-seat seat-driver"><span className="text-[10px] text-indigo-200 font-bold">DRIVER</span></div><Seat id="seat1" label="#1" sub="Co-Pilot" type="front" ia={ia} /></div>
             <div className="flex justify-center gap-4 mb-4"><Seat id="seat2" label="#2" sub="Capt" type="vip" ia={ia} /><Seat id="seat3" label="#3" sub="Capt" type="vip" ia={ia} /></div>
             <div className="text-center mb-2 text-[10px] text-slate-500 uppercase">Bench</div>
             <div className="flex justify-center gap-4 mb-6"><Seat id="seat4" label="#4" sub="Win" type="standard" ia={ia} /><Seat id="seat5" label="#5" sub="Mid" type="standard" ia={ia} /><Seat id="seat6" label="#6" sub="Win" type="standard" ia={ia} /></div>
@@ -744,6 +785,23 @@ function App() {
                         <div className="flex gap-4 text-xs text-slate-400 pt-2"><span className="flex gap-1"><Wifi className="w-4 h-4" /> WiFi</span><span className="flex gap-1"><Coffee className="w-4 h-4" /> Snacks</span><span className="flex gap-1"><CreditCard className="w-4 h-4" /> Cards</span></div>
                         <button onClick={() => setShowInquiryModal(true)} className="w-full border border-slate-600 text-slate-300 py-2 rounded text-sm hover:bg-slate-800 flex items-center justify-center gap-2"><HelpCircle className="w-4 h-4" /> Inquire Here</button>
                         
+                        <div className="mt-4 p-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] text-slate-400 space-y-2">
+                            <div className="flex items-start gap-2">
+                                <Users className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5"/>
+                                <div>
+                                    <strong className="text-indigo-200 block">Shared Tour</strong>
+                                    Pay per seat. Requires minimum 2 passengers to confirm departure.
+                                </div>
+                            </div>
+                             <div className="flex items-start gap-2">
+                                <Users2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5"/>
+                                <div>
+                                    <strong className="text-amber-200 block">Private Tour</strong>
+                                    Book the whole van. Guaranteed departure immediately.
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="mt-4 p-3 bg-indigo-900/20 border border-indigo-500/30 rounded-lg text-xs space-y-2">
                             <div className="font-bold text-indigo-200">Shared Tour Status</div>
                             {currentSharedPaxCount === 0 && <div className="text-slate-400">Waiting for 2 passengers to confirm.</div>}
@@ -754,15 +812,6 @@ function App() {
                         <div className="mt-6 p-6 bg-slate-900 rounded border border-slate-700 text-center relative overflow-hidden"><div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>{quote.count > 0 || isPrivateMode ? (<div className="price-badge"><div className="text-slate-400 text-xs uppercase">{isPrivateMode ? "PRIVATE" : "Total"}</div><div className="flex justify-center items-center gap-2">{!isPrivateMode && quote.disc > 0 && <span className="line-through text-slate-500">${quote.base}</span>}<div className="text-3xl font-bold text-cyan-400">${quote.total}</div></div>{isPrivateMode ? <div className="text-xs text-indigo-400 font-bold">PRIVATE ({quote.count} PAX)</div> : (quote.disc > 0 && <div className="text-xs text-green-400">SAVED {quote.disc}%</div>)}</div>) : <div className="text-slate-500 text-sm">Select seats</div>}</div>
                     </div>
                     <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl order-1 md:order-2">
-                        <div className="mb-2 text-xs font-bold text-center text-slate-400 uppercase tracking-widest flex justify-between px-4">
-                           <span>Private Tour</span>
-                           <span>Shared Tour</span>
-                        </div>
-                        <div className="mb-4 text-[10px] text-slate-500 text-center flex justify-between px-4">
-                           <span>Guaranteed Departure</span>
-                           <span>Min 2 Pax Required</span>
-                        </div>
-                        
                         <Map ia={!isPrivateMode} />
                         <div className="flex justify-center gap-2 text-[10px] text-slate-400 border-t border-slate-700 pt-4 mb-4 flex-wrap"><span className="flex gap-1"><div className="w-3 h-3 rounded bg-indigo-500"></div>Open</span><span className="flex gap-1"><div className="w-3 h-3 rounded border border-a855f7"></div>VIP</span><span className="flex gap-1"><div className="w-3 h-3 rounded bg-blue-600"></div>You</span><span className="flex gap-1"><div className="w-3 h-3 rounded bg-f97316"></div>Hold</span><span className="flex gap-1"><div className="w-3 h-3 rounded bg-red-500"></div>Sold</span></div>
                         <button disabled={!quote.count && !isPrivateMode} onClick={() => setShowBookingModal(true)} className={`w-full py-4 rounded font-bold text-lg ${quote.count || isPrivateMode ? (editingBookingId ? 'bg-amber-600' : 'bg-indigo-600') : 'bg-slate-700 text-slate-500'}`}>{quote.count || isPrivateMode ? (editingBookingId ? 'Modify' : 'Reserve') : 'Select Seats'}</button>
@@ -827,10 +876,28 @@ function App() {
                         
                         {/* SEAT TIERS */}
                         <h3 className="font-bold border-b pb-2 pt-4">Seat Tier Pricing</h3>
-                        <div className="grid grid-cols-3 gap-2">
-                           <div><label className="text-xs text-slate-400 block mb-1">VIP (Front)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.vipPrice} onChange={e => setConfig({...config, vipPrice: e.target.value})} /></div>
-                           <div><label className="text-xs text-slate-400 block mb-1">Window</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.windowPrice} onChange={e => setConfig({...config, windowPrice: e.target.value})} /></div>
-                           <div><label className="text-xs text-slate-400 block mb-1">Middle</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" value={config.middlePrice} onChange={e => setConfig({...config, middlePrice: e.target.value})} /></div>
+                        <div className="grid grid-cols-2 gap-3">
+                           <div><label className="text-xs text-slate-400 block mb-1 text-yellow-400">Front Co-Pilot (#1)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-yellow-400" value={config.frontPrice} onChange={e => setConfig({...config, frontPrice: e.target.value})} /></div>
+                           <div><label className="text-xs text-slate-400 block mb-1 text-purple-400">Captain VIP (#2, #3)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-purple-400" value={config.vipPrice} onChange={e => setConfig({...config, vipPrice: e.target.value})} /></div>
+                           <div><label className="text-xs text-slate-400 block mb-1 text-green-400">Window (#4, #6)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-green-400" value={config.windowPrice} onChange={e => setConfig({...config, windowPrice: e.target.value})} /></div>
+                           <div><label className="text-xs text-slate-400 block mb-1 text-green-600">Middle (#5)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-green-600" value={config.middlePrice} onChange={e => setConfig({...config, middlePrice: e.target.value})} /></div>
+                        </div>
+
+                        {/* GROUP DISCOUNTS (%) */}
+                        <h3 className="font-bold border-b pb-2 pt-4">Group Discounts (% Off)</h3>
+                        <div className="grid grid-cols-5 gap-2">
+                           {[2,3,4,5,6].map(n => (
+                              <div key={n}><label className="text-xs text-slate-400">{n} Pax</label>
+                                 <input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1" 
+                                   value={config.discounts ? config.discounts[n] : 0} 
+                                   onChange={e => setConfig({...config, discounts: {...config.discounts, [n]: e.target.value}})} 
+                                 />
+                              </div>
+                           ))}
+                        </div>
+                        <div className="mt-2">
+                           <label className="text-xs text-slate-400 block mb-1">Global Promo Discount (%)</label>
+                           <input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-pink-400" value={config.promoDiscount} onChange={e => setConfig({...config, promoDiscount: e.target.value})} />
                         </div>
 
                         {/* MINIMUM PER PERSON */}
