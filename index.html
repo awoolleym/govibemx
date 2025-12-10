@@ -268,7 +268,7 @@ function App() {
     const [config, setConfig] = useState({
         // DEFAULT NEW PRICING
         frontPrice: 1350, 
-        captainPrice: 1250, // Renamed from vipPrice
+        captainPrice: 1250, // UNIFIED VARIABLE NAME
         windowPrice: 1100,
         middlePrice: 950,
         privatePrice: 6000,
@@ -335,11 +335,12 @@ function App() {
             if (snap.val()) {
                 let loadedConfig = snap.val();
                 
-                // MIGRATION: Ensure new fields exist
+                // MIGRATION: Ensure new fields exist and map old vipPrice
                 if(!loadedConfig.frontPrice) loadedConfig.frontPrice = 1350;
+                if(!loadedConfig.captainPrice) loadedConfig.captainPrice = loadedConfig.vipPrice || 1250; 
                 if(!loadedConfig.promoDiscount) loadedConfig.promoDiscount = 0;
                 
-                // AUTO-FIX: If old low values exist for 4-6 pax, overwrite them with new logic (6000 total)
+                // AUTO-FIX: If old low values exist for 4-6 pax, overwrite them
                 if (loadedConfig.minPerPerson && loadedConfig.minPerPerson[4] < 1000) {
                     console.log("Migrating old pricing structure...");
                     loadedConfig.minPerPerson[4] = 1500;
@@ -458,7 +459,7 @@ function App() {
         let b = 0;
         selectedSeats.forEach(id => {
             if (id === 'seat1') b += parseInt(config.frontPrice || 1350); 
-            else if (['seat2', 'seat3'].includes(id)) b += parseInt(config.captainPrice || 1250); // Renamed to captainPrice
+            else if (['seat2', 'seat3'].includes(id)) b += parseInt(config.captainPrice || 1250); // UNIFIED
             else if (id === 'seat5') b += parseInt(config.middlePrice);
             else b += parseInt(config.windowPrice);
         });
@@ -785,6 +786,14 @@ function App() {
                         <div className="flex gap-4 text-xs text-slate-400 pt-2"><span className="flex gap-1"><Wifi className="w-4 h-4" /> WiFi</span><span className="flex gap-1"><Coffee className="w-4 h-4" /> Snacks</span><span className="flex gap-1"><CreditCard className="w-4 h-4" /> Cards</span></div>
                         <button onClick={() => setShowInquiryModal(true)} className="w-full border border-slate-600 text-slate-300 py-2 rounded text-sm hover:bg-slate-800 flex items-center justify-center gap-2"><HelpCircle className="w-4 h-4" /> Inquire Here</button>
                         
+                        <div className="mt-4 p-3 bg-indigo-900/20 border border-indigo-500/30 rounded-lg text-xs space-y-2">
+                            <div className="font-bold text-indigo-200">Shared Tour Status</div>
+                            {currentSharedPaxCount === 0 && <div className="text-slate-400">Waiting for 2 passengers to confirm.</div>}
+                            {currentSharedPaxCount === 1 && <div className="text-amber-400 font-bold flex items-center gap-2"><AlertTriangle className="w-3 h-3"/> 1 Pax Waiting - Needs 1 more to go!</div>}
+                            {currentSharedPaxCount >= 2 && <div className="text-green-400 font-bold flex items-center gap-2"><CheckCircle className="w-3 h-3"/> {currentSharedPaxCount} Passengers Confirmed - Trip is ON!</div>}
+                        </div>
+                        
+                        {/* WIDGET INFO BOX - SHARED VS PRIVATE */}
                         <div className="mt-4 p-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] text-slate-400 space-y-2">
                             <div className="flex items-start gap-2">
                                 <Users className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5"/>
@@ -800,13 +809,6 @@ function App() {
                                     Book the whole van. Guaranteed departure immediately.
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="mt-4 p-3 bg-indigo-900/20 border border-indigo-500/30 rounded-lg text-xs space-y-2">
-                            <div className="font-bold text-indigo-200">Shared Tour Status</div>
-                            {currentSharedPaxCount === 0 && <div className="text-slate-400">Waiting for 2 passengers to confirm.</div>}
-                            {currentSharedPaxCount === 1 && <div className="text-amber-400 font-bold flex items-center gap-2"><AlertTriangle className="w-3 h-3"/> 1 Pax Waiting - Needs 1 more to go!</div>}
-                            {currentSharedPaxCount >= 2 && <div className="text-green-400 font-bold flex items-center gap-2"><CheckCircle className="w-3 h-3"/> {currentSharedPaxCount} Passengers Confirmed - Trip is ON!</div>}
                         </div>
 
                         <div className="mt-6 p-6 bg-slate-900 rounded border border-slate-700 text-center relative overflow-hidden"><div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>{quote.count > 0 || isPrivateMode ? (<div className="price-badge"><div className="text-slate-400 text-xs uppercase">{isPrivateMode ? "PRIVATE" : "Total"}</div><div className="flex justify-center items-center gap-2">{!isPrivateMode && quote.disc > 0 && <span className="line-through text-slate-500">${quote.base}</span>}<div className="text-3xl font-bold text-cyan-400">${quote.total}</div></div>{isPrivateMode ? <div className="text-xs text-indigo-400 font-bold">PRIVATE ({quote.count} PAX)</div> : (quote.disc > 0 && <div className="text-xs text-green-400">SAVED {quote.disc}%</div>)}</div>) : <div className="text-slate-500 text-sm">Select seats</div>}</div>
@@ -859,7 +861,22 @@ function App() {
                 </div>
                 <div><label className="text-xs text-slate-400 block mb-1">Pickup Location</label><input name="location" value={formData.location} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Pickup / Hotel" /></div>
                 <div><label className="text-xs text-slate-400 block mb-1">Email (Optional)</label><input type="email" name="email" value={formData.email} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Email (Optional)" /></div>
-                {isAdmin && <div><label className="text-xs text-slate-400 block mb-1">Notes</label><textarea name="notes" value={formData.notes} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Notes" /></div>}
+                
+                {/* ADMIN ONLY FIELDS */}
+                {isAdmin && (
+                    <div className="bg-slate-800 p-3 rounded border border-slate-600 space-y-2">
+                        <label className="text-xs text-yellow-400 font-bold block">Admin Controls</label>
+                        <div>
+                            <label className="text-xs text-slate-400 block mb-1">Manual Discount (%)</label>
+                            <input type="number" name="manualDiscount" value={formData.manualDiscount} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-yellow-400" placeholder="0" />
+                        </div>
+                        <div>
+                            <label className="text-xs text-slate-400 block mb-1">Internal Notes</label>
+                            <textarea name="notes" value={formData.notes} onChange={hIn} className="w-full bg-slate-900 border border-slate-700 rounded p-2" placeholder="Notes" />
+                        </div>
+                    </div>
+                )}
+                
                 <button disabled={isSubmitting} className="w-full bg-indigo-600 p-3 rounded font-bold">{isSubmitting ? <Loader2 className="w-4 h-4 animate-spin inline" /> : (editingBookingId ? 'Update' : 'Confirm')}</button></form></div></div>}
 
             {showSuccessModal && <div className="fixed inset-0 bg-black/90 z-[70] flex items-center justify-center p-4"><div className="text-center"><CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" /><h2 className="text-2xl font-bold">{successMsg}</h2><p className="text-slate-400 mb-8">{successMsg.includes("Hold") ? "Waiting for 2nd passenger." : "Your trip is confirmed."}</p><button onClick={() => setShowSuccessModal(false)} className="bg-slate-700 px-6 py-2 rounded">Close</button></div></div>}
@@ -878,7 +895,7 @@ function App() {
                         <h3 className="font-bold border-b pb-2 pt-4">Seat Tier Pricing</h3>
                         <div className="grid grid-cols-2 gap-3">
                            <div><label className="text-xs text-slate-400 block mb-1 text-yellow-400">Front Co-Pilot (#1)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-yellow-400" value={config.frontPrice} onChange={e => setConfig({...config, frontPrice: e.target.value})} /></div>
-                           <div><label className="text-xs text-slate-400 block mb-1 text-purple-400">Captain VIP (#2, #3)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-purple-400" value={config.vipPrice} onChange={e => setConfig({...config, vipPrice: e.target.value})} /></div>
+                           <div><label className="text-xs text-slate-400 block mb-1 text-purple-400">Captain VIP (#2, #3)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-purple-400" value={config.captainPrice} onChange={e => setConfig({...config, captainPrice: e.target.value})} /></div>
                            <div><label className="text-xs text-slate-400 block mb-1 text-green-400">Window (#4, #6)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-green-400" value={config.windowPrice} onChange={e => setConfig({...config, windowPrice: e.target.value})} /></div>
                            <div><label className="text-xs text-slate-400 block mb-1 text-green-600">Middle (#5)</label><input type="number" className="w-full bg-slate-900 border border-slate-600 rounded p-1 text-green-600" value={config.middlePrice} onChange={e => setConfig({...config, middlePrice: e.target.value})} /></div>
                         </div>
