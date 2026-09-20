@@ -566,3 +566,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .trust div { font-size: .85rem; }
 @media (min-width: 1100px) { .trust { gap: 1.2rem 2rem; } }
 @media (max-width: 480px) { .trust { grid-template-columns: 1fr 1fr; gap: 1rem; } }
+
+/* Señal discreta de que el enlace abre en otra pestaña */
+.btn-primary[target="_blank"]::after,
+.perfil.destacado[target="_blank"] .a-ext { content: ""; }

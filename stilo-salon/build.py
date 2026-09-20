@@ -244,7 +244,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     en_href = alt_href if lang == "es" else canon
     def _link(h, l):
         url = BOOKING if h == "__BOOK__" else h
-        rel = ' rel="noopener"' if h == "__BOOK__" else ''
+        rel = ' target="_blank" rel="noopener"' if h == "__BOOK__" else ''
         return '<a href="%s"%s>%s</a>' % (url, rel, e(l))
     nav = "\n      ".join(_link(h, l) for h, l in NAV[lang])
     return f"""<!DOCTYPE html>
@@ -309,7 +309,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         <p><a href="https://www.instagram.com/stilosalon91/" rel="noopener">Instagram</a><br>
         <a href="{GMB}" rel="noopener">Google</a><br>
         <a href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">Fresha</a></p>
-        <p style="margin-top:1rem"><a class="foot-resena" href="{RESENA}" rel="noopener">{'★ Escribe tu reseña' if lang=='es' else '★ Write your review'}</a></p>
+        <p style="margin-top:1rem"><a class="foot-resena" href="{RESENA}" target="_blank" rel="noopener">{'★ Escribe tu reseña' if lang=='es' else '★ Write your review'}</a></p>
         <h4 style="margin-top:1.6rem">{t['hours']}</h4>
         <p>{t['mf']} · 9:00 – 20:00<br>{t['sat']} · 9:00 – 19:00<br>{t['sun']} · {t['closed']}</p>
       </div>
@@ -642,7 +642,7 @@ def home_body(lang):
   <p class="lede">{e(c['home_lede'])}</p>
   <p class="lede-fino">{e(c['home_lede2'])}</p>
   <div class="btn-row">
-    <a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
+    <a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
     <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
     <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
   </div>
@@ -693,7 +693,7 @@ def home_body(lang):
       <strong>Instagram</strong><span>@stilosalon91</span></a>
     <a class="perfil" href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">
       <strong>Fresha</strong><span>{'Reserva y reseñas' if lang=='es' else 'Booking and reviews'}</span></a>
-    <a class="perfil destacado" href="{RESENA}" rel="noopener">
+    <a class="perfil destacado" href="{RESENA}" target="_blank" rel="noopener">
       <strong>{'Escribe tu reseña' if lang=='es' else 'Write your review'}</strong><span>{'Se abre directo en Google · toma menos de un minuto' if lang=='es' else 'Opens straight in Google · under a minute'}</span></a>
   </div>
 </div></section>
@@ -706,7 +706,7 @@ def home_body(lang):
     {t['appts']}: <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a><br>
     <a href="tel:{NAP['tel2']}">{NAP['tel2_display']}</a></address>
     <p style="margin-top:1.4rem"><strong>{t['mf']}</strong> 9:00 – 20:00<br><strong>{t['sat']}</strong> 9:00 – 19:00<br><strong>{t['sun']}</strong> {t['closed']}</p>
-    <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
+    <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
     <a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
   </div>
@@ -729,7 +729,7 @@ def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner=""
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
   {table(keys, lang)}
-  <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
+  <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
   <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
   <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a></div>
 </div></section>
@@ -1360,7 +1360,7 @@ def main():
                       f'<span class="a-guia-c">{"Ver precios" if lang=="es" else "See prices"} &rarr;</span></a>'
                       f'</div></section>'
                       f'<section><div class="wrap"><div class="btn-row">'
-                      f'<a class="btn btn-primary" href="{BOOKING}" rel="noopener">{T[lang]["book"]}</a>'
+                      f'<a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{T[lang]["book"]}</a>'
                       f'<a class="btn btn-wa" href="{WA}" rel="noopener">{T[lang]["book_wa"]}</a>'
                       f'</div></div></section>')
             log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"],
