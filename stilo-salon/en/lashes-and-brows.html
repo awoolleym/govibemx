@@ -224,6 +224,8 @@
         var py = (ev.clientY - r.top) / r.height - 0.5;
         c.style.transform = 'perspective(850px) rotateX(' + (-py * 7).toFixed(2) +
                             'deg) rotateY(' + (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+        c.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+        c.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100).toFixed(1) + '%');
       });
       c.addEventListener('mouseleave', function () { c.style.transform = ''; });
     });

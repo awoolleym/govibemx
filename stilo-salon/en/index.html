@@ -72,7 +72,17 @@
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">Our services</p>
   <h2>Everything we do, with its price</h2></div>
-  <div class="grid g4 js-reveal"><article class="card"><h3>Hair</h3><p>Cuts, color, balayage, babylights, toner and styling.</p><p class="from">from $330</p><a class="more" href="/en/hair.html">See hair and color</a></article><article class="card"><h3>Treatments</h3><p>Nanoplasty, Brazilian Blowout, hair botox and deep hydration.</p><p class="from">from $520</p><a class="more" href="/en/hair.html#tratamientos">See treatments and smoothing</a></article><article class="card"><h3>Nails</h3><p>Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.</p><p class="from">from $150</p><a class="more" href="/en/nails.html">See nails, manicure and pedicure</a></article><article class="card"><h3>Lashes &amp; Brows</h3><p>Extensions from 1x1 to Russian volume, lifts, lamination and brow design.</p><p class="from">from $450</p><a class="more" href="/en/lashes-and-brows.html">See lashes and brows</a></article></div>
+  <div class="grid g4 js-reveal"><article class="card"><svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M9 11c6 5 11 11 15 18 4 7 8 10 14 8"/><path d="M9 37c6-5 11-11 15-18"/>
+<circle cx="37" cy="14" r="4.2"/><circle cx="37" cy="34" r="4.2"/>
+<path d="M24 29c4-7 8-10 14-8"/></svg><h3>Hair</h3><p>Cuts, color, balayage, babylights, toner and styling.</p><p class="from">from $330</p><a class="more" href="/en/hair.html">See hair and color</a></article><article class="card"><svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M24 6c0 0-9 11-9 18a9 9 0 0 0 18 0c0-7-9-18-9-18z"/>
+<path d="M20 26a4 4 0 0 0 4 4"/><path d="M12 40c4 2 8 3 12 3s8-1 12-3"/></svg><h3>Treatments</h3><p>Nanoplasty, Brazilian Blowout, hair botox and deep hydration.</p><p class="from">from $520</p><a class="more" href="/en/hair.html#tratamientos">See treatments and smoothing</a></article><article class="card"><svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M18 30V14a4 4 0 0 1 8 0v14"/><path d="M26 22a3.5 3.5 0 0 1 7 0v8"/>
+<path d="M33 26a3.5 3.5 0 0 1 6 0v6c0 6-5 10-11 10h-6c-5 0-9-4-9-9v-9"/>
+<path d="M18 14c0-3 1-5 4-5"/></svg><h3>Nails</h3><p>Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.</p><p class="from">from $150</p><a class="more" href="/en/nails.html">See nails, manicure and pedicure</a></article><article class="card"><svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M6 28c6-8 12-12 18-12s12 4 18 12"/><circle cx="24" cy="26" r="5"/>
+<path d="M10 33l-3 5M17 36l-2 5M24 38v6M31 36l2 5M38 33l3 5"/></svg><h3>Lashes &amp; Brows</h3><p>Extensions from 1x1 to Russian volume, lifts, lamination and brow design.</p><p class="from">from $450</p><a class="more" href="/en/lashes-and-brows.html">See lashes and brows</a></article></div>
 </div></section>
 
 <section class="ink-sec"><div class="wrap">
@@ -221,6 +231,8 @@
         var py = (ev.clientY - r.top) / r.height - 0.5;
         c.style.transform = 'perspective(850px) rotateX(' + (-py * 7).toFixed(2) +
                             'deg) rotateY(' + (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+        c.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+        c.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100).toFixed(1) + '%');
       });
       c.addEventListener('mouseleave', function () { c.style.transform = ''; });
     });

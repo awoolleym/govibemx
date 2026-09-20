@@ -172,6 +172,30 @@ NAV = {
         ("/en/lashes-and-brows.html","Lashes & Brows"),("/en/pricing.html","Pricing"),("__BOOK__","Book")],
 }
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ICONOS — trazo fino, dibujados a mano, con los motivos del propio logo:
+# la tijera y la pestaña. Van embebidos en el HTML: cero peticiones extra.
+# ─────────────────────────────────────────────────────────────────────────────
+ICONOS = {
+"cabello": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M9 11c6 5 11 11 15 18 4 7 8 10 14 8"/><path d="M9 37c6-5 11-11 15-18"/>
+<circle cx="37" cy="14" r="4.2"/><circle cx="37" cy="34" r="4.2"/>
+<path d="M24 29c4-7 8-10 14-8"/></svg>""",
+"tratamientos": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M24 6c0 0-9 11-9 18a9 9 0 0 0 18 0c0-7-9-18-9-18z"/>
+<path d="M20 26a4 4 0 0 0 4 4"/><path d="M12 40c4 2 8 3 12 3s8-1 12-3"/></svg>""",
+"unas": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M18 30V14a4 4 0 0 1 8 0v14"/><path d="M26 22a3.5 3.5 0 0 1 7 0v8"/>
+<path d="M33 26a3.5 3.5 0 0 1 6 0v6c0 6-5 10-11 10h-6c-5 0-9-4-9-9v-9"/>
+<path d="M18 14c0-3 1-5 4-5"/></svg>""",
+"pestanas": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+<path d="M6 28c6-8 12-12 18-12s12 4 18 12"/><circle cx="24" cy="26" r="5"/>
+<path d="M10 33l-3 5M17 36l-2 5M24 38v6M31 36l2 5M38 33l3 5"/></svg>""",
+}
+
+def icono(clave):
+    return ICONOS.get(clave, "")
+
 def e(s): return html.escape(str(s), quote=False)
 
 ALTA  = ' fetchpriority="high"'
@@ -361,6 +385,8 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         var py = (ev.clientY - r.top) / r.height - 0.5;
         c.style.transform = 'perspective(850px) rotateX(' + (-py * 7).toFixed(2) +
                             'deg) rotateY(' + (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+        c.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+        c.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100).toFixed(1) + '%');
       }});
       c.addEventListener('mouseleave', function () {{ c.style.transform = ''; }});
     }});
@@ -489,10 +515,10 @@ C = {
    ("Tiempos reales", "Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas."),
  ],
  "svc_cards": [
-   ("Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html", "Ver cabello y color"),
-   ("Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/cabello.html#tratamientos", "Ver tratamientos y alisados"),
-   ("Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html", "Ver uñas, manicure y pedicure"),
-   ("Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html", "Ver pestañas y cejas"),
+   ("cabello", "Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html", "Ver cabello y color"),
+   ("tratamientos", "Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/cabello.html#tratamientos", "Ver tratamientos y alisados"),
+   ("unas", "Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html", "Ver uñas, manicure y pedicure"),
+   ("pestanas", "Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html", "Ver pestañas y cejas"),
  ],
  "faq": [
    ("¿Cuál es su horario de atención?", "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 19:00. Domingos cerrado."),
@@ -515,10 +541,10 @@ C = {
    ("Honest timing", "Every service on the list shows its duration. A balayage takes three hours and we say so up front, so you can plan your day."),
  ],
  "svc_cards": [
-   ("Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html", "See hair and color"),
-   ("Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/hair.html#tratamientos", "See treatments and smoothing"),
-   ("Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html", "See nails, manicure and pedicure"),
-   ("Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html", "See lashes and brows"),
+   ("cabello", "Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html", "See hair and color"),
+   ("tratamientos", "Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/hair.html#tratamientos", "See treatments and smoothing"),
+   ("unas", "Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html", "See nails, manicure and pedicure"),
+   ("pestanas", "Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html", "See lashes and brows"),
  ],
  "faq": [
    ("What are your hours?", "Monday to Friday, 9:00 to 20:00, and Saturday, 9:00 to 19:00. Closed Sundays."),
@@ -598,9 +624,9 @@ def featured_table(lang):
 def home_body(lang):
     t, c = T[lang], C[lang]
     cards = "".join(
-      f'<article class="card"><h3>{e(n)}</h3><p>{e(d)}</p>'
+      f'<article class="card">{icono(k)}<h3>{e(n)}</h3><p>{e(d)}</p>'
       f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(cta)}</a></article>'
-      for n, d, p, h, cta in c["svc_cards"])
+      for k, n, d, p, h, cta in c["svc_cards"])
     why = "".join(f'<div><h3>{e(h)}</h3><p>{e(b)}</p></div>' for h, b in c["why"])
     faqs = "".join(
       f'<details class="faq"{" open" if i==0 else ""}><summary>{e(q)}</summary><p>{e(a)}</p></details>'
