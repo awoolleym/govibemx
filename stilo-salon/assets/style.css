@@ -681,3 +681,34 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .hero .hero-figure .marco { transform: rotate(-2deg) translate(-10px, 10px); border-radius: var(--r); }
   .hero .hero-figure { aspect-ratio: 4/3.4; max-height: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CITA DE VALORACIÓN
+   Para la clienta que no sabe qué pedir. Sin esto, la duda termina en
+   que no escribe; con esto, la duda es el motivo de escribir.
+   ═══════════════════════════════════════════════════════════════════ */
+.valora {
+  background: linear-gradient(135deg, var(--accent-tint), var(--paper-2) 60%, #efdde5);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.valora-in {
+  display: grid; grid-template-columns: 1.55fr 1fr;
+  gap: clamp(1.6rem, 4vw, 3.5rem); align-items: center;
+}
+.valora h2 { margin: .3rem 0 .8rem; }
+.valora .lede { margin: 0; }
+.valora .btn-row { margin: 0; justify-content: flex-start; }
+@media (max-width: 860px) { .valora-in { grid-template-columns: 1fr; } }
+
+/* ── Iconos de redes en el pie ── */
+.redes { display: flex; gap: .55rem; margin: .2rem 0 1rem; }
+.redes a {
+  display: inline-grid; place-items: center; width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,.22); border-radius: 50%;
+  color: inherit; transition: background .25s ease, border-color .25s ease, transform .25s ease;
+}
+.redes a:hover {
+  background: var(--accent); border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.redes svg { width: 19px; height: 19px; }

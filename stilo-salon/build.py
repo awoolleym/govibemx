@@ -39,8 +39,54 @@ PERFILES = ["https://www.instagram.com/stilosalon91/",
             "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb",
             "https://stilo-salon.versum.com/",
             GMB_CID, GMB_CORTO]
+# FB y TIKTOK se suman abajo, una vez definidos (ver la sección de redes).
 WA = ("https://wa.me/525522993258?text="
       "Hola%2C%20quiero%20agendar%20una%20cita%20en%20Stilo%20Sal%C3%B3n")
+# La valoración entra por WhatsApp con su propio mensaje: así sabemos de
+# dónde viene la clienta y ella no tiene que explicar qué quiere.
+WA_VALORA = ("https://wa.me/525522993258?text="
+             "Hola%2C%20quiero%20una%20cita%20de%20valoraci%C3%B3n."
+             "%20Les%20mando%20una%20foto%20y%20me%20dicen%20qu%C3%A9%20me%20conviene")
+
+
+# ── Redes ─────────────────────────────────────────────────────────────
+# Solo entra lo que existe de verdad. Si mañana abren Facebook o TikTok,
+# se agrega una línea aquí y aparece en el pie de las 18 páginas.
+IG = "https://www.instagram.com/stilosalon91/"
+FRESHA = "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb"
+# PENDIENTE: pegar aquí las URLs reales de Facebook y TikTok. En cuanto
+# dejen de estar vacías aparecen solas en el pie de las 18 páginas y en el
+# sameAs del JSON-LD.  Una URL equivocada es peor que ninguna: el sameAs es
+# lo que Google usa para saber que esos perfiles son el mismo negocio.
+FB     = ""
+TIKTOK = ""
+PERFILES += [u for u in (FB, TIKTOK) if u]
+
+_RED_SVG = {
+ "ig": ('<rect x="3" y="3" width="18" height="18" rx="5.2"/>'
+        '<circle cx="12" cy="12" r="4.1"/>'
+        '<circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/>'),
+ "wa": ('<path fill="currentColor" stroke="none" d="%s"/>' % 'M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.04 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.23-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.9.99 6.68 2.77a9.38 9.38 0 0 1 2.77 6.68c0 5.2-4.24 9.44-9.46 9.44zM20.5 3.49A11.36 11.36 0 0 0 12.04 0C5.76 0 .65 5.1.65 11.39c0 2 .52 3.96 1.52 5.68L.55 24l7.1-1.86a11.34 11.34 0 0 0 5.43 1.38h.01c6.28 0 11.39-5.11 11.39-11.4 0-3.04-1.18-5.9-3.33-8.05z'),
+ "gmb": ('<path d="M12 21.6s7-6.2 7-11.1a7 7 0 1 0-14 0c0 4.9 7 11.1 7 11.1z"/>'
+         '<circle cx="12" cy="10.4" r="2.6"/>'),
+ "fb": ('<path d="M14.1 21.4v-8.3h2.8l.42-3.25h-3.22V7.77c0-.94.26-1.58 1.61-1.58h1.72V3.28'
+        'A23 23 0 0 0 15 3.15c-2.48 0-4.18 1.51-4.18 4.29v2.39H8v3.25h2.82v8.32z"/>'),
+ "tk": ('<path d="M16.4 3.2h-2.9v12.1a2.6 2.6 0 1 1-2.2-2.57V9.8a5.65 5.65 0 1 0 5.1 5.62V9.5'
+        'a6.4 6.4 0 0 0 3.7 1.18V7.77A3.66 3.66 0 0 1 16.4 3.2z"/>'),
+}
+
+def redes(lang):
+    """Fila de iconos de redes para el pie."""
+    items = [(k, u, n) for k, u, n in
+             [("ig", IG, "Instagram"), ("fb", FB, "Facebook"), ("tk", TIKTOK, "TikTok"),
+              ("wa", WA, "WhatsApp"), ("gmb", GMB, "Google Maps")] if u]
+    ic = "".join(
+      f'<a href="{u}" rel="noopener" aria-label="{n}" title="{n}">'
+      f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
+      f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{_RED_SVG[k]}</svg></a>'
+      for k, u, n in items)
+    return f'<div class="redes">{ic}</div>'
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PRECIOS — fuente única de verdad.  (nombre_es, nombre_en, precio, duración,
@@ -307,9 +353,9 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
       </div>
       <div>
         <h4>{'Síguenos' if lang=='es' else 'Follow us'}</h4>
-        <p><a href="https://www.instagram.com/stilosalon91/" rel="noopener">Instagram</a><br>
-        <a href="{GMB}" rel="noopener">Google</a><br>
-        <a href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">Fresha</a></p>
+        {redes(lang)}
+        <p><a href="{IG}" rel="noopener">@stilosalon91</a><br>
+        <a href="{FRESHA}" rel="noopener">{'Reserva en Fresha' if lang=='es' else 'Book on Fresha'}</a></p>
         <p style="margin-top:1rem"><a class="foot-resena" href="{RESENA}" target="_blank" rel="noopener">{'★ Escribe tu reseña' if lang=='es' else '★ Write your review'}</a></p>
         <h4 style="margin-top:1.6rem">{t['hours']}</h4>
         <p>{t['mf']} · 9:00 – 20:00<br>{t['sat']} · 9:00 – 19:00<br>{t['sun']} · {t['closed']}</p>
@@ -736,6 +782,20 @@ def home_body(lang):
   <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
   <h2>{'Todo lo que hacemos, con su precio' if lang=='es' else 'Everything we do, with its price'}</h2></div>
   <div class="grid g4 js-reveal">{cards}</div>
+</div></section>
+
+<section class="valora"><div class="wrap">
+  <div class="valora-in">
+    <div>
+      <p class="eyebrow">{'Antes de agendar' if lang=='es' else 'Before you book'}</p>
+      <h2>{'¿No sabes qué servicio necesitas?' if lang=='es' else 'Not sure which service you need?'}</h2>
+      <p class="lede">{'Pide una cita de valoración: mándanos una foto de tu cabello, tus uñas o tus pestañas por WhatsApp y te decimos qué te conviene, cuánto cuesta y cuánto tarda — antes de que reserves nada. Si la respuesta honesta es un tratamiento de $520 y no un alisado de $2,500, te lo vamos a decir.' if lang=='es' else 'Ask for a valuation: send us a photo of your hair, nails or lashes on WhatsApp and we will tell you what suits you, what it costs and how long it takes — before you book anything. If the honest answer is a $520 treatment rather than a $2,500 smoothing service, we will say so.'}</p>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn-wa" href="{WA_VALORA}" rel="noopener">{'Pedir mi valoración' if lang=='es' else 'Ask for my valuation'}</a>
+      <a class="btn btn-ghost" href="{'/precios.html' if lang=='es' else '/en/pricing.html'}">{'Ver la lista de precios' if lang=='es' else 'See the price list'}</a>
+    </div>
+  </div>
 </div></section>
 
 <section class="ink-sec"><div class="wrap">
