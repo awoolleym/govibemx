@@ -384,30 +384,6 @@
     });
   }
 
-  // La foto de portada sigue al cursor, muy poco: 4.5 grados como tope.
-  // Más que eso se siente a truco; menos, ni se nota.
-  var fig = document.querySelector('.hero-figure');
-  if (fig && window.matchMedia('(min-width: 900px)').matches &&
-      window.matchMedia('(hover: hover)').matches) {
-    var pend = false;
-    fig.addEventListener('mousemove', function (ev) {
-      if (pend) return;
-      pend = true;
-      requestAnimationFrame(function () {
-        var r = fig.getBoundingClientRect();
-        var px = (ev.clientX - r.left) / r.width  - .5;
-        var py = (ev.clientY - r.top)  / r.height - .5;
-        fig.style.setProperty('--ty', (px * 9).toFixed(2) + 'deg');
-        fig.style.setProperty('--tx', (-py * 9).toFixed(2) + 'deg');
-        pend = false;
-      });
-    });
-    fig.addEventListener('mouseleave', function () {
-      fig.style.setProperty('--ty', '0deg');
-      fig.style.setProperty('--tx', '0deg');
-    });
-  }
-
   // Encabezado compacto al bajar
   var head = document.querySelector('.site-head'), ticking = false;
   window.addEventListener('scroll', function () {

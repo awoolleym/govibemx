@@ -196,14 +196,14 @@ PRICES = {
 
 T = {  # cadenas de interfaz
  "es": {"price":"Precio","service":"Servicio","dur":"Duración","from":"desde",
-        "hero_alt":"Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias","unas_alt":"Uñas esculturales en gel dorado y nude hechas en Stilo Salón, Roma Norte","pest_alt":"Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
+        "hero_alt":"Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias","unas_alt":"Uñas largas en gel dorado espejo hechas en Stilo Salón, Roma Norte","pest_alt":"Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
         "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
         "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
         "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
         "logo_alt":"Stilo Salón — salón de belleza en Roma Norte, CDMX","privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
         "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
  "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
-        "hero_alt":"Balayage done at Stilo Salón, Roma Norte: dark brown roots blending into blonde ends","unas_alt":"Sculpted gel nails in gold and nude done at Stilo Salón, Roma Norte","pest_alt":"Russian volume eyelash extensions applied at Stilo Salón, Roma Norte","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
+        "hero_alt":"Balayage done at Stilo Salón, Roma Norte: dark brown roots blending into blonde ends","unas_alt":"Long mirror-gold gel nails done at Stilo Salón, Roma Norte","pest_alt":"Russian volume eyelash extensions applied at Stilo Salón, Roma Norte","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
         "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
         "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
         "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
@@ -554,30 +554,6 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     }});
   }}
 
-  // La foto de portada sigue al cursor, muy poco: 4.5 grados como tope.
-  // Más que eso se siente a truco; menos, ni se nota.
-  var fig = document.querySelector('.hero-figure');
-  if (fig && window.matchMedia('(min-width: 900px)').matches &&
-      window.matchMedia('(hover: hover)').matches) {{
-    var pend = false;
-    fig.addEventListener('mousemove', function (ev) {{
-      if (pend) return;
-      pend = true;
-      requestAnimationFrame(function () {{
-        var r = fig.getBoundingClientRect();
-        var px = (ev.clientX - r.left) / r.width  - .5;
-        var py = (ev.clientY - r.top)  / r.height - .5;
-        fig.style.setProperty('--ty', (px * 9).toFixed(2) + 'deg');
-        fig.style.setProperty('--tx', (-py * 9).toFixed(2) + 'deg');
-        pend = false;
-      }});
-    }});
-    fig.addEventListener('mouseleave', function () {{
-      fig.style.setProperty('--ty', '0deg');
-      fig.style.setProperty('--tx', '0deg');
-    }});
-  }}
-
   // Encabezado compacto al bajar
   var head = document.querySelector('.site-head'), ticking = false;
   window.addEventListener('scroll', function () {{
@@ -762,13 +738,14 @@ def amenidades(lang):
 PORTADA = [
   ("hero",          900, 1125, "hero_alt",  "Cabello y color",   "Hair & color",
    "/cabello.html",         "/en/hair.html"),
-  ("hero-unas",     699,  787, "unas_alt",  "Uñas",              "Nails",
+  ("hero-unas",     512,  640, "unas_alt",  "Uñas",              "Nails",
    "/unas.html",            "/en/nails.html"),
-  ("hero-pestanas", 497,  560, "pest_alt",  "Pestañas y cejas",  "Lashes & brows",
+  ("hero-pestanas", 512,  640, "pest_alt",  "Pestañas y cejas",  "Lashes & brows",
    "/pestanas-y-cejas.html","/en/lashes-and-brows.html"),
 ]
 
 def portada(lang):
+    """Banda de portada: llega al borde derecho de la pantalla."""
     t = T[lang]
     laminas, puntos = [], []
     for i, (base, w, h, alt_k, es_t, en_t, es_u, en_u) in enumerate(PORTADA):
@@ -777,8 +754,6 @@ def portada(lang):
         url = es_u if lang == "es" else en_u
         txt = es_t if lang == "es" else en_t
         laminas.append(
-          # visibility:hidden ya saca la lámina inactiva del árbol de
-          # accesibilidad; un aria-hidden encima sobra y se escapaba mal
           f'<div class="lamina{act}" data-i="{i}">'
           f'{img(base, w, h, t[alt_k], rot)}'
           f'<a class="lamina-pie" href="{url}">{e(txt)}</a></div>')
@@ -786,13 +761,12 @@ def portada(lang):
           f'<button type="button" class="punto{act}" data-i="{i}" '
           f'aria-label="{e(txt)}"></button>')
     ver = "Ver" if lang == "es" else "Show"
-    return ('<figure class="hero-figure portada">'
-            '<span class="marco" aria-hidden="true"></span>'
+    return ('<div class="banda portada">'
             + "".join(laminas)
+            + '<span class="velo" aria-hidden="true"></span>'
             + f'<div class="puntos" role="group" aria-label="{ver}">' + "".join(puntos) + '</div>'
             + '<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" '
-              'height="252" alt="" aria-hidden="true"></span></figure>')
-
+              'height="252" alt="" aria-hidden="true"></span></div>')
 
 # ── Marcas con las que trabajan ───────────────────────────────────────
 # Sin logos de terceros: son marcas registradas y no tenemos los
@@ -839,7 +813,7 @@ def home_body(lang):
     hi = "Roma Norte · Ciudad de México" if lang=="es" else "Roma Norte · Mexico City"
     return f"""
 <section class="hero">
-  <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
+  {portada(lang)}
   <div class="wrap hero-grid"><div>
   <p class="eyebrow">{hi}</p>
   <h1 class="h1-firma"><em>{e(c["home_h1"][0])}</em><br>{e(c["home_h1"][1])}</h1>
@@ -850,14 +824,16 @@ def home_body(lang):
     <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
   </div>
   {amenidades(lang)}
+</div>
+</div></section>
+
+<section class="cifras"><div class="wrap">
   <div class="trust">
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
     <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>
     <div><strong>72 h</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
     <div><strong>3 {'meses' if lang=='es' else 'months'}</strong>{'sin intereses desde $2,000' if lang=='es' else 'interest-free from $2,000'}</div>
   </div>
-</div>
-{portada(lang)}
 </div></section>
 
 {marcas(lang)}

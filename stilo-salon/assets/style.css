@@ -645,12 +645,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    cursor con una inclinación muy leve.
    ═══════════════════════════════════════════════════════════════════ */
 .hero .hero-figure { --tx: 0deg; --ty: 0deg; }
-.hero .hero-figure picture {
-  display: block; position: relative; z-index: 1;
-  transform: perspective(1100px) rotateX(var(--tx)) rotateY(var(--ty));
-  transition: transform .5s cubic-bezier(.16,1,.3,1);
-  will-change: transform;
-}
+
 /* marco de acento, girado, asomando por detrás */
 .hero .hero-figure .marco {
   position: absolute; inset: 0; z-index: 0;
@@ -764,7 +759,12 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    En tipografía, no en logos: se ve mejor, pesa cero y no usamos
    marcas registradas de terceros sin sus archivos oficiales.
    ═══════════════════════════════════════════════════════════════════ */
-.marcas { padding: clamp(1.8rem, 4vw, 2.8rem) 0; border-bottom: 1px solid var(--line); }
+.marcas {
+  padding: clamp(1.6rem, 3.5vw, 2.4rem) 0;
+  background: var(--paper-2);
+  border-top: 1px solid rgba(192,97,132,.22);
+  border-bottom: 1px solid rgba(192,97,132,.22);
+}
 .marcas .wrap {
   display: flex; flex-wrap: wrap; align-items: center;
   gap: .9rem clamp(1.4rem, 4vw, 3rem);
@@ -780,12 +780,89 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   gap: .8rem clamp(1.4rem, 3.5vw, 2.6rem);
 }
 .marcas li {
-  font-family: var(--display); font-size: clamp(1.15rem, 2.4vw, 1.55rem);
-  font-weight: 400; letter-spacing: .05em; color: var(--ink-soft);
-  white-space: nowrap; opacity: .72;
-  transition: opacity .25s ease, color .25s ease;
+  font-family: var(--display); font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  font-weight: 400; letter-spacing: .05em; color: var(--ink);
+  white-space: nowrap;
+  transition: color .25s ease;
+  position: relative;
 }
-.marcas li:hover { opacity: 1; color: var(--ink); }
+/* separador entre marcas: la fila se lee como una lista, no como un renglón */
+.marcas li + li::before {
+  content: ""; position: absolute;
+  left: calc(-1 * clamp(.7rem, 1.75vw, 1.3rem)); top: 50%;
+  width: 4px; height: 4px; margin-top: -2px;
+  border-radius: 50%; background: var(--accent); opacity: .5;
+}
+.marcas li:hover { color: var(--accent-deep); }
 @media (max-width: 640px) {
   .marcas .wrap { flex-direction: column; align-items: flex-start; gap: .7rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA A TODO LO ANCHO
+   La banda llega al borde derecho de la pantalla, no al del contenedor.
+   El texto vive sobre un velo del color de marca: así la foto puede ser
+   grande sin que la tipografía pelee con ella.
+   Anula lo anterior a propósito — la portada dejó de ser una tarjeta.
+   ═══════════════════════════════════════════════════════════════════ */
+.hero { position: relative; overflow: hidden; padding: 0; }
+.hero > .wrap {
+  position: relative; z-index: 2;
+  padding-top: clamp(2.6rem, 7vw, 5.5rem);
+  padding-bottom: clamp(2.6rem, 6vw, 4.5rem);
+}
+.hero .banda { position: relative; }
+.banda .lamina { position: absolute; inset: 0; }
+.banda .lamina picture,
+.banda .lamina img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* velo: de opaco sobre el texto a transparente sobre la foto */
+.banda .velo { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+@media (min-width: 900px) {
+  .hero-grid { display: block; }
+  .hero > .wrap > div { max-width: 46%; }
+  /* la banda llega al borde de la pantalla, no al del contenedor */
+  .hero .banda {
+    position: absolute; z-index: 1;
+    top: 0; bottom: 0; right: 0; left: 48%;
+  }
+  /* el velo muere antes de la foto: el texto nunca se le encima */
+  .banda .velo {
+    background: linear-gradient(90deg,
+      var(--paper) 0%, rgba(253,251,252,.92) 8%, rgba(253,251,252,0) 34%);
+  }
+  .hero > .wrap { min-height: clamp(520px, 66vh, 700px); display: flex; align-items: center; }
+  .banda .lamina-pie { left: auto; right: 22px; top: 22px; }
+  .banda .puntos { left: auto; right: 22px; bottom: 22px; transform: none; }
+  .banda .sello { left: auto; right: 22px; bottom: 22px; display: none; }
+}
+
+@media (max-width: 899px) {
+  /* en el teléfono la banda va arriba, a todo lo ancho */
+  .hero .banda { height: clamp(260px, 58vw, 400px); }
+  .banda .velo {
+    background: linear-gradient(0deg,
+      var(--paper) 0%, rgba(253,251,252,0) 38%);
+  }
+  .banda .lamina-pie { left: 16px; top: 16px; right: auto; }
+  .banda .puntos { left: 50%; bottom: 14px; transform: translateX(-50%); }
+  .banda .sello { display: none; }
+  .hero > .wrap { padding-top: 1.6rem; }
+}
+
+/* lo que era de la tarjeta ya no aplica a la portada */
+.hero .banda .marco { display: none; }
+.hero .banda::before { content: none; }
+
+/* ── Las cifras salen del hero ──────────────────────────────────────
+   Dentro de la portada la empujaban a 1046 px de alto: la banda de
+   marcas quedaba fuera de la primera pantalla. Fuera, además, caben
+   las cuatro en fila en vez de apretadas en dos por dos. */
+.cifras { padding: clamp(1.6rem, 3.5vw, 2.4rem) 0 0; }
+.cifras .trust {
+  margin: 0; padding: 0; border: 0;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem clamp(1rem, 2.5vw, 2.2rem);
+}
+@media (max-width: 760px) { .cifras .trust { grid-template-columns: 1fr 1fr; } }
