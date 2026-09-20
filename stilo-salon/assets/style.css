@@ -7,6 +7,18 @@
    El rosa de marca solo va en superficies y trazos; para texto y enlaces
    usamos --accent-deep, que sí pasa contraste AA. */
 
+/* Parisienne — el acento script del H1.
+   La servimos nosotros (22 KB) en vez de pedirla a Google: es una sola
+   palabra visible de entrada, así que no puede depender de un tercero. */
+@font-face {
+  font-family: "Parisienne";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("parisienne.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122;
+}
+
 :root {
   --ink:         #15191D;
   --ink-soft:    #3a4045;
@@ -570,3 +582,31 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 /* Señal discreta de que el enlace abre en otra pestaña */
 .btn-primary[target="_blank"]::after,
 .perfil.destacado[target="_blank"] .a-ext { content: ""; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA FIRMA
+   El script va en UNA palabra, nunca en párrafos ni en títulos largos.
+   Así acompaña al logo en vez de competirle, y no se pierde legibilidad.
+   ═══════════════════════════════════════════════════════════════════ */
+.h1-firma { line-height: 1.02; }
+.h1-firma em {
+  font-family: "Parisienne", "Cormorant Garamond", cursive;
+  font-style: normal; font-weight: 400;
+  font-size: 1.42em; line-height: .9;
+  color: var(--accent-deep);
+  display: inline-block; padding-right: .06em;
+  /* leve inclinación, como trazo hecho a mano */
+  transform: rotate(-1.6deg);
+}
+@media (max-width: 640px) { .h1-firma em { font-size: 1.3em; } }
+
+/* La portada gana altura y presencia */
+.hero { padding: clamp(4rem, 11vw, 8.5rem) 0 clamp(3.5rem, 8vw, 6rem); }
+.hero-grid { align-items: center; gap: clamp(2rem, 6vw, 5rem); }
+.hero h1 { margin-bottom: 1.6rem; }
+@media (min-width: 900px) {
+  .hero-grid { grid-template-columns: 1.08fr .92fr; }
+  .hero-figure { transform: translateY(0); }
+  /* la foto se sale un poco del margen: rompe la caja y da amplitud */
+  .hero-figure picture img { border-radius: 20px 20px 20px 90px; }
+}

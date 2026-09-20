@@ -268,6 +268,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/parisienne.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">
 {extra_ld}
 </head>
@@ -506,7 +507,7 @@ def write(path, content):
 # ─────────────────────────────────────────────────────────────────────────────
 C = {
 "es": {
- "home_h1": "¡Bonita la que lo lea!",
+ "home_h1": ["¡Bonita", "la que lo lea!"],
  "home_lede": "Bienvenida a Stilo Salón. Nos encanta consentirte y hacerte sentir como en casa: somos el lugar para relajarte, dejarte consentir y ser tú misma. Porque sabemos que la belleza no lo es todo… pero conocemos el gran poder que tiene para impulsarnos a ser la mejor versión de nosotras mismas.",
  "home_lede2": "Precios completos, con su duración, a la vista.",
  "home_why_h2": "Nos estamos actualizando, sin perder lo que ya funcionaba",
@@ -532,7 +533,7 @@ C = {
  "visit_h2": "Estamos en el corazón de la Roma Norte",
 },
 "en": {
- "home_h1": "Beautiful, whoever's reading this.",
+ "home_h1": ["Beautiful", "— yes, you."],
  "home_lede": "Welcome to Stilo Salón. We love spoiling you and making you feel at home: this is the place to relax, be looked after, and be yourself. Because beauty isn't everything — but we know the power it has to push us toward the best version of ourselves.",
  "home_lede2": "Full prices, with real durations, in plain sight.",
  "home_why_h2": "We are modernizing, without losing what already worked",
@@ -638,7 +639,7 @@ def home_body(lang):
   <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
   <div class="wrap hero-grid"><div>
   <p class="eyebrow">{hi}</p>
-  <h1>{e(c['home_h1'])}</h1>
+  <h1 class="h1-firma"><em>{e(c["home_h1"][0])}</em><br>{e(c["home_h1"][1])}</h1>
   <p class="lede">{e(c['home_lede'])}</p>
   <p class="lede-fino">{e(c['home_lede2'])}</p>
   <div class="btn-row">
