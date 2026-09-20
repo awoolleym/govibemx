@@ -178,16 +178,17 @@ NAV = {
 # ─────────────────────────────────────────────────────────────────────────────
 ICONOS = {
 "cabello": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-<path d="M9 11c6 5 11 11 15 18 4 7 8 10 14 8"/><path d="M9 37c6-5 11-11 15-18"/>
-<circle cx="37" cy="14" r="4.2"/><circle cx="37" cy="34" r="4.2"/>
-<path d="M24 29c4-7 8-10 14-8"/></svg>""",
+<path d="M14.5 7.5 L30.5 34.5"/><path d="M33.5 7.5 L17.5 34.5"/>
+<circle cx="32.5" cy="37.5" r="4.4"/><circle cx="15.5" cy="37.5" r="4.4"/>
+<circle cx="24" cy="24.7" r="1.7"/></svg>""",
 "tratamientos": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
 <path d="M24 6c0 0-9 11-9 18a9 9 0 0 0 18 0c0-7-9-18-9-18z"/>
 <path d="M20 26a4 4 0 0 0 4 4"/><path d="M12 40c4 2 8 3 12 3s8-1 12-3"/></svg>""",
 "unas": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-<path d="M18 30V14a4 4 0 0 1 8 0v14"/><path d="M26 22a3.5 3.5 0 0 1 7 0v8"/>
-<path d="M33 26a3.5 3.5 0 0 1 6 0v6c0 6-5 10-11 10h-6c-5 0-9-4-9-9v-9"/>
-<path d="M18 14c0-3 1-5 4-5"/></svg>""",
+<rect x="18.4" y="4" width="11.2" height="12.5" rx="2.8"/>
+<path d="M21.6 16.5h4.8v4.2h-4.8z"/>
+<rect x="13.2" y="20.7" width="21.6" height="22.3" rx="5.4"/>
+<path d="M18 27.4h8.4"/></svg>""",
 "pestanas": """<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
 <path d="M6 28c6-8 12-12 18-12s12 4 18 12"/><circle cx="24" cy="26" r="5"/>
 <path d="M10 33l-3 5M17 36l-2 5M24 38v6M31 36l2 5M38 33l3 5"/></svg>""",
