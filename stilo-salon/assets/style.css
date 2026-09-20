@@ -864,3 +864,37 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   gap: 1.2rem clamp(1rem, 2.5vw, 2.2rem);
 }
 @media (max-width: 760px) { .cifras .trust { grid-template-columns: 1fr 1fr; } }
+
+/* ── La marca recupera su peso en la portada ────────────────────────
+   Al pasar a banda a todo lo ancho, la marca de agua y el sello se
+   habían quedado fuera y el logo vivía solo en el encabezado. Vuelven,
+   pero al revés que antes: la filigrana ya no pelea con la foto, se
+   apoya en el campo de color de la izquierda, que está limpio. */
+.hero .marca-agua {
+  display: block; z-index: 0;
+  right: auto; top: auto;
+  left: -6%; bottom: -4%;
+  transform: none;
+  width: min(60vw, 620px);
+  opacity: .1;
+}
+@media (max-width: 899px) {
+  /* anclada abajo, no a media altura: detrás del párrafo enturbiaba
+     la lectura, y ahí abajo las pastillas de amenidades la tapan */
+  .hero .marca-agua {
+    display: block;
+    left: -16%; top: auto; bottom: -2%;
+    width: 112vw; opacity: .055;
+  }
+}
+
+/* El sello firma la foto: esquina donde el velo ya aclaró el fondo */
+@media (min-width: 900px) {
+  .hero .banda .sello {
+    display: block;
+    left: 26px; right: auto; bottom: 26px;
+    transform: none;
+    padding: .75rem 1.6rem;
+  }
+  .hero .banda .sello img { height: 34px; }
+}

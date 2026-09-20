@@ -826,6 +826,7 @@ def home_body(lang):
     hi = "Roma Norte · Ciudad de México" if lang=="es" else "Roma Norte · Mexico City"
     return f"""
 <section class="hero">
+  <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
   {portada(lang)}
   <div class="wrap hero-grid"><div>
   <p class="eyebrow">{hi}</p>
