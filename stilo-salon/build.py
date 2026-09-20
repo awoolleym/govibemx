@@ -533,10 +533,9 @@ C = {
 "es": {
  "home_h1": ["¡Bonita", "la que lo lea!"],
  "home_lede": "Bienvenida a Stilo Salón. Nos encanta consentirte y hacerte sentir como en casa: somos el lugar para relajarte, dejarte consentir y ser tú misma. Porque sabemos que la belleza no lo es todo… pero conocemos el gran poder que tiene para impulsarnos a ser la mejor versión de nosotras mismas.",
- "home_lede2": "Precios completos, con su duración, a la vista.",
  "home_why_h2": "Nos estamos actualizando, sin perder lo que ya funcionaba",
  "why": [
-   ("Precios publicados", "La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar."),
+   ("Nunca un ajuste al cobrar", "La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar."),
    ("Técnica al día", "Nanoplastia, botox capilar y Brazilian Blowout con producto profesional. Extensiones de pestañas en cinco técnicas distintas, desde el 1x1 clásico hasta el volumen ruso."),
    ("Tiempos reales", "Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas."),
  ],
@@ -562,10 +561,9 @@ C = {
 "en": {
  "home_h1": ["Beautiful", "— yes, you."],
  "home_lede": "Welcome to Stilo Salón. We love spoiling you and making you feel at home: this is the place to relax, be looked after, and be yourself. Because beauty isn't everything — but we know the power it has to push us toward the best version of ourselves.",
- "home_lede2": "Full prices, with real durations, in plain sight.",
  "home_why_h2": "We are modernizing, without losing what already worked",
  "why": [
-   ("Published prices", "The full list is on the site, not in a private message. If a service needs an adjustment for hair length or density, we tell you before we start — never at the register."),
+   ("No adjustments at the register", "The full list is on the site, not in a private message. If a service needs an adjustment for hair length or density, we tell you before we start — never at the register."),
    ("Current technique", "Nanoplasty, hair botox and Brazilian Blowout with professional product. Eyelash extensions in five distinct techniques, from classic 1x1 to Russian volume."),
    ("Honest timing", "Every service on the list shows its duration. A balayage takes three hours and we say so up front, so you can plan your day."),
  ],
@@ -718,7 +716,6 @@ def home_body(lang):
   <p class="eyebrow">{hi}</p>
   <h1 class="h1-firma"><em>{e(c["home_h1"][0])}</em><br>{e(c["home_h1"][1])}</h1>
   <p class="lede">{e(c['home_lede'])}</p>
-  <p class="lede-fino">{e(c['home_lede2'])}</p>
   <div class="btn-row">
     <a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
     <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
@@ -728,7 +725,7 @@ def home_body(lang):
   <div class="trust">
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
     <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>
-    <div><strong>60+</strong>{'servicios con precio publicado' if lang=='es' else 'services with published prices'}</div>
+    <div><strong>72 h</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
     <div><strong>3 {'meses' if lang=='es' else 'months'}</strong>{'sin intereses desde $2,000' if lang=='es' else 'interest-free from $2,000'}</div>
   </div>
 </div>
