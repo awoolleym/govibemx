@@ -150,14 +150,14 @@ PRICES = {
 
 T = {  # cadenas de interfaz
  "es": {"price":"Precio","service":"Servicio","dur":"Duración","from":"desde",
-        "wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
+        "hero_alt":"Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
         "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
         "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
         "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
         "logo_alt":"Stilo Salón — salón de belleza en Roma Norte, CDMX","privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
         "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
  "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
-        "wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
+        "hero_alt":"Balayage done at Stilo Salón, Roma Norte: dark brown roots blending into blonde ends","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
         "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
         "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
         "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
@@ -173,6 +173,16 @@ NAV = {
 }
 
 def e(s): return html.escape(str(s), quote=False)
+
+ALTA  = ' fetchpriority="high"'
+TARDE = ' loading="lazy"'
+
+def img(base, w, h, alt, extra=""):
+    """<picture>: WebP primero, JPEG de respaldo. Si no hay WebP, solo <img>."""
+    jpg = f'<img src="/assets/{base}.jpg" width="{w}" height="{h}" alt="{alt}"{extra}>'
+    if not (OUT / "assets" / f"{base}.webp").exists():
+        return jpg
+    return f'<picture><source srcset="/assets/{base}.webp" type="image/webp">{jpg}</picture>' 
 
 def money(p):
     """'~2,300' -> ('desde', '$2,300')"""
@@ -548,7 +558,7 @@ def home_body(lang):
     <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
   </div>
 </div>
-<figure class="hero-figure"><img src="/assets/hero.jpg" width="1200" height="1500" alt="" fetchpriority="high">
+<figure class="hero-figure">{img("hero", 900, 1125, t["hero_alt"], ALTA)}
   <svg class="swoosh" viewBox="0 0 1200 1500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
     <path d="M-40 1180 C 330 760, 690 1360, 1010 880 S 1180 560, 1260 430"/>
     <path class="thin" d="M-40 1310 C 380 930, 760 1470, 1260 900"/>
@@ -557,7 +567,7 @@ def home_body(lang):
 
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
-  <h2>{'Todo lo que hacemos, con precio de arranque' if lang=='es' else 'Everything we do, with a starting price'}</h2></div>
+  <h2>{'Todo lo que hacemos, con su precio' if lang=='es' else 'Everything we do, with its price'}</h2></div>
   <div class="grid g4 js-reveal">{cards}</div>
 </div></section>
 
@@ -623,7 +633,7 @@ def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner=""
   <h1>{e(h1)}</h1>
   <p class="lede">{e(intro)}</p>
 </div></section>
-{f'<div class="wrap"><figure class="banner"><img src="/assets/{banner}" width="1600" height="900" alt="" loading="lazy"></figure></div>' if banner else ''}
+{f'<div class="wrap"><figure class="banner">{img(banner[:-4], 1400, 787, "", TARDE)}</figure></div>' if banner else ''}
 <section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}{extra}</div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
@@ -1060,6 +1070,16 @@ def topic_faq_ld(table, lang):
 # Fotos reales de trabajos del salón. Son exportaciones de Instagram a 640x640,
 # suficientes para galería pero NO para una portada a sangre completa.
 GALERIA = {
+ "hair": [("trabajo-cabello-01.jpg",
+           "Balayage en cabello largo hecho en Stilo Salón Roma Norte, transición de castaño a rubio",
+           "Balayage · 3 horas · desde $2,300",
+           "Long-hair balayage done at Stilo Salón Roma Norte, brown blending into blonde",
+           "Balayage · 3 hours · from $2,300"),
+          ("trabajo-cabello-02.jpg",
+           "Balayage con ondas hecho en Stilo Salón Roma Norte",
+           "Balayage con ondas · Alto peinado desde $600",
+           "Balayage with waves done at Stilo Salón Roma Norte",
+           "Balayage with waves · Updo from $600")],
  "nails": [("trabajo-unas-01.jpg",
             "Manicure francés con uña larga cuadrada, hecho en Stilo Salón Roma Norte",
             "Francés con uña cuadrada · Manicure Spa + Gel",
