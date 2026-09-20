@@ -500,3 +500,69 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .a-guia-c { display: block; color: var(--accent-deep); font-size: .89rem;
   font-weight: 500; letter-spacing: .05em; }
 .a-guia:hover .a-guia-c { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROFUNDIDAD DE COLOR
+   La página venía toda clara y plana. Se introduce un recorrido: la
+   portada arranca en crema y va cayendo hacia el rosa de marca; la
+   banda oscura gana un halo; y entre secciones hay transiciones en
+   vez de cortes secos.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.hero {
+  background: linear-gradient(168deg,
+    #fdfbfc 0%, #fbf5f7 38%, #f7ecf1 72%, #f3e3ea 100%);
+}
+/* velo rosa difuso en la esquina, detrás de todo */
+.hero::before {
+  content: ""; position: absolute; top: -18%; right: -12%;
+  width: 62vw; height: 62vw; max-width: 780px; max-height: 780px;
+  background: radial-gradient(circle, rgba(192,97,132,.17), transparent 68%);
+  pointer-events: none; z-index: 0;
+}
+
+/* Sección de servicios: arranca donde terminó la portada y aclara */
+.alt { background: linear-gradient(180deg, #f3e3ea 0%, #faf3f6 34%, #f7eff2 100%); }
+
+/* Banda oscura: deja de ser un bloque plano */
+.ink-sec {
+  background:
+    radial-gradient(900px circle at 78% 18%, rgba(192,97,132,.22), transparent 62%),
+    radial-gradient(700px circle at 8% 92%, rgba(192,97,132,.13), transparent 60%),
+    linear-gradient(160deg, #1b2025 0%, #15191d 52%, #10141a 100%);
+  position: relative;
+}
+/* filo superior con el color de marca, como un hilo */
+.ink-sec::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* Barra de confianza sobre un lavado rosa */
+.trust {
+  background: linear-gradient(90deg, rgba(192,97,132,.07), rgba(192,97,132,.02) 70%, transparent);
+  border-radius: 12px; padding: 1.4rem 1.2rem;
+  border-top: 1px solid rgba(192,97,132,.22);
+  border-bottom: 1px solid rgba(192,97,132,.22);
+}
+
+/* Pie: transición hacia el negro en vez de corte */
+.site-foot {
+  background:
+    radial-gradient(800px circle at 82% 0%, rgba(192,97,132,.14), transparent 58%),
+    linear-gradient(180deg, #1b2025 0%, #15191d 100%);
+}
+
+/* Tarjetas con un lavado apenas perceptible, para que floten */
+.card { background: linear-gradient(170deg, #ffffff 0%, #fefcfd 62%, #fdf7f9 100%); }
+
+/* Los degradados no deben tapar el contenido */
+.hero > .wrap, .ink-sec > .wrap { position: relative; z-index: 1; }
+
+/* Barra de confianza: rejilla pareja en vez de línea que se desborda */
+.trust { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.6rem; }
+.trust > div { display: flex; flex-direction: column; gap: .15rem; }
+.trust strong { font-size: 1.75rem; line-height: 1; }
+.trust div { font-size: .85rem; }
+@media (min-width: 1100px) { .trust { gap: 1.2rem 2rem; } }
+@media (max-width: 480px) { .trust { grid-template-columns: 1fr 1fr; gap: 1rem; } }
