@@ -1,0 +1,688 @@
+#!/usr/bin/env python3
+"""
+Stilo Salón — generador del sitio estático.
+
+Por qué existe: los precios y los servicios viven UNA sola vez, en este archivo.
+De aquí se generan las páginas en español y en inglés, idénticas en contenido.
+Cuando cambie un precio, se cambia aquí y se vuelve a correr:  python3 build.py
+
+Salida: HTML estático plano, listo para Cloudflare Pages. Sin JavaScript para
+renderizar contenido — todo el texto viaja en el HTML para que Google lo lea.
+"""
+import html
+import pathlib
+
+OUT = pathlib.Path(__file__).parent
+SITE = "https://stilo-salon.com"
+
+NAP = {
+    "street": "Calle Guadalajara 70-B",
+    "locality": "Roma Norte, Cuauhtémoc",
+    "postal": "06700",
+    "city": "Ciudad de México",
+    "tel1": "+525522993258", "tel1_display": "55 2299 3258",
+    "tel2": "+525552562137", "tel2_display": "55 5256 2137",
+}
+WA = ("https://wa.me/525522993258?text="
+      "Hola%2C%20quiero%20agendar%20una%20cita%20en%20Stilo%20Sal%C3%B3n")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRECIOS — fuente única de verdad.  (nombre_es, nombre_en, precio, duración,
+# nota_es, nota_en).  "desde" se marca con el prefijo ~ en el precio.
+# ─────────────────────────────────────────────────────────────────────────────
+PRICES = {
+"cabello": {
+  "es": "Corte, Color y Peinado", "en": "Cut, Color & Styling",
+  "items": [
+    ("Corte Dama", "Women's Haircut", "330", "30 min", "con moldeado", "with blow-dry shaping"),
+    ("Corte Dama", "Women's Haircut", "420", "30 min", "con lavado y peinado", "with wash and style"),
+    ("Corte Caballero", "Men's Haircut", "230", "30 min", "", ""),
+    ("Corte Niño / Niña", "Children's Haircut", "190", "30 min", "", ""),
+    ("Tinte", "Full Color", "~800", "1 h 15", "a partir del hombro", "shoulder length and up"),
+    ("Retoque de Raíz", "Root Touch-Up", "900", "1 h 15", "", ""),
+    ("Matiz", "Toner", "~900", "1 h 15", "a partir del hombro", "shoulder length and up"),
+    ("Baño de Color", "Color Gloss", "~900", "1 h 15", "a partir del hombro", "shoulder length and up"),
+    ("Balayage", "Balayage", "~2,300", "3 h", "a partir del hombro", "shoulder length and up"),
+    ("Babylights", "Babylights", "~2,300", "3 h", "a partir del hombro", "shoulder length and up"),
+    ("Base", "Base Color", "~1,200", "2 h", "a partir del hombro", "shoulder length and up"),
+    ("Split Ender", "Split Ender", "~600", "1 h", "elimina puntas abiertas", "removes split ends"),
+    ("Alto Peinado", "Updo", "~600", "30 min", "", ""),
+    ("Alaciado o Moldeado con Secadora", "Blow-Dry Styling", "~280", "1 h", "a partir del hombro", "shoulder length and up"),
+    ("Alaciado Express", "Express Straightening", "~280", "1 h", "a partir del hombro", "shoulder length and up"),
+  ]},
+"tratamientos": {
+  "es": "Tratamientos y Alisados", "en": "Treatments & Smoothing",
+  "items": [
+    ("Nanoplastia", "Nanoplasty", "~2,500", "2 h", "alisado sin formol", "formaldehyde-free smoothing"),
+    ("Brazilian Blowout", "Brazilian Blowout", "~2,500", "2 h", "a partir del hombro", "shoulder length and up"),
+    ("Botox Capilar", "Hair Botox", "~1,800", "1 h", "a partir del hombro", "shoulder length and up"),
+    ("Tratamiento Profundo Hidratante", "Deep Hydrating Treatment", "~520", "1 h", "a partir del hombro", "shoulder length and up"),
+    ("Ampolleta Hidratante Alfa Parf", "Alfaparf Hydrating Ampoule", "220", "", "", ""),
+  ]},
+"mani-pedi": {
+  "es": "Manicure y Pedicure", "en": "Manicure & Pedicure",
+  "items": [
+    ("Manicure Spa", "Spa Manicure", "220", "", "sales, exfoliación, masaje y esmalte", "salts, exfoliation, massage and polish"),
+    ("Manicure Express con Gel", "Express Manicure with Gel", "250", "", "drill, limado y gel hasta 2 tonos lisos", "drill, file and gel up to 2 solid shades"),
+    ("Manicure Spa + Gel", "Spa Manicure + Gel", "350", "", "spa completo con gel hasta 2 tonos", "full spa with gel up to 2 shades"),
+    ("Pedicure Spa", "Spa Pedicure", "360", "", "tina con sales, limado de talón, masaje y esmalte", "salt soak, heel filing, massage and polish"),
+    ("Pedicure Spa + Gel", "Spa Pedicure + Gel", "450", "", "spa completo con gel hasta 2 tonos", "full spa with gel up to 2 shades"),
+    ("Paquete Mani Spa + Pedi Spa con Gel", "Spa Mani + Pedi Package with Gel", "750", "", "ambos servicios con gel hasta 2 tonos lisos", "both services with gel up to 2 solid shades"),
+  ]},
+"gel-esmalte": {
+  "es": "Gel, Esmalte y Vitaminas", "en": "Gel, Polish & Nail Vitamins",
+  "items": [
+    ("Gel Manos", "Gel — Hands", "180", "", "hasta 2 tonos lisos · tono adicional $20", "up to 2 solid shades · extra shade $20"),
+    ("Gel Pies", "Gel — Feet", "220", "", "hasta 2 tonos lisos · tono adicional $20", "up to 2 solid shades · extra shade $20"),
+    ("Esmalte", "Regular Polish", "150", "", "hasta 2 tonos lisos · tono adicional $10", "up to 2 solid shades · extra shade $10"),
+    ("Retiro de Gel", "Gel Removal", "100", "", "", ""),
+    ("Calcio", "Calcium", "150", "", "fortalece la uña natural", "strengthens the natural nail"),
+    ("Calcio + Gel", "Calcium + Gel", "280", "", "hasta 2 tonos lisos", "up to 2 solid shades"),
+    ("Rubber", "Rubber Base", "150", "", "cubre imperfecciones y da volumen a uñas débiles", "covers imperfections, adds body to weak nails"),
+    ("Vitamina", "Nail Vitamin", "150", "", "protege y fortalece la uña natural", "protects and strengthens the natural nail"),
+  ]},
+"unas": {
+  "es": "Acrílico y Esculturales", "en": "Acrylic & Sculpted Nails",
+  "items": [
+    ("Acrílico sobre uña natural", "Acrylic over Natural Nail", "400", "", "", ""),
+    ("Retoque de Acrílico", "Acrylic Fill", "350", "", "", ""),
+    ("Uña Escultural con Gel", "Sculpted Gel Nail", "~500", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
+    ("Retoque Escultural con Gel", "Sculpted Gel Fill", "~400", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
+    ("Uña Tip con Gel", "Gel Tip Nail", "~450", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
+    ("Retoque de Uña Tip con Gel", "Gel Tip Fill", "~350", "", "hasta el #3, hasta 2 tonos lisos", "up to length #3, up to 2 solid shades"),
+    ("Acripie", "Acrylic — Toes", "380", "", "", ""),
+    ("Retiro de Acrílico", "Acrylic Removal", "100", "", "", ""),
+  ]},
+"pestanas": {
+  "es": "Extensiones de Pestañas", "en": "Eyelash Extensions",
+  "items": [
+    ("Extensiones 1x1", "Classic 1x1 Set", "750", "1 h 30", "técnica clásica, una extensión por pestaña", "classic technique, one extension per lash"),
+    ("Extensiones Flat", "Flat Set", "800", "1 h 30", "más ligeras, mayor superficie de adhesión", "lighter, larger bonding surface"),
+    ("Extensiones YY", "YY Set", "1,000", "1 h 30", "efecto de mayor densidad", "denser look"),
+    ("Extensiones Híbridas", "Hybrid Set", "1,100", "2 h", "mezcla de clásico y volumen", "mix of classic and volume"),
+    ("Extensiones Volumen Ruso", "Russian Volume Set", "1,200", "2 h", "máxima densidad", "maximum density"),
+    ("Retoque 1x1", "Classic 1x1 Fill", "450", "", "mínimo 50% de pestaña, antes de 21 días", "at least 50% retention, within 21 days"),
+    ("Retoque Flat", "Flat Fill", "500", "", "mínimo 50% de pestaña, antes de 21 días", "at least 50% retention, within 21 days"),
+    ("Retoque YY", "YY Fill", "550", "", "mínimo 50% de pestaña, antes de 21 días", "at least 50% retention, within 21 days"),
+    ("Retoque Híbridas", "Hybrid Fill", "550", "", "de 50% a 30% de pestaña, antes de 21 días", "50%–30% retention, within 21 days"),
+    ("Retoque Volumen Ruso", "Russian Volume Fill", "650", "", "mínimo 50% de pestaña, antes de 21 días", "at least 50% retention, within 21 days"),
+    ("Retoque de Trabajo Externo", "Fill on Outside Work", "~500", "", "según la técnica que traigas", "depending on the technique applied elsewhere"),
+    ("Lifting de Pestañas", "Lash Lift", "450", "", "incluye tinte y keratina", "includes tint and keratin"),
+    ("Retiro de Pestañas", "Lash Removal", "200", "", "sin nueva aplicación", "without a new application"),
+  ]},
+"cejas": {
+  "es": "Cejas", "en": "Brows",
+  "items": [
+    ("Diseño de Ceja", "Brow Design", "450", "", "perfilado, diseño y laminación", "shaping, design and lamination"),
+    ("Laminado de Ceja", "Brow Lamination", "450", "", "perfilado y laminación", "shaping and lamination"),
+    ("Ceja con Cera", "Brow Wax", "220", "", "", ""),
+  ]},
+"depilacion": {
+  "es": "Depilación con Cera y Maquillaje", "en": "Waxing & Makeup",
+  "items": [
+    ("Cara Completa", "Full Face", "480", "", "", ""),
+    ("Axilas", "Underarms", "280", "", "", ""),
+    ("Bigote", "Upper Lip", "180", "", "", ""),
+    ("Bozo", "Peach Fuzz", "180", "", "", ""),
+    ("Mentón", "Chin", "150", "", "", ""),
+    ("Patilla", "Sideburns", "120", "", "", ""),
+    ("Nariz", "Nose", "120", "", "", ""),
+    ("Maquillaje", "Makeup Application", "950", "", "", ""),
+  ]},
+}
+
+T = {  # cadenas de interfaz
+ "es": {"price":"Precio","service":"Servicio","dur":"Duración","from":"desde",
+        "book_wa":"Agendar por WhatsApp","appts":"Citas","hours":"Horario",
+        "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
+        "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
+        "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
+        "privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
+        "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
+ "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
+        "book_wa":"Book on WhatsApp","appts":"Appointments","hours":"Hours",
+        "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
+        "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
+        "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
+        "privacy":"Privacy Notice","full_list":"See the full price list",
+        "mxn":"Prices in Mexican pesos (MXN).","other":"Español"},
+}
+
+NAV = {
+ "es": [("/cabello.html","Cabello"),("/unas.html","Uñas"),
+        ("/pestanas-y-cejas.html","Pestañas y Cejas"),("/precios.html","Precios")],
+ "en": [("/en/hair.html","Hair"),("/en/nails.html","Nails"),
+        ("/en/lashes-and-brows.html","Lashes & Brows"),("/en/pricing.html","Pricing")],
+}
+
+def e(s): return html.escape(str(s), quote=False)
+
+def money(p):
+    """'~2,300' -> ('desde', '$2,300')"""
+    return (True, "$" + p[1:]) if p.startswith("~") else (False, "$" + p)
+
+def table(keys, lang):
+    t, out = T[lang], []
+    for k in keys:
+        grp = PRICES[k]
+        out.append(f'<div class="price-block" id="{k}">')
+        out.append(f'<h3>{e(grp[lang])}</h3>')
+        out.append('<table class="price">')
+        out.append(f'<thead><tr><th>{t["service"]}</th>'
+                   f'<th style="text-align:right">{t["price"]}</th>'
+                   f'<th style="text-align:right">{t["dur"]}</th></tr></thead><tbody>')
+        for it in grp["items"]:
+            name = it[0] if lang == "es" else it[1]
+            note = it[4] if lang == "es" else it[5]
+            dur  = it[3]
+            pre, amt = money(it[2])
+            label = f'{t["from"]} {amt}' if pre else amt
+            small = f'<small>{e(note)}</small>' if note else ""
+            out.append(f'<tr><td class="svc">{e(name)}{small}</td>'
+                       f'<td class="amt">{e(label)}</td>'
+                       f'<td class="dur">{e(dur) if dur else "—"}</td></tr>')
+        out.append('</tbody></table></div>')
+    return "\n".join(out)
+
+def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
+    t = T[lang]
+    home = "/" if lang == "es" else "/en/"
+    canon = f"{SITE}{home}" if slug in ("", "index") else f"{SITE}{slug}"
+    es_href = canon if lang == "es" else alt_href
+    en_href = alt_href if lang == "es" else canon
+    nav = "\n      ".join(f'<a href="{h}">{e(l)}</a>' for h, l in NAV[lang])
+    return f"""<!DOCTYPE html>
+<html lang="{'es-MX' if lang=='es' else 'en'}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{e(title)}</title>
+<meta name="description" content="{html.escape(desc, quote=True)}">
+<link rel="canonical" href="{canon}">
+<link rel="alternate" hreflang="es-mx" href="{es_href}">
+<link rel="alternate" hreflang="en" href="{en_href}">
+<link rel="alternate" hreflang="x-default" href="{es_href}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{'es_MX' if lang=='es' else 'en_US'}">
+<meta property="og:title" content="{html.escape(title, quote=True)}">
+<meta property="og:description" content="{html.escape(desc, quote=True)}">
+<meta property="og:url" content="{canon}">
+<meta name="theme-color" content="#17130f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+{extra_ld}
+</head>
+<body>
+<a class="skip" href="#main">{t['skip']}</a>
+<header class="site-head">
+  <div class="wrap head-in">
+    <a class="brand" href="{home}">Stilo <span>Salón</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">{t['menu']}</button>
+    <nav class="nav" id="nav" aria-label="{'Principal' if lang=='es' else 'Main'}">
+      {nav}
+      <div class="lang">
+        <a href="{es_href}" hreflang="es-mx"{' aria-current="true"' if lang=='es' else ''}>ES</a>
+        <a href="{en_href}" hreflang="en"{' aria-current="true"' if lang=='en' else ''}>EN</a>
+      </div>
+    </nav>
+  </div>
+</header>
+<main id="main">
+{body}
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-brand">Stilo Salón</p>
+        <p>{'Salón de belleza en Roma Norte, Ciudad de México. Cabello, uñas, pestañas y cejas.' if lang=='es' else 'Beauty salon in Roma Norte, Mexico City. Hair, nails, lashes and brows.'}</p>
+      </div>
+      <div>
+        <h4>{t['services']}</h4>
+        <p>{'<br>'.join(f'<a href="{h}">{e(l)}</a>' for h, l in NAV[lang])}</p>
+      </div>
+      <div>
+        <h4>{t['hours']}</h4>
+        <p>{t['mf']} · 9:00 – 20:00<br>{t['sat']} · 9:00 – 19:00<br>{t['sun']} · {t['closed']}</p>
+      </div>
+      <div>
+        <h4>{t['branch']}</h4>
+        <address>
+          {NAP['street']}<br>
+          {NAP['locality']}<br>
+          {NAP['postal']}, {NAP['city']}<br>
+          <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
+        </address>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Stilo Salón. {t['rights']}</span>
+      <span><a href="{'/aviso-de-privacidad.html' if lang=='es' else '/en/privacy.html'}">{t['privacy']}</a> · <a href="{en_href if lang=='es' else es_href}">{t['other']}</a></span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){{var b=document.getElementById('menuBtn'),n=document.getElementById('nav');
+if(!b||!n)return;b.addEventListener('click',function(){{var o=n.classList.toggle('open');
+b.setAttribute('aria-expanded',o?'true':'false');}});}})();
+</script>
+</body>
+</html>
+"""
+
+def write(path, content):
+    p = OUT / path
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(content, encoding="utf-8")
+    return f"  {path}  ({len(content):,} bytes)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CONTENIDO DE LAS PÁGINAS
+# ─────────────────────────────────────────────────────────────────────────────
+C = {
+"es": {
+ "home_h1": "Un salón serio, con los precios a la vista.",
+ "home_lede": "Llevamos más de diez años atendiendo a la Roma Norte y seguimos aquí por una razón sencilla: la gente regresa. Cabello, color, tratamientos, uñas, pestañas y cejas — con la lista de precios publicada completa, para que sepas exactamente qué vas a pagar antes de sentarte en la silla.",
+ "home_why_h2": "Nos estamos actualizando, sin perder lo que ya funcionaba",
+ "why": [
+   ("Precios publicados", "La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar."),
+   ("Técnica al día", "Nanoplastia, botox capilar y Brazilian Blowout con producto profesional. Extensiones de pestañas en cinco técnicas distintas, desde el 1x1 clásico hasta el volumen ruso."),
+   ("Tiempos reales", "Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas."),
+ ],
+ "svc_cards": [
+   ("Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html"),
+   ("Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/cabello.html#tratamientos"),
+   ("Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html"),
+   ("Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html"),
+ ],
+ "faq": [
+   ("¿Cuál es su horario de atención?", "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 19:00. Domingos cerrado."),
+   ("¿Dónde están ubicados?", "En Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. Estamos a unas cuadras del Metro Insurgentes."),
+   ("¿Necesito cita o aceptan walk-in?", "Recomendamos cita, sobre todo para color y tratamientos que toman varias horas. Recibimos walk-in según la disponibilidad del día — te sugerimos escribirnos por WhatsApp antes de venir."),
+   ("¿Qué formas de pago aceptan?", "Efectivo y tarjetas de débito y crédito."),
+   ("¿Los precios publicados son finales?", "Los precios marcados “desde” aplican a cabello a partir del hombro. Si tu cabello es más largo o más denso, el ajuste se te comunica antes de empezar el servicio, nunca al final."),
+   ("¿Sus servicios tienen garantía?", "Sí. Si algo no quedó como lo acordamos, regresa dentro de los 7 días siguientes y lo corregimos sin costo."),
+ ],
+ "visit_h2": "Estamos en el corazón de la Roma Norte",
+},
+"en": {
+ "home_h1": "A serious salon, with the prices in plain sight.",
+ "home_lede": "We have served Roma Norte for more than ten years, and we are still here for a simple reason: people come back. Hair, color, treatments, nails, lashes and brows — with the full price list published, so you know exactly what you will pay before you sit down.",
+ "home_why_h2": "We are modernizing, without losing what already worked",
+ "why": [
+   ("Published prices", "The full list is on the site, not in a private message. If a service needs an adjustment for hair length or density, we tell you before we start — never at the register."),
+   ("Current technique", "Nanoplasty, hair botox and Brazilian Blowout with professional product. Eyelash extensions in five distinct techniques, from classic 1x1 to Russian volume."),
+   ("Honest timing", "Every service on the list shows its duration. A balayage takes three hours and we say so up front, so you can plan your day."),
+ ],
+ "svc_cards": [
+   ("Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html"),
+   ("Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/hair.html#tratamientos"),
+   ("Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html"),
+   ("Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html"),
+ ],
+ "faq": [
+   ("What are your hours?", "Monday to Friday, 9:00 to 20:00, and Saturday, 9:00 to 19:00. Closed Sundays."),
+   ("Where are you located?", "Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City — a few blocks from Metro Insurgentes."),
+   ("Do I need an appointment, or do you take walk-ins?", "We recommend an appointment, especially for color and treatments that take several hours. We do take walk-ins based on the day's availability — message us on WhatsApp before coming in."),
+   ("What payment methods do you accept?", "Cash, and debit and credit cards."),
+   ("Are the published prices final?", "Prices marked “from” apply to hair at shoulder length and above. If your hair is longer or denser, we tell you the adjustment before starting the service, never at the end."),
+   ("Do your services come with a guarantee?", "Yes. If something did not turn out the way we agreed, come back within 7 days and we will correct it at no cost."),
+ ],
+ "visit_h2": "In the heart of Roma Norte",
+},
+}
+
+def faq_ld(lang):
+    qs = ",".join(
+        '{"@type":"Question","name":%s,"acceptedAnswer":{"@type":"Answer","text":%s}}'
+        % (_j(q), _j(a)) for q, a in C[lang]["faq"])
+    return ('<script type="application/ld+json">'
+            '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[%s]}</script>' % qs)
+
+def _j(s):
+    import json
+    return json.dumps(s, ensure_ascii=False)
+
+def salon_ld(lang):
+    import json
+    d = {"@context":"https://schema.org","@type":"HairSalon","@id":f"{SITE}/#salon",
+      "name":"Stilo Salón","url":f"{SITE}/" if lang=="es" else f"{SITE}/en/",
+      "description":("Salón de belleza en Roma Norte, CDMX. Cabello, color, tratamientos, uñas, extensiones de pestañas y diseño de cejas."
+                     if lang=="es" else
+                     "Beauty salon in Roma Norte, Mexico City. Hair, color, treatments, nails, eyelash extensions and brow design."),
+      "telephone":"+52-55-2299-3258","priceRange":"$$","currenciesAccepted":"MXN",
+      "image":f"{SITE}/assets/og.jpg",
+      "address":{"@type":"PostalAddress","streetAddress":NAP["street"],
+                 "addressLocality":NAP["locality"],"addressRegion":"Ciudad de México",
+                 "postalCode":NAP["postal"],"addressCountry":"MX"},
+      "areaServed":["Roma Norte","Roma Sur","Condesa","Juárez","Ciudad de México"],
+      "openingHoursSpecification":[
+        {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"20:00"},
+        {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"19:00"}],
+    }
+    return '<script type="application/ld+json">%s</script>' % json.dumps(d, ensure_ascii=False)
+
+
+FEATURED = [
+  ("cabello", 1), ("cabello", 2), ("cabello", 8),
+  ("tratamientos", 0), ("pestanas", 0), ("mani-pedi", 2),
+]
+
+def featured_table(lang):
+    t = T[lang]
+    rows = []
+    for key, idx in FEATURED:
+        it = PRICES[key]["items"][idx]
+        name = it[0] if lang == "es" else it[1]
+        note = it[4] if lang == "es" else it[5]
+        pre, amt = money(it[2])
+        label = f'{t["from"]} {amt}' if pre else amt
+        small = f'<small>{e(note)}</small>' if note else ""
+        rows.append(f'<tr><td class="svc">{e(name)}{small}</td>'
+                    f'<td class="amt">{e(label)}</td>'
+                    f'<td class="dur">{e(it[3]) if it[3] else "—"}</td></tr>')
+    return (f'<table class="price"><thead><tr><th>{t["service"]}</th>'
+            f'<th style="text-align:right">{t["price"]}</th>'
+            f'<th style="text-align:right">{t["dur"]}</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table>')
+
+def home_body(lang):
+    t, c = T[lang], C[lang]
+    cards = "".join(
+      f'<article class="card"><h3>{e(n)}</h3><p>{e(d)}</p>'
+      f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(n)}</a></article>'
+      for n, d, p, h in c["svc_cards"])
+    why = "".join(f'<div><h3>{e(h)}</h3><p>{e(b)}</p></div>' for h, b in c["why"])
+    faqs = "".join(
+      f'<details class="faq"{" open" if i==0 else ""}><summary>{e(q)}</summary><p>{e(a)}</p></details>'
+      for i, (q, a) in enumerate(c["faq"]))
+    hi = "Roma Norte · Ciudad de México" if lang=="es" else "Roma Norte · Mexico City"
+    return f"""
+<section class="hero"><div class="wrap hero-grid"><div>
+  <p class="eyebrow">{hi}</p>
+  <h1>{e(c['home_h1'])}</h1>
+  <p class="lede">{e(c['home_lede'])}</p>
+  <div class="btn-row">
+    <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
+    <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
+  </div>
+  <div class="trust">
+    <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
+    <div><strong>60+</strong>{'servicios con precio publicado' if lang=='es' else 'services with published prices'}</div>
+    <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
+  </div>
+</div>
+<figure class="hero-figure"><p class="ph">[ {'Sustituir por foto del salón' if lang=='es' else 'Replace with salon photo'} — 1200×1500px ]</p></figure>
+</div></section>
+
+<section class="alt"><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
+  <h2>{'Todo lo que hacemos, con precio de arranque' if lang=='es' else 'Everything we do, with a starting price'}</h2></div>
+  <div class="grid g4">{cards}</div>
+</div></section>
+
+<section class="ink-sec"><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Por qué Stilo' if lang=='es' else 'Why Stilo'}</p>
+  <h2>{e(c['home_why_h2'])}</h2></div>
+  <div class="grid g3">{why}</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Los más pedidos' if lang=='es' else 'Most requested'}</p>
+  <h2>{'Lo que más nos piden en Roma Norte' if lang=='es' else 'What Roma Norte asks us for most'}</h2>
+  <p class="lede">{t['mxn']}</p></div>
+  {featured_table(lang)}
+  <div class="btn-row"><a class="btn btn-primary" href="{'/precios.html' if lang=='es' else '/en/pricing.html'}">{t['full_list']}</a></div>
+</div></section>
+
+<section class="alt"><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Preguntas frecuentes' if lang=='es' else 'Frequently asked'}</p>
+  <h2>{'Lo que nos preguntan antes de agendar' if lang=='es' else 'What people ask before booking'}</h2></div>
+  {faqs}
+</div></section>
+
+<section id="contacto"><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Visítanos' if lang=='es' else 'Visit us'}</p><h2>{e(c['visit_h2'])}</h2></div>
+  <div class="grid g2"><div>
+    <h3>{t['branch']}</h3>
+    <address><strong>{NAP['street']}</strong><br>{NAP['locality']}<br>{NAP['postal']}, {NAP['city']}<br><br>
+    {t['appts']}: <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a><br>
+    <a href="tel:{NAP['tel2']}">{NAP['tel2_display']}</a></address>
+    <p style="margin-top:1.4rem"><strong>{t['mf']}</strong> 9:00 – 20:00<br><strong>{t['sat']}</strong> 9:00 – 19:00<br><strong>{t['sun']}</strong> {t['closed']}</p>
+    <div class="btn-row"><a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
+    <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
+  </div>
+  <figure class="hero-figure" style="aspect-ratio:4/3"><p class="ph">[ {'Mapa de Google Maps o foto de fachada' if lang=='es' else 'Google Map embed or storefront photo'} ]</p></figure>
+  </div>
+</div></section>
+"""
+
+def svc_body(lang, eyebrow, h1, intro, paras, keys, note=""):
+    t = T[lang]
+    body = "".join(f"<p>{p}</p>" for p in paras)
+    return f"""
+<section><div class="wrap">
+  <p class="eyebrow">{e(eyebrow)}</p>
+  <h1>{e(h1)}</h1>
+  <p class="lede">{e(intro)}</p>
+</div></section>
+<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}</div></section>
+<section><div class="wrap">
+  <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
+  {table(keys, lang)}
+  <div class="btn-row"><a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
+  <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a></div>
+</div></section>
+"""
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PÁGINAS DE SERVICIO — el texto largo vive aquí.  Google necesita leer esto:
+# las páginas de 100 palabras no compiten.
+# ─────────────────────────────────────────────────────────────────────────────
+SERVICE_PAGES = [
+ dict(key="hair", es_slug="/cabello.html", en_slug="/en/hair.html",
+   keys=["cabello", "tratamientos"],
+   es=dict(eyebrow="Cabello y color · Roma Norte",
+     title="Corte, Color y Balayage en Roma Norte, CDMX | Stilo Salón",
+     desc="Corte dama desde $330, tinte desde $800, balayage desde $2,300, nanoplastia desde $2,500. Precios y duraciones publicados. Guadalajara 70-B, Roma Norte, CDMX.",
+     h1="Corte, color y tratamientos de cabello en Roma Norte",
+     intro="Todo el trabajo de cabello que hacemos, con su precio y su duración real. Sin cotizaciones por mensaje privado y sin ajustes de último momento.",
+     paras=[
+      "En Stilo Salón trabajamos el cabello en tres frentes: <strong>corte</strong>, <strong>color</strong> y <strong>tratamiento</strong>. Cada uno tiene su propia lógica de tiempo y de producto, y por eso publicamos las duraciones junto a los precios. Un corte de dama con lavado y peinado son treinta minutos. Un balayage son tres horas. Saber eso de antemano te permite agendar sin que el día se te desacomode.",
+      "En <strong>corte</strong> manejamos dama, caballero y niños. La diferencia entre el corte con moldeado ($330) y el corte con lavado y peinado ($420) es justamente el lavado y el peinado terminado: si vienes con prisa o ya con el cabello lavado, el primero te sirve; si quieres salir lista, el segundo.",
+      "En <strong>color</strong> cubrimos desde lo más sencillo hasta lo más técnico. El <strong>retoque de raíz</strong> ($900) es el mantenimiento mensual de un color que ya traes. El <strong>tinte</strong> (desde $800) es color completo. El <strong>matiz</strong> y el <strong>baño de color</strong> (desde $900) corrigen o refrescan el tono sin levantar el color base. Y el <strong>balayage</strong> y los <strong>babylights</strong> (desde $2,300, tres horas) son técnicas de iluminación a mano alzada que crean dimensión natural, con crecimiento suave: no te dejan una línea de raíz marcada a las seis semanas.",
+      "Los precios de color marcados “desde” aplican de hombro hacia arriba. El cabello más largo o más denso lleva más producto y más tiempo, y el ajuste te lo decimos <strong>antes</strong> de empezar, con el espejo enfrente. Nunca al momento de cobrar.",
+      "En <strong id='tratamientos'>tratamientos y alisados</strong> trabajamos tres técnicas distintas, y la diferencia importa. La <strong>nanoplastia</strong> (desde $2,500) es un alisado sin formol que reestructura la fibra capilar y deja el cabello liso y con brillo por varios meses. El <strong>Brazilian Blowout</strong> (desde $2,500) sella la cutícula y reduce el frizz manteniendo movimiento — no deja el cabello completamente lacio. El <strong>botox capilar</strong> (desde $1,800, una hora) no alisa: rellena y repara cabello poroso o maltratado por decoloración.",
+      "Si no sabes cuál te conviene, escríbenos por WhatsApp con una foto de tu cabello y te decimos con honestidad cuál sí y cuál no. A veces la respuesta es un <strong>tratamiento profundo hidratante</strong> de $520 y no un alisado de $2,500.",
+      "Todos nuestros servicios tienen <strong>7 días de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo.",
+     ]),
+   en=dict(eyebrow="Hair & color · Roma Norte",
+     title="Haircuts, Color & Balayage in Roma Norte, Mexico City | Stilo Salón",
+     desc="Women's cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Guadalajara 70-B, Roma Norte, Mexico City.",
+     h1="Haircuts, color and hair treatments in Roma Norte",
+     intro="All the hair work we do, with its real price and duration. No quotes by private message, and no last-minute adjustments.",
+     paras=[
+      "At Stilo Salón we work hair on three fronts: <strong>cutting</strong>, <strong>color</strong> and <strong>treatment</strong>. Each has its own logic of time and product, which is why we publish durations alongside prices. A women's cut with wash and style is thirty minutes. A balayage is three hours. Knowing that in advance lets you book without losing your day.",
+      "For <strong>cuts</strong> we serve women, men and children. The difference between the cut with blow-dry shaping ($330) and the cut with wash and style ($420) is exactly that — the wash and the finished style. If you are in a hurry or arrive with clean hair, the first works; if you want to walk out ready, take the second.",
+      "In <strong>color</strong> we cover everything from the simplest to the most technical. A <strong>root touch-up</strong> ($900) is monthly maintenance on color you already have. <strong>Full color</strong> (from $800) covers the whole head. <strong>Toner</strong> and <strong>color gloss</strong> (from $900) correct or refresh the tone without lifting the base. And <strong>balayage</strong> and <strong>babylights</strong> (from $2,300, three hours) are freehand lightening techniques that build natural dimension with a soft grow-out — no hard root line at six weeks.",
+      "Color prices marked “from” apply at shoulder length and above. Longer or denser hair takes more product and more time, and we tell you that adjustment <strong>before</strong> we begin, with the mirror in front of you. Never at the register.",
+      "In <strong id='tratamientos'>treatments and smoothing</strong> we work three distinct techniques, and the difference matters. <strong>Nanoplasty</strong> (from $2,500) is a formaldehyde-free smoothing service that restructures the hair fiber, leaving it straight and glossy for several months. <strong>Brazilian Blowout</strong> (from $2,500) seals the cuticle and cuts frizz while keeping movement — it does not leave hair perfectly flat. <strong>Hair botox</strong> (from $1,800, one hour) does not straighten: it fills and repairs porous hair damaged by bleaching.",
+      "If you are not sure which one suits you, message us on WhatsApp with a photo of your hair and we will tell you honestly which will work and which will not. Sometimes the answer is a $520 deep hydrating treatment rather than a $2,500 smoothing service.",
+      "Every service carries a <strong>7-day guarantee</strong>: if something did not turn out the way we agreed, come back and we will correct it at no cost.",
+     ])),
+ dict(key="nails", es_slug="/unas.html", en_slug="/en/nails.html",
+   keys=["mani-pedi", "gel-esmalte", "unas"],
+   es=dict(eyebrow="Uñas · Roma Norte",
+     title="Uñas, Manicure y Pedicure en Roma Norte, CDMX | Stilo Salón",
+     desc="Manicure spa desde $220, gel desde $180, acrílico desde $400, esculturales desde $500. Paquete mani + pedi con gel $750. Roma Norte, CDMX.",
+     h1="Uñas, manicure y pedicure en Roma Norte",
+     intro="Desde un esmalte sencillo hasta esculturales con gel. Toda la lista con precio, para que elijas sin preguntar.",
+     paras=[
+      "Nuestro servicio de uñas se divide en tres bloques: <strong>manicure y pedicure</strong>, <strong>gel y esmalte</strong>, y <strong>acrílico y esculturales</strong>. La diferencia entre ellos es sobre todo de duración del resultado y de cuidado de la uña natural.",
+      "El <strong>manicure spa</strong> ($220) incluye tina con sales, exfoliación, masaje y esmalte — es el servicio completo de cuidado, no solo el color. Si quieres que dure más, el <strong>manicure spa + gel</strong> ($350) cambia el esmalte por gel, que aguanta entre dos y tres semanas sin despostillarse. El <strong>pedicure spa</strong> ($360) añade limado de talón y masaje de pies.",
+      "Si vas a hacer manos y pies el mismo día, el <strong>paquete de mani spa + pedi spa con gel</strong> ($750) es la opción conveniente: los dos servicios completos con gel en ambos.",
+      "En <strong>gel y esmalte</strong> cobramos por separado cuando solo quieres el color: <strong>gel en manos</strong> ($180), <strong>gel en pies</strong> ($220) o <strong>esmalte tradicional</strong> ($150). Todos incluyen hasta dos tonos lisos; los tonos adicionales o los diseños tienen un costo extra pequeño que te decimos antes.",
+      "Las <strong>vitaminas</strong> ($150) son tratamientos para la uña natural, no color. El <strong>calcio</strong> fortalece, el <strong>rubber</strong> cubre imperfecciones y da cuerpo a uñas delgadas o débiles, y la <strong>vitamina</strong> protege mientras la uña se recupera. Si traes las uñas maltratadas después de mucho acrílico, empieza por aquí.",
+      "En <strong>acrílico y esculturales</strong> manejamos acrílico sobre uña natural ($400), uña escultural con gel (desde $500) y uña tip con gel (desde $450). Los retoques son más económicos que el juego completo y te recomendamos hacerlos cada tres o cuatro semanas: esperar más tiempo daña la uña natural. El <strong>retiro</strong> ($100) lo hacemos siempre con técnica, nunca arrancando.",
+      "Una nota honesta: no todas las manos necesitan acrílico. Si tu uña natural está en buen estado, un gel bien puesto se ve igual de bien y cuida más. Te lo vamos a decir.",
+     ]),
+   en=dict(eyebrow="Nails · Roma Norte",
+     title="Nails, Manicure & Pedicure in Roma Norte, Mexico City | Stilo Salón",
+     desc="Spa manicure from $220, gel from $180, acrylic from $400, sculpted nails from $500 MXN. Mani + pedi gel package $750. Roma Norte, Mexico City.",
+     h1="Nails, manicure and pedicure in Roma Norte",
+     intro="From a simple polish to sculpted gel nails. The whole list with prices, so you can choose without asking.",
+     paras=[
+      "Our nail work splits into three blocks: <strong>manicure and pedicure</strong>, <strong>gel and polish</strong>, and <strong>acrylic and sculpted nails</strong>. The difference between them is mostly how long the result lasts and how it treats your natural nail.",
+      "The <strong>spa manicure</strong> ($220) includes a salt soak, exfoliation, massage and polish — it is the full care service, not just color. If you want it to last longer, the <strong>spa manicure + gel</strong> ($350) swaps polish for gel, which holds two to three weeks without chipping. The <strong>spa pedicure</strong> ($360) adds heel filing and a foot massage.",
+      "If you are doing hands and feet the same day, the <strong>spa mani + spa pedi package with gel</strong> ($750) is the convenient option: both full services with gel on each.",
+      "In <strong>gel and polish</strong> we charge separately when you only want color: <strong>gel on hands</strong> ($180), <strong>gel on feet</strong> ($220) or <strong>regular polish</strong> ($150). All include up to two solid shades; additional shades or designs carry a small extra cost that we tell you beforehand.",
+      "<strong>Nail vitamins</strong> ($150) are treatments for the natural nail, not color. <strong>Calcium</strong> strengthens, <strong>rubber base</strong> covers imperfections and adds body to thin or weak nails, and <strong>nail vitamin</strong> protects while the nail recovers. If your nails are worn down after a long stretch of acrylic, start here.",
+      "In <strong>acrylic and sculpted nails</strong> we offer acrylic over the natural nail ($400), sculpted gel nails (from $500) and gel tips (from $450). Fills cost less than a full set, and we recommend them every three or four weeks — waiting longer damages the natural nail. <strong>Removal</strong> ($100) is always done properly, never by prying.",
+      "One honest note: not every hand needs acrylic. If your natural nail is in good shape, a well-applied gel looks just as good and treats it better. We will tell you so.",
+     ])),
+ dict(key="lashes", es_slug="/pestanas-y-cejas.html", en_slug="/en/lashes-and-brows.html",
+   keys=["pestanas", "cejas", "depilacion"],
+   es=dict(eyebrow="Pestañas y cejas · Roma Norte",
+     title="Extensiones de Pestañas y Diseño de Cejas en Roma Norte, CDMX | Stilo Salón",
+     desc="Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258.",
+     h1="Extensiones de pestañas y diseño de cejas en Roma Norte",
+     intro="Cinco técnicas distintas de extensión, con su precio, su duración y para quién funciona cada una.",
+     paras=[
+      "Las extensiones de pestañas no son un solo servicio: son cinco técnicas distintas, y elegir la correcta importa más que el precio. Esta es la diferencia, en corto.",
+      "El <strong>1x1 clásico</strong> ($750) coloca una extensión sobre cada pestaña natural. Es el look más natural y el más ligero — ideal si es tu primera vez o si tienes pestaña natural sana y abundante. El <strong>flat</strong> ($800) usa una fibra de base plana que abraza la pestaña natural: pesa menos y se adhiere mejor, por eso funciona bien en pestañas delgadas.",
+      "El <strong>YY</strong> ($1,000) usa fibras entrelazadas en forma de Y que dan sensación de mayor densidad sin agregar peso. Las <strong>híbridas</strong> ($1,100) mezclan clásico y volumen para un efecto intermedio, y son la opción más pedida porque se ven llenas sin verse artificiales. El <strong>volumen ruso</strong> ($1,200) es la máxima densidad: abanicos de varias fibras ultrafinas por cada pestaña natural.",
+      "Los <strong>retoques</strong> (desde $450) mantienen el trabajo y cuestan bastante menos que un juego nuevo. La condición es el tiempo: necesitas al menos 50% de pestaña puesta y venir <strong>antes de los 21 días</strong>. Después de ese punto ya no es retoque, es aplicación nueva. Si traes trabajo de otro salón, lo retocamos (desde $500) según la técnica que traigas.",
+      "Si prefieres no usar extensiones, el <strong>lifting de pestañas</strong> ($450) curva tu pestaña natural desde la raíz e incluye tinte y keratina. Dura entre seis y ocho semanas y no necesita mantenimiento.",
+      "En <strong>cejas</strong>, el <strong>laminado</strong> ($450) alinea y fija el pelo hacia arriba para dar forma y densidad visual. El <strong>diseño de ceja</strong> ($450) incluye además el perfilado completo según tu rostro. Y si solo necesitas mantenimiento, la <strong>ceja con cera</strong> ($220) es el servicio sencillo.",
+      "También hacemos <strong>depilación con cera</strong> de rostro y axilas, y <strong>maquillaje</strong> ($950) para eventos. La lista completa está abajo.",
+     ]),
+   en=dict(eyebrow="Lashes & brows · Roma Norte",
+     title="Eyelash Extensions & Brow Design in Roma Norte, Mexico City | Stilo Salón",
+     desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.",
+     h1="Eyelash extensions and brow design in Roma Norte",
+     intro="Five distinct extension techniques, with the price, the duration, and who each one actually suits.",
+     paras=[
+      "Eyelash extensions are not one service — they are five distinct techniques, and choosing the right one matters more than the price. Here is the difference, briefly.",
+      "<strong>Classic 1x1</strong> ($750) places one extension on each natural lash. It is the most natural look and the lightest — ideal for a first time, or if your natural lashes are healthy and full. <strong>Flat</strong> ($800) uses a flat-based fiber that wraps the natural lash: it weighs less and bonds better, which makes it work well on fine lashes.",
+      "<strong>YY</strong> ($1,000) uses Y-shaped interlaced fibers that create the feel of greater density without adding weight. <strong>Hybrid</strong> ($1,100) blends classic and volume for an in-between effect, and it is our most requested set because it looks full without looking artificial. <strong>Russian volume</strong> ($1,200) is maximum density: fans of several ultra-fine fibers on each natural lash.",
+      "<strong>Fills</strong> (from $450) maintain the work and cost considerably less than a new set. The condition is timing: you need at least 50% retention and you need to come in <strong>within 21 days</strong>. Past that point it is no longer a fill, it is a new application. If you are carrying work from another salon, we will fill it (from $500) depending on the technique used.",
+      "If you would rather not wear extensions, a <strong>lash lift</strong> ($450) curls your natural lash from the root and includes tint and keratin. It lasts six to eight weeks and needs no maintenance.",
+      "For <strong>brows</strong>, <strong>lamination</strong> ($450) aligns and sets the hair upward to build shape and visual density. <strong>Brow design</strong> ($450) adds full shaping mapped to your face. And if you only need maintenance, a <strong>brow wax</strong> ($220) is the simple service.",
+      "We also offer facial and underarm <strong>waxing</strong>, and <strong>makeup application</strong> ($950) for events. The full list is below.",
+     ])),
+]
+
+def main():
+    log = []
+    # Home (ES + EN)
+    for lang in ("es", "en"):
+        home, alt = ("/", f"{SITE}/en/") if lang == "es" else ("/en/", f"{SITE}/")
+        title = ("Stilo Salón | Salón de Belleza en Roma Norte, CDMX — Cabello, Uñas y Pestañas"
+                 if lang == "es" else
+                 "Stilo Salón | Beauty Salon in Roma Norte, Mexico City — Hair, Nails & Lashes")
+        desc = ("Salón de belleza en Roma Norte, CDMX. Corte desde $330, balayage desde $2,300, "
+                "extensiones de pestañas desde $750. Precios publicados, sin sorpresas. "
+                "Guadalajara 70-B. Citas: 55 2299 3258."
+                if lang == "es" else
+                "Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, "
+                "lash extensions from $750 MXN. Published prices, no surprises. "
+                "Guadalajara 70-B. Appointments: 55 2299 3258.")
+        out = "index.html" if lang == "es" else "en/index.html"
+        log.append(write(out, page(lang, "", title, desc, home_body(lang), alt,
+                                   salon_ld(lang) + faq_ld(lang))))
+    # Service pages
+    for sp in SERVICE_PAGES:
+        for lang in ("es", "en"):
+            d = sp[lang]
+            slug = sp["es_slug"] if lang == "es" else sp["en_slug"]
+            alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
+            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"])
+            log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"], body, alt, salon_ld(lang))))
+    # Full price list
+    allk = list(PRICES.keys())
+    for lang in ("es", "en"):
+        slug = "/precios.html" if lang == "es" else "/en/pricing.html"
+        alt  = SITE + ("/en/pricing.html" if lang == "es" else "/precios.html")
+        title = ("Lista de Precios Completa | Stilo Salón Roma Norte, CDMX" if lang == "es"
+                 else "Full Price List | Stilo Salón Roma Norte, Mexico City")
+        desc = ("Lista de precios completa de Stilo Salón: cabello, tratamientos, uñas, pestañas, "
+                "cejas y depilación. Más de 60 servicios con precio y duración. Roma Norte, CDMX."
+                if lang == "es" else
+                "Full price list for Stilo Salón: hair, treatments, nails, lashes, brows and waxing. "
+                "Over 60 services with price and duration. Roma Norte, Mexico City.")
+        h1 = "Lista de precios completa" if lang == "es" else "Full price list"
+        intro = ("Todos nuestros servicios con su precio y su duración. Los precios marcados “desde” "
+                 "aplican a cabello a partir del hombro; cualquier ajuste te lo decimos antes de empezar."
+                 if lang == "es" else
+                 "Every service with its price and duration. Prices marked “from” apply at shoulder "
+                 "length and above; any adjustment is discussed before we begin.")
+        body = svc_body(lang, "Roma Norte · CDMX" if lang=="es" else "Roma Norte · Mexico City",
+                        h1, intro, [], allk)
+        log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt, salon_ld(lang))))
+    # Privacy
+    for lang in ("es", "en"):
+        slug = "/aviso-de-privacidad.html" if lang == "es" else "/en/privacy.html"
+        alt  = SITE + ("/en/privacy.html" if lang == "es" else "/aviso-de-privacidad.html")
+        if lang == "es":
+            title, h1 = "Aviso de Privacidad | Stilo Salón", "Aviso de Privacidad"
+            desc = ("Aviso de privacidad de Stilo Salón, salón de belleza en Roma Norte, CDMX. Qué datos recabamos para tu cita, para qué los usamos y cómo ejercer tus derechos ARCO.")
+            ps = ["<strong>Stilo Salón</strong>, con domicilio en Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México, es responsable del tratamiento de tus datos personales.",
+                  "<strong>Qué datos recabamos.</strong> Únicamente los necesarios para agendar y dar seguimiento a tu cita: nombre, teléfono y, cuando aplica, el historial de servicios realizados en el salón.",
+                  "<strong>Para qué los usamos.</strong> Para confirmar y recordarte tus citas, llevar el registro de los servicios que te hemos hecho, y contactarte si necesitamos reprogramar. No vendemos ni compartimos tus datos con terceros.",
+                  "<strong>Tus derechos.</strong> Puedes solicitar el acceso, la rectificación, la cancelación o la oposición al tratamiento de tus datos (derechos ARCO) llamando al 55 2299 3258 o directamente en el salón.",
+                  "<strong>Cambios.</strong> Cualquier modificación a este aviso se publicará en esta misma página.",
+                  "Última actualización: septiembre de 2026."]
+        else:
+            title, h1 = "Privacy Notice | Stilo Salón", "Privacy Notice"
+            desc = ("Privacy notice for Stilo Salón, a beauty salon in Roma Norte, Mexico City. What data we collect for your appointment, how we use it, and how to exercise your rights.")
+            ps = ["<strong>Stilo Salón</strong>, located at Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City, is responsible for the handling of your personal data.",
+                  "<strong>What we collect.</strong> Only what is needed to book and follow up on your appointment: name, phone number and, where applicable, the history of services performed at the salon.",
+                  "<strong>How we use it.</strong> To confirm and remind you of appointments, keep a record of the services we have performed, and contact you if we need to reschedule. We do not sell or share your data with third parties.",
+                  "<strong>Your rights.</strong> You may request access, rectification, cancellation or object to the handling of your data (ARCO rights) by calling 55 2299 3258 or in person at the salon.",
+                  "<strong>Changes.</strong> Any change to this notice will be published on this page.",
+                  "Last updated: September 2026."]
+        body = (f'<section><div class="wrap" style="max-width:74ch"><h1>{h1}</h1>'
+                + "".join(f"<p>{p}</p>" for p in ps) + '</div></section>')
+        log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt)))
+
+    # sitemap / robots / Cloudflare
+    urls = ["/", "/cabello.html", "/unas.html", "/pestanas-y-cejas.html", "/precios.html",
+            "/aviso-de-privacidad.html", "/en/", "/en/hair.html", "/en/nails.html",
+            "/en/lashes-and-brows.html", "/en/pricing.html", "/en/privacy.html"]
+    sm = ['<?xml version="1.0" encoding="UTF-8"?>',
+          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in urls:
+        sm.append(f"  <url><loc>{SITE}{u}</loc><changefreq>monthly</changefreq>"
+                  f"<priority>{'1.0' if u in ('/', '/en/') else '0.8'}</priority></url>")
+    sm.append("</urlset>")
+    log.append(write("sitemap.xml", "\n".join(sm) + "\n"))
+    log.append(write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n"))
+    log.append(write("_headers",
+        "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
+        "  Referrer-Policy: strict-origin-when-cross-origin\n"
+        "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n\n"
+        "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n"))
+    # Rutas viejas del sitio de GoDaddy -> nuevas.  Evita perder el poco
+    # posicionamiento que ya existe.
+    log.append(write("_redirects",
+        "/cabello            /cabello.html            301\n"
+        "/u%C3%B1as          /unas.html               301\n"
+        "/unas               /unas.html               301\n"
+        "/extensiones        /pestanas-y-cejas.html   301\n"
+        "/lifting            /pestanas-y-cejas.html   301\n"
+        "/microblading       /pestanas-y-cejas.html   301\n"
+        "/dise%C3%B1o-de-ceja /pestanas-y-cejas.html  301\n"
+        "/servicios-y-costos /precios.html            301\n"
+        "/colores-y-dise%C3%B1os-lv-1 /unas.html      301\n"
+        "/comun%C3%ADcate-con-nosotros /#contacto     301\n"
+        "/informacion        /pestanas-y-cejas.html   301\n"
+        "/citas              /#contacto               301\n"
+        "/galeria            /                        301\n"
+        "/ols/products       /precios.html            301\n"))
+    print("Stilo Salón — sitio generado:\n" + "\n".join(log))
+    print(f"\n{len(urls)} páginas · fuente única de precios: PRICES en build.py")
+
+if __name__ == "__main__":
+    main()
