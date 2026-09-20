@@ -555,29 +555,13 @@ SERVICE_PAGES = [
      desc="Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258.",
      h1="Extensiones de pestañas y diseño de cejas en Roma Norte",
      intro="¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está toda la información detallada de esta maravillosa forma de lucir unos ojos y unas cejas de impacto.",
-     paras=[
-      "Las extensiones de pestañas no son un solo servicio: son cinco técnicas distintas, y elegir la correcta importa más que el precio. Esta es la diferencia, en corto.",
-      "El <strong>1x1 clásico</strong> ($750) coloca una extensión sobre cada pestaña natural. Es el look más natural y el más ligero — ideal si es tu primera vez o si tienes pestaña natural sana y abundante. El <strong>flat</strong> ($800) usa una fibra de base plana que abraza la pestaña natural: pesa menos y se adhiere mejor, por eso funciona bien en pestañas delgadas.",
-      "El <strong>YY</strong> ($1,000) usa fibras entrelazadas en forma de Y que dan sensación de mayor densidad sin agregar peso. Las <strong>híbridas</strong> ($1,100) mezclan clásico y volumen para un efecto intermedio, y son la opción más pedida porque se ven llenas sin verse artificiales. El <strong>volumen ruso</strong> ($1,200) es la máxima densidad: abanicos de varias fibras ultrafinas por cada pestaña natural.",
-      "Los <strong>retoques</strong> (desde $450) mantienen el trabajo y cuestan bastante menos que un juego nuevo. La condición es el tiempo: necesitas al menos 50% de pestaña puesta y venir <strong>antes de los 21 días</strong>. Después de ese punto ya no es retoque, es aplicación nueva. Si traes trabajo de otro salón, lo retocamos (desde $500) según la técnica que traigas.",
-      "Si prefieres no usar extensiones, el <strong>lifting de pestañas</strong> ($450) curva tu pestaña natural desde la raíz e incluye tinte y keratina. Dura entre seis y ocho semanas y no necesita mantenimiento.",
-      "En <strong>cejas</strong>, el <strong>laminado</strong> ($450) alinea y fija el pelo hacia arriba para dar forma y densidad visual. El <strong>diseño de ceja</strong> ($450) incluye además el perfilado completo según tu rostro. Y si solo necesitas mantenimiento, la <strong>ceja con cera</strong> ($220) es el servicio sencillo.",
-      "También hacemos <strong>depilación con cera</strong> de rostro y axilas, y <strong>maquillaje</strong> ($950) para eventos. La lista completa está abajo.",
-     ]),
+     paras=[]),
    en=dict(eyebrow="Lashes & brows · Roma Norte",
      title="Eyelash Extensions & Brow Design in Roma Norte, Mexico City | Stilo Salón",
      desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.",
      h1="Eyelash extensions and brow design in Roma Norte",
      intro="Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.",
-     paras=[
-      "Eyelash extensions are not one service — they are five distinct techniques, and choosing the right one matters more than the price. Here is the difference, briefly.",
-      "<strong>Classic 1x1</strong> ($750) places one extension on each natural lash. It is the most natural look and the lightest — ideal for a first time, or if your natural lashes are healthy and full. <strong>Flat</strong> ($800) uses a flat-based fiber that wraps the natural lash: it weighs less and bonds better, which makes it work well on fine lashes.",
-      "<strong>YY</strong> ($1,000) uses Y-shaped interlaced fibers that create the feel of greater density without adding weight. <strong>Hybrid</strong> ($1,100) blends classic and volume for an in-between effect, and it is our most requested set because it looks full without looking artificial. <strong>Russian volume</strong> ($1,200) is maximum density: fans of several ultra-fine fibers on each natural lash.",
-      "<strong>Fills</strong> (from $450) maintain the work and cost considerably less than a new set. The condition is timing: you need at least 50% retention and you need to come in <strong>within 21 days</strong>. Past that point it is no longer a fill, it is a new application. If you are carrying work from another salon, we will fill it (from $500) depending on the technique used.",
-      "If you would rather not wear extensions, a <strong>lash lift</strong> ($450) curls your natural lash from the root and includes tint and keratin. It lasts six to eight weeks and needs no maintenance.",
-      "For <strong>brows</strong>, <strong>lamination</strong> ($450) aligns and sets the hair upward to build shape and visual density. <strong>Brow design</strong> ($450) adds full shaping mapped to your face. And if you only need maintenance, a <strong>brow wax</strong> ($220) is the simple service.",
-      "We also offer facial and underarm <strong>waxing</strong>, and <strong>makeup application</strong> ($950) for events. The full list is below.",
-     ])),
+     paras=[])),
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -593,6 +577,20 @@ TECNICAS = [
    en=dict(n="Classic 1x1",
      q="One extension on each of your natural lashes. It is a full set, so how dense it looks depends on how much natural lash you have.",
      p="This is the entry technique and the most natural. If you have never worn extensions, start here.")),
+ dict(id="tecnica-flat", precio="$800", dur="1 hora 30 minutos", retoque="$500",
+   es=dict(n="Técnica flat",
+     q="Usa una fibra de base plana que abraza tu pestaña natural en lugar de apoyarse en un punto.",
+     p="Pesa menos y se adhiere mejor, por eso funciona bien si tienes la pestaña delgada o quebradiza."),
+   en=dict(n="Flat",
+     q="Uses a flat-based fiber that wraps your natural lash instead of resting on a single point.",
+     p="It weighs less and bonds better, so it works well if your lashes are fine or brittle.")),
+ dict(id="tecnica-yy", precio="$1,000", dur="1 hora 30 minutos", retoque="$550",
+   es=dict(n="Técnica YY",
+     q="Fibras entrelazadas en forma de Y: cada extensión cubre el doble sin pesar el doble.",
+     p="Da sensación de mayor densidad sin cargar la pestaña natural. Buen punto medio entre el 1x1 y el volumen."),
+   en=dict(n="YY",
+     q="Y-shaped interlaced fibers: each extension covers twice the area without twice the weight.",
+     p="It creates a denser look without loading the natural lash. A good middle ground between classic and volume.")),
  dict(id="tecnica-hibrida", precio="$1,100", dur="2 horas", retoque="$550",
    es=dict(n="Técnica híbrida",
      q="Combina 1x1 y volumen: se coloca una extensión clásica y un grupo de volumen, alternando.",
@@ -644,7 +642,7 @@ def lash_guide(lang):
     out = [f'<h2>{"La biblia de las extensiones de pestañas y cejas" if es else "The eyelash and brow bible"}</h2>']
     out.append('<p>' + ("Todo lo que nos preguntan en la silla, escrito. Empecemos por lo primero: cuál es cuál."
         if es else "Everything people ask us in the chair, written down. First things first: which one is which.") + '</p>')
-    out.append(f'<h3>{"Las tres técnicas" if es else "The three techniques"}</h3>')
+    out.append(f'<h3>{"Las cinco técnicas" if es else "The five techniques"}</h3>')
     for t in TECNICAS:
         d = t[lang]
         out.append(f'<h4 id="{t["id"]}">{e(d["n"])} — {t["precio"]}</h4>')
@@ -693,6 +691,10 @@ def lash_guide(lang):
         "<strong>Brow design</strong> ($450) combines mapping, waxing and pressing, shaped to your face. "
         "<strong>Brow lamination</strong> ($450) follows the same process, but the hair is pressed <strong>upward</strong>, "
         "which is what creates the fuller, brushed-up look.") + '</p>')
+    out.append('<p class="muted">' + ("También hacemos depilación con cera de rostro y axilas, y maquillaje ($950) para eventos. "
+        "La lista completa está abajo."
+        if es else "We also offer facial and underarm waxing, and makeup application ($950) for events. "
+        "The full list is below.") + '</p>')
     return "\n".join(out)
 
 def lash_faq_ld(lang):
