@@ -24,6 +24,12 @@ NAP = {
     "tel2": "+525552562137", "tel2_display": "55 5256 2137",
 }
 BOOKING = "https://stilo-salon.versum.com/?trade=598440"
+# Ficha de Google: el CID sale del enlace de Maps del salón.
+GMB     = "https://maps.google.com/?cid=4574699337846800212"
+PERFILES = ["https://www.instagram.com/stilosalon91/",
+            "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb",
+            "https://stilo-salon.versum.com/",
+            GMB]
 WA = ("https://wa.me/525522993258?text="
       "Hola%2C%20quiero%20agendar%20una%20cita%20en%20Stilo%20Sal%C3%B3n")
 
@@ -255,7 +261,11 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         <p>{'<br>'.join(_link(h, l) for h, l in NAV[lang])}</p>
       </div>
       <div>
-        <h4>{t['hours']}</h4>
+        <h4>{'Síguenos' if lang=='es' else 'Follow us'}</h4>
+        <p><a href="https://www.instagram.com/stilosalon91/" rel="noopener">Instagram</a><br>
+        <a href="{GMB}" rel="noopener">Google</a><br>
+        <a href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">Fresha</a></p>
+        <h4 style="margin-top:1.6rem">{t['hours']}</h4>
         <p>{t['mf']} · 9:00 – 20:00<br>{t['sat']} · 9:00 – 19:00<br>{t['sun']} · {t['closed']}</p>
       </div>
       <div>
@@ -449,6 +459,8 @@ def salon_ld(lang):
                  "addressLocality":NAP["locality"],"addressRegion":"Ciudad de México",
                  "postalCode":NAP["postal"],"addressCountry":"MX"},
       "areaServed":["Roma Norte","Roma Sur","Condesa","Juárez","Ciudad de México"],
+      "sameAs":PERFILES,
+      "email":"stilo91@hotmail.com",
       "hasMap":"https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX",
       "potentialAction":{"@type":"ReserveAction",
         "target":{"@type":"EntryPoint","urlTemplate":BOOKING,
@@ -545,6 +557,22 @@ def home_body(lang):
   <div class="sec-head"><p class="eyebrow">{'Preguntas frecuentes' if lang=='es' else 'Frequently asked'}</p>
   <h2>{'Lo que nos preguntan antes de agendar' if lang=='es' else 'What people ask before booking'}</h2></div>
   {faqs}
+</div></section>
+
+<section class="alt"><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Dónde encontrarnos' if lang=='es' else 'Find us'}</p>
+  <h2>{'Búscanos, léenos, reserva' if lang=='es' else 'Look us up, read us, book'}</h2>
+  <p class="lede">{'Estamos en Google, en Instagram y en Fresha. Si ya viniste, una reseña en Google nos ayuda muchísimo a que otras clientas nos encuentren.' if lang=='es' else 'We are on Google, Instagram and Fresha. If you have been here, a Google review helps other clients find us.'}</p></div>
+  <div class="perfiles">
+    <a class="perfil" href="{GMB}" rel="noopener">
+      <strong>Google</strong><span>{'Ver reseñas y cómo llegar' if lang=='es' else 'Reviews and directions'}</span></a>
+    <a class="perfil" href="https://www.instagram.com/stilosalon91/" rel="noopener">
+      <strong>Instagram</strong><span>@stilosalon91</span></a>
+    <a class="perfil" href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">
+      <strong>Fresha</strong><span>{'Reserva y reseñas' if lang=='es' else 'Booking and reviews'}</span></a>
+    <a class="perfil destacado" href="{GMB}" rel="noopener">
+      <strong>{'Déjanos tu reseña' if lang=='es' else 'Leave us a review'}</strong><span>{'Toma menos de un minuto' if lang=='es' else 'Takes under a minute'}</span></a>
+  </div>
 </div></section>
 
 <section id="contacto"><div class="wrap">
