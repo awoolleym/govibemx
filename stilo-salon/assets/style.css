@@ -354,3 +354,11 @@ details.faq[open] summary::after { transform: rotate(180deg); }
 .perfil.destacado strong { color: #fff; }
 .perfil.destacado span { color: rgba(255,255,255,.85); }
 .perfil.destacado:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
+
+/* Llamada a reseña en el footer: es la palanca más barata para el local pack */
+.foot-resena {
+  display: inline-block; padding: .55rem 1rem; border-radius: 999px;
+  border: 1px solid var(--accent); color: var(--accent) !important;
+  font-size: .85rem; transition: background .25s ease, color .25s ease;
+}
+.foot-resena:hover { background: var(--accent); color: #fff !important; }

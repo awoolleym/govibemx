@@ -24,12 +24,20 @@ NAP = {
     "tel2": "+525552562137", "tel2_display": "55 5256 2137",
 }
 BOOKING = "https://stilo-salon.versum.com/?trade=598440"
-# Ficha de Google: el CID sale del enlace de Maps del salón.
-GMB     = "https://maps.google.com/?cid=4574699337846800212"
+# Ficha de Google. GMB_CORTO es el enlace que comparte el propio salón;
+# GMB_CID es el canónico armado con el CID de la ficha. Ambos abren el mismo
+# lugar, y los dos van al schema para que Google los asocie.
+GMB_CORTO = "https://maps.app.goo.gl/SRXsyACEtcT2T9cd7"
+GMB_CID   = "https://maps.google.com/?cid=4574699337846800212"
+GMB       = GMB_CORTO
+# Enlace directo al formulario de reseña. El token lleva embebido el CID de
+# la ficha (verificado: 4574699337846800212), así que abre la caja de reseña
+# del negocio correcto, sin pasar por el perfil.
+RESENA = "https://g.page/r/CVS_klrPmHw_EBM/review"
 PERFILES = ["https://www.instagram.com/stilosalon91/",
             "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb",
             "https://stilo-salon.versum.com/",
-            GMB]
+            GMB_CID, GMB_CORTO]
 WA = ("https://wa.me/525522993258?text="
       "Hola%2C%20quiero%20agendar%20una%20cita%20en%20Stilo%20Sal%C3%B3n")
 
@@ -265,6 +273,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         <p><a href="https://www.instagram.com/stilosalon91/" rel="noopener">Instagram</a><br>
         <a href="{GMB}" rel="noopener">Google</a><br>
         <a href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">Fresha</a></p>
+        <p style="margin-top:1rem"><a class="foot-resena" href="{RESENA}" rel="noopener">{'★ Escribe tu reseña' if lang=='es' else '★ Write your review'}</a></p>
         <h4 style="margin-top:1.6rem">{t['hours']}</h4>
         <p>{t['mf']} · 9:00 – 20:00<br>{t['sat']} · 9:00 – 19:00<br>{t['sun']} · {t['closed']}</p>
       </div>
@@ -570,8 +579,8 @@ def home_body(lang):
       <strong>Instagram</strong><span>@stilosalon91</span></a>
     <a class="perfil" href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">
       <strong>Fresha</strong><span>{'Reserva y reseñas' if lang=='es' else 'Booking and reviews'}</span></a>
-    <a class="perfil destacado" href="{GMB}" rel="noopener">
-      <strong>{'Déjanos tu reseña' if lang=='es' else 'Leave us a review'}</strong><span>{'Toma menos de un minuto' if lang=='es' else 'Takes under a minute'}</span></a>
+    <a class="perfil destacado" href="{RESENA}" rel="noopener">
+      <strong>{'Escribe tu reseña' if lang=='es' else 'Write your review'}</strong><span>{'Se abre directo en Google · toma menos de un minuto' if lang=='es' else 'Opens straight in Google · under a minute'}</span></a>
   </div>
 </div></section>
 
