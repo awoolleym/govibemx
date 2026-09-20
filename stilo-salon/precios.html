@@ -219,6 +219,17 @@
 
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 
+  // A partir de aquí el JS se hace responsable de revelar. Marcamos <html>
+  // para que el CSS pueda ocultar: si este script nunca corre, nada se oculta.
+  document.documentElement.classList.add('anim');
+
+  // Respaldo: pase lo que pase, a los 2.5 s todo queda visible. Más vale
+  // perder la animación que perder el contenido.
+  setTimeout(function () {
+    var faltan = document.querySelectorAll('.reveal:not(.seen)');
+    for (var i = 0; i < faltan.length; i++) faltan[i].classList.add('seen');
+  }, 2500);
+
   // Aparición al entrar en pantalla
   var grupos = document.querySelectorAll('.js-reveal');
   for (var g = 0; g < grupos.length; g++) {
@@ -236,7 +247,7 @@
       ents.forEach(function (en) {
         if (en.isIntersecting) { en.target.classList.add('seen'); io.unobserve(en.target); }
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   } else {
     document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('seen'); });

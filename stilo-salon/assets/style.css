@@ -211,11 +211,11 @@ address { font-style: normal; line-height: 1.8; }
    ═══════════════════════════════════════════════════════════════════ */
 
 /* — Aparición al hacer scroll — */
-.reveal { opacity: 0; transform: translateY(26px); }
-.reveal.seen { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
-.reveal.d1.seen { transition-delay: .08s; }
-.reveal.d2.seen { transition-delay: .16s; }
-.reveal.d3.seen { transition-delay: .24s; }
+.anim .reveal { opacity: 0; transform: translateY(26px); }
+.anim .reveal.seen { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.anim .reveal.d1.seen { transition-delay: .08s; }
+.anim .reveal.d2.seen { transition-delay: .16s; }
+.anim .reveal.d3.seen { transition-delay: .24s; }
 
 /* — Tarjetas con inclinación 3D al pasar el cursor — */
 .card {
@@ -245,14 +245,14 @@ address { font-style: normal; line-height: 1.8; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
 /* — Portada: entrada escalonada — */
-.hero h1, .hero .eyebrow, .hero .lede, .hero .btn-row, .hero .trust { animation: rise .85s cubic-bezier(.16,1,.3,1) both; }
+.anim .hero h1, .anim .hero .eyebrow, .anim .hero .lede, .anim .hero .btn-row, .anim .hero .trust { animation: rise .85s cubic-bezier(.16,1,.3,1) both; }
 .hero .eyebrow  { animation-delay: .05s; }
 .hero h1        { animation-delay: .13s; }
 .hero .lede     { animation-delay: .22s; }
 .hero .btn-row  { animation-delay: .34s; }
 .hero .trust    { animation-delay: .44s; }
 @keyframes rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-.hero-figure img { animation: fadeScale 1.3s cubic-bezier(.16,1,.3,1) both; }
+.anim .hero-figure img { animation: fadeScale 1.3s cubic-bezier(.16,1,.3,1) both; }
 @keyframes fadeScale { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
 
 /* — Botones — */
@@ -307,7 +307,7 @@ details.faq[open] summary::after { transform: rotate(180deg); }
 .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1 !important; transform: none !important; }
+  .anim .reveal { opacity: 1 !important; transform: none !important; }
   .swoosh path { stroke-dashoffset: 0 !important; animation: none !important; }
 }
 
