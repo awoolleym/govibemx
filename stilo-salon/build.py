@@ -137,14 +137,14 @@ T = {  # cadenas de interfaz
         "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
         "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
         "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
-        "privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
+        "logo_alt":"Stilo Salón — salón de belleza en Roma Norte, CDMX","privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
         "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
  "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
         "book_wa":"Book on WhatsApp","appts":"Appointments","hours":"Hours",
         "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
         "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
         "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
-        "privacy":"Privacy Notice","full_list":"See the full price list",
+        "logo_alt":"Stilo Salón — beauty salon in Roma Norte, Mexico City","privacy":"Privacy Notice","full_list":"See the full price list",
         "mxn":"Prices in Mexican pesos (MXN).","other":"Español"},
 }
 
@@ -207,10 +207,11 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <meta property="og:title" content="{html.escape(title, quote=True)}">
 <meta property="og:description" content="{html.escape(desc, quote=True)}">
 <meta property="og:url" content="{canon}">
-<meta name="theme-color" content="#17130f">
+<meta name="theme-color" content="#15191D">
+<meta property="og:image" content="{SITE}/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
 {extra_ld}
 </head>
@@ -218,7 +219,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <a class="skip" href="#main">{t['skip']}</a>
 <header class="site-head">
   <div class="wrap head-in">
-    <a class="brand" href="{home}">Stilo <span>Salón</span></a>
+    <a class="brand" href="{home}"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="{t['logo_alt']}"></a>
     <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">{t['menu']}</button>
     <nav class="nav" id="nav" aria-label="{'Principal' if lang=='es' else 'Main'}">
       {nav}
@@ -236,7 +237,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <p class="foot-brand">Stilo Salón</p>
+        <p class="foot-brand"><img src="/assets/logo-stilo-salon-negativo.png" width="640" height="252" alt="{t['logo_alt']}" loading="lazy"></p>
         <p>{'Salón de belleza en Roma Norte, Ciudad de México. Cabello, uñas, pestañas y cejas.' if lang=='es' else 'Beauty salon in Roma Norte, Mexico City. Hair, nails, lashes and brows.'}</p>
       </div>
       <div>
@@ -292,10 +293,10 @@ C = {
    ("Tiempos reales", "Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas."),
  ],
  "svc_cards": [
-   ("Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html"),
-   ("Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/cabello.html#tratamientos"),
-   ("Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html"),
-   ("Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html"),
+   ("Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html", "Ver cabello y color"),
+   ("Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/cabello.html#tratamientos", "Ver tratamientos y alisados"),
+   ("Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html", "Ver uñas, manicure y pedicure"),
+   ("Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html", "Ver pestañas y cejas"),
  ],
  "faq": [
    ("¿Cuál es su horario de atención?", "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 19:00. Domingos cerrado."),
@@ -317,10 +318,10 @@ C = {
    ("Honest timing", "Every service on the list shows its duration. A balayage takes three hours and we say so up front, so you can plan your day."),
  ],
  "svc_cards": [
-   ("Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html"),
-   ("Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/hair.html#tratamientos"),
-   ("Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html"),
-   ("Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html"),
+   ("Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html", "See hair and color"),
+   ("Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/hair.html#tratamientos", "See treatments and smoothing"),
+   ("Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html", "See nails, manicure and pedicure"),
+   ("Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html", "See lashes and brows"),
  ],
  "faq": [
    ("What are your hours?", "Monday to Friday, 9:00 to 20:00, and Saturday, 9:00 to 19:00. Closed Sundays."),
@@ -353,7 +354,7 @@ def salon_ld(lang):
                      if lang=="es" else
                      "Beauty salon in Roma Norte, Mexico City. Hair, color, treatments, nails, eyelash extensions and brow design."),
       "telephone":"+52-55-2299-3258","priceRange":"$$","currenciesAccepted":"MXN",
-      "image":f"{SITE}/assets/og.jpg",
+      "image":f"{SITE}/assets/og.png",
       "address":{"@type":"PostalAddress","streetAddress":NAP["street"],
                  "addressLocality":NAP["locality"],"addressRegion":"Ciudad de México",
                  "postalCode":NAP["postal"],"addressCountry":"MX"},
@@ -392,8 +393,8 @@ def home_body(lang):
     t, c = T[lang], C[lang]
     cards = "".join(
       f'<article class="card"><h3>{e(n)}</h3><p>{e(d)}</p>'
-      f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(n)}</a></article>'
-      for n, d, p, h in c["svc_cards"])
+      f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(cta)}</a></article>'
+      for n, d, p, h, cta in c["svc_cards"])
     why = "".join(f'<div><h3>{e(h)}</h3><p>{e(b)}</p></div>' for h, b in c["why"])
     faqs = "".join(
       f'<details class="faq"{" open" if i==0 else ""}><summary>{e(q)}</summary><p>{e(a)}</p></details>'
