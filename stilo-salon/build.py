@@ -109,6 +109,7 @@ PRICES = {
     ("Retoque de Trabajo Externo", "Fill on Outside Work", "~500", "", "según la técnica que traigas", "depending on the technique applied elsewhere"),
     ("Lifting de Pestañas", "Lash Lift", "450", "", "incluye tinte y keratina", "includes tint and keratin"),
     ("Retiro de Pestañas", "Lash Removal", "200", "", "sin nueva aplicación", "without a new application"),
+    ("Retiro + Aplicación Nueva", "Removal + New Set", "150", "", "retiro cuando pasaron más de 21 días y se aplica set nuevo", "removal past 21 days, when a new set is applied"),
   ]},
 "cejas": {
   "es": "Cejas", "en": "Brows",
@@ -460,7 +461,7 @@ def home_body(lang):
 </div></section>
 """
 
-def svc_body(lang, eyebrow, h1, intro, paras, keys, note=""):
+def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra=""):
     t = T[lang]
     body = "".join(f"<p>{p}</p>" for p in paras)
     return f"""
@@ -469,7 +470,7 @@ def svc_body(lang, eyebrow, h1, intro, paras, keys, note=""):
   <h1>{e(h1)}</h1>
   <p class="lede">{e(intro)}</p>
 </div></section>
-<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}</div></section>
+<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}{extra}</div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
   {table(keys, lang)}
@@ -575,6 +576,150 @@ SERVICE_PAGES = [
      ])),
 ]
 
+# ─────────────────────────────────────────────────────────────────────────────
+# GUÍA DE PESTAÑAS — contenido propio del salón. Es el mejor activo editorial
+# que tienen: responde las búsquedas informativas ("cuánto duran", "cómo se
+# cuidan") que hoy no capturan.
+# ─────────────────────────────────────────────────────────────────────────────
+TECNICAS = [
+ dict(id="tecnica-1x1", precio="$750", dur="1 hora 30 minutos", retoque="$450",
+   es=dict(n="Técnica 1x1 o clásica",
+     q="Se coloca una extensión por cada una de tus pestañas naturales. Es set completo, así que lo tupido depende de la cantidad de pestaña que tengas.",
+     p="Es la técnica de entrada y la más natural. Si nunca has usado extensiones, empieza aquí."),
+   en=dict(n="Classic 1x1",
+     q="One extension on each of your natural lashes. It is a full set, so how dense it looks depends on how much natural lash you have.",
+     p="This is the entry technique and the most natural. If you have never worn extensions, start here.")),
+ dict(id="tecnica-hibrida", precio="$1,100", dur="2 horas", retoque="$550",
+   es=dict(n="Técnica híbrida",
+     q="Combina 1x1 y volumen: se coloca una extensión clásica y un grupo de volumen, alternando.",
+     p="Se ven más tupidas aunque no tengas mucha pestaña natural. Es el punto medio, y la que más nos piden."),
+   en=dict(n="Hybrid",
+     q="Combines 1x1 and volume: one classic extension and one volume fan, alternating.",
+     p="Looks fuller even without much natural lash. It is the middle ground, and the set we are asked for most.")),
+ dict(id="tecnica-volumen", precio="$1,200", dur="2 horas", retoque="$650",
+   es=dict(n="Técnica volumen ruso",
+     q="Se colocan tres extensiones por cada pestaña tuya, en abanico.",
+     p="No la recomendamos si antes no usaste híbridas o clásicas: hay que ir preparando tu pestaña para el peso."),
+   en=dict(n="Russian volume",
+     q="Three extensions in a fan on each of your natural lashes.",
+     p="We do not recommend it if you have not worn hybrid or classic first — the natural lash needs to be prepared for the weight.")),
+]
+
+CUIDADOS = {
+ "es": ["No mojar las pestañas durante las primeras 24 horas.",
+        "No usar productos grasos para desmaquillarte; de preferencia agua micelar.",
+        "No usar vapor ni sauna.",
+        "Cepillar y lavar a diario — que el agua caiga en tus pestañas al menos una vez al día.",
+        "No utilizar rímel.",
+        "No frotar tus ojos bruscamente.",
+        "Hacer un retoque cada dos o tres semanas."],
+ "en": ["Keep lashes dry for the first 24 hours.",
+        "Do not use oil-based removers; micellar water is best.",
+        "No steam and no sauna.",
+        "Brush and wash daily — let water run over your lashes at least once a day.",
+        "Do not use mascara.",
+        "Do not rub your eyes hard.",
+        "Book a fill every two to three weeks."],
+}
+
+CUIDADOS_LIFT = {
+ "es": ["No mojar durante las primeras 24 horas.",
+        "No usar vapor ni sauna.",
+        "No usar aceite de bebé; solo aceite de almendras o agua micelar.",
+        "Puedes usar rímel después de 24 horas.",
+        "Evitar agua muy caliente los primeros tres días."],
+ "en": ["Keep dry for the first 24 hours.",
+        "No steam and no sauna.",
+        "No baby oil — almond oil or micellar water only.",
+        "You can wear mascara after 24 hours.",
+        "Avoid very hot water for the first three days."],
+}
+
+def lash_guide(lang):
+    es = lang == "es"
+    out = [f'<h2>{"Las tres técnicas, explicadas" if es else "The three techniques, explained"}</h2>']
+    for t in TECNICAS:
+        d = t[lang]
+        out.append(f'<h3 id="{t["id"]}">{e(d["n"])} — {t["precio"]}</h3>')
+        out.append(f'<p>{e(d["q"])} {e(d["p"])}</p>')
+        out.append(f'<p class="muted">{"Aplicación" if es else "Application"}: {t["dur"]} · '
+                   f'{"Retoque" if es else "Fill"}: {t["retoque"]}</p>')
+    out.append(f'<h2>{"Por qué los retoques son necesarios" if es else "Why fills are necessary"}</h2>')
+    out.append('<p>' + ("Tus pestañas cumplen un ciclo de vida: se caen alrededor de <strong>cuatro o cinco al día</strong>, "
+        "y con cada una se va su extensión. Por eso el retoque no es un extra, es parte del servicio. "
+        "Las extensiones <strong>no maltratan ni tiran</strong> tu pestaña natural — lo que ves caer es el ciclo normal."
+        if es else
+        "Your lashes follow a growth cycle: you shed roughly <strong>four or five a day</strong>, and each one takes its "
+        "extension with it. That is why a fill is not an extra, it is part of the service. Extensions "
+        "<strong>do not damage or pull out</strong> your natural lashes — what you see falling is the normal cycle.") + '</p>')
+    out.append('<p>' + ("El retoque se cobra <strong>a evaluación de la lashista</strong>, según tus cuidados, tu crecimiento y "
+        "cuánta pestaña conserves: necesitas al menos el <strong>50%</strong> puesta. "
+        "Pasados los <strong>21 días</strong> ya no es retoque — la mayor parte de las extensiones se habrá caído, "
+        "así que se cobra retiro ($150) más aplicación nueva."
+        if es else
+        "The fill is priced <strong>at the lash artist's assessment</strong>, based on your aftercare, your growth and how much "
+        "lash you still have: you need at least <strong>50%</strong> retention. Past <strong>21 days</strong> it is no longer a "
+        "fill — most extensions will have shed — so it is charged as removal ($150) plus a new set.") + '</p>')
+    out.append(f'<h2>{"Cuidados de tus extensiones" if es else "Caring for your extensions"}</h2>')
+    out.append("<ul>" + "".join(f"<li>{e(c)}</li>" for c in CUIDADOS[lang]) + "</ul>")
+    out.append('<p>' + ("La duración de tus extensiones depende directamente del cuidado que les des. "
+        "Bien cuidadas y con retoque puntual, duran el tiempo que tú quieras."
+        if es else
+        "How long your extensions last depends directly on how you care for them. Well cared for and filled on "
+        "schedule, they last as long as you want them to.") + '</p>')
+    out.append(f'<h2>{"Lifting de pestañas — $450" if es else "Lash lift — $450"}</h2>')
+    out.append('<p>' + ("El lifting eleva tu <strong>pestaña natural desde la raíz</strong> para dar un efecto natural. "
+        "No se usa pelo sintético: el proceso va con pigmento y keratina, así que no daña la pestaña. "
+        "Incluye tinte negro y dura entre <strong>mes y medio y dos meses</strong>, según la persona y sus cuidados. "
+        "La aplicación toma una hora y puedes repetirlo cuantas veces quieras."
+        if es else
+        "A lash lift raises your <strong>natural lash from the root</strong> for a natural effect. No synthetic hair is used: "
+        "the process uses pigment and keratin, so it does not damage the lash. It includes black tint and lasts "
+        "<strong>six to eight weeks</strong>, depending on the person and their aftercare. Application takes an hour and you "
+        "can repeat it as often as you like.") + '</p>')
+    out.append("<ul>" + "".join(f"<li>{e(c)}</li>" for c in CUIDADOS_LIFT[lang]) + "</ul>")
+    out.append(f'<h2>{"Cejas: diseño y laminado" if es else "Brows: design and lamination"}</h2>')
+    out.append('<p>' + ("El <strong>diseño de ceja</strong> ($450) combina trazado, depilación y planchado, mapeado a tu rostro. "
+        "El <strong>laminado de ceja</strong> ($450) sigue el mismo proceso, pero el planchado va <strong>hacia arriba</strong>, "
+        "que es lo que da el efecto de ceja más poblada y peinada."
+        if es else
+        "<strong>Brow design</strong> ($450) combines mapping, waxing and pressing, shaped to your face. "
+        "<strong>Brow lamination</strong> ($450) follows the same process, but the hair is pressed <strong>upward</strong>, "
+        "which is what creates the fuller, brushed-up look.") + '</p>')
+    return "\n".join(out)
+
+def lash_faq_ld(lang):
+    es = lang == "es"
+    qa = ([("¿Cuánto duran las extensiones de pestañas?",
+            "Duran el tiempo que quieras, siempre que las retoques cada dos o tres semanas y las cuides. Tus pestañas naturales se caen entre cuatro y cinco al día y con ellas se va la extensión, por eso el retoque es parte del servicio."),
+           ("¿Las extensiones maltratan mis pestañas naturales?",
+            "No. Las extensiones no maltratan ni tiran la pestaña natural. Lo que ves caer es el ciclo de vida normal de tu pestaña."),
+           ("¿Cada cuándo tengo que retocar?",
+            "Cada dos o tres semanas. Necesitas conservar al menos el 50% de la pestaña puesta. Pasados 21 días ya no aplica retoque: se cobra retiro más aplicación nueva."),
+           ("¿Qué técnica me conviene si es mi primera vez?",
+            "La técnica 1x1 o clásica, de $750. El volumen ruso no se recomienda si antes no usaste híbridas o clásicas, porque hay que preparar tu pestaña para el peso."),
+           ("¿Puedo usar rímel con extensiones?",
+            "No. Con extensiones no se usa rímel. Con lifting de pestañas sí, después de las primeras 24 horas."),
+           ("¿Cuánto dura el lifting de pestañas?",
+            "Entre mes y medio y dos meses, según la persona y sus cuidados. Incluye tinte negro y keratina, y no usa pelo sintético.")]
+          if es else
+          [("How long do eyelash extensions last?",
+            "They last as long as you want, provided you get a fill every two to three weeks and care for them. Your natural lashes shed four to five a day and the extension goes with them, which is why fills are part of the service."),
+           ("Do extensions damage my natural lashes?",
+            "No. Extensions do not damage or pull out the natural lash. What you see shedding is your lashes' normal growth cycle."),
+           ("How often do I need a fill?",
+            "Every two to three weeks. You need to keep at least 50% retention. Past 21 days a fill no longer applies: it is charged as removal plus a new set."),
+           ("Which technique should I choose for my first time?",
+            "Classic 1x1, at $750. Russian volume is not recommended unless you have worn hybrid or classic first, because the natural lash needs to be prepared for the weight."),
+           ("Can I wear mascara with extensions?",
+            "No. Mascara is not used with extensions. With a lash lift you can, after the first 24 hours."),
+           ("How long does a lash lift last?",
+            "Six to eight weeks, depending on the person and their aftercare. It includes black tint and keratin, and uses no synthetic hair.")])
+    body = ",".join('{"@type":"Question","name":%s,"acceptedAnswer":{"@type":"Answer","text":%s}}'
+                    % (_j(q), _j(a)) for q, a in qa)
+    return ('<script type="application/ld+json">'
+            '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[%s]}</script>' % body)
+
 def main():
     log = []
     # Home (ES + EN)
@@ -599,8 +744,10 @@ def main():
             d = sp[lang]
             slug = sp["es_slug"] if lang == "es" else sp["en_slug"]
             alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
-            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"])
-            log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"], body, alt, salon_ld(lang))))
+            extra = lash_guide(lang) if sp["key"] == "lashes" else ""
+            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"], extra=extra)
+            ld = salon_ld(lang) + (lash_faq_ld(lang) if sp["key"] == "lashes" else "")
+            log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"], body, alt, ld)))
     # Full price list
     allk = list(PRICES.keys())
     for lang in ("es", "en"):
