@@ -1193,6 +1193,64 @@ def galeria_html(key, lang):
     titulo = "Trabajos hechos aquí" if es else "Work done here"
     return f'<h2>{titulo}</h2><div class="galeria js-reveal">{figs}</div>'
 
+GUIA_META = {
+ "lashes": dict(
+   es_slug="/guia-extensiones-de-pestanas.html", en_slug="/en/eyelash-extensions-guide.html",
+   es=dict(title="La Biblia de las Extensiones de Pestañas y Cejas | Stilo Salón",
+     desc="¿Cuánto duran las extensiones de pestañas? ¿Qué técnica te conviene? ¿Cada cuándo retocar? La guía completa de Stilo Salón, Roma Norte, CDMX.",
+     h1="La biblia de las extensiones de pestañas y cejas",
+     lede="¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está todo, escrito por quienes las aplican.",
+     eyebrow="Guía completa · Roma Norte"),
+   en=dict(title="The Eyelash Extension & Brow Bible | Stilo Salón",
+     desc="How long do eyelash extensions last? Which technique suits you? How often to get a fill? The complete guide from Stilo Salón, Roma Norte, Mexico City.",
+     h1="The eyelash extension and brow bible",
+     lede="Want to know what they cost? Which techniques exist? Which suits you? How long they last? It is all here, written by the people who apply them.",
+     eyebrow="Complete guide · Roma Norte")),
+ "hair": dict(
+   es_slug="/guia-color-y-alisados.html", en_slug="/en/color-and-smoothing-guide.html",
+   es=dict(title="Balayage, Babylights y Alisados: la Guía Completa | Stilo Salón",
+     desc="Diferencia entre balayage y babylights, cada cuándo retocar raíz, y cuál alisado te conviene: nanoplastia, Brazilian Blowout o botox capilar. Roma Norte, CDMX.",
+     h1="Color y alisados: la guía completa",
+     lede="Lo que más nos preguntan en la silla, escrito: qué técnica de color es cuál, cada cuándo volver, y cuál alisado te toca.",
+     eyebrow="Guía completa · Roma Norte"),
+   en=dict(title="Balayage, Babylights and Smoothing: the Complete Guide | Stilo Salón",
+     desc="The difference between balayage and babylights, how often to touch up roots, and which smoothing service suits you: nanoplasty, Brazilian Blowout or hair botox.",
+     h1="Color and smoothing: the complete guide",
+     lede="What people ask us most in the chair, written down: which color technique is which, how often to come back, and which smoothing service is yours.",
+     eyebrow="Complete guide · Roma Norte")),
+ "nails": dict(
+   es_slug="/guia-unas.html", en_slug="/en/nails-guide.html",
+   es=dict(title="Acrílico, Gel o Escultural: la Guía de Uñas | Stilo Salón",
+     desc="Qué conviene entre acrílico, gel y escultural, cada cuándo retocar sin dañar la uña natural, y qué hacer si traes la uña débil. Roma Norte, CDMX.",
+     h1="Uñas: la guía completa",
+     lede="Qué técnica te conviene, por qué el retoque a tiempo protege tu uña natural, y qué hacer si la traes débil.",
+     eyebrow="Guía completa · Roma Norte"),
+   en=dict(title="Acrylic, Gel or Sculpted: the Nail Guide | Stilo Salón",
+     desc="What suits you between acrylic, gel and sculpted nails, how often to fill without damaging the natural nail, and what to do if your nails are weak.",
+     h1="Nails: the complete guide",
+     lede="Which technique suits you, why fills on schedule protect your natural nail, and what to do if yours are weak.",
+     eyebrow="Complete guide · Roma Norte")),
+}
+
+RESUMEN = {
+ "lashes": {"es": "Cinco técnicas, de la clásica 1x1 al volumen ruso. Todas son set completo, se retocan cada dos o tres semanas y no maltratan tu pestaña natural. Abajo están los precios de todas.",
+            "en": "Five techniques, from classic 1x1 to Russian volume. All are full sets, filled every two to three weeks, and none damage your natural lashes. All prices below."},
+ "hair":   {"es": "Corte, color y tratamiento. Los precios marcados “desde” aplican de hombro hacia arriba; si tu cabello es más largo, el ajuste te lo decimos antes de empezar, nunca al cobrar.",
+            "en": "Cutting, color and treatment. Prices marked “from” apply at shoulder length and above; if your hair is longer, we tell you the adjustment before we start, never at the register."},
+ "nails":  {"es": "Manicure y pedicure spa, gel, acrílico y esculturales, más vitaminas para uña débil. Todo con su precio abajo.",
+            "en": "Spa manicure and pedicure, gel, acrylic and sculpted nails, plus treatments for weak nails. Every price below."},
+}
+
+def enlace_guia(key, lang):
+    g = GUIA_META[key]; d = g[lang]
+    slug = g["es_slug"] if lang == "es" else g["en_slug"]
+    txt = "Leer la guía completa" if lang == "es" else "Read the complete guide"
+    sub = ("Todo el detalle: técnicas, duración, cuidados y cada cuándo volver."
+           if lang == "es" else
+           "The full detail: techniques, how long they last, aftercare and when to come back.")
+    return (f'<a class="a-guia" href="{slug}"><span class="a-guia-t">{e(d["h1"])}</span>'
+            f'<span class="a-guia-s">{e(sub)}</span><span class="a-guia-c">{txt} &rarr;</span></a>')
+
 def main():
     log = []
     # Home (ES + EN)
@@ -1217,15 +1275,46 @@ def main():
             d = sp[lang]
             slug = sp["es_slug"] if lang == "es" else sp["en_slug"]
             alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
-            extra = {"lashes": lash_guide, "hair": hair_guide, "nails": nails_guide}[sp["key"]](lang)
-            extra += galeria_html(sp["key"], lang)
+            extra = galeria_html(sp["key"], lang) + enlace_guia(sp["key"], lang)
             bnr = {"hair":"h-cabello.jpg","nails":"h-unas.jpg","lashes":"h-pestanas.jpg"}[sp["key"]]
-            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"], extra=extra, banner=bnr)
-            faq = {"lashes": lambda l: lash_faq_ld(l),
-                   "hair":   lambda l: topic_faq_ld(HAIR_FAQ, l),
-                   "nails":  lambda l: topic_faq_ld(NAILS_FAQ, l)}[sp["key"]](lang)
-            ld = salon_ld(lang) + faq
+            resumen = [RESUMEN[sp["key"]][lang]]
+            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], resumen, sp["keys"], extra=extra, banner=bnr)
+            ld = salon_ld(lang)   # el FAQPage vive en la guía, que es donde están las respuestas
             log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"], body, alt, ld)))
+    # Páginas de guía: una por servicio, en los dos idiomas
+    CUERPO = {"lashes": lash_guide, "hair": hair_guide, "nails": nails_guide}
+    FAQ_G  = {"lashes": lambda l: lash_faq_ld(l),
+              "hair":   lambda l: topic_faq_ld(HAIR_FAQ, l),
+              "nails":  lambda l: topic_faq_ld(NAILS_FAQ, l)}
+    VUELTA = {"lashes": ("/pestanas-y-cejas.html", "/en/lashes-and-brows.html",
+                         "Ver precios de pestañas y cejas", "See lash and brow prices"),
+              "hair":   ("/cabello.html", "/en/hair.html",
+                         "Ver precios de cabello y color", "See hair and color prices"),
+              "nails":  ("/unas.html", "/en/nails.html",
+                         "Ver precios de uñas", "See nail prices")}
+    for key, g in GUIA_META.items():
+        for lang in ("es", "en"):
+            d = g[lang]
+            slug = g["es_slug"] if lang == "es" else g["en_slug"]
+            alt  = SITE + (g["en_slug"] if lang == "es" else g["es_slug"])
+            volver_es, volver_en, txt_es, txt_en = VUELTA[key]
+            destino = volver_es if lang == "es" else volver_en
+            txt = txt_es if lang == "es" else txt_en
+            cuerpo = (f'<section><div class="wrap">'
+                      f'<p class="eyebrow">{e(d["eyebrow"])}</p><h1>{e(d["h1"])}</h1>'
+                      f'<p class="lede">{e(d["lede"])}</p></div></section>'
+                      f'<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">'
+                      f'{CUERPO[key](lang)}'
+                      f'<a class="a-guia" href="{destino}"><span class="a-guia-t">{txt}</span>'
+                      f'<span class="a-guia-c">{"Ver precios" if lang=="es" else "See prices"} &rarr;</span></a>'
+                      f'</div></section>'
+                      f'<section><div class="wrap"><div class="btn-row">'
+                      f'<a class="btn btn-primary" href="{BOOKING}" rel="noopener">{T[lang]["book"]}</a>'
+                      f'<a class="btn btn-wa" href="{WA}" rel="noopener">{T[lang]["book_wa"]}</a>'
+                      f'</div></div></section>')
+            log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"],
+                                                    cuerpo, alt, salon_ld(lang) + FAQ_G[key](lang))))
+
     # Full price list
     allk = list(PRICES.keys())
     for lang in ("es", "en"):
@@ -1275,8 +1364,10 @@ def main():
 
     # sitemap / robots / Cloudflare
     urls = ["/", "/cabello.html", "/unas.html", "/pestanas-y-cejas.html", "/precios.html",
+            "/guia-extensiones-de-pestanas.html", "/guia-color-y-alisados.html", "/guia-unas.html",
             "/aviso-de-privacidad.html", "/en/", "/en/hair.html", "/en/nails.html",
-            "/en/lashes-and-brows.html", "/en/pricing.html", "/en/privacy.html"]
+            "/en/lashes-and-brows.html", "/en/pricing.html", "/en/eyelash-extensions-guide.html",
+            "/en/color-and-smoothing-guide.html", "/en/nails-guide.html", "/en/privacy.html"]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
