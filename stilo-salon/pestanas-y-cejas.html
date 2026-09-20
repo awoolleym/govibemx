@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://stilo-salon.com/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "HairSalon", "@id": "https://stilo-salon.com/#salon", "name": "Stilo Salón", "url": "https://stilo-salon.com/", "description": "Salón de belleza en Roma Norte, CDMX. Cabello, color, tratamientos, uñas, extensiones de pestañas y diseño de cejas.", "telephone": "+52-55-2299-3258", "priceRange": "$$", "currenciesAccepted": "MXN", "image": "https://stilo-salon.com/assets/og.png", "address": {"@type": "PostalAddress", "streetAddress": "Calle Guadalajara 70-B", "addressLocality": "Roma Norte, Cuauhtémoc", "addressRegion": "Ciudad de México", "postalCode": "06700", "addressCountry": "MX"}, "areaServed": ["Roma Norte", "Roma Sur", "Condesa", "Juárez", "Ciudad de México"], "sameAs": ["https://www.instagram.com/stilosalon91/", "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb", "https://stilo-salon.versum.com/", "https://maps.google.com/?cid=4574699337846800212", "https://maps.app.goo.gl/SRXsyACEtcT2T9cd7"], "email": "stilo91@hotmail.com", "hasMap": "https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX", "potentialAction": {"@type": "ReserveAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://stilo-salon.versum.com/?trade=598440", "inLanguage": "es-MX", "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]}, "result": {"@type": "Reservation", "name": "Cita en Stilo Salón"}}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "19:00"}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cuánto duran las extensiones de pestañas?","acceptedAnswer":{"@type":"Answer","text":"Duran el tiempo que quieras, siempre que las retoques cada dos o tres semanas y las cuides. Tus pestañas naturales se caen entre cuatro y cinco al día y con ellas se va la extensión, por eso el retoque es parte del servicio."}},{"@type":"Question","name":"¿Las extensiones maltratan mis pestañas naturales?","acceptedAnswer":{"@type":"Answer","text":"No. Las extensiones no maltratan ni tiran la pestaña natural. Lo que ves caer es el ciclo de vida normal de tu pestaña."}},{"@type":"Question","name":"¿Cada cuándo tengo que retocar?","acceptedAnswer":{"@type":"Answer","text":"Cada dos o tres semanas. Necesitas conservar al menos el 50% de la pestaña puesta. Pasados 21 días ya no aplica retoque: se cobra retiro más aplicación nueva."}},{"@type":"Question","name":"¿Qué técnica me conviene si es mi primera vez?","acceptedAnswer":{"@type":"Answer","text":"La técnica 1x1 o clásica, de $750. El volumen ruso no se recomienda si antes no usaste híbridas o clásicas, porque hay que preparar tu pestaña para el peso."}},{"@type":"Question","name":"¿Puedo usar rímel con extensiones?","acceptedAnswer":{"@type":"Answer","text":"No. Con extensiones no se usa rímel. Con lifting de pestañas sí, después de las primeras 24 horas."}},{"@type":"Question","name":"¿Cuánto dura el lifting de pestañas?","acceptedAnswer":{"@type":"Answer","text":"Entre mes y medio y dos meses, según la persona y sus cuidados. Incluye tinte negro y keratina, y no usa pelo sintético."}}]}</script>
 </head>
@@ -247,6 +247,72 @@
         })(ini);
       });
     }, { threshold: 0.4 }).observe(barra);
+  }
+
+
+  // ── Parallax de la foto de portada ──────────────────────────────────
+  // Se mueve una fracción de lo que se mueve la página: da profundidad sin
+  // marear. Se calcula dentro de requestAnimationFrame para no trabar scroll.
+  var foto = document.querySelector('.hero-figure img');
+  if (foto && window.innerWidth > 900) {
+    var pend = false;
+    window.addEventListener('scroll', function () {
+      if (pend) return;
+      pend = true;
+      requestAnimationFrame(function () {
+        var y = window.scrollY;
+        if (y < 900) foto.style.transform = 'translateY(' + (y * 0.07).toFixed(1) + 'px)';
+        pend = false;
+      });
+    }, { passive: true });
+  }
+
+  // ── Visor de galería ────────────────────────────────────────────────
+  var figs = document.querySelectorAll('.galeria figure');
+  if (figs.length) {
+    var visor = document.createElement('div');
+    visor.className = 'visor';
+    visor.setAttribute('role', 'dialog');
+    visor.setAttribute('aria-modal', 'true');
+    visor.innerHTML = '<button class="visor-cerrar" aria-label="Cerrar">&times;</button>' +
+                      '<img alt=""><figcaption></figcaption>';
+    document.body.appendChild(visor);
+    var vImg = visor.querySelector('img');
+    var vCap = visor.querySelector('figcaption');
+    var abridor = null;
+
+    function abrir(fig) {
+      var im = fig.querySelector('img');
+      var cap = fig.querySelector('figcaption');
+      vImg.src = im.currentSrc || im.src;
+      vImg.alt = im.alt || '';
+      vCap.textContent = cap ? cap.textContent : '';
+      visor.classList.add('abierto');
+      document.body.style.overflow = 'hidden';
+      abridor = fig;
+      visor.querySelector('.visor-cerrar').focus();
+    }
+    function cerrar() {
+      visor.classList.remove('abierto');
+      document.body.style.overflow = '';
+      if (abridor) { abridor.focus(); abridor = null; }
+    }
+    for (var i = 0; i < figs.length; i++) {
+      (function (fig) {
+        fig.setAttribute('tabindex', '0');
+        fig.setAttribute('role', 'button');
+        fig.addEventListener('click', function () { abrir(fig); });
+        fig.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrir(fig); }
+        });
+      })(figs[i]);
+    }
+    visor.addEventListener('click', function (ev) {
+      if (ev.target === visor || ev.target.classList.contains('visor-cerrar')) cerrar();
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && visor.classList.contains('abierto')) cerrar();
+    });
   }
 
   // Encabezado compacto al bajar

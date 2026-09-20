@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://stilo-salon.com/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
 
 </head>
@@ -164,6 +164,72 @@
         })(ini);
       });
     }, { threshold: 0.4 }).observe(barra);
+  }
+
+
+  // ── Parallax de la foto de portada ──────────────────────────────────
+  // Se mueve una fracción de lo que se mueve la página: da profundidad sin
+  // marear. Se calcula dentro de requestAnimationFrame para no trabar scroll.
+  var foto = document.querySelector('.hero-figure img');
+  if (foto && window.innerWidth > 900) {
+    var pend = false;
+    window.addEventListener('scroll', function () {
+      if (pend) return;
+      pend = true;
+      requestAnimationFrame(function () {
+        var y = window.scrollY;
+        if (y < 900) foto.style.transform = 'translateY(' + (y * 0.07).toFixed(1) + 'px)';
+        pend = false;
+      });
+    }, { passive: true });
+  }
+
+  // ── Visor de galería ────────────────────────────────────────────────
+  var figs = document.querySelectorAll('.galeria figure');
+  if (figs.length) {
+    var visor = document.createElement('div');
+    visor.className = 'visor';
+    visor.setAttribute('role', 'dialog');
+    visor.setAttribute('aria-modal', 'true');
+    visor.innerHTML = '<button class="visor-cerrar" aria-label="Cerrar">&times;</button>' +
+                      '<img alt=""><figcaption></figcaption>';
+    document.body.appendChild(visor);
+    var vImg = visor.querySelector('img');
+    var vCap = visor.querySelector('figcaption');
+    var abridor = null;
+
+    function abrir(fig) {
+      var im = fig.querySelector('img');
+      var cap = fig.querySelector('figcaption');
+      vImg.src = im.currentSrc || im.src;
+      vImg.alt = im.alt || '';
+      vCap.textContent = cap ? cap.textContent : '';
+      visor.classList.add('abierto');
+      document.body.style.overflow = 'hidden';
+      abridor = fig;
+      visor.querySelector('.visor-cerrar').focus();
+    }
+    function cerrar() {
+      visor.classList.remove('abierto');
+      document.body.style.overflow = '';
+      if (abridor) { abridor.focus(); abridor = null; }
+    }
+    for (var i = 0; i < figs.length; i++) {
+      (function (fig) {
+        fig.setAttribute('tabindex', '0');
+        fig.setAttribute('role', 'button');
+        fig.addEventListener('click', function () { abrir(fig); });
+        fig.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrir(fig); }
+        });
+      })(figs[i]);
+    }
+    visor.addEventListener('click', function (ev) {
+      if (ev.target === visor || ev.target.classList.contains('visor-cerrar')) cerrar();
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && visor.classList.contains('abierto')) cerrar();
+    });
   }
 
   // Encabezado compacto al bajar

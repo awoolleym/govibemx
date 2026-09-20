@@ -242,7 +242,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <meta property="og:image" content="{SITE}/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
 {extra_ld}
 </head>
@@ -384,6 +384,72 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         }})(ini);
       }});
     }}, {{ threshold: 0.4 }}).observe(barra);
+  }}
+
+
+  // ── Parallax de la foto de portada ──────────────────────────────────
+  // Se mueve una fracción de lo que se mueve la página: da profundidad sin
+  // marear. Se calcula dentro de requestAnimationFrame para no trabar scroll.
+  var foto = document.querySelector('.hero-figure img');
+  if (foto && window.innerWidth > 900) {{
+    var pend = false;
+    window.addEventListener('scroll', function () {{
+      if (pend) return;
+      pend = true;
+      requestAnimationFrame(function () {{
+        var y = window.scrollY;
+        if (y < 900) foto.style.transform = 'translateY(' + (y * 0.07).toFixed(1) + 'px)';
+        pend = false;
+      }});
+    }}, {{ passive: true }});
+  }}
+
+  // ── Visor de galería ────────────────────────────────────────────────
+  var figs = document.querySelectorAll('.galeria figure');
+  if (figs.length) {{
+    var visor = document.createElement('div');
+    visor.className = 'visor';
+    visor.setAttribute('role', 'dialog');
+    visor.setAttribute('aria-modal', 'true');
+    visor.innerHTML = '<button class="visor-cerrar" aria-label="Cerrar">&times;</button>' +
+                      '<img alt=""><figcaption></figcaption>';
+    document.body.appendChild(visor);
+    var vImg = visor.querySelector('img');
+    var vCap = visor.querySelector('figcaption');
+    var abridor = null;
+
+    function abrir(fig) {{
+      var im = fig.querySelector('img');
+      var cap = fig.querySelector('figcaption');
+      vImg.src = im.currentSrc || im.src;
+      vImg.alt = im.alt || '';
+      vCap.textContent = cap ? cap.textContent : '';
+      visor.classList.add('abierto');
+      document.body.style.overflow = 'hidden';
+      abridor = fig;
+      visor.querySelector('.visor-cerrar').focus();
+    }}
+    function cerrar() {{
+      visor.classList.remove('abierto');
+      document.body.style.overflow = '';
+      if (abridor) {{ abridor.focus(); abridor = null; }}
+    }}
+    for (var i = 0; i < figs.length; i++) {{
+      (function (fig) {{
+        fig.setAttribute('tabindex', '0');
+        fig.setAttribute('role', 'button');
+        fig.addEventListener('click', function () {{ abrir(fig); }});
+        fig.addEventListener('keydown', function (ev) {{
+          if (ev.key === 'Enter' || ev.key === ' ') {{ ev.preventDefault(); abrir(fig); }}
+        }});
+      }})(figs[i]);
+    }}
+    visor.addEventListener('click', function (ev) {{
+      if (ev.target === visor || ev.target.classList.contains('visor-cerrar')) cerrar();
+    }});
+    document.addEventListener('keydown', function (ev) {{
+      if (ev.key === 'Escape' && visor.classList.contains('abierto')) cerrar();
+    }});
   }}
 
   // Encabezado compacto al bajar
@@ -541,7 +607,9 @@ def home_body(lang):
       for i, (q, a) in enumerate(c["faq"]))
     hi = "Roma Norte · Ciudad de México" if lang=="es" else "Roma Norte · Mexico City"
     return f"""
-<section class="hero"><div class="wrap hero-grid"><div>
+<section class="hero">
+  <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
+  <div class="wrap hero-grid"><div>
   <p class="eyebrow">{hi}</p>
   <h1>{e(c['home_h1'])}</h1>
   <p class="lede">{e(c['home_lede'])}</p>
@@ -558,11 +626,7 @@ def home_body(lang):
     <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
   </div>
 </div>
-<figure class="hero-figure">{img("hero", 900, 1125, t["hero_alt"], ALTA)}
-  <svg class="swoosh" viewBox="0 0 1200 1500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path d="M-40 1180 C 330 760, 690 1360, 1010 880 S 1180 560, 1260 430"/>
-    <path class="thin" d="M-40 1310 C 380 930, 760 1470, 1260 900"/>
-  </svg></figure>
+<figure class="hero-figure">{img("hero", 900, 1125, t["hero_alt"], ALTA)}<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></figure>
 </div></section>
 
 <section class="alt"><div class="wrap">
