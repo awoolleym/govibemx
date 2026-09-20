@@ -553,8 +553,9 @@ C = {
    ("¿Puedo llevar a mi perro?", "Sí, somos pet friendly. Puedes venir con tu mascota siempre que sea tranquila con otras personas y la traigas con correa o en transportadora."),
    ("¿Tienen WiFi?", "Sí, WiFi gratis para las clientas. Los servicios de color y tratamiento toman varias horas, así que puedes trabajar o ver algo mientras tanto. También te ofrecemos una bebida de cortesía."),
    ("¿Qué formas de pago aceptan?", "Efectivo y tarjetas de débito y crédito."),
+   ("¿Aceptan meses sin intereses?", "Sí. Manejamos 3 meses sin intereses con todas las tarjetas de crédito en compras a partir de $2,000."),
    ("¿Los precios publicados son finales?", "Los precios marcados “desde” aplican a cabello a partir del hombro. Si tu cabello es más largo o más denso, el ajuste se te comunica antes de empezar el servicio, nunca al final."),
-   ("¿Sus servicios tienen garantía?", "Sí. Si algo no quedó como lo acordamos, regresa dentro de los 7 días siguientes y lo corregimos sin costo."),
+   ("¿Sus servicios tienen garantía?", "Sí. Todos nuestros servicios tienen 72 horas de garantía, y las uñas en gel 5 días. Si algo no quedó como lo acordamos, regresa dentro de ese plazo y lo corregimos sin costo."),
  ],
  "visit_h2": "Estamos en el corazón de la Roma Norte",
 },
@@ -581,8 +582,9 @@ C = {
    ("Can I bring my dog?", "Yes, we are pet friendly. You are welcome to come with your pet as long as it is calm around people and comes on a leash or in a carrier."),
    ("Do you have WiFi?", "Yes, free WiFi for clients. Color and treatment services take several hours, so you can work or watch something while you wait. We also offer you a complimentary drink."),
    ("What payment methods do you accept?", "Cash, and debit and credit cards."),
+   ("Do you offer interest-free monthly payments?", "Yes. We offer 3 interest-free monthly payments with any credit card on purchases from $2,000 MXN."),
    ("Are the published prices final?", "Prices marked “from” apply to hair at shoulder length and above. If your hair is longer or denser, we tell you the adjustment before starting the service, never at the end."),
-   ("Do your services come with a guarantee?", "Yes. If something did not turn out the way we agreed, come back within 7 days and we will correct it at no cost."),
+   ("Do your services come with a guarantee?", "Yes. Every service carries a 72-hour guarantee, and gel nails 5 days. If something did not turn out the way we agreed, come back within that window and we will correct it at no cost."),
  ],
  "visit_h2": "In the heart of Roma Norte",
 },
@@ -607,6 +609,7 @@ def salon_ld(lang):
                      if lang=="es" else
                      "Beauty salon in Roma Norte, Mexico City. Hair, color, treatments, nails, eyelash extensions and brow design."),
       "telephone":"+52-55-2299-3258","priceRange":"$$","currenciesAccepted":"MXN",
+      "paymentAccepted":("Efectivo, tarjeta de débito, tarjeta de crédito, 3 meses sin intereses desde $2,000" if lang=="es" else "Cash, debit card, credit card, 3 interest-free monthly payments from $2,000"),
       "image":f"{SITE}/assets/og.png",
       "address":{"@type":"PostalAddress","streetAddress":NAP["street"],
                  "addressLocality":NAP["locality"],"addressRegion":"Ciudad de México",
@@ -726,7 +729,7 @@ def home_body(lang):
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
     <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>
     <div><strong>60+</strong>{'servicios con precio publicado' if lang=='es' else 'services with published prices'}</div>
-    <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
+    <div><strong>3 {'meses' if lang=='es' else 'months'}</strong>{'sin intereses desde $2,000' if lang=='es' else 'interest-free from $2,000'}</div>
   </div>
 </div>
 <figure class="hero-figure"><span class="marco" aria-hidden="true"></span>{img("hero", 900, 1125, t["hero_alt"], ALTA)}<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></figure>
@@ -830,7 +833,7 @@ SERVICE_PAGES = [
       "Los precios de color marcados “desde” aplican de hombro hacia arriba. El cabello más largo o más denso lleva más producto y más tiempo, y el ajuste te lo decimos <strong>antes</strong> de empezar, con el espejo enfrente. Nunca al momento de cobrar.",
       "En <strong id='tratamientos'>tratamientos y alisados</strong> trabajamos tres técnicas distintas, y la diferencia importa. La <strong>nanoplastia</strong> (desde $2,500) es un alisado sin formol que reestructura la fibra capilar y deja el cabello liso y con brillo por varios meses. El <strong>Brazilian Blowout</strong> (desde $2,500) sella la cutícula y reduce el frizz manteniendo movimiento — no deja el cabello completamente lacio. El <strong>botox capilar</strong> (desde $1,800, una hora) no alisa: rellena y repara cabello poroso o maltratado por decoloración.",
       "Si no sabes cuál te conviene, escríbenos por WhatsApp con una foto de tu cabello y te decimos con honestidad cuál sí y cuál no. A veces la respuesta es un <strong>tratamiento profundo hidratante</strong> de $520 y no un alisado de $2,500.",
-      "Todos nuestros servicios tienen <strong>7 días de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo.",
+      "Todos nuestros servicios tienen <strong>72 horas de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo. Y en compras desde $2,000 manejamos <strong>3 meses sin intereses</strong> con todas las tarjetas de crédito.",
      ]),
    en=dict(eyebrow="Hair & color · Roma Norte",
      title="Haircuts, Color & Balayage in Roma Norte, Mexico City | Stilo Salón",
@@ -844,7 +847,7 @@ SERVICE_PAGES = [
       "Color prices marked “from” apply at shoulder length and above. Longer or denser hair takes more product and more time, and we tell you that adjustment <strong>before</strong> we begin, with the mirror in front of you. Never at the register.",
       "In <strong id='tratamientos'>treatments and smoothing</strong> we work three distinct techniques, and the difference matters. <strong>Nanoplasty</strong> (from $2,500) is a formaldehyde-free smoothing service that restructures the hair fiber, leaving it straight and glossy for several months. <strong>Brazilian Blowout</strong> (from $2,500) seals the cuticle and cuts frizz while keeping movement — it does not leave hair perfectly flat. <strong>Hair botox</strong> (from $1,800, one hour) does not straighten: it fills and repairs porous hair damaged by bleaching.",
       "If you are not sure which one suits you, message us on WhatsApp with a photo of your hair and we will tell you honestly which will work and which will not. Sometimes the answer is a $520 deep hydrating treatment rather than a $2,500 smoothing service.",
-      "Every service carries a <strong>7-day guarantee</strong>: if something did not turn out the way we agreed, come back and we will correct it at no cost.",
+      "Every service carries a <strong>72-hour guarantee</strong>: if something did not turn out the way we agreed, come back and we will correct it at no cost. On purchases from $2,000 we offer <strong>3 interest-free monthly payments</strong> with any credit card.",
      ])),
  dict(key="nails", es_slug="/unas.html", en_slug="/en/nails.html",
    keys=["mani-pedi", "gel-esmalte", "unas"],
@@ -861,6 +864,7 @@ SERVICE_PAGES = [
       "Las <strong>vitaminas</strong> ($150) son tratamientos para la uña natural, no color. El <strong>calcio</strong> fortalece, el <strong>rubber</strong> cubre imperfecciones y da cuerpo a uñas delgadas o débiles, y la <strong>vitamina</strong> protege mientras la uña se recupera. Si traes las uñas maltratadas después de mucho acrílico, empieza por aquí.",
       "En <strong>acrílico y esculturales</strong> manejamos acrílico sobre uña natural ($400), uña escultural con gel (desde $500) y uña tip con gel (desde $450). Los retoques son más económicos que el juego completo y te recomendamos hacerlos cada tres o cuatro semanas: esperar más tiempo daña la uña natural. El <strong>retiro</strong> ($100) lo hacemos siempre con técnica, nunca arrancando.",
       "Una nota honesta: no todas las manos necesitan acrílico. Si tu uña natural está en buen estado, un gel bien puesto se ve igual de bien y cuida más. Te lo vamos a decir.",
+      "Las <strong>uñas en gel tienen 5 días de garantía</strong> — el resto de nuestros servicios, 72 horas. Si se te despostilla algo dentro de ese plazo, regresas y lo corregimos sin costo.",
      ]),
    en=dict(eyebrow="Nails · Roma Norte",
      title="Nails, Manicure & Pedicure in Roma Norte, Mexico City | Stilo Salón",
@@ -875,6 +879,7 @@ SERVICE_PAGES = [
       "<strong>Nail vitamins</strong> ($150) are treatments for the natural nail, not color. <strong>Calcium</strong> strengthens, <strong>rubber base</strong> covers imperfections and adds body to thin or weak nails, and <strong>nail vitamin</strong> protects while the nail recovers. If your nails are worn down after a long stretch of acrylic, start here.",
       "In <strong>acrylic and sculpted nails</strong> we offer acrylic over the natural nail ($400), sculpted gel nails (from $500) and gel tips (from $450). Fills cost less than a full set, and we recommend them every three or four weeks — waiting longer damages the natural nail. <strong>Removal</strong> ($100) is always done properly, never by prying.",
       "One honest note: not every hand needs acrylic. If your natural nail is in good shape, a well-applied gel looks just as good and treats it better. We will tell you so.",
+      "<strong>Gel nails carry a 5-day guarantee</strong> — every other service, 72 hours. If anything chips within that window, come back and we will fix it at no cost.",
      ])),
  dict(key="lashes", es_slug="/pestanas-y-cejas.html", en_slug="/en/lashes-and-brows.html",
    keys=["pestanas", "cejas", "depilacion"],
@@ -1128,6 +1133,18 @@ def hair_guide(lang):
       "The <strong>Split Ender</strong> (from $600, one hour) is a tool that trims only the split ends — millimeters — without "
       "taking length. It is for when you are growing your hair out but the ends are breaking and a regular cut would cost you "
       "several centimeters. It does not replace a haircut: it spaces them out.") + '</p>')
+    o.append(f'<h2>{"Garantía y formas de pago" if es else "Guarantee and payment"}</h2>')
+    o.append('<p>' + ("Todos nuestros servicios tienen <strong>72 horas de garantía</strong>: si algo no quedó "
+      "como lo acordamos, regresas dentro de ese plazo y lo corregimos sin costo. "
+      "Aceptamos efectivo y tarjetas de débito y crédito, y a partir de <strong>$2,000</strong> puedes pagar "
+      "a <strong>3 meses sin intereses</strong> con cualquier tarjeta de crédito — que es justo el rango en el "
+      "que caen el balayage, la nanoplastia y el Brazilian Blowout."
+      if es else
+      "Every service carries a <strong>72-hour guarantee</strong>: if something did not turn out the way we "
+      "agreed, come back within that window and we will correct it at no cost. "
+      "We take cash and debit and credit cards, and from <strong>$2,000</strong> you can split the payment into "
+      "<strong>3 interest-free monthly instalments</strong> with any credit card — which is exactly the range "
+      "balayage, nanoplasty and Brazilian Blowout fall into.") + '</p>')
     return "\n".join(o)
 
 def nails_guide(lang):
@@ -1172,6 +1189,14 @@ def nails_guide(lang):
       if es else
       "And an honest recommendation: if your natural nail is healthy, a well-applied gel looks just as good as acrylic and "
       "treats it better. We will tell you so, even though acrylic costs more.") + '</p>')
+    o.append(f'<h2>{"Garantía" if es else "Guarantee"}</h2>')
+    o.append('<p>' + ("Las <strong>uñas en gel tienen 5 días de garantía</strong> y el resto de nuestros "
+      "servicios, <strong>72 horas</strong>. Si algo se despostilla o no quedó como lo acordamos dentro de ese "
+      "plazo, regresas y lo corregimos sin costo."
+      if es else
+      "<strong>Gel nails carry a 5-day guarantee</strong>, and every other service <strong>72 hours</strong>. "
+      "If anything chips or did not turn out the way we agreed within that window, come back and we will fix "
+      "it at no cost.") + '</p>')
     return "\n".join(o)
 
 HAIR_FAQ = {
@@ -1213,7 +1238,9 @@ NAILS_FAQ = {
         ("Tengo la uña débil después de mucho acrílico, ¿qué hago?",
          "Empieza por las vitaminas ($150): el calcio fortalece, el rubber cubre imperfecciones y da cuerpo a uñas delgadas, y la vitamina protege mientras la uña se recupera. Se pueden combinar con gel para que no dejes de traerlas arregladas."),
         ("¿Qué incluye el manicure spa?",
-         "Tina con sales, exfoliación, masaje y esmalte, por $220. Con gel en lugar de esmalte son $350. El pedicure spa ($360) añade limado de talón y masaje de pies.")],
+         "Tina con sales, exfoliación, masaje y esmalte, por $220. Con gel en lugar de esmalte son $350. El pedicure spa ($360) añade limado de talón y masaje de pies."),
+        ("¿Las uñas en gel tienen garantía?",
+         "Sí, 5 días. El resto de nuestros servicios tienen 72 horas de garantía. Si algo se despostilla dentro de ese plazo, regresas y lo corregimos sin costo.")],
  "en": [("Acrylic or gel?",
          "If your natural nail is healthy, gel looks just as good and treats it better. Acrylic makes sense when you want structure and length. Gel lasts two to three weeks; acrylic holds longer but needs a fill every three to four weeks."),
         ("Does acrylic damage the natural nail?",
@@ -1225,7 +1252,9 @@ NAILS_FAQ = {
         ("My nails are weak after a long run of acrylic — what now?",
          "Start with nail vitamins ($150): calcium strengthens, rubber base covers imperfections and adds body to thin nails, and nail vitamin protects while the nail recovers. They combine with gel so you do not have to go bare."),
         ("What does the spa manicure include?",
-         "A salt soak, exfoliation, massage and polish, for $220. With gel instead of polish it is $350. The spa pedicure ($360) adds heel filing and a foot massage.")],
+         "A salt soak, exfoliation, massage and polish, for $220. With gel instead of polish it is $350. The spa pedicure ($360) adds heel filing and a foot massage."),
+        ("Do gel nails come with a guarantee?",
+         "Yes, 5 days. Every other service carries a 72-hour guarantee. If anything chips within that window, come back and we will fix it at no cost.")],
 }
 
 def topic_faq_ld(table, lang):
@@ -1456,10 +1485,13 @@ def main():
                 "Over 60 services with price and duration. Roma Norte, Mexico City.")
         h1 = "Lista de precios completa" if lang == "es" else "Full price list"
         intro = ("Todos nuestros servicios con su precio y su duración. Los precios marcados “desde” "
-                 "aplican a cabello a partir del hombro; cualquier ajuste te lo decimos antes de empezar."
+                 "aplican a cabello a partir del hombro; cualquier ajuste te lo decimos antes de empezar. "
+                 "A partir de $2,000 puedes pagar a 3 meses sin intereses con cualquier "
+                 "tarjeta de crédito."
                  if lang == "es" else
                  "Every service with its price and duration. Prices marked “from” apply at shoulder "
-                 "length and above; any adjustment is discussed before we begin.")
+                 "length and above; any adjustment is discussed before we begin. From $2,000 you can "
+                 "split the payment into 3 interest-free monthly instalments with any credit card.")
         body = svc_body(lang, "Roma Norte · CDMX" if lang=="es" else "Roma Norte · Mexico City",
                         h1, intro, [], allk)
         log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt, salon_ld(lang))))
