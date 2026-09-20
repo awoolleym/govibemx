@@ -34,6 +34,7 @@ GMB       = GMB_CORTO
 # la ficha (verificado: 4574699337846800212), así que abre la caja de reseña
 # del negocio correcto, sin pasar por el perfil.
 RESENA = "https://g.page/r/CVS_klrPmHw_EBM/review"
+OPINIONES = 91   # ← actualizar cuando crezca
 PERFILES = ["https://www.instagram.com/stilosalon91/",
             "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb",
             "https://stilo-salon.versum.com/",
@@ -531,6 +532,7 @@ def home_body(lang):
   </div>
   <div class="trust">
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
+    <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>
     <div><strong>60+</strong>{'servicios con precio publicado' if lang=='es' else 'services with published prices'}</div>
     <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
   </div>
@@ -571,10 +573,10 @@ def home_body(lang):
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">{'Dónde encontrarnos' if lang=='es' else 'Find us'}</p>
   <h2>{'Búscanos, léenos, reserva' if lang=='es' else 'Look us up, read us, book'}</h2>
-  <p class="lede">{'Estamos en Google, en Instagram y en Fresha. Si ya viniste, una reseña en Google nos ayuda muchísimo a que otras clientas nos encuentren.' if lang=='es' else 'We are on Google, Instagram and Fresha. If you have been here, a Google review helps other clients find us.'}</p></div>
+  <p class="lede">{f'Ya somos {OPINIONES} opiniones en Google. Si ya viniste, la tuya nos ayuda muchísimo a que más clientas nos encuentren.' if lang=='es' else f'We are at {OPINIONES} Google reviews. If you have been here, yours helps more clients find us.'}</p></div>
   <div class="perfiles">
     <a class="perfil" href="{GMB}" rel="noopener">
-      <strong>Google</strong><span>{'Ver reseñas y cómo llegar' if lang=='es' else 'Reviews and directions'}</span></a>
+      <strong>Google</strong><span>{f'{OPINIONES} opiniones · cómo llegar' if lang=='es' else f'{OPINIONES} reviews · directions'}</span></a>
     <a class="perfil" href="https://www.instagram.com/stilosalon91/" rel="noopener">
       <strong>Instagram</strong><span>@stilosalon91</span></a>
     <a class="perfil" href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">
