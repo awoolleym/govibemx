@@ -415,7 +415,7 @@ C = {
 "es": {
  "home_h1": "¡Bonita la que lo lea!",
  "home_lede": "Bienvenida a Stilo Salón. Nos encanta consentirte y hacerte sentir como en casa: somos el lugar para relajarte, dejarte consentir y ser tú misma. Porque sabemos que la belleza no lo es todo… pero conocemos el gran poder que tiene para impulsarnos a ser la mejor versión de nosotras mismas.",
- "home_lede2": "Lo único que cambiamos es esto: ahora los precios están aquí, completos y con su duración, para que llegues sabiendo exactamente qué vas a pagar.",
+ "home_lede2": "Precios completos, con su duración, a la vista.",
  "home_why_h2": "Nos estamos actualizando, sin perder lo que ya funcionaba",
  "why": [
    ("Precios publicados", "La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar."),
@@ -441,7 +441,7 @@ C = {
 "en": {
  "home_h1": "Beautiful, whoever's reading this.",
  "home_lede": "Welcome to Stilo Salón. We love spoiling you and making you feel at home: this is the place to relax, be looked after, and be yourself. Because beauty isn't everything — but we know the power it has to push us toward the best version of ourselves.",
- "home_lede2": "The one thing we changed: the prices are now right here, complete and with their real duration, so you arrive knowing exactly what you will pay.",
+ "home_lede2": "Full prices, with real durations, in plain sight.",
  "home_why_h2": "We are modernizing, without losing what already worked",
  "why": [
    ("Published prices", "The full list is on the site, not in a private message. If a service needs an adjustment for hair length or density, we tell you before we start — never at the register."),
@@ -545,7 +545,7 @@ def home_body(lang):
   <p class="eyebrow">{hi}</p>
   <h1>{e(c['home_h1'])}</h1>
   <p class="lede">{e(c['home_lede'])}</p>
-  <p class="lede">{e(c['home_lede2'])}</p>
+  <p class="lede-fino">{e(c['home_lede2'])}</p>
   <div class="btn-row">
     <a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
     <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>

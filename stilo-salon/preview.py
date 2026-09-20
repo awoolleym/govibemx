@@ -45,7 +45,7 @@ def main():
             if url == "" and frag:            # ancla pura de la misma página
                 return f'{attr}="{frag}"'
             return f'{attr}="{rel(f, url)}{frag}"'
-        t2 = re.sub(r'\b(href|src)="(/[^"]*)"', fix, t)
+        t2 = re.sub(r'\b(href|src|srcset)="(/[^"]*)"', fix, t)
         # enlaces absolutos al dominio real (toggle de idioma, footer)
         def fix_abs(m):
             attr, url = m.group(1), m.group(2)
@@ -54,7 +54,7 @@ def main():
             if "#" in path:
                 path, frag = path.split("#", 1); frag = "#" + frag
             return f'{attr}="{rel(f, path)}{frag}"'
-        t2 = re.sub(r'\b(href|src)="(https://stilo-salon\.com[^"]*)"', fix_abs, t2)
+        t2 = re.sub(r'\b(href|src|srcset)="(https://stilo-salon\.com[^"]*)"', fix_abs, t2)
         # canonical / hreflang / og:url apuntan al dominio real: se dejan,
         # pero se quitan del preview para no confundir al navegador
         t2 = re.sub(r'\s*<link rel="canonical"[^>]*>\n?', "", t2)

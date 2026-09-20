@@ -362,3 +362,9 @@ details.faq[open] summary::after { transform: rotate(180deg); }
   font-size: .85rem; transition: background .25s ease, color .25s ease;
 }
 .foot-resena:hover { background: var(--accent); color: #fff !important; }
+
+/* Línea de apoyo bajo la bienvenida: presente, sin competirle al saludo */
+.lede-fino {
+  font-size: .97rem; letter-spacing: .04em; color: var(--muted);
+  border-left: 2px solid var(--accent); padding-left: .95rem; margin: 1.4rem 0 0;
+}
