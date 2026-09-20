@@ -106,6 +106,34 @@
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   });
 
+  // Portada rotatoria. Avanza sola cada 5.5 s, se detiene cuando el
+  // cursor está encima o cuando alguien usa los puntos: si la clienta
+  // está mirando una foto, moverla se la quitamos de enfrente.
+  var port = document.querySelector('.portada');
+  if (port) {
+    var lam = port.querySelectorAll('.lamina'),
+        pts = port.querySelectorAll('.punto'),
+        cur = 0, reloj = null;
+    var ir = function (n) {
+      if (n === cur) return;
+      lam[cur].classList.remove('activa'); pts[cur].classList.remove('activa');
+      cur = n;
+      lam[cur].classList.add('activa'); pts[cur].classList.add('activa');
+    };
+    var correr = function () {
+      if (reloj) return;
+      reloj = setInterval(function () { ir((cur + 1) % lam.length); }, 5500);
+    };
+    var parar = function () { clearInterval(reloj); reloj = null; };
+    for (var q = 0; q < pts.length; q++) (function (n) {
+      pts[n].addEventListener('click', function () { parar(); ir(n); });
+    })(q);
+    port.addEventListener('mouseenter', parar);
+    port.addEventListener('mouseleave', correr);
+    if (lam.length > 1 && !menos) correr();   // el avance solo se suma
+                                              // si no pidieron menos movimiento
+  }
+
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 
   // A partir de aquí el JS se hace responsable de revelar. Marcamos <html>

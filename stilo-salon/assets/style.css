@@ -712,3 +712,80 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   transform: translateY(-2px);
 }
 .redes svg { width: 19px; height: 19px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA ROTATORIA
+   Tres láminas en cruce suave. El H1 no se mueve: lo que rota es la
+   prueba visual, para que las tres líneas del salón se vean sin bajar.
+   ═══════════════════════════════════════════════════════════════════ */
+.portada .lamina {
+  position: absolute; inset: 0; z-index: 1;
+  opacity: 0; visibility: hidden;
+  transition: opacity .9s ease, visibility .9s;
+}
+.portada .lamina.activa { opacity: 1; visibility: visible; }
+.portada .lamina picture,
+.portada .lamina img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* etiqueta de la lámina: dice qué estás viendo y lleva a esa página */
+.lamina-pie {
+  position: absolute; left: 14px; top: 14px; z-index: 3;
+  font-family: var(--sans); font-size: .76rem; letter-spacing: .06em;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--ink); background: rgba(253,251,252,.92);
+  padding: .42rem .85rem; border-radius: 999px;
+  backdrop-filter: blur(6px);
+  transition: background .25s ease, color .25s ease;
+}
+.lamina-pie:hover { background: var(--accent); color: #fff; }
+
+.portada .puntos {
+  position: absolute; z-index: 3; left: 50%; bottom: 14px;
+  transform: translateX(-50%);
+  display: flex; gap: .45rem;
+}
+.portada .punto {
+  width: 9px; height: 9px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(253,251,252,.85); background: rgba(21,25,29,.25);
+  cursor: pointer; transition: background .25s ease, transform .25s ease;
+}
+.portada .punto.activa { background: var(--paper); transform: scale(1.3); }
+.portada .punto:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+/* el sello vive abajo al centro: los puntos se corren para no encimarse */
+@media (min-width: 901px) { .portada .puntos { bottom: 26px; } }
+
+/* Sin movimiento pedido: se queda la primera y los puntos siguen sirviendo */
+@media (prefers-reduced-motion: reduce) {
+  .portada .lamina { transition: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MARCAS
+   En tipografía, no en logos: se ve mejor, pesa cero y no usamos
+   marcas registradas de terceros sin sus archivos oficiales.
+   ═══════════════════════════════════════════════════════════════════ */
+.marcas { padding: clamp(1.8rem, 4vw, 2.8rem) 0; border-bottom: 1px solid var(--line); }
+.marcas .wrap {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: .9rem clamp(1.4rem, 4vw, 3rem);
+}
+.marcas-t {
+  margin: 0; font-family: var(--sans); font-size: .74rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent-deep);
+  flex: none;
+}
+.marcas ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: .8rem clamp(1.4rem, 3.5vw, 2.6rem);
+}
+.marcas li {
+  font-family: var(--display); font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+  font-weight: 400; letter-spacing: .05em; color: var(--ink-soft);
+  white-space: nowrap; opacity: .72;
+  transition: opacity .25s ease, color .25s ease;
+}
+.marcas li:hover { opacity: 1; color: var(--ink); }
+@media (max-width: 640px) {
+  .marcas .wrap { flex-direction: column; align-items: flex-start; gap: .7rem; }
+}

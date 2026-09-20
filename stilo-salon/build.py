@@ -196,14 +196,14 @@ PRICES = {
 
 T = {  # cadenas de interfaz
  "es": {"price":"Precio","service":"Servicio","dur":"Duración","from":"desde",
-        "hero_alt":"Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
+        "hero_alt":"Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias","unas_alt":"Uñas esculturales en gel dorado y nude hechas en Stilo Salón, Roma Norte","pest_alt":"Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
         "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
         "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
         "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
         "logo_alt":"Stilo Salón — salón de belleza en Roma Norte, CDMX","privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
         "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
  "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
-        "hero_alt":"Balayage done at Stilo Salón, Roma Norte: dark brown roots blending into blonde ends","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
+        "hero_alt":"Balayage done at Stilo Salón, Roma Norte: dark brown roots blending into blonde ends","unas_alt":"Sculpted gel nails in gold and nude done at Stilo Salón, Roma Norte","pest_alt":"Russian volume eyelash extensions applied at Stilo Salón, Roma Norte","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
         "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
         "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
         "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
@@ -387,6 +387,34 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     var o = n.classList.toggle('open');
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   }});
+
+  // Portada rotatoria. Avanza sola cada 5.5 s, se detiene cuando el
+  // cursor está encima o cuando alguien usa los puntos: si la clienta
+  // está mirando una foto, moverla se la quitamos de enfrente.
+  var port = document.querySelector('.portada');
+  if (port) {{
+    var lam = port.querySelectorAll('.lamina'),
+        pts = port.querySelectorAll('.punto'),
+        cur = 0, reloj = null;
+    var ir = function (n) {{
+      if (n === cur) return;
+      lam[cur].classList.remove('activa'); pts[cur].classList.remove('activa');
+      cur = n;
+      lam[cur].classList.add('activa'); pts[cur].classList.add('activa');
+    }};
+    var correr = function () {{
+      if (reloj) return;
+      reloj = setInterval(function () {{ ir((cur + 1) % lam.length); }}, 5500);
+    }};
+    var parar = function () {{ clearInterval(reloj); reloj = null; }};
+    for (var q = 0; q < pts.length; q++) (function (n) {{
+      pts[n].addEventListener('click', function () {{ parar(); ir(n); }});
+    }})(q);
+    port.addEventListener('mouseenter', parar);
+    port.addEventListener('mouseleave', correr);
+    if (lam.length > 1 && !menos) correr();   // el avance solo se suma
+                                              // si no pidieron menos movimiento
+  }}
 
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 
@@ -726,6 +754,60 @@ def amenidades(lang):
     return f'<ul class="amenidades">{ch}</ul>'
 
 
+
+# ── Portada rotatoria ─────────────────────────────────────────────────
+# Tres fotos en vez de una: la portada deja de hablar solo de cabello y
+# enseña las tres líneas del salón antes de que nadie baje.  El H1 no
+# rota — lo que Google indexa se queda fijo.
+PORTADA = [
+  ("hero",          900, 1125, "hero_alt",  "Cabello y color",   "Hair & color",
+   "/cabello.html",         "/en/hair.html"),
+  ("hero-unas",     699,  787, "unas_alt",  "Uñas",              "Nails",
+   "/unas.html",            "/en/nails.html"),
+  ("hero-pestanas", 497,  560, "pest_alt",  "Pestañas y cejas",  "Lashes & brows",
+   "/pestanas-y-cejas.html","/en/lashes-and-brows.html"),
+]
+
+def portada(lang):
+    t = T[lang]
+    laminas, puntos = [], []
+    for i, (base, w, h, alt_k, es_t, en_t, es_u, en_u) in enumerate(PORTADA):
+        rot = ALTA if i == 0 else TARDE
+        act = " activa" if i == 0 else ""
+        url = es_u if lang == "es" else en_u
+        txt = es_t if lang == "es" else en_t
+        laminas.append(
+          # visibility:hidden ya saca la lámina inactiva del árbol de
+          # accesibilidad; un aria-hidden encima sobra y se escapaba mal
+          f'<div class="lamina{act}" data-i="{i}">'
+          f'{img(base, w, h, t[alt_k], rot)}'
+          f'<a class="lamina-pie" href="{url}">{e(txt)}</a></div>')
+        puntos.append(
+          f'<button type="button" class="punto{act}" data-i="{i}" '
+          f'aria-label="{e(txt)}"></button>')
+    ver = "Ver" if lang == "es" else "Show"
+    return ('<figure class="hero-figure portada">'
+            '<span class="marco" aria-hidden="true"></span>'
+            + "".join(laminas)
+            + f'<div class="puntos" role="group" aria-label="{ver}">' + "".join(puntos) + '</div>'
+            + '<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" '
+              'height="252" alt="" aria-hidden="true"></span></figure>')
+
+
+# ── Marcas con las que trabajan ───────────────────────────────────────
+# Sin logos de terceros: son marcas registradas y no tenemos los
+# archivos oficiales.  Puestas en tipografía se ven mejor, pesan cero y
+# no hay nada que pedirle a nadie.  Solo van las que sí usan.
+MARCAS = ["Alfaparf", "Framesi", "Brazilian Blowout", "Split Ender"]
+
+def marcas(lang):
+    ms = "".join(f"<li>{e(m)}</li>" for m in MARCAS)
+    tit = ("Trabajamos con producto profesional"
+           if lang == "es" else "We work with professional product")
+    return (f'<section class="marcas"><div class="wrap">'
+            f'<p class="marcas-t">{e(tit)}</p><ul>{ms}</ul></div></section>')
+
+
 def featured_table(lang):
     t = T[lang]
     rows = []
@@ -775,8 +857,10 @@ def home_body(lang):
     <div><strong>3 {'meses' if lang=='es' else 'months'}</strong>{'sin intereses desde $2,000' if lang=='es' else 'interest-free from $2,000'}</div>
   </div>
 </div>
-<figure class="hero-figure"><span class="marco" aria-hidden="true"></span>{img("hero", 900, 1125, t["hero_alt"], ALTA)}<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></figure>
+{portada(lang)}
 </div></section>
+
+{marcas(lang)}
 
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
