@@ -310,3 +310,32 @@ details.faq[open] summary::after { transform: rotate(180deg); }
   .reveal { opacity: 1 !important; transform: none !important; }
   .swoosh path { stroke-dashoffset: 0 !important; animation: none !important; }
 }
+
+/* ── WhatsApp flotante: visible en toda la página, en todas las páginas ──
+   En México es el canal por el que realmente escriben, así que nunca queda
+   a más de un toque de distancia. */
+.wa-flot {
+  position: fixed; right: 20px; bottom: 20px; z-index: 60;
+  display: inline-flex; align-items: center; gap: .55rem;
+  background: var(--ok); color: #fff; text-decoration: none;
+  padding: 13px 18px 13px 15px; border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(21,25,29,.2), 0 2px 6px rgba(21,25,29,.12);
+  font-size: .93rem; font-weight: 500; line-height: 1;
+  transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease, background .25s ease;
+}
+.wa-flot:hover { background: #276a48; transform: translateY(-3px); box-shadow: 0 12px 34px rgba(47,107,79,.34); }
+.wa-flot:active { transform: translateY(-1px); }
+.wa-flot:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.wa-flot svg { flex-shrink: 0; }
+/* Latido discreto para que se note, tres veces y se detiene */
+@keyframes wa-pulso {
+  0%,100% { box-shadow: 0 6px 24px rgba(21,25,29,.2), 0 0 0 0 rgba(47,107,79,.5); }
+  50%     { box-shadow: 0 6px 24px rgba(21,25,29,.2), 0 0 0 14px rgba(47,107,79,0); }
+}
+.wa-flot { animation: wa-pulso 2.4s ease-out 1.6s 3; }
+/* En celular solo el ícono, para no tapar contenido */
+@media (max-width: 640px) {
+  .wa-flot { right: 14px; bottom: 14px; padding: 14px; }
+  .wa-txt { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .wa-flot { animation: none; } }

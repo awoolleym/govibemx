@@ -23,6 +23,7 @@ NAP = {
     "tel1": "+525522993258", "tel1_display": "55 2299 3258",
     "tel2": "+525552562137", "tel2_display": "55 5256 2137",
 }
+BOOKING = "https://stilo-salon.versum.com/?trade=598440"
 WA = ("https://wa.me/525522993258?text="
       "Hola%2C%20quiero%20agendar%20una%20cita%20en%20Stilo%20Sal%C3%B3n")
 
@@ -134,14 +135,14 @@ PRICES = {
 
 T = {  # cadenas de interfaz
  "es": {"price":"Precio","service":"Servicio","dur":"Duración","from":"desde",
-        "book_wa":"Agendar por WhatsApp","appts":"Citas","hours":"Horario",
+        "wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
         "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
         "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
         "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
         "logo_alt":"Stilo Salón — salón de belleza en Roma Norte, CDMX","privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
         "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
  "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
-        "book_wa":"Book on WhatsApp","appts":"Appointments","hours":"Hours",
+        "wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
         "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
         "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
         "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
@@ -151,9 +152,9 @@ T = {  # cadenas de interfaz
 
 NAV = {
  "es": [("/cabello.html","Cabello"),("/unas.html","Uñas"),
-        ("/pestanas-y-cejas.html","Pestañas y Cejas"),("/precios.html","Precios")],
+        ("/pestanas-y-cejas.html","Pestañas y Cejas"),("/precios.html","Precios"),("__BOOK__","Citas")],
  "en": [("/en/hair.html","Hair"),("/en/nails.html","Nails"),
-        ("/en/lashes-and-brows.html","Lashes & Brows"),("/en/pricing.html","Pricing")],
+        ("/en/lashes-and-brows.html","Lashes & Brows"),("/en/pricing.html","Pricing"),("__BOOK__","Book")],
 }
 
 def e(s): return html.escape(str(s), quote=False)
@@ -191,7 +192,11 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     canon = f"{SITE}{home}" if slug in ("", "index") else f"{SITE}{slug}"
     es_href = canon if lang == "es" else alt_href
     en_href = alt_href if lang == "es" else canon
-    nav = "\n      ".join(f'<a href="{h}">{e(l)}</a>' for h, l in NAV[lang])
+    def _link(h, l):
+        url = BOOKING if h == "__BOOK__" else h
+        rel = ' rel="noopener"' if h == "__BOOK__" else ''
+        return '<a href="%s"%s>%s</a>' % (url, rel, e(l))
+    nav = "\n      ".join(_link(h, l) for h, l in NAV[lang])
     return f"""<!DOCTYPE html>
 <html lang="{'es-MX' if lang=='es' else 'en'}">
 <head>
@@ -218,6 +223,10 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 </head>
 <body>
 <a class="skip" href="#main">{t['skip']}</a>
+<a class="wa-flot" href="{WA}" rel="noopener" aria-label="{t['wa_aria']}" title="{t['wa_aria']}">
+  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.04 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.23-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.9.99 6.68 2.77a9.38 9.38 0 0 1 2.77 6.68c0 5.2-4.24 9.44-9.46 9.44zM20.5 3.49A11.36 11.36 0 0 0 12.04 0C5.76 0 .65 5.1.65 11.39c0 2 .52 3.96 1.52 5.68L.55 24l7.1-1.86a11.34 11.34 0 0 0 5.43 1.38h.01c6.28 0 11.39-5.11 11.39-11.4 0-3.04-1.18-5.9-3.33-8.05z"/></svg>
+  <span class="wa-txt">{t['wa_cta']}</span>
+</a>
 <header class="site-head">
   <div class="wrap head-in">
     <a class="brand" href="{home}"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="{t['logo_alt']}"></a>
@@ -243,7 +252,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
       </div>
       <div>
         <h4>{t['services']}</h4>
-        <p>{'<br>'.join(f'<a href="{h}">{e(l)}</a>' for h, l in NAV[lang])}</p>
+        <p>{'<br>'.join(_link(h, l) for h, l in NAV[lang])}</p>
       </div>
       <div>
         <h4>{t['hours']}</h4>
@@ -381,7 +390,7 @@ C = {
  "faq": [
    ("¿Cuál es su horario de atención?", "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 19:00. Domingos cerrado."),
    ("¿Dónde están ubicados?", "En Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. Estamos a unas cuadras del Metro Insurgentes."),
-   ("¿Necesito cita o aceptan walk-in?", "Recomendamos cita, sobre todo para color y tratamientos que toman varias horas. Recibimos walk-in según la disponibilidad del día — te sugerimos escribirnos por WhatsApp antes de venir."),
+   ("¿Necesito cita o aceptan walk-in?", "Recomendamos cita, sobre todo para color y tratamientos que toman varias horas. Puedes reservar en línea a cualquier hora, escribirnos por WhatsApp o llamarnos. Recibimos walk-in según la disponibilidad del día."),
    ("¿Qué formas de pago aceptan?", "Efectivo y tarjetas de débito y crédito."),
    ("¿Los precios publicados son finales?", "Los precios marcados “desde” aplican a cabello a partir del hombro. Si tu cabello es más largo o más denso, el ajuste se te comunica antes de empezar el servicio, nunca al final."),
    ("¿Sus servicios tienen garantía?", "Sí. Si algo no quedó como lo acordamos, regresa dentro de los 7 días siguientes y lo corregimos sin costo."),
@@ -407,7 +416,7 @@ C = {
  "faq": [
    ("What are your hours?", "Monday to Friday, 9:00 to 20:00, and Saturday, 9:00 to 19:00. Closed Sundays."),
    ("Where are you located?", "Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City — a few blocks from Metro Insurgentes."),
-   ("Do I need an appointment, or do you take walk-ins?", "We recommend an appointment, especially for color and treatments that take several hours. We do take walk-ins based on the day's availability — message us on WhatsApp before coming in."),
+   ("Do I need an appointment, or do you take walk-ins?", "We recommend an appointment, especially for color and treatments that take several hours. You can book online any time, message us on WhatsApp, or call. We do take walk-ins based on the day's availability."),
    ("What payment methods do you accept?", "Cash, and debit and credit cards."),
    ("Are the published prices final?", "Prices marked “from” apply to hair at shoulder length and above. If your hair is longer or denser, we tell you the adjustment before starting the service, never at the end."),
    ("Do your services come with a guarantee?", "Yes. If something did not turn out the way we agreed, come back within 7 days and we will correct it at no cost."),
@@ -440,6 +449,13 @@ def salon_ld(lang):
                  "addressLocality":NAP["locality"],"addressRegion":"Ciudad de México",
                  "postalCode":NAP["postal"],"addressCountry":"MX"},
       "areaServed":["Roma Norte","Roma Sur","Condesa","Juárez","Ciudad de México"],
+      "hasMap":"https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX",
+      "potentialAction":{"@type":"ReserveAction",
+        "target":{"@type":"EntryPoint","urlTemplate":BOOKING,
+                  "inLanguage":"es-MX",
+                  "actionPlatform":["http://schema.org/DesktopWebPlatform",
+                                    "http://schema.org/MobileWebPlatform"]},
+        "result":{"@type":"Reservation","name":"Cita en Stilo Salón"}},
       "openingHoursSpecification":[
         {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"20:00"},
         {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"19:00"}],
@@ -488,6 +504,7 @@ def home_body(lang):
   <p class="lede">{e(c['home_lede'])}</p>
   <p class="lede">{e(c['home_lede2'])}</p>
   <div class="btn-row">
+    <a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
     <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
     <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
   </div>
@@ -538,7 +555,8 @@ def home_body(lang):
     {t['appts']}: <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a><br>
     <a href="tel:{NAP['tel2']}">{NAP['tel2_display']}</a></address>
     <p style="margin-top:1.4rem"><strong>{t['mf']}</strong> 9:00 – 20:00<br><strong>{t['sat']}</strong> 9:00 – 19:00<br><strong>{t['sun']}</strong> {t['closed']}</p>
-    <div class="btn-row"><a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
+    <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
+    <a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
   </div>
   <figure class="hero-figure" style="aspect-ratio:4/3"><img src="/assets/contacto.jpg" width="1200" height="900" alt="" loading="lazy"></figure>
@@ -560,7 +578,8 @@ def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner=""
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
   {table(keys, lang)}
-  <div class="btn-row"><a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
+  <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" rel="noopener">{t['book']}</a>
+  <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
   <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a></div>
 </div></section>
 """
@@ -1024,11 +1043,11 @@ def main():
                  "Stilo Salón | Beauty Salon in Roma Norte, Mexico City — Hair, Nails & Lashes")
         desc = ("Salón de belleza en Roma Norte, CDMX. Corte desde $330, balayage desde $2,300, "
                 "extensiones de pestañas desde $750. Precios publicados, sin sorpresas. "
-                "Guadalajara 70-B. Citas: 55 2299 3258."
+                "Reserva en línea o al 55 2299 3258."
                 if lang == "es" else
                 "Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, "
                 "lash extensions from $750 MXN. Published prices, no surprises. "
-                "Guadalajara 70-B. Appointments: 55 2299 3258.")
+                "Guadalajara 70-B. Book online or call 55 2299 3258.")
         out = "index.html" if lang == "es" else "en/index.html"
         log.append(write(out, page(lang, "", title, desc, home_body(lang), alt,
                                    salon_ld(lang) + faq_ld(lang))))
