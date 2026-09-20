@@ -285,8 +285,9 @@ def write(path, content):
 # ─────────────────────────────────────────────────────────────────────────────
 C = {
 "es": {
- "home_h1": "Un salón serio, con los precios a la vista.",
- "home_lede": "Llevamos más de diez años atendiendo a la Roma Norte y seguimos aquí por una razón sencilla: la gente regresa. Cabello, color, tratamientos, uñas, pestañas y cejas — con la lista de precios publicada completa, para que sepas exactamente qué vas a pagar antes de sentarte en la silla.",
+ "home_h1": "¡Bonita la que lo lea!",
+ "home_lede": "Bienvenida a Stilo Salón. Nos encanta consentirte y hacerte sentir como en casa: somos el lugar para relajarte, dejarte consentir y ser tú misma. Porque sabemos que la belleza no lo es todo… pero conocemos el gran poder que tiene para impulsarnos a ser la mejor versión de nosotras mismas.",
+ "home_lede2": "Lo único que cambiamos es esto: ahora los precios están aquí, completos y con su duración, para que llegues sabiendo exactamente qué vas a pagar.",
  "home_why_h2": "Nos estamos actualizando, sin perder lo que ya funcionaba",
  "why": [
    ("Precios publicados", "La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar."),
@@ -310,8 +311,9 @@ C = {
  "visit_h2": "Estamos en el corazón de la Roma Norte",
 },
 "en": {
- "home_h1": "A serious salon, with the prices in plain sight.",
- "home_lede": "We have served Roma Norte for more than ten years, and we are still here for a simple reason: people come back. Hair, color, treatments, nails, lashes and brows — with the full price list published, so you know exactly what you will pay before you sit down.",
+ "home_h1": "Beautiful, whoever's reading this.",
+ "home_lede": "Welcome to Stilo Salón. We love spoiling you and making you feel at home: this is the place to relax, be looked after, and be yourself. Because beauty isn't everything — but we know the power it has to push us toward the best version of ourselves.",
+ "home_lede2": "The one thing we changed: the prices are now right here, complete and with their real duration, so you arrive knowing exactly what you will pay.",
  "home_why_h2": "We are modernizing, without losing what already worked",
  "why": [
    ("Published prices", "The full list is on the site, not in a private message. If a service needs an adjustment for hair length or density, we tell you before we start — never at the register."),
@@ -406,6 +408,7 @@ def home_body(lang):
   <p class="eyebrow">{hi}</p>
   <h1>{e(c['home_h1'])}</h1>
   <p class="lede">{e(c['home_lede'])}</p>
+  <p class="lede">{e(c['home_lede2'])}</p>
   <div class="btn-row">
     <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
     <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
@@ -551,7 +554,7 @@ SERVICE_PAGES = [
      title="Extensiones de Pestañas y Diseño de Cejas en Roma Norte, CDMX | Stilo Salón",
      desc="Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258.",
      h1="Extensiones de pestañas y diseño de cejas en Roma Norte",
-     intro="Cinco técnicas distintas de extensión, con su precio, su duración y para quién funciona cada una.",
+     intro="¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está toda la información detallada de esta maravillosa forma de lucir unos ojos y unas cejas de impacto.",
      paras=[
       "Las extensiones de pestañas no son un solo servicio: son cinco técnicas distintas, y elegir la correcta importa más que el precio. Esta es la diferencia, en corto.",
       "El <strong>1x1 clásico</strong> ($750) coloca una extensión sobre cada pestaña natural. Es el look más natural y el más ligero — ideal si es tu primera vez o si tienes pestaña natural sana y abundante. El <strong>flat</strong> ($800) usa una fibra de base plana que abraza la pestaña natural: pesa menos y se adhiere mejor, por eso funciona bien en pestañas delgadas.",
@@ -565,7 +568,7 @@ SERVICE_PAGES = [
      title="Eyelash Extensions & Brow Design in Roma Norte, Mexico City | Stilo Salón",
      desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.",
      h1="Eyelash extensions and brow design in Roma Norte",
-     intro="Five distinct extension techniques, with the price, the duration, and who each one actually suits.",
+     intro="Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.",
      paras=[
       "Eyelash extensions are not one service — they are five distinct techniques, and choosing the right one matters more than the price. Here is the difference, briefly.",
       "<strong>Classic 1x1</strong> ($750) places one extension on each natural lash. It is the most natural look and the lightest — ideal for a first time, or if your natural lashes are healthy and full. <strong>Flat</strong> ($800) uses a flat-based fiber that wraps the natural lash: it weighs less and bonds better, which makes it work well on fine lashes.",
@@ -638,10 +641,13 @@ CUIDADOS_LIFT = {
 
 def lash_guide(lang):
     es = lang == "es"
-    out = [f'<h2>{"Las tres técnicas, explicadas" if es else "The three techniques, explained"}</h2>']
+    out = [f'<h2>{"La biblia de las extensiones de pestañas y cejas" if es else "The eyelash and brow bible"}</h2>']
+    out.append('<p>' + ("Todo lo que nos preguntan en la silla, escrito. Empecemos por lo primero: cuál es cuál."
+        if es else "Everything people ask us in the chair, written down. First things first: which one is which.") + '</p>')
+    out.append(f'<h3>{"Las tres técnicas" if es else "The three techniques"}</h3>')
     for t in TECNICAS:
         d = t[lang]
-        out.append(f'<h3 id="{t["id"]}">{e(d["n"])} — {t["precio"]}</h3>')
+        out.append(f'<h4 id="{t["id"]}">{e(d["n"])} — {t["precio"]}</h4>')
         out.append(f'<p>{e(d["q"])} {e(d["p"])}</p>')
         out.append(f'<p class="muted">{"Aplicación" if es else "Application"}: {t["dur"]} · '
                    f'{"Retoque" if es else "Fill"}: {t["retoque"]}</p>')
