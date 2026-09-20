@@ -266,9 +266,87 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
   </div>
 </footer>
 <script>
-(function(){{var b=document.getElementById('menuBtn'),n=document.getElementById('nav');
-if(!b||!n)return;b.addEventListener('click',function(){{var o=n.classList.toggle('open');
-b.setAttribute('aria-expanded',o?'true':'false');}});}})();
+(function(){{
+  'use strict';
+  var menos = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Menú móvil
+  var b = document.getElementById('menuBtn'), n = document.getElementById('nav');
+  if (b && n) b.addEventListener('click', function () {{
+    var o = n.classList.toggle('open');
+    b.setAttribute('aria-expanded', o ? 'true' : 'false');
+  }});
+
+  if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
+
+  // Aparición al entrar en pantalla
+  var grupos = document.querySelectorAll('.js-reveal');
+  for (var g = 0; g < grupos.length; g++) {{
+    var hijos = grupos[g].children;
+    for (var i = 0; i < hijos.length; i++) {{
+      hijos[i].classList.add('reveal');
+      if (i % 4) hijos[i].classList.add('d' + (i % 4));
+    }}
+  }}
+  var secciones = document.querySelectorAll('.sec-head, .price-block, details.faq');
+  for (var k = 0; k < secciones.length; k++) secciones[k].classList.add('reveal');
+
+  if ('IntersectionObserver' in window) {{
+    var io = new IntersectionObserver(function (ents) {{
+      ents.forEach(function (en) {{
+        if (en.isIntersecting) {{ en.target.classList.add('seen'); io.unobserve(en.target); }}
+      }});
+    }}, {{ rootMargin: '0px 0px -8% 0px', threshold: 0.08 }});
+    document.querySelectorAll('.reveal').forEach(function (el) {{ io.observe(el); }});
+  }} else {{
+    document.querySelectorAll('.reveal').forEach(function (el) {{ el.classList.add('seen'); }});
+  }}
+
+  // Inclinación 3D de las tarjetas (solo con mouse: en táctil estorba)
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {{
+    document.querySelectorAll('.card').forEach(function (c) {{
+      c.addEventListener('mousemove', function (ev) {{
+        var r = c.getBoundingClientRect();
+        var px = (ev.clientX - r.left) / r.width - 0.5;
+        var py = (ev.clientY - r.top) / r.height - 0.5;
+        c.style.transform = 'perspective(850px) rotateX(' + (-py * 7).toFixed(2) +
+                            'deg) rotateY(' + (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+      }});
+      c.addEventListener('mouseleave', function () {{ c.style.transform = ''; }});
+    }});
+  }}
+
+  // Los números de la barra de confianza cuentan hacia arriba
+  var barra = document.querySelector('.trust');
+  if (barra && 'IntersectionObserver' in window) {{
+    new IntersectionObserver(function (ents, ob) {{
+      if (!ents[0].isIntersecting) return;
+      ob.disconnect();
+      barra.querySelectorAll('strong').forEach(function (el) {{
+        var txt = el.textContent, m = txt.match(/\d+/);
+        if (!m) return;
+        var fin = parseInt(m[0], 10), ini = performance.now();
+        (function paso(t) {{
+          var p = Math.min((t - ini) / 900, 1);
+          var val = Math.round(fin * (1 - Math.pow(1 - p, 3)));
+          el.textContent = txt.replace(/\d+/, val);
+          if (p < 1) requestAnimationFrame(paso);
+        }})(ini);
+      }});
+    }}, {{ threshold: 0.4 }}).observe(barra);
+  }}
+
+  // Encabezado compacto al bajar
+  var head = document.querySelector('.site-head'), ticking = false;
+  window.addEventListener('scroll', function () {{
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {{
+      head.classList.toggle('scrolled', window.scrollY > 40);
+      ticking = false;
+    }});
+  }}, {{ passive: true }});
+}})();
 </script>
 </body>
 </html>
@@ -419,19 +497,23 @@ def home_body(lang):
     <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
   </div>
 </div>
-<figure class="hero-figure"><img src="/assets/hero.jpg" width="1200" height="1500" alt="" fetchpriority="high"></figure>
+<figure class="hero-figure"><img src="/assets/hero.jpg" width="1200" height="1500" alt="" fetchpriority="high">
+  <svg class="swoosh" viewBox="0 0 1200 1500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M-40 1180 C 330 760, 690 1360, 1010 880 S 1180 560, 1260 430"/>
+    <path class="thin" d="M-40 1310 C 380 930, 760 1470, 1260 900"/>
+  </svg></figure>
 </div></section>
 
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
   <h2>{'Todo lo que hacemos, con precio de arranque' if lang=='es' else 'Everything we do, with a starting price'}</h2></div>
-  <div class="grid g4">{cards}</div>
+  <div class="grid g4 js-reveal">{cards}</div>
 </div></section>
 
 <section class="ink-sec"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">{'Por qué Stilo' if lang=='es' else 'Why Stilo'}</p>
   <h2>{e(c['home_why_h2'])}</h2></div>
-  <div class="grid g3">{why}</div>
+  <div class="grid g3 js-reveal">{why}</div>
 </div></section>
 
 <section><div class="wrap">
@@ -906,6 +988,32 @@ def topic_faq_ld(table, lang):
     return ('<script type="application/ld+json">'
             '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[%s]}</script>' % body)
 
+# Fotos reales de trabajos del salón. Son exportaciones de Instagram a 640x640,
+# suficientes para galería pero NO para una portada a sangre completa.
+GALERIA = {
+ "nails": [("trabajo-unas-01.jpg",
+            "Manicure francés con uña larga cuadrada, hecho en Stilo Salón Roma Norte",
+            "Francés con uña cuadrada · Manicure Spa + Gel",
+            "French manicure, square tip, done at Stilo Salón Roma Norte",
+            "Square-tip French · Spa Manicure + Gel"),
+           ("trabajo-unas-02.jpg",
+            "Uñas acrílicas largas en rojo y verde con diseño, hechas en Stilo Salón Roma Norte",
+            "Acrílico largo con diseño · Uña escultural con gel",
+            "Long acrylic nails in red and green with art, done at Stilo Salón Roma Norte",
+            "Long acrylic with nail art · Sculpted gel")],
+}
+
+def galeria_html(key, lang):
+    items = GALERIA.get(key)
+    if not items: return ""
+    es = lang == "es"
+    figs = "".join(
+      f'<figure><img src="/assets/{f}" width="640" height="640" loading="lazy" '
+      f'alt="{e(alt_es if es else alt_en)}"><figcaption>{e(cap_es if es else cap_en)}</figcaption></figure>'
+      for f, alt_es, cap_es, alt_en, cap_en in items)
+    titulo = "Trabajos hechos aquí" if es else "Work done here"
+    return f'<h2>{titulo}</h2><div class="galeria js-reveal">{figs}</div>'
+
 def main():
     log = []
     # Home (ES + EN)
@@ -931,6 +1039,7 @@ def main():
             slug = sp["es_slug"] if lang == "es" else sp["en_slug"]
             alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
             extra = {"lashes": lash_guide, "hair": hair_guide, "nails": nails_guide}[sp["key"]](lang)
+            extra += galeria_html(sp["key"], lang)
             bnr = {"hair":"h-cabello.jpg","nails":"h-unas.jpg","lashes":"h-pestanas.jpg"}[sp["key"]]
             body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"], extra=extra, banner=bnr)
             faq = {"lashes": lambda l: lash_faq_ld(l),

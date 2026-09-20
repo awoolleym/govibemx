@@ -57,19 +57,23 @@
     <div><strong>7 días</strong>de garantía en cada servicio</div>
   </div>
 </div>
-<figure class="hero-figure"><img src="/assets/hero.jpg" width="1200" height="1500" alt="" fetchpriority="high"></figure>
+<figure class="hero-figure"><img src="/assets/hero.jpg" width="1200" height="1500" alt="" fetchpriority="high">
+  <svg class="swoosh" viewBox="0 0 1200 1500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M-40 1180 C 330 760, 690 1360, 1010 880 S 1180 560, 1260 430"/>
+    <path class="thin" d="M-40 1310 C 380 930, 760 1470, 1260 900"/>
+  </svg></figure>
 </div></section>
 
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">Nuestros servicios</p>
   <h2>Todo lo que hacemos, con precio de arranque</h2></div>
-  <div class="grid g4"><article class="card"><h3>Cabello</h3><p>Corte, tinte, balayage, babylights, matiz y peinado.</p><p class="from">desde $330</p><a class="more" href="/cabello.html">Ver cabello y color</a></article><article class="card"><h3>Tratamientos</h3><p>Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.</p><p class="from">desde $520</p><a class="more" href="/cabello.html#tratamientos">Ver tratamientos y alisados</a></article><article class="card"><h3>Uñas</h3><p>Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.</p><p class="from">desde $150</p><a class="more" href="/unas.html">Ver uñas, manicure y pedicure</a></article><article class="card"><h3>Pestañas y Cejas</h3><p>Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.</p><p class="from">desde $450</p><a class="more" href="/pestanas-y-cejas.html">Ver pestañas y cejas</a></article></div>
+  <div class="grid g4 js-reveal"><article class="card"><h3>Cabello</h3><p>Corte, tinte, balayage, babylights, matiz y peinado.</p><p class="from">desde $330</p><a class="more" href="/cabello.html">Ver cabello y color</a></article><article class="card"><h3>Tratamientos</h3><p>Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.</p><p class="from">desde $520</p><a class="more" href="/cabello.html#tratamientos">Ver tratamientos y alisados</a></article><article class="card"><h3>Uñas</h3><p>Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.</p><p class="from">desde $150</p><a class="more" href="/unas.html">Ver uñas, manicure y pedicure</a></article><article class="card"><h3>Pestañas y Cejas</h3><p>Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.</p><p class="from">desde $450</p><a class="more" href="/pestanas-y-cejas.html">Ver pestañas y cejas</a></article></div>
 </div></section>
 
 <section class="ink-sec"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">Por qué Stilo</p>
   <h2>Nos estamos actualizando, sin perder lo que ya funcionaba</h2></div>
-  <div class="grid g3"><div><h3>Precios publicados</h3><p>La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar.</p></div><div><h3>Técnica al día</h3><p>Nanoplastia, botox capilar y Brazilian Blowout con producto profesional. Extensiones de pestañas en cinco técnicas distintas, desde el 1x1 clásico hasta el volumen ruso.</p></div><div><h3>Tiempos reales</h3><p>Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas.</p></div></div>
+  <div class="grid g3 js-reveal"><div><h3>Precios publicados</h3><p>La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar.</p></div><div><h3>Técnica al día</h3><p>Nanoplastia, botox capilar y Brazilian Blowout con producto profesional. Extensiones de pestañas en cinco técnicas distintas, desde el 1x1 clásico hasta el volumen ruso.</p></div><div><h3>Tiempos reales</h3><p>Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas.</p></div></div>
 </div></section>
 
 <section><div class="wrap">
@@ -134,9 +138,87 @@
   </div>
 </footer>
 <script>
-(function(){var b=document.getElementById('menuBtn'),n=document.getElementById('nav');
-if(!b||!n)return;b.addEventListener('click',function(){var o=n.classList.toggle('open');
-b.setAttribute('aria-expanded',o?'true':'false');});})();
+(function(){
+  'use strict';
+  var menos = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Menú móvil
+  var b = document.getElementById('menuBtn'), n = document.getElementById('nav');
+  if (b && n) b.addEventListener('click', function () {
+    var o = n.classList.toggle('open');
+    b.setAttribute('aria-expanded', o ? 'true' : 'false');
+  });
+
+  if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
+
+  // Aparición al entrar en pantalla
+  var grupos = document.querySelectorAll('.js-reveal');
+  for (var g = 0; g < grupos.length; g++) {
+    var hijos = grupos[g].children;
+    for (var i = 0; i < hijos.length; i++) {
+      hijos[i].classList.add('reveal');
+      if (i % 4) hijos[i].classList.add('d' + (i % 4));
+    }
+  }
+  var secciones = document.querySelectorAll('.sec-head, .price-block, details.faq');
+  for (var k = 0; k < secciones.length; k++) secciones[k].classList.add('reveal');
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('seen'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('seen'); });
+  }
+
+  // Inclinación 3D de las tarjetas (solo con mouse: en táctil estorba)
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('.card').forEach(function (c) {
+      c.addEventListener('mousemove', function (ev) {
+        var r = c.getBoundingClientRect();
+        var px = (ev.clientX - r.left) / r.width - 0.5;
+        var py = (ev.clientY - r.top) / r.height - 0.5;
+        c.style.transform = 'perspective(850px) rotateX(' + (-py * 7).toFixed(2) +
+                            'deg) rotateY(' + (px * 9).toFixed(2) + 'deg) translateY(-6px)';
+      });
+      c.addEventListener('mouseleave', function () { c.style.transform = ''; });
+    });
+  }
+
+  // Los números de la barra de confianza cuentan hacia arriba
+  var barra = document.querySelector('.trust');
+  if (barra && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (ents, ob) {
+      if (!ents[0].isIntersecting) return;
+      ob.disconnect();
+      barra.querySelectorAll('strong').forEach(function (el) {
+        var txt = el.textContent, m = txt.match(/\d+/);
+        if (!m) return;
+        var fin = parseInt(m[0], 10), ini = performance.now();
+        (function paso(t) {
+          var p = Math.min((t - ini) / 900, 1);
+          var val = Math.round(fin * (1 - Math.pow(1 - p, 3)));
+          el.textContent = txt.replace(/\d+/, val);
+          if (p < 1) requestAnimationFrame(paso);
+        })(ini);
+      });
+    }, { threshold: 0.4 }).observe(barra);
+  }
+
+  // Encabezado compacto al bajar
+  var head = document.querySelector('.site-head'), ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      head.classList.toggle('scrolled', window.scrollY > 40);
+      ticking = false;
+    });
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
