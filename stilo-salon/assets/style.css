@@ -777,23 +777,21 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .marcas ul {
   list-style: none; margin: 0; padding: 0;
   display: flex; flex-wrap: wrap; align-items: center;
-  gap: .8rem clamp(1.4rem, 3.5vw, 2.6rem);
+  gap: 1.1rem clamp(1.6rem, 4vw, 3.2rem);
 }
-.marcas li {
-  font-family: var(--display); font-size: clamp(1.2rem, 2.4vw, 1.6rem);
-  font-weight: 400; letter-spacing: .05em; color: var(--ink);
-  white-space: nowrap;
-  transition: color .25s ease;
-  position: relative;
+/* Los logos van en gris: en color, cuatro paletas ajenas rompen la
+   nuestra. En hover recuperan su peso. */
+.marcas .m-logo img {
+  /* los atributos width/height reservan el hueco; --h manda el alto real */
+  display: block; height: var(--h); width: auto;
+  filter: grayscale(1) contrast(.9);
+  opacity: .72;
+  transition: opacity .25s ease, filter .25s ease;
 }
-/* separador entre marcas: la fila se lee como una lista, no como un renglón */
-.marcas li + li::before {
-  content: ""; position: absolute;
-  left: calc(-1 * clamp(.7rem, 1.75vw, 1.3rem)); top: 50%;
-  width: 4px; height: 4px; margin-top: -2px;
-  border-radius: 50%; background: var(--accent); opacity: .5;
-}
-.marcas li:hover { color: var(--accent-deep); }
+/* los que vienen más tenues de origen necesitan más cuerpo */
+.marcas .m-logo.claro img { filter: grayscale(1) brightness(.62) contrast(1.1); opacity: .85; }
+.marcas .m-logo img:hover { opacity: 1; }
+@media (max-width: 480px) { .marcas .m-logo img { transform: scale(.88); transform-origin: left center; } }
 @media (max-width: 640px) {
   .marcas .wrap { flex-direction: column; align-items: flex-start; gap: .7rem; }
 }

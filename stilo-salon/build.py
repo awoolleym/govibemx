@@ -769,18 +769,31 @@ def portada(lang):
               'height="252" alt="" aria-hidden="true"></span></div>')
 
 # ── Marcas con las que trabajan ───────────────────────────────────────
-# Sin logos de terceros: son marcas registradas y no tenemos los
-# archivos oficiales.  Puestas en tipografía se ven mejor, pesan cero y
-# no hay nada que pedirle a nadie.  Solo van las que sí usan.
-MARCAS = ["Alfaparf", "Framesi", "Brazilian Blowout", "Split Ender"]
+# Logos oficiales, bajados de los sitios de cada marca y servidos desde
+# /assets/marcas.  Uso nominativo: decir con qué producto trabajamos.
+# Van todos en gris a la misma altura óptica para que la fila se lea
+# como una sola cosa y no como cuatro logos peleando.
+#   alto:  ajustado a ojo, no matemáticamente — un logo de dos renglones
+#          (framesi) necesita más alto que un wordmark de uno.
+#   clase: "claro" para los que vienen más tenues de origen.
+#   ancho: calculado del viewBox / los píxeles reales, para que el
+#          navegador reserve el hueco y la franja no brinque al cargar.
+MARCAS = [
+  ("alfaparf.svg",          "Alfaparf Milano",   115, 22, ""),
+  ("framesi.png",           "Framesi",            99, 34, ""),
+  ("brazilian-blowout.svg", "Brazilian Blowout", 142, 19, ""),
+  ("split-ender.png",       "Split Ender",       107, 23, " claro"),
+]
 
 def marcas(lang):
-    ms = "".join(f"<li>{e(m)}</li>" for m in MARCAS)
+    ms = "".join(
+      f'<li class="m-logo{cl}"><img src="/assets/marcas/{f}" alt="{e(n)}" '
+      f'width="{w}" height="{h}" loading="lazy" style="--h:{h}px"></li>'
+      for f, n, w, h, cl in MARCAS)
     tit = ("Trabajamos con producto profesional"
            if lang == "es" else "We work with professional product")
     return (f'<section class="marcas"><div class="wrap">'
             f'<p class="marcas-t">{e(tit)}</p><ul>{ms}</ul></div></section>')
-
 
 def featured_table(lang):
     t = T[lang]
