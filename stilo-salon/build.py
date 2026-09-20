@@ -480,6 +480,30 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     }});
   }}
 
+  // La foto de portada sigue al cursor, muy poco: 4.5 grados como tope.
+  // Más que eso se siente a truco; menos, ni se nota.
+  var fig = document.querySelector('.hero-figure');
+  if (fig && window.matchMedia('(min-width: 900px)').matches &&
+      window.matchMedia('(hover: hover)').matches) {{
+    var pend = false;
+    fig.addEventListener('mousemove', function (ev) {{
+      if (pend) return;
+      pend = true;
+      requestAnimationFrame(function () {{
+        var r = fig.getBoundingClientRect();
+        var px = (ev.clientX - r.left) / r.width  - .5;
+        var py = (ev.clientY - r.top)  / r.height - .5;
+        fig.style.setProperty('--ty', (px * 9).toFixed(2) + 'deg');
+        fig.style.setProperty('--tx', (-py * 9).toFixed(2) + 'deg');
+        pend = false;
+      }});
+    }});
+    fig.addEventListener('mouseleave', function () {{
+      fig.style.setProperty('--ty', '0deg');
+      fig.style.setProperty('--tx', '0deg');
+    }});
+  }}
+
   // Encabezado compacto al bajar
   var head = document.querySelector('.site-head'), ticking = false;
   window.addEventListener('scroll', function () {{
@@ -526,6 +550,8 @@ C = {
    ("¿Cuál es su horario de atención?", "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 19:00. Domingos cerrado."),
    ("¿Dónde están ubicados?", "En Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. Estamos a unas cuadras del Metro Insurgentes."),
    ("¿Necesito cita o aceptan walk-in?", "Recomendamos cita, sobre todo para color y tratamientos que toman varias horas. Puedes reservar en línea a cualquier hora, escribirnos por WhatsApp o llamarnos. Recibimos walk-in según la disponibilidad del día."),
+   ("¿Puedo llevar a mi perro?", "Sí, somos pet friendly. Puedes venir con tu mascota siempre que sea tranquila con otras personas y la traigas con correa o en transportadora."),
+   ("¿Tienen WiFi?", "Sí, WiFi gratis para las clientas. Los servicios de color y tratamiento toman varias horas, así que puedes trabajar o ver algo mientras tanto. También te ofrecemos una bebida de cortesía."),
    ("¿Qué formas de pago aceptan?", "Efectivo y tarjetas de débito y crédito."),
    ("¿Los precios publicados son finales?", "Los precios marcados “desde” aplican a cabello a partir del hombro. Si tu cabello es más largo o más denso, el ajuste se te comunica antes de empezar el servicio, nunca al final."),
    ("¿Sus servicios tienen garantía?", "Sí. Si algo no quedó como lo acordamos, regresa dentro de los 7 días siguientes y lo corregimos sin costo."),
@@ -552,6 +578,8 @@ C = {
    ("What are your hours?", "Monday to Friday, 9:00 to 20:00, and Saturday, 9:00 to 19:00. Closed Sundays."),
    ("Where are you located?", "Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City — a few blocks from Metro Insurgentes."),
    ("Do I need an appointment, or do you take walk-ins?", "We recommend an appointment, especially for color and treatments that take several hours. You can book online any time, message us on WhatsApp, or call. We do take walk-ins based on the day's availability."),
+   ("Can I bring my dog?", "Yes, we are pet friendly. You are welcome to come with your pet as long as it is calm around people and comes on a leash or in a carrier."),
+   ("Do you have WiFi?", "Yes, free WiFi for clients. Color and treatment services take several hours, so you can work or watch something while you wait. We also offer you a complimentary drink."),
    ("What payment methods do you accept?", "Cash, and debit and credit cards."),
    ("Are the published prices final?", "Prices marked “from” apply to hair at shoulder length and above. If your hair is longer or denser, we tell you the adjustment before starting the service, never at the end."),
    ("Do your services come with a guarantee?", "Yes. If something did not turn out the way we agreed, come back within 7 days and we will correct it at no cost."),
@@ -593,6 +621,14 @@ def salon_ld(lang):
                   "actionPlatform":["http://schema.org/DesktopWebPlatform",
                                     "http://schema.org/MobileWebPlatform"]},
         "result":{"@type":"Reservation","name":"Cita en Stilo Salón"}},
+      "amenityFeature":[
+        {"@type":"LocationFeatureSpecification",
+         "name":"Wi-Fi gratuito" if lang=="es" else "Free Wi-Fi","value":True},
+        {"@type":"LocationFeatureSpecification",
+         "name":"Se admiten mascotas" if lang=="es" else "Pet friendly","value":True},
+        {"@type":"LocationFeatureSpecification",
+         "name":"Bebida de cortesía" if lang=="es" else "Complimentary drink","value":True}],
+      "petsAllowed":True,
       "openingHoursSpecification":[
         {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"20:00"},
         {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"19:00"}],
@@ -604,6 +640,44 @@ FEATURED = [
   ("cabello", 1), ("cabello", 2), ("cabello", 8),
   ("tratamientos", 0), ("pestanas", 0), ("mani-pedi", 2),
 ]
+
+
+# ── Amenidades ────────────────────────────────────────────────────────
+# Tres cosas que la clienta decide ANTES de agendar: si puede trabajar,
+# si puede traer a su perro y cómo la van a tratar mientras espera.
+# Van en la portada (zona de conversión) y también en el JSON-LD, que es
+# de donde Google toma los "atributos" del negocio.
+AMENIDAD_ICONO = {
+  "wifi": ('<path d="M3 8.6a12.7 12.7 0 0 1 18 0"/>'
+           '<path d="M6.3 12a8 8 0 0 1 11.4 0"/>'
+           '<path d="M9.6 15.4a3.4 3.4 0 0 1 4.8 0"/>'
+           '<circle cx="12" cy="18.9" r="1.15" fill="currentColor" stroke="none"/>'),
+  "pet":  ('<ellipse cx="6.6" cy="10.1" rx="1.9" ry="2.5"/>'
+           '<ellipse cx="10.4" cy="6.9" rx="1.9" ry="2.6"/>'
+           '<ellipse cx="14.5" cy="6.9" rx="1.9" ry="2.6"/>'
+           '<ellipse cx="18.3" cy="10.1" rx="1.9" ry="2.5"/>'
+           '<path d="M12.4 12.6c2.5 0 4.8 2 4.8 4.3 0 1.9-1.5 3-3.1 3-.8 0-1.2-.3-1.7-.3'
+           's-.9.3-1.7.3c-1.6 0-3.1-1.1-3.1-3 0-2.3 2.3-4.3 4.8-4.3z"/>'),
+  "bebida": ('<path d="M4.6 8.2h11.6v6.4a4.6 4.6 0 0 1-4.6 4.6H9.2a4.6 4.6 0 0 1-4.6-4.6V8.2z"/>'
+             '<path d="M16.2 9.7h1.9a2.6 2.6 0 0 1 0 5.2h-1.9"/>'
+             '<path d="M8.6 2.8c-.75.9-.75 1.8 0 2.7"/>'
+             '<path d="M12.7 2.8c-.75.9-.75 1.8 0 2.7"/>'),
+}
+AMENIDADES = [
+  ("wifi",   "WiFi gratis",        "Free WiFi"),
+  ("pet",    "Pet friendly",       "Pet friendly"),
+  ("bebida", "Bebida de cortesía", "Complimentary drink"),
+]
+
+def amenidades(lang):
+    """Fila de amenidades de la portada."""
+    ch = "".join(
+      f'<li><svg class="ico-am" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+      f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      f'{AMENIDAD_ICONO[k]}</svg>{e(es if lang=="es" else en)}</li>'
+      for k, es, en in AMENIDADES)
+    return f'<ul class="amenidades">{ch}</ul>'
+
 
 def featured_table(lang):
     t = T[lang]
@@ -647,6 +721,7 @@ def home_body(lang):
     <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
     <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
   </div>
+  {amenidades(lang)}
   <div class="trust">
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
     <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>
@@ -654,7 +729,7 @@ def home_body(lang):
     <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
   </div>
 </div>
-<figure class="hero-figure">{img("hero", 900, 1125, t["hero_alt"], ALTA)}<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></figure>
+<figure class="hero-figure"><span class="marco" aria-hidden="true"></span>{img("hero", 900, 1125, t["hero_alt"], ALTA)}<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></figure>
 </div></section>
 
 <section class="alt"><div class="wrap">

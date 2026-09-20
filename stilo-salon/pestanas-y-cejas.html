@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="preload" href="/assets/parisienne.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "HairSalon", "@id": "https://stilo-salon.com/#salon", "name": "Stilo Salón", "url": "https://stilo-salon.com/", "description": "Salón de belleza en Roma Norte, CDMX. Cabello, color, tratamientos, uñas, extensiones de pestañas y diseño de cejas.", "telephone": "+52-55-2299-3258", "priceRange": "$$", "currenciesAccepted": "MXN", "image": "https://stilo-salon.com/assets/og.png", "address": {"@type": "PostalAddress", "streetAddress": "Calle Guadalajara 70-B", "addressLocality": "Roma Norte, Cuauhtémoc", "addressRegion": "Ciudad de México", "postalCode": "06700", "addressCountry": "MX"}, "areaServed": ["Roma Norte", "Roma Sur", "Condesa", "Juárez", "Ciudad de México"], "sameAs": ["https://www.instagram.com/stilosalon91/", "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb", "https://stilo-salon.versum.com/", "https://maps.google.com/?cid=4574699337846800212", "https://maps.app.goo.gl/SRXsyACEtcT2T9cd7"], "email": "stilo91@hotmail.com", "hasMap": "https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX", "potentialAction": {"@type": "ReserveAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://stilo-salon.versum.com/?trade=598440", "inLanguage": "es-MX", "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]}, "result": {"@type": "Reservation", "name": "Cita en Stilo Salón"}}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "19:00"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "HairSalon", "@id": "https://stilo-salon.com/#salon", "name": "Stilo Salón", "url": "https://stilo-salon.com/", "description": "Salón de belleza en Roma Norte, CDMX. Cabello, color, tratamientos, uñas, extensiones de pestañas y diseño de cejas.", "telephone": "+52-55-2299-3258", "priceRange": "$$", "currenciesAccepted": "MXN", "image": "https://stilo-salon.com/assets/og.png", "address": {"@type": "PostalAddress", "streetAddress": "Calle Guadalajara 70-B", "addressLocality": "Roma Norte, Cuauhtémoc", "addressRegion": "Ciudad de México", "postalCode": "06700", "addressCountry": "MX"}, "areaServed": ["Roma Norte", "Roma Sur", "Condesa", "Juárez", "Ciudad de México"], "sameAs": ["https://www.instagram.com/stilosalon91/", "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb", "https://stilo-salon.versum.com/", "https://maps.google.com/?cid=4574699337846800212", "https://maps.app.goo.gl/SRXsyACEtcT2T9cd7"], "email": "stilo91@hotmail.com", "hasMap": "https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX", "potentialAction": {"@type": "ReserveAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://stilo-salon.versum.com/?trade=598440", "inLanguage": "es-MX", "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]}, "result": {"@type": "Reservation", "name": "Cita en Stilo Salón"}}, "amenityFeature": [{"@type": "LocationFeatureSpecification", "name": "Wi-Fi gratuito", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Se admiten mascotas", "value": true}, {"@type": "LocationFeatureSpecification", "name": "Bebida de cortesía", "value": true}], "petsAllowed": true, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "09:00", "closes": "20:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "19:00"}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
@@ -286,6 +286,30 @@
     });
     document.addEventListener('keydown', function (ev) {
       if (ev.key === 'Escape' && visor.classList.contains('abierto')) cerrar();
+    });
+  }
+
+  // La foto de portada sigue al cursor, muy poco: 4.5 grados como tope.
+  // Más que eso se siente a truco; menos, ni se nota.
+  var fig = document.querySelector('.hero-figure');
+  if (fig && window.matchMedia('(min-width: 900px)').matches &&
+      window.matchMedia('(hover: hover)').matches) {
+    var pend = false;
+    fig.addEventListener('mousemove', function (ev) {
+      if (pend) return;
+      pend = true;
+      requestAnimationFrame(function () {
+        var r = fig.getBoundingClientRect();
+        var px = (ev.clientX - r.left) / r.width  - .5;
+        var py = (ev.clientY - r.top)  / r.height - .5;
+        fig.style.setProperty('--ty', (px * 9).toFixed(2) + 'deg');
+        fig.style.setProperty('--tx', (-py * 9).toFixed(2) + 'deg');
+        pend = false;
+      });
+    });
+    fig.addEventListener('mouseleave', function () {
+      fig.style.setProperty('--ty', '0deg');
+      fig.style.setProperty('--tx', '0deg');
     });
   }
 

@@ -610,3 +610,74 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   /* la foto se sale un poco del margen: rompe la caja y da amplitud */
   .hero-figure picture img { border-radius: 20px 20px 20px 90px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AMENIDADES
+   Wifi, mascotas y bebida son objeciones que se resuelven antes de
+   agendar, así que viven en la portada y no enterradas en "nosotros".
+   ═══════════════════════════════════════════════════════════════════ */
+.amenidades {
+  list-style: none; margin: 1.5rem 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .5rem .55rem;
+}
+.amenidades li {
+  display: inline-flex; align-items: center; gap: .48rem;
+  font-family: var(--sans); font-size: .83rem; letter-spacing: .01em;
+  color: var(--ink-soft); background: var(--paper);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: .42rem .85rem .42rem .7rem;
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.amenidades li:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(192,97,132,.14);
+}
+.ico-am { width: 17px; height: 17px; color: var(--accent-deep); flex: none; }
+.anim .hero .amenidades { animation: rise .85s cubic-bezier(.16,1,.3,1) .54s both; }
+@media (max-width: 420px) { .amenidades li { font-size: .78rem; padding: .38rem .7rem .38rem .58rem; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA FOTO DE PORTADA
+   Es la única prueba visual antes de que la clienta haga scroll, así
+   que ocupa más: se sale del margen derecho (el hero recorta, no hay
+   scroll horizontal), lleva un marco desplazado detrás y responde al
+   cursor con una inclinación muy leve.
+   ═══════════════════════════════════════════════════════════════════ */
+.hero .hero-figure { --tx: 0deg; --ty: 0deg; }
+.hero .hero-figure picture {
+  display: block; position: relative; z-index: 1;
+  transform: perspective(1100px) rotateX(var(--tx)) rotateY(var(--ty));
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+  will-change: transform;
+}
+/* marco de acento, girado, asomando por detrás */
+.hero .hero-figure .marco {
+  position: absolute; inset: 0; z-index: 0;
+  border: 1px solid var(--accent);
+  border-radius: 20px 20px 20px 90px;
+  /* asoma por la izquierda: por la derecha la foto ya se sale del margen */
+  transform: rotate(-2.5deg) translate(-24px, 22px);
+  opacity: .6; pointer-events: none;
+}
+/* halo suave: despega la foto del fondo sin una sombra dura */
+.hero .hero-figure::before {
+  content: ""; position: absolute; z-index: 0;
+  inset: 8% -12% -10% -8%;
+  background: radial-gradient(60% 55% at 60% 55%, rgba(192,97,132,.28), transparent 70%);
+  filter: blur(38px); pointer-events: none;
+}
+@media (min-width: 900px) {
+  /* la columna de texto conserva su ancho: la foto crece saliéndose
+     del margen derecho, no quitándole espacio al texto */
+  .hero-grid { grid-template-columns: 1.12fr .88fr; }
+  .hero .hero-figure {
+    aspect-ratio: 4/4.5;
+    margin-right: calc(-1 * min(7vw, 84px));
+    box-shadow: 0 30px 70px -28px rgba(21,25,29,.38);
+  }
+}
+@media (max-width: 899px) {
+  .hero .hero-figure .marco { transform: rotate(-2deg) translate(-10px, 10px); border-radius: var(--r); }
+  .hero .hero-figure { aspect-ratio: 4/3.4; max-height: none; }
+}
