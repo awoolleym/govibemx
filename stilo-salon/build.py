@@ -416,7 +416,7 @@ def home_body(lang):
     <div><strong>7 {'días' if lang=='es' else 'days'}</strong>{'de garantía en cada servicio' if lang=='es' else 'guarantee on every service'}</div>
   </div>
 </div>
-<figure class="hero-figure"><p class="ph">[ {'Sustituir por foto del salón' if lang=='es' else 'Replace with salon photo'} — 1200×1500px ]</p></figure>
+<figure class="hero-figure"><img src="/assets/hero.jpg" width="1200" height="1500" alt="" fetchpriority="high"></figure>
 </div></section>
 
 <section class="alt"><div class="wrap">
@@ -456,20 +456,21 @@ def home_body(lang):
     <div class="btn-row"><a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
   </div>
-  <figure class="hero-figure" style="aspect-ratio:4/3"><p class="ph">[ {'Mapa de Google Maps o foto de fachada' if lang=='es' else 'Google Map embed or storefront photo'} ]</p></figure>
+  <figure class="hero-figure" style="aspect-ratio:4/3"><img src="/assets/contacto.jpg" width="1200" height="900" alt="" loading="lazy"></figure>
   </div>
 </div></section>
 """
 
-def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra=""):
+def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner=""):
     t = T[lang]
     body = "".join(f"<p>{p}</p>" for p in paras)
     return f"""
-<section><div class="wrap">
+<section style="padding-bottom:1.5rem"><div class="wrap">
   <p class="eyebrow">{e(eyebrow)}</p>
   <h1>{e(h1)}</h1>
   <p class="lede">{e(intro)}</p>
 </div></section>
+{f'<div class="wrap"><figure class="banner"><img src="/assets/{banner}" width="1600" height="900" alt="" loading="lazy"></figure></div>' if banner else ''}
 <section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}{extra}</div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
@@ -720,6 +721,183 @@ def lash_faq_ld(lang):
     return ('<script type="application/ld+json">'
             '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[%s]}</script>' % body)
 
+# ─────────────────────────────────────────────────────────────────────────────
+# GUÍAS DE CABELLO Y UÑAS
+# Escritas para responder búsquedas informativas reales ("diferencia entre
+# balayage y babylights", "acrílico o gel", "cada cuándo retocar raíz").
+# REVISAR: el salón debe confirmar que todo coincide con su práctica.
+# ─────────────────────────────────────────────────────────────────────────────
+def hair_guide(lang):
+    es = lang == "es"
+    o = []
+    o.append(f'<h2>{"Balayage, babylights y matiz: cuál es cuál" if es else "Balayage, babylights and toner: which is which"}</h2>')
+    o.append('<p>' + ("Son las tres cosas que más nos preguntan, y se confunden seguido. "
+      "El <strong>balayage</strong> se pinta a mano alzada, barriendo el color de medios a puntas: deja una transición suave "
+      "y crece sin línea marcada, por eso aguanta meses sin retoque. Los <strong>babylights</strong> son mechones muy finos "
+      "tomados desde la raíz, que imitan el aclarado natural del sol en el cabello de un niño — se ven más parejos y "
+      "menos contrastados que el balayage. Ambos toman tres horas y arrancan en $2,300."
+      if es else
+      "These are the three we get asked about most, and they get confused constantly. "
+      "<strong>Balayage</strong> is painted freehand, sweeping color from mid-length to ends: it leaves a soft transition and grows "
+      "out without a hard line, which is why it holds for months between appointments. <strong>Babylights</strong> are very fine "
+      "sections taken from the root, imitating the way sun naturally lightens a child's hair — more even and less contrasted "
+      "than balayage. Both take three hours and start at $2,300.") + '</p>')
+    o.append('<p>' + ("El <strong>matiz</strong> no aclara: neutraliza. Es lo que quita el amarillo o el naranja que aparece semanas "
+      "después de un aclarado, y por eso suele ir después de un balayage, no en lugar de él. El <strong>baño de color</strong> "
+      "deposita tono y brillo sin levantar la base. Los dos arrancan en $900 y toman hora y cuarto."
+      if es else
+      "<strong>Toner</strong> does not lighten — it neutralizes. It is what removes the yellow or orange that appears weeks after "
+      "lightening, which is why it usually follows a balayage rather than replacing it. A <strong>color gloss</strong> deposits tone "
+      "and shine without lifting the base. Both start at $900 and take an hour and fifteen.") + '</p>')
+    o.append(f'<h2>{"Cada cuándo retocar la raíz" if es else "How often to touch up your roots"}</h2>')
+    o.append('<p>' + ("El cabello crece alrededor de un centímetro al mes. Con un <strong>tinte global</strong> o una <strong>base</strong>, "
+      "la raíz se nota a las cuatro o seis semanas y ahí va el <strong>retoque de raíz</strong> ($900). Con balayage o babylights "
+      "el crecimiento es suave por diseño: puedes estirarlo a tres o cuatro meses, y muchas clientas solo entran a matiz "
+      "en medio. Esa es la ventaja real de las técnicas a mano alzada, y la razón por la que a la larga salen más baratas."
+      if es else
+      "Hair grows about a centimeter a month. With <strong>full color</strong> or a <strong>base</strong>, the root shows at four to six "
+      "weeks, and that is when a <strong>root touch-up</strong> ($900) goes in. With balayage or babylights the grow-out is soft by "
+      "design: you can stretch it to three or four months, and many clients only come in for a toner in between. That is the "
+      "real advantage of freehand technique, and why it costs less over time.") + '</p>')
+    o.append(f'<h2>{"Los tres alisados, comparados" if es else "The three smoothing services, compared"}</h2>')
+    o.append('<p>' + ("No son lo mismo y elegir mal es caro. Esta es la diferencia:"
+      if es else "They are not the same, and choosing wrong is expensive. Here is the difference:") + '</p>')
+    rows = ([("Nanoplastia", "$2,500", "2 h", "Alisa de verdad, sin formol. Reestructura la fibra.",
+              "Quieres el cabello liso y con brillo varios meses."),
+             ("Brazilian Blowout", "$2,500", "2 h", "Sella la cutícula y baja el frizz, conservando movimiento.",
+              "Quierescontrolar el frizz pero no perder tu onda natural."),
+             ("Botox capilar", "$1,800", "1 h", "No alisa: rellena y repara.",
+              "Tu cabello está poroso o maltratado por decoloración.")]
+            if es else
+            [("Nanoplasty", "$2,500", "2 h", "Genuinely straightens, formaldehyde-free. Restructures the fiber.",
+              "You want straight, glossy hair for several months."),
+             ("Brazilian Blowout", "$2,500", "2 h", "Seals the cuticle and cuts frizz while keeping movement.",
+              "You want frizz control without losing your natural wave."),
+             ("Hair botox", "$1,800", "1 h", "Does not straighten: it fills and repairs.",
+              "Your hair is porous or damaged from bleaching.")])
+    th = ("Servicio","Precio","Tiempo","Qué hace","Te conviene si") if es else ("Service","Price","Time","What it does","Choose it if")
+    o.append('<table class="price"><thead><tr>' + "".join(f'<th>{x}</th>' for x in th) + '</tr></thead><tbody>' +
+      "".join(f'<tr><td class="svc">{a}</td><td class="amt">{b}</td><td class="dur">{c}</td>'
+              f'<td>{d}</td><td>{ee}</td></tr>' for a,b,c,d,ee in rows) + '</tbody></table>')
+    o.append('<p>' + ("Si no sabes cuál te toca, mándanos una foto por WhatsApp. A veces la respuesta honesta es un "
+      "<strong>tratamiento profundo hidratante</strong> de $520 y no un alisado de $2,500 — y preferimos decírtelo antes que cobrarte de más."
+      if es else
+      "If you are not sure which one applies, send us a photo on WhatsApp. Sometimes the honest answer is a $520 "
+      "<strong>deep hydrating treatment</strong> rather than a $2,500 smoothing service — and we would rather tell you that than overcharge you.") + '</p>')
+    o.append(f'<h2>{"Split Ender: cortar solo la punta abierta" if es else "Split Ender: cutting only the split end"}</h2>')
+    o.append('<p>' + ("El <strong>Split Ender</strong> (desde $600, una hora) es una herramienta que recorta únicamente las puntas "
+      "abiertas, milímetros, sin quitarte largo. Sirve cuando quieres dejarte crecer el cabello pero las puntas ya están "
+      "quebradas y el corte normal te costaría varios centímetros. No sustituye al corte: lo espacia."
+      if es else
+      "The <strong>Split Ender</strong> (from $600, one hour) is a tool that trims only the split ends — millimeters — without "
+      "taking length. It is for when you are growing your hair out but the ends are breaking and a regular cut would cost you "
+      "several centimeters. It does not replace a haircut: it spaces them out.") + '</p>')
+    return "\n".join(o)
+
+def nails_guide(lang):
+    es = lang == "es"
+    o = []
+    o.append(f'<h2>{"Acrílico, gel y escultural: qué te conviene" if es else "Acrylic, gel and sculpted: what suits you"}</h2>')
+    o.append('<p>' + ("La diferencia no es de precio, es de para qué. El <strong>gel</strong> (desde $180) va sobre tu uña natural "
+      "y le da color y resistencia: dura de dos a tres semanas y es lo más noble con la uña. El <strong>acrílico</strong> ($400) "
+      "construye estructura encima: aguanta más y permite largo, pero pide retoque puntual. La <strong>uña escultural con gel</strong> "
+      "(desde $500) construye largo con gel en lugar de acrílico — queda más ligera y flexible, y suele sentirse más natural."
+      if es else
+      "The difference is not price, it is purpose. <strong>Gel</strong> (from $180) goes over your natural nail for color and "
+      "resistance: it lasts two to three weeks and is the gentlest option. <strong>Acrylic</strong> ($400) builds structure on top: "
+      "it holds up longer and allows length, but needs fills on schedule. <strong>Sculpted gel nails</strong> (from $500) build length "
+      "with gel instead of acrylic — lighter and more flexible, and they usually feel more natural.") + '</p>')
+    o.append(f'<h2>{"Por qué el retoque se hace a tiempo" if es else "Why fills matter on schedule"}</h2>')
+    o.append('<p>' + ("El retoque va cada <strong>tres o cuatro semanas</strong>. No es por vender más: conforme la uña crece, el "
+      "material se despega de la raíz y queda una cámara de aire donde entra humedad. Ahí es donde se daña la uña natural — "
+      "no en el acrílico en sí. Esperar dos meses no ahorra dinero, cuesta uña. El retoque siempre sale más barato que el "
+      "juego completo."
+      if es else
+      "Fills go every <strong>three to four weeks</strong>. This is not about selling more: as the nail grows, the product lifts at "
+      "the base and leaves an air pocket where moisture gets in. That is where the natural nail gets damaged — not from the "
+      "acrylic itself. Waiting two months does not save money, it costs nail. A fill is always cheaper than a full set.") + '</p>')
+    o.append('<p>' + ("El <strong>retiro</strong> ($100) lo hacemos siempre con técnica y producto. Arrancarte el acrílico en casa "
+      "se lleva capas de tu uña natural, y recuperarlas toma meses."
+      if es else
+      "<strong>Removal</strong> ($100) is always done with proper technique and product. Prying acrylic off at home takes layers of "
+      "your natural nail with it, and those take months to grow back.") + '</p>')
+    o.append(f'<h2>{"Si traes la uña débil: empieza por aquí" if es else "If your nails are weak: start here"}</h2>')
+    o.append('<p>' + ("Después de mucho tiempo con acrílico es normal que la uña quede delgada. Para eso están las "
+      "<strong>vitaminas</strong> ($150 cada una), que no son color sino tratamiento: el <strong>calcio</strong> fortalece, el "
+      "<strong>rubber</strong> cubre imperfecciones y da cuerpo a uñas delgadas, y la <strong>vitamina</strong> protege mientras la uña "
+      "se recupera. Se pueden combinar con gel ($280 calcio + gel) para que no dejes de traerlas arregladas mientras sanan."
+      if es else
+      "After a long run of acrylic it is normal for the nail to end up thin. That is what <strong>nail vitamins</strong> ($150 each) "
+      "are for — treatment, not color: <strong>calcium</strong> strengthens, <strong>rubber base</strong> covers imperfections and adds body "
+      "to thin nails, and <strong>nail vitamin</strong> protects while the nail recovers. They combine with gel ($280 calcium + gel) so "
+      "you do not have to go bare while they heal.") + '</p>')
+    o.append('<p>' + ("Y una recomendación honesta: si tu uña natural está sana, un gel bien puesto se ve igual de bien que el "
+      "acrílico y la cuida más. Te lo vamos a decir aunque el acrílico cueste más."
+      if es else
+      "And an honest recommendation: if your natural nail is healthy, a well-applied gel looks just as good as acrylic and "
+      "treats it better. We will tell you so, even though acrylic costs more.") + '</p>')
+    return "\n".join(o)
+
+HAIR_FAQ = {
+ "es": [("¿Cuál es la diferencia entre balayage y babylights?",
+         "El balayage se pinta a mano alzada de medios a puntas y deja una transición suave que crece sin línea marcada. Los babylights son mechones muy finos tomados desde la raíz que imitan el aclarado natural del sol: se ven más parejos y menos contrastados. Ambos cuestan desde $2,300 y toman tres horas."),
+        ("¿Cada cuándo debo retocar la raíz?",
+         "Con tinte global o base, entre cuatro y seis semanas. Con balayage o babylights puedes estirarlo a tres o cuatro meses porque el crecimiento es suave por diseño."),
+        ("¿Qué alisado me conviene?",
+         "La nanoplastia alisa de verdad y sin formol. El Brazilian Blowout baja el frizz conservando movimiento. El botox capilar no alisa: rellena y repara cabello poroso o decolorado. Si no sabes cuál, mándanos una foto por WhatsApp."),
+        ("¿Cuál es la diferencia entre matiz y baño de color?",
+         "El matiz neutraliza el amarillo o naranja que aparece después de aclarar; no cambia el tono base. El baño de color deposita tono y brillo sin levantar la base. Ambos desde $900."),
+        ("¿Qué es el Split Ender?",
+         "Una herramienta que recorta únicamente las puntas abiertas, milímetros, sin quitarte largo. Sirve para dejarte crecer el cabello sin cargar puntas quebradas. Desde $600."),
+        ("¿Los precios de color son finales?",
+         "Los precios marcados “desde” aplican a cabello a partir del hombro. Si tu cabello es más largo o más denso lleva más producto y más tiempo, y el ajuste te lo decimos antes de empezar, nunca al cobrar.")],
+ "en": [("What is the difference between balayage and babylights?",
+         "Balayage is painted freehand from mid-length to ends and leaves a soft transition that grows out without a hard line. Babylights are very fine sections taken from the root that imitate natural sun-lightening: more even, less contrasted. Both start at $2,300 and take three hours."),
+        ("How often should I touch up my roots?",
+         "With full color or a base, every four to six weeks. With balayage or babylights you can stretch it to three or four months, because the grow-out is soft by design."),
+        ("Which smoothing service should I choose?",
+         "Nanoplasty genuinely straightens, formaldehyde-free. Brazilian Blowout reduces frizz while keeping movement. Hair botox does not straighten: it fills and repairs porous or bleached hair. If you are unsure, send us a photo on WhatsApp."),
+        ("What is the difference between toner and color gloss?",
+         "Toner neutralizes the yellow or orange that appears after lightening; it does not change the base. A color gloss deposits tone and shine without lifting the base. Both from $900."),
+        ("What is the Split Ender?",
+         "A tool that trims only split ends — millimeters — without taking length. It lets you grow your hair out without carrying broken ends. From $600."),
+        ("Are the color prices final?",
+         "Prices marked “from” apply at shoulder length and above. Longer or denser hair takes more product and time, and we tell you that adjustment before we start, never at the register.")],
+}
+
+NAILS_FAQ = {
+ "es": [("¿Acrílico o gel?",
+         "Si tu uña natural está sana, el gel se ve igual de bien y la cuida más. El acrílico conviene cuando quieres estructura y largo. El gel dura de dos a tres semanas; el acrílico aguanta más pero pide retoque cada tres o cuatro semanas."),
+        ("¿El acrílico daña la uña natural?",
+         "El daño no viene del acrílico, viene de dejarlo crecer demasiado: al crecer la uña, el material se despega en la raíz y entra humedad. Con retoque cada tres o cuatro semanas y retiro con técnica, la uña natural se mantiene bien."),
+        ("¿Cada cuándo tengo que retocar?",
+         "Cada tres o cuatro semanas. El retoque siempre cuesta menos que el juego completo, y esperar más tiempo termina costando uña."),
+        ("¿Puedo retirarme el gel o el acrílico en casa?",
+         "No te lo recomendamos. Arrancarlo se lleva capas de tu uña natural y recuperarlas toma meses. El retiro con técnica cuesta $100."),
+        ("Tengo la uña débil después de mucho acrílico, ¿qué hago?",
+         "Empieza por las vitaminas ($150): el calcio fortalece, el rubber cubre imperfecciones y da cuerpo a uñas delgadas, y la vitamina protege mientras la uña se recupera. Se pueden combinar con gel para que no dejes de traerlas arregladas."),
+        ("¿Qué incluye el manicure spa?",
+         "Tina con sales, exfoliación, masaje y esmalte, por $220. Con gel en lugar de esmalte son $350. El pedicure spa ($360) añade limado de talón y masaje de pies.")],
+ "en": [("Acrylic or gel?",
+         "If your natural nail is healthy, gel looks just as good and treats it better. Acrylic makes sense when you want structure and length. Gel lasts two to three weeks; acrylic holds longer but needs a fill every three to four weeks."),
+        ("Does acrylic damage the natural nail?",
+         "The damage does not come from the acrylic, it comes from letting it grow out too long: as the nail grows, product lifts at the base and moisture gets in. With fills every three to four weeks and proper removal, the natural nail stays healthy."),
+        ("How often do I need a fill?",
+         "Every three to four weeks. A fill always costs less than a full set, and waiting longer ends up costing nail."),
+        ("Can I remove gel or acrylic at home?",
+         "We do not recommend it. Prying it off takes layers of your natural nail with it, and those take months to grow back. Professional removal is $100."),
+        ("My nails are weak after a long run of acrylic — what now?",
+         "Start with nail vitamins ($150): calcium strengthens, rubber base covers imperfections and adds body to thin nails, and nail vitamin protects while the nail recovers. They combine with gel so you do not have to go bare."),
+        ("What does the spa manicure include?",
+         "A salt soak, exfoliation, massage and polish, for $220. With gel instead of polish it is $350. The spa pedicure ($360) adds heel filing and a foot massage.")],
+}
+
+def topic_faq_ld(table, lang):
+    body = ",".join('{"@type":"Question","name":%s,"acceptedAnswer":{"@type":"Answer","text":%s}}'
+                    % (_j(q), _j(a)) for q, a in table[lang])
+    return ('<script type="application/ld+json">'
+            '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[%s]}</script>' % body)
+
 def main():
     log = []
     # Home (ES + EN)
@@ -744,9 +922,13 @@ def main():
             d = sp[lang]
             slug = sp["es_slug"] if lang == "es" else sp["en_slug"]
             alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
-            extra = lash_guide(lang) if sp["key"] == "lashes" else ""
-            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"], extra=extra)
-            ld = salon_ld(lang) + (lash_faq_ld(lang) if sp["key"] == "lashes" else "")
+            extra = {"lashes": lash_guide, "hair": hair_guide, "nails": nails_guide}[sp["key"]](lang)
+            bnr = {"hair":"h-cabello.jpg","nails":"h-unas.jpg","lashes":"h-pestanas.jpg"}[sp["key"]]
+            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], d["paras"], sp["keys"], extra=extra, banner=bnr)
+            faq = {"lashes": lambda l: lash_faq_ld(l),
+                   "hair":   lambda l: topic_faq_ld(HAIR_FAQ, l),
+                   "nails":  lambda l: topic_faq_ld(NAILS_FAQ, l)}[sp["key"]](lang)
+            ld = salon_ld(lang) + faq
             log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"], body, alt, ld)))
     # Full price list
     allk = list(PRICES.keys())

@@ -191,3 +191,7 @@ address { font-style: normal; line-height: 1.8; }
   html { scroll-behavior: auto; }
   * { transition: none !important; animation: none !important; }
 }
+
+/* Banner decorativo de las páginas de servicio */
+.banner { margin: 0 0 2.5rem; border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.banner img { width: 100%; height: clamp(120px, 22vw, 240px); object-fit: cover; display: block; }
