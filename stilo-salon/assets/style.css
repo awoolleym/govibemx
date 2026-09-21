@@ -1230,3 +1230,26 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .hero .foto-portada { height: clamp(300px, 78vw, 430px); margin-bottom: 1.4rem; }
   .hero .foto-portada { box-shadow: 0 18px 44px -20px rgba(21,25,29,.26); }
 }
+
+/* ── La flor de marca ───────────────────────────────────────────────
+   Sustituye al botánico que yo había dibujado. Es la acuarela de su
+   propio material, recortada del mármol: la de ellos vale más que la
+   mía, y de paso trae el verde de su identidad, que en el sitio no
+   estaba en ningún lado. */
+.d-bot, .d-p { display: none; }
+.d-flor {
+  position: absolute; z-index: 2;
+  left: -4%; bottom: -8%;
+  width: clamp(200px, 26vw, 330px); height: auto;
+  opacity: .92; pointer-events: none;
+  transform: rotate(-6deg);
+}
+@media (min-width: 900px) {
+  /* cruza del campo limpio al canto de la foto, como la flor de la
+     referencia cruza sus dos mitades */
+  .d-flor {
+    left: 27%; bottom: 1%;
+    width: clamp(300px, 33vw, 470px);
+    transform: rotate(-4deg);
+  }
+}

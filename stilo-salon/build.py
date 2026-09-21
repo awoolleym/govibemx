@@ -773,37 +773,16 @@ def marcas(lang):
 
 
 # ── Adornos de la portada ─────────────────────────────────────────────
-# Tres recursos de una referencia que le gustó al salón: un marco de
-# línea que se monta sobre la foto, un botánico que cruza el límite
-# entre el campo de color y las fotos, y pétalos sueltos. Todos son
-# trazo, no relleno, y van a baja opacidad: adornan sin pedir turno.
-BOTANICO = (
-  '<svg class="d-bot" viewBox="0 0 300 300" aria-hidden="true" focusable="false">'
-  '<g class="t">'
-  '<path d="M34 288 C 86 254, 118 204, 136 154 C 150 114, 157 74, 157 40"/>'
-  '<path d="M139 146 C 156 136, 174 132, 192 134"/></g>'
-  '<g class="h">'
-  '<path d="M113 218 C 90 214, 74 196, 70 174 C 94 176, 112 194, 113 218 Z"/>'
-  '<path d="M115 214 C 118 192, 133 174, 154 168 C 152 191, 137 209, 115 214 Z"/>'
-  '<path d="M136 164 C 115 155, 104 136, 105 115 C 126 121, 139 142, 136 164 Z"/>'
-  '<path d="M139 158 C 146 138, 163 125, 184 124 C 177 144, 160 157, 139 158 Z"/>'
-  '<path d="M150 108 C 134 99, 127 82, 130 64 C 146 72, 155 90, 150 108 Z"/></g>'
-  '<g class="f">'
-  '<path d="M157 42 C 148 36, 146 24, 152 15 C 158 9, 164 12, 165 20 C 166 30, 163 38, 157 42 Z"/>'
-  '<path d="M157 42 C 157 34, 158 24, 159 16"/>'
-  '<path d="M192 134 C 197 126, 205 123, 212 127 C 208 136, 199 139, 192 134 Z"/>'
-  '<path d="M192 134 C 199 132, 206 130, 212 127"/></g></svg>')
-
-# Un pétalo: dos arcos que se juntan en punta.
-_PETALO = ('<svg class="d-p d-p{i}" viewBox="0 0 24 32" aria-hidden="true" focusable="false">'
-           '<path d="M12 1 C 20 9, 23 20, 12 31 C 1 20, 4 9, 12 1 Z"/></svg>')
-
+# El marco de línea viene de la referencia que le gustó al salón. La
+# flor ya no la dibujo yo: es la de su propio material de marca (el
+# banner de 3840x2160 que tenían en Drive), recortada del mármol con
+# una máscara por saturación. Su acuarela real vale más que mi trazo.
 def adornos():
-    petalos = "".join(_PETALO.format(i=i) for i in range(1, 8))
     return ('<div class="deco" aria-hidden="true">'
             '<span class="d-marco"></span>'
-            + BOTANICO + petalos + '</div>')
-
+            '<img class="d-flor" src="/assets/flor-marca.png" '
+            'width="980" height="627" alt="" loading="lazy">'
+            '</div>')
 
 def featured_table(lang):
     t = T[lang]
