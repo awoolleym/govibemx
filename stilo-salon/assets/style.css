@@ -888,10 +888,10 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .hero .marca-agua {
   display: block; z-index: 0;
   right: auto; top: auto;
-  left: 10%; bottom: -6%;
+  left: -6%; bottom: -4%;
   transform: none;
-  width: min(48vw, 460px);
-  opacity: .07;
+  width: min(60vw, 620px);
+  opacity: .1;
 }
 @media (max-width: 899px) {
   /* anclada abajo, no a media altura: detrás del párrafo enturbiaba
@@ -1216,7 +1216,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .d-marco {
     left: 54%; right: 6%;
     top: clamp(2.4rem, 7vh, 4.6rem); bottom: clamp(2.4rem, 7vh, 4.6rem);
-    border: 3px solid rgba(255,255,255,.92);
+    border: 7px solid rgba(255,255,255,.95);
     border-radius: 0;
     box-shadow: 0 0 22px rgba(21,25,29,.10);
   }
@@ -1270,11 +1270,17 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
      le encimaba al párrafo, y ahí no cabe nada de este tamaño. Sobre
      la foto sí se lee, porque es acuarea a color y no trazo fino —
      es justo lo que hace la flor de la referencia. */
+  /* Abajo a la izquierda, apoyada en el canto de la foto. Antes estaba
+     más arriba y más metida en la imagen: tapaba el cabello, que es lo
+     que se vende. Aquí cae en el aire que dejan el botón y la línea de
+     WhatsApp, y solo roza el borde de la foto. */
   .d-flor {
-    left: auto; right: 34%;
-    bottom: clamp(1.8rem, 4.5vh, 3.2rem);
-    width: clamp(260px, 25vw, 380px);
-    transform: rotate(-5deg);
+    left: 34%; right: auto;
+    /* el giro ensancha la caja: sin este margen la flor vuelve a
+       salirse por abajo y el hero la recorta */
+    bottom: clamp(.8rem, 2vh, 1.4rem);
+    width: clamp(250px, 24vw, 350px);
+    transform: rotate(-3deg);
   }
 }
 .hero .btn-row-hero { margin-top: 2rem; margin-bottom: .9rem; }
@@ -1295,14 +1301,12 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   display: none; height: auto;
 }
 @media (min-width: 900px) {
-  /* Baja a la esquina de abajo: arriba competía con el epígrafe y el
-     título, que son lo primero que se lee. */
   .d-flor2 {
     display: block;
-    left: -7%; top: auto; bottom: -10%;
-    width: clamp(190px, 18vw, 280px);
-    opacity: .5;
-    transform: scaleX(-1) rotate(12deg);
+    left: -6%; top: -8%;
+    width: clamp(180px, 17vw, 260px);
+    opacity: .45;
+    transform: scaleX(-1) rotate(-14deg);
   }
 }
 @media (max-width: 899px) {
