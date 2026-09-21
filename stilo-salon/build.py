@@ -196,14 +196,14 @@ PRICES = {
 
 T = {  # cadenas de interfaz
  "es": {"price":"Precio","service":"Servicio","dur":"Duración","from":"desde",
-        "hero_alt":"Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias","unas_alt":"Uñas largas en gel dorado espejo hechas en Stilo Salón, Roma Norte","pest_alt":"Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
+        "hero_alt":"Clienta con balayage largo en Stilo Salón, Roma Norte, con el salón al fondo","unas_alt":"Uñas largas en gel dorado espejo hechas en Stilo Salón, Roma Norte","pest_alt":"Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte","wa_aria":"Escríbenos por WhatsApp","wa_cta":"Escríbenos","book":"Reservar cita en línea","book_wa":"WhatsApp","appts":"Citas","hours":"Horario",
         "mf":"Lunes a viernes","sat":"Sábado","sun":"Domingo","closed":"cerrado",
         "branch":"Sucursal Roma Norte","services":"Servicios","skip":"Saltar al contenido",
         "menu":"Menú","directions":"Cómo llegar","rights":"Todos los derechos reservados.",
         "logo_alt":"Stilo Salón — salón de belleza en Roma Norte, CDMX","privacy":"Aviso de Privacidad","full_list":"Ver la lista completa de precios",
         "mxn":"Precios en pesos mexicanos (MXN).","other":"English"},
  "en": {"price":"Price","service":"Service","dur":"Duration","from":"from",
-        "hero_alt":"Balayage done at Stilo Salón, Roma Norte: dark brown roots blending into blonde ends","unas_alt":"Long mirror-gold gel nails done at Stilo Salón, Roma Norte","pest_alt":"Russian volume eyelash extensions applied at Stilo Salón, Roma Norte","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
+        "hero_alt":"Client with long balayage at Stilo Salón, Roma Norte, with the salon behind her","unas_alt":"Long mirror-gold gel nails done at Stilo Salón, Roma Norte","pest_alt":"Russian volume eyelash extensions applied at Stilo Salón, Roma Norte","wa_aria":"Message us on WhatsApp","wa_cta":"Message us","book":"Book online","book_wa":"WhatsApp","appts":"Appointments","hours":"Hours",
         "mf":"Monday to Friday","sat":"Saturday","sun":"Sunday","closed":"closed",
         "branch":"Roma Norte Location","services":"Services","skip":"Skip to content",
         "menu":"Menu","directions":"Get directions","rights":"All rights reserved.",
@@ -741,7 +741,7 @@ def portada(lang):
     """
     t = T[lang]
     return ('<div class="foto-portada">'
-            + img("hero", 900, 1125, t["hero_alt"], ALTA)
+            + img("hero", 960, 1010, t["hero_alt"], ALTA)
             + '</div>')
 
 # ── Marcas con las que trabajan ───────────────────────────────────────
