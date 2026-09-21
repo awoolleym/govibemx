@@ -836,11 +836,14 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
     position: absolute; z-index: 1;
     top: 0; bottom: 0; right: 0; left: 44%;
   }
-  /* el velo muere antes de la foto: el texto nunca se le encima */
-  .banda .velo {
-    background: linear-gradient(90deg,
-      #f7dfe9 0%, rgba(247,223,233,.92) 8%, rgba(247,223,233,0) 34%);
-  }
+  /* Sin velo. Un degradado de color derramándose sobre la foto siempre
+     se ensucia, porque los colores de la foto no son los del degradado:
+     sobre la lámina de pestañas el rosa caía encima de piel y gris y
+     quedaba lodoso. En su lugar, canto limpio y la foto proyectando
+     sombra sobre el campo de color: se lee como un plano encima del
+     fondo, que es lo que hace una revista. */
+  .banda .velo { background: none; }
+  .hero .banda { box-shadow: -22px 0 54px -16px rgba(21,25,29,.22); }
   /* más baja y con la banda más ancha: así la foto tiende a cuadrada
      en vez de ser una tira vertical */
   .hero > .wrap { min-height: clamp(440px, 56vh, 600px); display: flex; align-items: center; }
@@ -852,10 +855,9 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 @media (max-width: 899px) {
   /* en el teléfono la banda va arriba, a todo lo ancho */
   .hero .banda { height: clamp(300px, 78vw, 430px); }
-  .banda .velo {
-    background: linear-gradient(0deg,
-      #f8e2ec 0%, rgba(248,226,236,0) 38%);
-  }
+  /* en el teléfono, mismo criterio: canto limpio y sombra hacia abajo */
+  .banda .velo { background: none; }
+  .hero .banda { box-shadow: 0 18px 44px -20px rgba(21,25,29,.28); }
   .banda .lamina-pie { left: 16px; top: 16px; right: auto; }
   .banda .puntos { left: 50%; bottom: 14px; transform: translateX(-50%); }
   .banda .sello { display: none; }
