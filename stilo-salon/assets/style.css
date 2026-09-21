@@ -1287,3 +1287,27 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 /* La franja de cifras baja y recoge las amenidades */
 .cifras { padding: clamp(2.6rem, 6vw, 4.4rem) 0 clamp(.6rem, 2vw, 1.4rem); }
 .cifras .amenidades { margin: 0 0 clamp(1.8rem, 4vw, 2.8rem); }
+
+/* Segunda flor: el mismo ramo espejeado, arriba a la izquierda, tenue.
+   Cierra la composición en diagonal con la grande del canto de la foto. */
+.d-flor2 {
+  position: absolute; z-index: 1; pointer-events: none;
+  display: none; height: auto;
+}
+@media (min-width: 900px) {
+  .d-flor2 {
+    display: block;
+    left: -6%; top: -8%;
+    width: clamp(180px, 17vw, 260px);
+    opacity: .45;
+    transform: scaleX(-1) rotate(-14deg);
+  }
+}
+@media (max-width: 899px) {
+  .d-flor2 {
+    display: block;
+    right: -12%; left: auto; top: auto; bottom: -6%;
+    width: 46vw; opacity: .4;
+    transform: scaleX(-1) rotate(8deg);
+  }
+}

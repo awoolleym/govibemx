@@ -782,6 +782,11 @@ def adornos():
             '<span class="d-marco"></span>'
             '<img class="d-flor" src="/assets/flor-marca.png" '
             'width="980" height="627" alt="" loading="lazy">'
+            # La segunda es el mismo ramo, volteado y más chico: recortar
+            # pimpollos sueltos de la acuarela deja el canto cuadrado y se
+            # ven rotos, así que se repite la pieza entera.
+            '<img class="d-flor2" src="/assets/flor-marca.png" '
+            'width="980" height="627" alt="" loading="lazy">'
             '</div>')
 
 def featured_table(lang):
@@ -838,6 +843,12 @@ def home_body(lang):
 </div>
 </div></section>
 
+<section class="alt"><div class="wrap">
+  <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
+  <h2>{'Todo lo que hacemos, con su precio' if lang=='es' else 'Everything we do, with its price'}</h2></div>
+  <div class="grid g4 js-reveal">{cards}</div>
+</div></section>
+
 <section class="cifras"><div class="wrap">
   {amenidades(lang)}
   <div class="trust">
@@ -850,11 +861,6 @@ def home_body(lang):
 
 {marcas(lang)}
 
-<section class="alt"><div class="wrap">
-  <div class="sec-head"><p class="eyebrow">{'Nuestros servicios' if lang=='es' else 'Our services'}</p>
-  <h2>{'Todo lo que hacemos, con su precio' if lang=='es' else 'Everything we do, with its price'}</h2></div>
-  <div class="grid g4 js-reveal">{cards}</div>
-</div></section>
 
 <section class="valora"><div class="wrap">
   <div class="valora-in">
