@@ -829,16 +829,17 @@ def home_body(lang):
   <p class="eyebrow">{hi}</p>
   <h1 class="h1-firma"><em>{e(c["home_h1"][0])}</em><br>{e(c["home_h1"][1])}</h1>
   <p class="lede">{e(c['home_lede'])}</p>
-  <div class="btn-row">
+  <div class="btn-row btn-row-hero">
     <a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
-    <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
-    <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
   </div>
-  {amenidades(lang)}
+  <p class="hero-alt">{'o escríbenos por' if lang=='es' else 'or message us on'}
+    <a href="{WA}" rel="noopener">WhatsApp</a> ·
+    <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a></p>
 </div>
 </div></section>
 
 <section class="cifras"><div class="wrap">
+  {amenidades(lang)}
   <div class="trust">
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
     <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>

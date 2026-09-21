@@ -1253,3 +1253,37 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
     transform: rotate(-4deg);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA — MÁS AIRE
+   Tres cosas que la apretaban: tres botones en dos filas, las
+   pastillas de amenidades pegadas al canto de abajo, y solo 43 px
+   entre el texto y la foto. Todo eso sale o se separa.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  /* el texto termina antes: el hueco con la foto pasa de 43 a ~100 px */
+  .hero > .wrap > div { max-width: 38%; }
+  /* la flor se anclaba a un porcentaje y en pantallas anchas se salía
+     del hero, que recorta: de ahí el corte abrupto. Ahora va a una
+     distancia fija del canto y siempre cabe entera. */
+  /* Montada sobre el canto de la foto, no en el hueco: en el hueco se
+     le encimaba al párrafo, y ahí no cabe nada de este tamaño. Sobre
+     la foto sí se lee, porque es acuarea a color y no trazo fino —
+     es justo lo que hace la flor de la referencia. */
+  .d-flor {
+    left: auto; right: 34%;
+    bottom: clamp(1.8rem, 4.5vh, 3.2rem);
+    width: clamp(260px, 25vw, 380px);
+    transform: rotate(-5deg);
+  }
+}
+.hero .btn-row-hero { margin-top: 2rem; margin-bottom: .9rem; }
+.hero-alt {
+  margin: 0; font-family: var(--sans); font-size: .9rem; color: var(--muted);
+}
+.hero-alt a { color: var(--accent-deep); text-decoration: none; font-weight: 400; }
+.hero-alt a:hover { text-decoration: underline; }
+
+/* La franja de cifras baja y recoge las amenidades */
+.cifras { padding: clamp(2.6rem, 6vw, 4.4rem) 0 clamp(.6rem, 2vw, 1.4rem); }
+.cifras .amenidades { margin: 0 0 clamp(1.8rem, 4vw, 2.8rem); }
