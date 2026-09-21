@@ -1133,3 +1133,53 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   }
   .tri-sello img { height: 30px; width: auto; display: block; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ADORNOS DE PORTADA
+   Marco de línea, botánico y pétalos. Todo trazo, nada de relleno:
+   así acompañan sin competirle a las fotos ni al título.
+   ═══════════════════════════════════════════════════════════════════ */
+/* z-index 2, igual que el bloque de texto: como los adornos van antes en
+   el marcado, el texto gana el empate y nunca queda tapado. Y como las
+   fotos están en 1, los adornos sí se montan sobre ellas. */
+.deco { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.deco svg { position: absolute; overflow: visible; fill: none;
+            stroke: var(--accent-deep); stroke-linecap: round; stroke-linejoin: round; }
+
+/* — Botánico: cruza el límite entre el campo de color y las fotos — */
+.d-bot { display: none; }
+.d-bot .t { stroke-width: 1.7; }
+.d-bot .h { stroke-width: 1.15; opacity: .78; }
+.d-bot .f { stroke-width: 1.3; opacity: .9; }
+
+/* — Pétalos sueltos, arriba a la izquierda — */
+.d-p { stroke-width: 1.15; opacity: .42; }
+.d-p1 { width: 26px; left: 4%;  top: 14%; transform: rotate(-18deg); }
+.d-p2 { width: 17px; left: 12%; top: 9%;  transform: rotate(34deg); opacity: .32; }
+.d-p3 { width: 21px; left: 21%; top: 17%; transform: rotate(-52deg); opacity: .36; }
+.d-p4 { width: 14px; left: 30%; top: 8%;  transform: rotate(12deg); opacity: .3; }
+.d-p5 { width: 24px; left: 7%;  top: 27%; transform: rotate(62deg); opacity: .26; }
+.d-p6 { width: 16px; left: 26%; top: 30%; transform: rotate(-8deg); opacity: .24; }
+.d-p7 { display: none; }
+@media (max-width: 899px) { .d-p3, .d-p4, .d-p5, .d-p6 { display: none; } }
+
+@media (min-width: 900px) {
+  /* Montado sobre el canto de la primera lámina, como la flor de la
+     referencia: es lo que cose el campo de color con las fotos. */
+  .d-bot {
+    display: block;
+    left: 29%; bottom: -12%;
+    width: clamp(300px, 32vw, 430px); height: auto;
+    opacity: .62;
+    transform: rotate(-10deg);
+  }
+  /* — Marco de línea: se monta sobre la primera lámina — */
+  .d-marco {
+    position: absolute;
+    left: 38%; right: 30%;
+    top: clamp(1.6rem, 5vh, 3.4rem); bottom: clamp(4rem, 10vh, 7rem);
+    border: 1px solid rgba(154, 72, 103, .5);
+    border-radius: 2px;
+  }
+  .d-p7 { display: block; width: 19px; left: 40%; top: 6%; transform: rotate(48deg); opacity: .34; }
+}

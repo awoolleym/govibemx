@@ -781,6 +781,40 @@ def marcas(lang):
     return (f'<section class="marcas"><div class="wrap">'
             f'<p class="marcas-t">{e(tit)}</p><ul>{ms}</ul></div></section>')
 
+
+# ── Adornos de la portada ─────────────────────────────────────────────
+# Tres recursos de una referencia que le gustó al salón: un marco de
+# línea que se monta sobre la foto, un botánico que cruza el límite
+# entre el campo de color y las fotos, y pétalos sueltos. Todos son
+# trazo, no relleno, y van a baja opacidad: adornan sin pedir turno.
+BOTANICO = (
+  '<svg class="d-bot" viewBox="0 0 300 300" aria-hidden="true" focusable="false">'
+  '<g class="t">'
+  '<path d="M34 288 C 86 254, 118 204, 136 154 C 150 114, 157 74, 157 40"/>'
+  '<path d="M139 146 C 156 136, 174 132, 192 134"/></g>'
+  '<g class="h">'
+  '<path d="M113 218 C 90 214, 74 196, 70 174 C 94 176, 112 194, 113 218 Z"/>'
+  '<path d="M115 214 C 118 192, 133 174, 154 168 C 152 191, 137 209, 115 214 Z"/>'
+  '<path d="M136 164 C 115 155, 104 136, 105 115 C 126 121, 139 142, 136 164 Z"/>'
+  '<path d="M139 158 C 146 138, 163 125, 184 124 C 177 144, 160 157, 139 158 Z"/>'
+  '<path d="M150 108 C 134 99, 127 82, 130 64 C 146 72, 155 90, 150 108 Z"/></g>'
+  '<g class="f">'
+  '<path d="M157 42 C 148 36, 146 24, 152 15 C 158 9, 164 12, 165 20 C 166 30, 163 38, 157 42 Z"/>'
+  '<path d="M157 42 C 157 34, 158 24, 159 16"/>'
+  '<path d="M192 134 C 197 126, 205 123, 212 127 C 208 136, 199 139, 192 134 Z"/>'
+  '<path d="M192 134 C 199 132, 206 130, 212 127"/></g></svg>')
+
+# Un pétalo: dos arcos que se juntan en punta.
+_PETALO = ('<svg class="d-p d-p{i}" viewBox="0 0 24 32" aria-hidden="true" focusable="false">'
+           '<path d="M12 1 C 20 9, 23 20, 12 31 C 1 20, 4 9, 12 1 Z"/></svg>')
+
+def adornos():
+    petalos = "".join(_PETALO.format(i=i) for i in range(1, 8))
+    return ('<div class="deco" aria-hidden="true">'
+            '<span class="d-marco"></span>'
+            + BOTANICO + petalos + '</div>')
+
+
 def featured_table(lang):
     t = T[lang]
     rows = []
@@ -820,6 +854,7 @@ def home_body(lang):
     return f"""
 <section class="hero">
   <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
+  {adornos()}
   {portada(lang)}
   <div class="wrap hero-grid"><div>
   <p class="eyebrow">{hi}</p>
