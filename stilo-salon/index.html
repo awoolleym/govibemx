@@ -50,7 +50,7 @@
 
 <section class="hero">
   <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
-  <div class="banda portada"><div class="lamina activa" data-i="0"><picture><source srcset="/assets/hero.webp" type="image/webp"><img src="/assets/hero.jpg" width="900" height="1125" alt="Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias" fetchpriority="high"></picture><a class="lamina-pie" href="/cabello.html">Cabello y color</a></div><div class="lamina" data-i="1"><img src="/assets/hero-unas.jpg" width="512" height="640" alt="Uñas largas en gel dorado espejo hechas en Stilo Salón, Roma Norte" loading="lazy"><a class="lamina-pie" href="/unas.html">Uñas</a></div><div class="lamina" data-i="2"><img src="/assets/hero-pestanas.jpg" width="512" height="640" alt="Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte" loading="lazy"><a class="lamina-pie" href="/pestanas-y-cejas.html">Pestañas y cejas</a></div><span class="velo" aria-hidden="true"></span><div class="puntos" role="group" aria-label="Ver"><button type="button" class="punto activa" data-i="0" aria-label="Cabello y color"></button><button type="button" class="punto" data-i="1" aria-label="Uñas"></button><button type="button" class="punto" data-i="2" aria-label="Pestañas y cejas"></button></div><span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></div>
+  <div class="tri"><a class="tri-l" href="/cabello.html"><img src="/assets/tri-cabello.jpg" width="803" height="1125" alt="Balayage hecho en Stilo Salón, Roma Norte: castaño oscuro en raíz con puntas rubias" fetchpriority="high"><span class="tri-t">Cabello y color</span></a><a class="tri-l" href="/unas.html"><img src="/assets/tri-unas.jpg" width="457" height="640" alt="Uñas largas en gel dorado espejo hechas en Stilo Salón, Roma Norte" loading="lazy"><span class="tri-t">Uñas</span></a><a class="tri-l" href="/pestanas-y-cejas.html"><img src="/assets/tri-pestanas.jpg" width="457" height="640" alt="Extensiones de pestañas de volumen ruso aplicadas en Stilo Salón, Roma Norte" loading="lazy"><span class="tri-t">Pestañas y cejas</span></a><span class="tri-sello"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true"></span></div>
   <div class="wrap hero-grid"><div>
   <p class="eyebrow">Roma Norte · Ciudad de México</p>
   <h1 class="h1-firma"><em>¡Bonita</em><br>la que lo lea!</h1>
@@ -215,34 +215,6 @@
     var o = n.classList.toggle('open');
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   });
-
-  // Portada rotatoria. Avanza sola cada 5.5 s, se detiene cuando el
-  // cursor está encima o cuando alguien usa los puntos: si la clienta
-  // está mirando una foto, moverla se la quitamos de enfrente.
-  var port = document.querySelector('.portada');
-  if (port) {
-    var lam = port.querySelectorAll('.lamina'),
-        pts = port.querySelectorAll('.punto'),
-        cur = 0, reloj = null;
-    var ir = function (n) {
-      if (n === cur) return;
-      lam[cur].classList.remove('activa'); pts[cur].classList.remove('activa');
-      cur = n;
-      lam[cur].classList.add('activa'); pts[cur].classList.add('activa');
-    };
-    var correr = function () {
-      if (reloj) return;
-      reloj = setInterval(function () { ir((cur + 1) % lam.length); }, 5500);
-    };
-    var parar = function () { clearInterval(reloj); reloj = null; };
-    for (var q = 0; q < pts.length; q++) (function (n) {
-      pts[n].addEventListener('click', function () { parar(); ir(n); });
-    })(q);
-    port.addEventListener('mouseenter', parar);
-    port.addEventListener('mouseleave', correr);
-    if (lam.length > 1 && !menos) correr();   // el avance solo se suma
-                                              // si no pidieron menos movimiento
-  }
 
   // Entrar por un enlace debe dejarte arriba.
   // El navegador —y el visor de vista previa— recuerdan dónde te quedaste

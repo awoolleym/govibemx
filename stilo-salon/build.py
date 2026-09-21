@@ -388,34 +388,6 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   }});
 
-  // Portada rotatoria. Avanza sola cada 5.5 s, se detiene cuando el
-  // cursor está encima o cuando alguien usa los puntos: si la clienta
-  // está mirando una foto, moverla se la quitamos de enfrente.
-  var port = document.querySelector('.portada');
-  if (port) {{
-    var lam = port.querySelectorAll('.lamina'),
-        pts = port.querySelectorAll('.punto'),
-        cur = 0, reloj = null;
-    var ir = function (n) {{
-      if (n === cur) return;
-      lam[cur].classList.remove('activa'); pts[cur].classList.remove('activa');
-      cur = n;
-      lam[cur].classList.add('activa'); pts[cur].classList.add('activa');
-    }};
-    var correr = function () {{
-      if (reloj) return;
-      reloj = setInterval(function () {{ ir((cur + 1) % lam.length); }}, 5500);
-    }};
-    var parar = function () {{ clearInterval(reloj); reloj = null; }};
-    for (var q = 0; q < pts.length; q++) (function (n) {{
-      pts[n].addEventListener('click', function () {{ parar(); ir(n); }});
-    }})(q);
-    port.addEventListener('mouseenter', parar);
-    port.addEventListener('mouseleave', correr);
-    if (lam.length > 1 && !menos) correr();   // el avance solo se suma
-                                              // si no pidieron menos movimiento
-  }}
-
   // Entrar por un enlace debe dejarte arriba.
   // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
   // en una página que ya habías abierto, y al volver a entrar por un
@@ -751,37 +723,36 @@ def amenidades(lang):
 # enseña las tres líneas del salón antes de que nadie baje.  El H1 no
 # rota — lo que Google indexa se queda fijo.
 PORTADA = [
-  ("hero",          900, 1125, "hero_alt",  "Cabello y color",   "Hair & color",
+  ("tri-cabello",  803, 1125, "hero_alt",  "Cabello y color",   "Hair & color",
    "/cabello.html",         "/en/hair.html"),
-  ("hero-unas",     512,  640, "unas_alt",  "Uñas",              "Nails",
+  ("tri-unas",     457,  640, "unas_alt",  "Uñas",              "Nails",
    "/unas.html",            "/en/nails.html"),
-  ("hero-pestanas", 512,  640, "pest_alt",  "Pestañas y cejas",  "Lashes & brows",
+  ("tri-pestanas", 457,  640, "pest_alt",  "Pestañas y cejas",  "Lashes & brows",
    "/pestanas-y-cejas.html","/en/lashes-and-brows.html"),
 ]
 
 def portada(lang):
-    """Banda de portada: llega al borde derecho de la pantalla."""
+    """Tríptico de portada.
+
+    Tres láminas verticales escalonadas, una por línea del salón, que se
+    salen por el borde derecho de la pantalla. Sustituye al carrusel: las
+    tres se ven a la vez, nada se mueve solo y cada una lleva a su página.
+    """
     t = T[lang]
-    laminas, puntos = [], []
+    laminas = []
     for i, (base, w, h, alt_k, es_t, en_t, es_u, en_u) in enumerate(PORTADA):
         rot = ALTA if i == 0 else TARDE
-        act = " activa" if i == 0 else ""
         url = es_u if lang == "es" else en_u
         txt = es_t if lang == "es" else en_t
         laminas.append(
-          f'<div class="lamina{act}" data-i="{i}">'
+          f'<a class="tri-l" href="{url}">'
           f'{img(base, w, h, t[alt_k], rot)}'
-          f'<a class="lamina-pie" href="{url}">{e(txt)}</a></div>')
-        puntos.append(
-          f'<button type="button" class="punto{act}" data-i="{i}" '
-          f'aria-label="{e(txt)}"></button>')
-    ver = "Ver" if lang == "es" else "Show"
-    return ('<div class="banda portada">'
-            + "".join(laminas)
-            + '<span class="velo" aria-hidden="true"></span>'
-            + f'<div class="puntos" role="group" aria-label="{ver}">' + "".join(puntos) + '</div>'
-            + '<span class="sello"><img src="/assets/logo-stilo-salon.png" width="640" '
-              'height="252" alt="" aria-hidden="true"></span></div>')
+          f'<span class="tri-t">{e(txt)}</span></a>')
+    # El hueco que deja la primera lámina al escalonarse es donde cabe
+    # la marca sin taparle nada a ninguna foto.
+    sello = ('<span class="tri-sello"><img src="/assets/logo-stilo-salon.png" '
+             'width="640" height="252" alt="" aria-hidden="true"></span>')
+    return '<div class="tri">' + "".join(laminas) + sello + '</div>'
 
 # ── Marcas con las que trabajan ───────────────────────────────────────
 # Logos oficiales, bajados de los sitios de cada marca y servidos desde
