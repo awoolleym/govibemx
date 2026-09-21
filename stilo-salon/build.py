@@ -416,6 +416,21 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
                                               // si no pidieron menos movimiento
   }}
 
+  // Entrar por un enlace debe dejarte arriba.
+  // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
+  // en una página que ya habías abierto, y al volver a entrar por un
+  // enlace te dejan a media altura o hasta abajo. Si la navegación es
+  // nueva y no trae ancla, empezamos arriba. El botón "atrás" conserva su
+  // posición, que ahí sí es lo que uno espera.
+  window.addEventListener('pageshow', function (ev) {{
+    if (ev.persisted) return;
+    var e = (window.performance && performance.getEntriesByType)
+              ? performance.getEntriesByType('navigation')[0] : null;
+    if (e && e.type === 'back_forward') return;
+    if (location.hash) return;
+    window.scrollTo({{ top: 0, left: 0, behavior: 'auto' }});
+  }});
+
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 
   // A partir de aquí el JS se hace responsable de revelar. Marcamos <html>
@@ -1481,8 +1496,11 @@ def galeria_html(key, lang):
     if not items: return ""
     es = lang == "es"
     figs = "".join(
-      f'<figure><img src="/assets/{f}" width="640" height="640" loading="lazy" '
-      f'alt="{e(alt_es if es else alt_en)}"><figcaption>{e(cap_es if es else cap_en)}</figcaption></figure>'
+      # El span es el marco que recorta: sin él, el acercamiento al pasar
+      # el cursor se derrama sobre el pie de foto.
+      f'<figure><span class="g-foto"><img src="/assets/{f}" width="560" height="560" '
+      f'loading="lazy" alt="{e(alt_es if es else alt_en)}"></span>'
+      f'<figcaption>{e(cap_es if es else cap_en)}</figcaption></figure>'
       for f, alt_es, cap_es, alt_en, cap_en in items)
     titulo = "Trabajos hechos aquí" if es else "Work done here"
     return f'<h2>{titulo}</h2><div class="galeria js-reveal">{figs}</div>'

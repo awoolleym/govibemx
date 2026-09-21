@@ -921,12 +921,18 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 }
 .card:hover .card-foto img { transform: scale(1.05); }
 .card-ico {
-  position: absolute; left: 12px; bottom: 12px;
+  position: absolute; left: 14px; bottom: 14px;
   display: grid; place-items: center;
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--paper); box-shadow: 0 4px 16px rgba(21,25,29,.16);
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--paper); box-shadow: 0 6px 22px rgba(21,25,29,.18);
+  transition: transform .4s cubic-bezier(.16,1,.3,1), background .3s ease;
 }
-.card-ico .ico { width: 24px; height: 24px; margin: 0; }
+.card-ico .ico { width: 34px; height: 34px; margin: 0; }
+.card:hover .card-ico { transform: scale(1.08); }
+@media (max-width: 520px) {
+  .card-ico { width: 54px; height: 54px; }
+  .card-ico .ico { width: 30px; height: 30px; }
+}
 .card-cuerpo { padding: 1.1rem 1.25rem 1.35rem; display: flex; flex-direction: column; flex: 1; }
 .card-cuerpo h3 { margin: 0 0 .4rem; }
 .card-cuerpo .from { margin-top: auto; }
@@ -945,3 +951,58 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .hero .btn-row { margin-top: 1.5rem; }
   .hero .amenidades { margin-top: 1.15rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GALERÍA — versión sobria
+   Antes era un álbum: marco blanco, fotos torcidas y un lacito de
+   papel. Simpático, pero de manualidad, no de salón caro. Aquí manda
+   la foto: cuadrada, grande, con aire alrededor y el pie discreto.
+   Y se arregla el bug que las alargaba: el atributo height del <img>
+   le ganaba al aspect-ratio, así que salían 343x640 en vez de cuadradas.
+   ═══════════════════════════════════════════════════════════════════ */
+.galeria {
+  /* se sale del contenedor de lectura (74ch): una galería estrecha se
+     siente apretada, y el aire es lo que se lee como caro */
+  width: min(100vw - 3rem, 1120px);
+  margin: clamp(2.2rem, 4vw, 3.2rem) auto clamp(1.6rem, 3vw, 2.4rem);
+  position: relative; left: 50%; transform: translateX(-50%);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 26vw, 320px), 1fr));
+  gap: clamp(1rem, 2.2vw, 1.9rem);
+}
+.galeria figure {
+  background: none; padding: 0; box-shadow: none;
+  border-radius: 0; transform: none;
+}
+.galeria figure:nth-child(odd),
+.galeria figure:nth-child(even) { transform: none; }
+.galeria figure::before { content: none; }
+
+.g-foto {
+  display: block; overflow: hidden; border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(21,25,29,.05), 0 14px 34px rgba(21,25,29,.11);
+  transition: box-shadow .45s ease;
+}
+.galeria figure img {
+  width: 100%; height: auto; aspect-ratio: 1; object-fit: cover;
+  display: block; border-radius: 0;
+  transition: transform .8s cubic-bezier(.16,1,.3,1);
+}
+.galeria figure:hover { transform: none; box-shadow: none; }
+.galeria figure:hover .g-foto { box-shadow: 0 2px 4px rgba(21,25,29,.07), 0 26px 56px rgba(21,25,29,.16); }
+.galeria figure:hover img { transform: scale(1.045); }
+
+.galeria figcaption {
+  font-family: var(--sans); font-weight: 300;
+  font-size: .82rem; letter-spacing: .015em; line-height: 1.5;
+  color: var(--muted); text-align: left;
+  padding: .85rem .1rem 0;
+}
+/* filete que aparece al pasar el cursor, como un subrayado fino */
+.galeria figcaption { position: relative; }
+.galeria figcaption::after {
+  content: ""; position: absolute; left: .1rem; top: 0;
+  width: 26px; height: 1px; background: var(--accent);
+  opacity: 0; transform: scaleX(.3); transform-origin: left;
+  transition: opacity .4s ease, transform .5s cubic-bezier(.16,1,.3,1);
+}
+.galeria figure:hover figcaption::after { opacity: 1; transform: scaleX(1); }

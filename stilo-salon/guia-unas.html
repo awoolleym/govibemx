@@ -134,6 +134,21 @@
                                               // si no pidieron menos movimiento
   }
 
+  // Entrar por un enlace debe dejarte arriba.
+  // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
+  // en una página que ya habías abierto, y al volver a entrar por un
+  // enlace te dejan a media altura o hasta abajo. Si la navegación es
+  // nueva y no trae ancla, empezamos arriba. El botón "atrás" conserva su
+  // posición, que ahí sí es lo que uno espera.
+  window.addEventListener('pageshow', function (ev) {
+    if (ev.persisted) return;
+    var e = (window.performance && performance.getEntriesByType)
+              ? performance.getEntriesByType('navigation')[0] : null;
+    if (e && e.type === 'back_forward') return;
+    if (location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
+
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 
   // A partir de aquí el JS se hace responsable de revelar. Marcamos <html>

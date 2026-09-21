@@ -54,7 +54,7 @@
   <p class="lede">¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está toda la información detallada de esta maravillosa forma de lucir unos ojos y unas cejas de impacto.</p>
 </div></section>
 <div class="wrap"><figure class="banner"><picture><source srcset="/assets/h-pestanas.webp" type="image/webp"><img src="/assets/h-pestanas.jpg" width="1400" height="787" alt="" loading="lazy"></picture></figure></div>
-<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch"><p>Cinco técnicas, de la clásica 1x1 al volumen ruso. Todas son set completo, se retocan cada dos o tres semanas y no maltratan tu pestaña natural. Abajo están los precios de todas.</p><h2>Trabajos hechos aquí</h2><div class="galeria js-reveal"><figure><img src="/assets/trabajo-pestanas-03.jpg" width="640" height="640" loading="lazy" alt="Extensiones de pestañas de volumen en primer plano, hechas en Stilo Salón Roma Norte"><figcaption>Volumen ruso · 2 horas · $1,200</figcaption></figure><figure><img src="/assets/trabajo-pestanas-02.jpg" width="640" height="640" loading="lazy" alt="Extensiones de pestañas densas en ambos ojos, hechas en Stilo Salón Roma Norte"><figcaption>Extensiones híbridas · 2 horas · $1,100</figcaption></figure><figure><img src="/assets/trabajo-pestanas-04.jpg" width="640" height="640" loading="lazy" alt="Extensiones de pestañas con efecto natural y ceja definida, Stilo Salón Roma Norte"><figcaption>Técnica 1x1 · 1 h 30 · $750</figcaption></figure><figure><img src="/assets/trabajo-pestanas-05.jpg" width="640" height="640" loading="lazy" alt="Extensiones de pestañas abiertas sobre ojo claro, hechas en Stilo Salón Roma Norte"><figcaption>Extensiones flat · 1 h 30 · $800</figcaption></figure><figure><img src="/assets/trabajo-pestanas-01.jpg" width="640" height="640" loading="lazy" alt="Lifting de pestañas: pestaña natural elevada desde la raíz, Stilo Salón Roma Norte"><figcaption>Lifting de pestañas · $450 · incluye tinte y keratina</figcaption></figure></div><a class="a-guia" href="/guia-extensiones-de-pestanas.html"><span class="a-guia-t">La biblia de las extensiones de pestañas y cejas</span><span class="a-guia-s">Todo el detalle: técnicas, duración, cuidados y cada cuándo volver.</span><span class="a-guia-c">Leer la guía completa &rarr;</span></a></div></section>
+<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch"><p>Cinco técnicas, de la clásica 1x1 al volumen ruso. Todas son set completo, se retocan cada dos o tres semanas y no maltratan tu pestaña natural. Abajo están los precios de todas.</p><h2>Trabajos hechos aquí</h2><div class="galeria js-reveal"><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-03.jpg" width="560" height="560" loading="lazy" alt="Extensiones de pestañas de volumen en primer plano, hechas en Stilo Salón Roma Norte"></span><figcaption>Volumen ruso · 2 horas · $1,200</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-02.jpg" width="560" height="560" loading="lazy" alt="Extensiones de pestañas densas en ambos ojos, hechas en Stilo Salón Roma Norte"></span><figcaption>Extensiones híbridas · 2 horas · $1,100</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-04.jpg" width="560" height="560" loading="lazy" alt="Extensiones de pestañas con efecto natural y ceja definida, Stilo Salón Roma Norte"></span><figcaption>Técnica 1x1 · 1 h 30 · $750</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-05.jpg" width="560" height="560" loading="lazy" alt="Extensiones de pestañas abiertas sobre ojo claro, hechas en Stilo Salón Roma Norte"></span><figcaption>Extensiones flat · 1 h 30 · $800</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-01.jpg" width="560" height="560" loading="lazy" alt="Lifting de pestañas: pestaña natural elevada desde la raíz, Stilo Salón Roma Norte"></span><figcaption>Lifting de pestañas · $450 · incluye tinte y keratina</figcaption></figure></div><a class="a-guia" href="/guia-extensiones-de-pestanas.html"><span class="a-guia-t">La biblia de las extensiones de pestañas y cejas</span><span class="a-guia-s">Todo el detalle: técnicas, duración, cuidados y cada cuándo volver.</span><span class="a-guia-c">Leer la guía completa &rarr;</span></a></div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">Precios en pesos mexicanos (MXN). </p>
   <div class="price-block" id="pestanas">
@@ -178,6 +178,21 @@
     if (lam.length > 1 && !menos) correr();   // el avance solo se suma
                                               // si no pidieron menos movimiento
   }
+
+  // Entrar por un enlace debe dejarte arriba.
+  // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
+  // en una página que ya habías abierto, y al volver a entrar por un
+  // enlace te dejan a media altura o hasta abajo. Si la navegación es
+  // nueva y no trae ancla, empezamos arriba. El botón "atrás" conserva su
+  // posición, que ahí sí es lo que uno espera.
+  window.addEventListener('pageshow', function (ev) {
+    if (ev.persisted) return;
+    var e = (window.performance && performance.getEntriesByType)
+              ? performance.getEntriesByType('navigation')[0] : null;
+    if (e && e.type === 'back_forward') return;
+    if (location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
 
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 

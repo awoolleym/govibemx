@@ -54,7 +54,7 @@
   <p class="lede">Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.</p>
 </div></section>
 <div class="wrap"><figure class="banner"><picture><source srcset="/assets/h-pestanas.webp" type="image/webp"><img src="/assets/h-pestanas.jpg" width="1400" height="787" alt="" loading="lazy"></picture></figure></div>
-<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch"><p>Five techniques, from classic 1x1 to Russian volume. All are full sets, filled every two to three weeks, and none damage your natural lashes. All prices below.</p><h2>Work done here</h2><div class="galeria js-reveal"><figure><img src="/assets/trabajo-pestanas-03.jpg" width="640" height="640" loading="lazy" alt="Close-up of volume eyelash extensions at Stilo Salón Roma Norte"><figcaption>Russian volume · 2 hours · $1,200</figcaption></figure><figure><img src="/assets/trabajo-pestanas-02.jpg" width="640" height="640" loading="lazy" alt="Dense eyelash extensions on both eyes at Stilo Salón Roma Norte"><figcaption>Hybrid extensions · 2 hours · $1,100</figcaption></figure><figure><img src="/assets/trabajo-pestanas-04.jpg" width="640" height="640" loading="lazy" alt="Natural-effect lash extensions with defined brow, Stilo Salón Roma Norte"><figcaption>Classic 1x1 · 1 h 30 · $750</figcaption></figure><figure><img src="/assets/trabajo-pestanas-05.jpg" width="640" height="640" loading="lazy" alt="Lash extensions on a light eye, done at Stilo Salón Roma Norte"><figcaption>Flat extensions · 1 h 30 · $800</figcaption></figure><figure><img src="/assets/trabajo-pestanas-01.jpg" width="640" height="640" loading="lazy" alt="Lash lift: natural lashes curled from the root, Stilo Salón Roma Norte"><figcaption>Lash lift · $450 · includes tint and keratin</figcaption></figure></div><a class="a-guia" href="/en/eyelash-extensions-guide.html"><span class="a-guia-t">The eyelash extension and brow bible</span><span class="a-guia-s">The full detail: techniques, how long they last, aftercare and when to come back.</span><span class="a-guia-c">Read the complete guide &rarr;</span></a></div></section>
+<section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch"><p>Five techniques, from classic 1x1 to Russian volume. All are full sets, filled every two to three weeks, and none damage your natural lashes. All prices below.</p><h2>Work done here</h2><div class="galeria js-reveal"><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-03.jpg" width="560" height="560" loading="lazy" alt="Close-up of volume eyelash extensions at Stilo Salón Roma Norte"></span><figcaption>Russian volume · 2 hours · $1,200</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-02.jpg" width="560" height="560" loading="lazy" alt="Dense eyelash extensions on both eyes at Stilo Salón Roma Norte"></span><figcaption>Hybrid extensions · 2 hours · $1,100</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-04.jpg" width="560" height="560" loading="lazy" alt="Natural-effect lash extensions with defined brow, Stilo Salón Roma Norte"></span><figcaption>Classic 1x1 · 1 h 30 · $750</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-05.jpg" width="560" height="560" loading="lazy" alt="Lash extensions on a light eye, done at Stilo Salón Roma Norte"></span><figcaption>Flat extensions · 1 h 30 · $800</figcaption></figure><figure><span class="g-foto"><img src="/assets/trabajo-pestanas-01.jpg" width="560" height="560" loading="lazy" alt="Lash lift: natural lashes curled from the root, Stilo Salón Roma Norte"></span><figcaption>Lash lift · $450 · includes tint and keratin</figcaption></figure></div><a class="a-guia" href="/en/eyelash-extensions-guide.html"><span class="a-guia-t">The eyelash extension and brow bible</span><span class="a-guia-s">The full detail: techniques, how long they last, aftercare and when to come back.</span><span class="a-guia-c">Read the complete guide &rarr;</span></a></div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">Prices in Mexican pesos (MXN). </p>
   <div class="price-block" id="pestanas">
@@ -178,6 +178,21 @@
     if (lam.length > 1 && !menos) correr();   // el avance solo se suma
                                               // si no pidieron menos movimiento
   }
+
+  // Entrar por un enlace debe dejarte arriba.
+  // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
+  // en una página que ya habías abierto, y al volver a entrar por un
+  // enlace te dejan a media altura o hasta abajo. Si la navegación es
+  // nueva y no trae ancla, empezamos arriba. El botón "atrás" conserva su
+  // posición, que ahí sí es lo que uno espera.
+  window.addEventListener('pageshow', function (ev) {
+    if (ev.persisted) return;
+    var e = (window.performance && performance.getEntriesByType)
+              ? performance.getEntriesByType('navigation')[0] : null;
+    if (e && e.type === 'back_forward') return;
+    if (location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
 
   if (menos) return;   // quien pidió menos movimiento, no recibe ninguno
 
