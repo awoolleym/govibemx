@@ -5,7 +5,12 @@
      Secundaria: Caviar Dreams Bold — en web usamos Jost, la equivalente
      libre más cercana (ambas geométricas derivadas de Futura)
    El rosa de marca solo va en superficies y trazos; para texto y enlaces
-   usamos --accent-deep, que sí pasa contraste AA. */
+   usamos --accent-deep.
+   Corregido: --accent-deep era #B35A7B y daba 4.37 sobre el papel — se
+   queda a un pelo del 4.5 que pide AA para texto chico. Medido contra
+   todas las superficies del sitio, #9A4867 pasa AA en todas salvo el
+   extremo más hondo del degradado de portada, donde solo hay texto
+   grande. A ojo es el mismo rosa. */
 
 /* Parisienne — el acento script del H1.
    La servimos nosotros (22 KB) en vez de pedirla a Google: es una sola
@@ -27,7 +32,7 @@
   --paper:       #fdfbfc;
   --paper-2:     #f7eff2;
   --accent:      #c06184;
-  --accent-deep: #B35A7B;
+  --accent-deep: #9A4867;
   --accent-tint: #f6e6ec;
   --ok:          #2f6b4f;
 
@@ -522,8 +527,14 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    ═══════════════════════════════════════════════════════════════════ */
 
 .hero {
-  background: linear-gradient(168deg,
-    #fdfbfc 0%, #fbf5f7 38%, #f7ecf1 72%, #f3e3ea 100%);
+  /* Fondo de estudio: la página anterior tenía a la modelo sobre un
+     ciclorama rosa y esa era su seña. Aquí se recrea con el rosa de
+     marca en vez del de la foto de stock. Medido: la tinta y la tinta
+     suave siguen pasando AA sobre el extremo más hondo. */
+  background:
+    radial-gradient(112% 82% at 80% 6%, #fbe4ee 0%, rgba(251,228,238,0) 58%),
+    radial-gradient(90% 70% at 8% 96%, #f7dbe8 0%, rgba(247,219,232,0) 62%),
+    linear-gradient(163deg, #fdf8fa 0%, #fae9f1 32%, #f6dbe6 66%, #f2cfdf 100%);
 }
 /* velo rosa difuso en la esquina, detrás de todo */
 .hero::before {
@@ -828,7 +839,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   /* el velo muere antes de la foto: el texto nunca se le encima */
   .banda .velo {
     background: linear-gradient(90deg,
-      var(--paper) 0%, rgba(253,251,252,.92) 8%, rgba(253,251,252,0) 34%);
+      #f7dfe9 0%, rgba(247,223,233,.92) 8%, rgba(247,223,233,0) 34%);
   }
   /* más baja y con la banda más ancha: así la foto tiende a cuadrada
      en vez de ser una tira vertical */
@@ -843,7 +854,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .hero .banda { height: clamp(300px, 78vw, 430px); }
   .banda .velo {
     background: linear-gradient(0deg,
-      var(--paper) 0%, rgba(253,251,252,0) 38%);
+      #f8e2ec 0%, rgba(248,226,236,0) 38%);
   }
   .banda .lamina-pie { left: 16px; top: 16px; right: auto; }
   .banda .puntos { left: 50%; bottom: 14px; transform: translateX(-50%); }
@@ -1006,3 +1017,34 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   transition: opacity .4s ease, transform .5s cubic-bezier(.16,1,.3,1);
 }
 .galeria figure:hover figcaption::after { opacity: 1; transform: scaleX(1); }
+
+/* ── Mapa de la sección "dónde encontrarnos" ────────────────────────
+   Ahí había una foto de uñas: bonita, pero en esa sección lo que la
+   clienta busca es dónde estamos. El mapa es estático (se genera en
+   build) y no un iframe de Google: no mete cookies de terceros ni
+   scripts, carga como una imagen y se puede teñir a la paleta. */
+.mapa {
+  display: block; position: relative; overflow: hidden;
+  border-radius: var(--r); aspect-ratio: 4 / 3;
+  box-shadow: 0 1px 2px rgba(21,25,29,.05), 0 16px 40px rgba(21,25,29,.12);
+  text-decoration: none;
+}
+.mapa img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .8s cubic-bezier(.16,1,.3,1);
+}
+.mapa:hover img { transform: scale(1.04); }
+.mapa-pie {
+  position: absolute; left: 16px; bottom: 16px;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--sans); font-size: .86rem; font-weight: 500;
+  padding: .6rem 1.1rem; border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(21,25,29,.18);
+  transition: background .25s ease, color .25s ease;
+}
+.mapa-pie::after { content: " →"; }
+.mapa:hover .mapa-pie { background: var(--accent-deep); color: #fff; }
+.mapa-cred {
+  font-size: .72rem; color: var(--muted); margin: .55rem 0 0; text-align: right;
+}
+.mapa-cred a { color: var(--muted); }

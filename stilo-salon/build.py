@@ -942,7 +942,16 @@ def home_body(lang):
     <a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
   </div>
-  <figure class="hero-figure" style="aspect-ratio:4/3"><img src="/assets/contacto.jpg" width="1200" height="900" alt="" loading="lazy"></figure>
+  <div>
+    <a class="mapa" href="{GMB}" target="_blank" rel="noopener"
+       aria-label="{'Ver la ubicación de Stilo Salón en Google Maps' if lang=='es' else 'See Stilo Salón on Google Maps'}">
+      <img src="/assets/mapa-roma-norte.jpg" width="1200" height="900" loading="lazy"
+           alt="{'Mapa de Roma Norte con la ubicación de Stilo Salón en Calle Guadalajara 70-B, entre Durango y Colima' if lang=='es' else 'Map of Roma Norte showing Stilo Salón at Calle Guadalajara 70-B, between Durango and Colima'}">
+      <span class="mapa-pie">{'Abrir en Google Maps' if lang=='es' else 'Open in Google Maps'}</span>
+    </a>
+    <p class="mapa-cred">{'Mapa © colaboradores de' if lang=='es' else 'Map © '}
+      <a href="https://www.openstreetmap.org/copyright" rel="noopener nofollow">OpenStreetMap</a></p>
+  </div>
   </div>
 </div></section>
 """
