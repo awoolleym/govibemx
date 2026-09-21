@@ -850,7 +850,6 @@ def home_body(lang):
 </div></section>
 
 <section class="cifras"><div class="wrap">
-  {amenidades(lang)}
   <div class="trust">
     <div><strong>+10</strong>{'años en Roma Norte' if lang=='es' else 'years in Roma Norte'}</div>
     <div><a href="{GMB}" rel="noopener" style="text-decoration:none;color:inherit"><strong>{OPINIONES}</strong>{'opiniones en Google' if lang=='es' else 'Google reviews'}</a></div>
@@ -920,6 +919,7 @@ def home_body(lang):
     {t['appts']}: <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a><br>
     <a href="tel:{NAP['tel2']}">{NAP['tel2_display']}</a></address>
     <p style="margin-top:1.4rem"><strong>{t['mf']}</strong> 9:00 – 20:00<br><strong>{t['sat']}</strong> 9:00 – 19:00<br><strong>{t['sun']}</strong> {t['closed']}</p>
+    {amenidades(lang)}
     <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
     <a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>

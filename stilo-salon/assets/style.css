@@ -888,10 +888,10 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .hero .marca-agua {
   display: block; z-index: 0;
   right: auto; top: auto;
-  left: -6%; bottom: -4%;
+  left: 10%; bottom: -6%;
   transform: none;
-  width: min(60vw, 620px);
-  opacity: .1;
+  width: min(48vw, 460px);
+  opacity: .07;
 }
 @media (max-width: 899px) {
   /* anclada abajo, no a media altura: detrás del párrafo enturbiaba
@@ -1193,7 +1193,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    Anula el tríptico y la banda anteriores.
    ═══════════════════════════════════════════════════════════════════ */
 .hero {
-  background: linear-gradient(180deg, #ffffff 0%, var(--paper) 62%, #fbf6f8 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 34%, var(--paper) 74%, #fdf9fb 100%);
 }
 .hero::before { content: none; }
 
@@ -1216,7 +1216,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .d-marco {
     left: 54%; right: 6%;
     top: clamp(2.4rem, 7vh, 4.6rem); bottom: clamp(2.4rem, 7vh, 4.6rem);
-    border: 1.5px solid rgba(255,255,255,.9);
+    border: 3px solid rgba(255,255,255,.92);
     border-radius: 0;
     box-shadow: 0 0 22px rgba(21,25,29,.10);
   }
@@ -1295,12 +1295,14 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   display: none; height: auto;
 }
 @media (min-width: 900px) {
+  /* Baja a la esquina de abajo: arriba competía con el epígrafe y el
+     título, que son lo primero que se lee. */
   .d-flor2 {
     display: block;
-    left: -6%; top: -8%;
-    width: clamp(180px, 17vw, 260px);
-    opacity: .45;
-    transform: scaleX(-1) rotate(-14deg);
+    left: -7%; top: auto; bottom: -10%;
+    width: clamp(190px, 18vw, 280px);
+    opacity: .5;
+    transform: scaleX(-1) rotate(12deg);
   }
 }
 @media (max-width: 899px) {
