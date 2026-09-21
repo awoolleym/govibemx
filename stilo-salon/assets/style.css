@@ -1213,10 +1213,15 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 
   /* El marco va entero sobre la foto y en blanco, como en la
      referencia: sobre el campo limpio una línea blanca no se vería. */
+  /* Marco abierto, no cuadro cerrado: en la referencia el rectángulo
+     se sale de la imagen y nunca cierra. Aquí se va más allá del borde
+     derecho de la pantalla y pierde ese lado, así que quedan tres
+     trazos en escuadra. */
   .d-marco {
-    left: 54%; right: 6%;
+    left: 52%; right: -6%;
     top: clamp(2.4rem, 7vh, 4.6rem); bottom: clamp(2.4rem, 7vh, 4.6rem);
     border: 7px solid rgba(255,255,255,.95);
+    border-right: 0;
     border-radius: 0;
     box-shadow: 0 0 22px rgba(21,25,29,.10);
   }
@@ -1301,19 +1306,22 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   display: none; height: auto;
 }
 @media (min-width: 900px) {
+  /* La misma planta girada 180°: es la de abajo reflejada, con las
+     hojas abriendo hacia arriba. */
   .d-flor2 {
     display: block;
-    left: -6%; top: -8%;
-    width: clamp(180px, 17vw, 260px);
-    opacity: .45;
-    transform: scaleX(-1) rotate(-14deg);
+    left: -5%; top: -6%;
+    width: clamp(190px, 18vw, 275px);
+    opacity: .5;
+    transform: scale(-1, -1) rotate(-7deg);
   }
 }
 @media (max-width: 899px) {
+  /* misma orientación que en escritorio: girada 180°, abriendo arriba */
   .d-flor2 {
     display: block;
-    right: -12%; left: auto; top: auto; bottom: -6%;
-    width: 46vw; opacity: .4;
-    transform: scaleX(-1) rotate(8deg);
+    right: -14%; left: auto; top: auto; bottom: -4%;
+    width: 46vw; opacity: .42;
+    transform: scale(-1, -1) rotate(6deg);
   }
 }
