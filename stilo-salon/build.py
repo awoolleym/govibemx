@@ -732,27 +732,17 @@ PORTADA = [
 ]
 
 def portada(lang):
-    """Tríptico de portada.
+    """Portada de una sola foto que se sale por el borde derecho.
 
-    Tres láminas verticales escalonadas, una por línea del salón, que se
-    salen por el borde derecho de la pantalla. Sustituye al carrusel: las
-    tres se ven a la vez, nada se mueve solo y cada una lleva a su página.
+    El tríptico enseñaba las tres líneas, pero eso ya lo hacen las
+    tarjetas de servicio con foto cuadrada que van justo debajo. Aquí
+    manda una imagen sola sobre campo limpio, que es lo que le da el
+    aire de la referencia.
     """
     t = T[lang]
-    laminas = []
-    for i, (base, w, h, alt_k, es_t, en_t, es_u, en_u) in enumerate(PORTADA):
-        rot = ALTA if i == 0 else TARDE
-        url = es_u if lang == "es" else en_u
-        txt = es_t if lang == "es" else en_t
-        laminas.append(
-          f'<a class="tri-l" href="{url}">'
-          f'{img(base, w, h, t[alt_k], rot)}'
-          f'<span class="tri-t">{e(txt)}</span></a>')
-    # El hueco que deja la primera lámina al escalonarse es donde cabe
-    # la marca sin taparle nada a ninguna foto.
-    sello = ('<span class="tri-sello"><img src="/assets/logo-stilo-salon.png" '
-             'width="640" height="252" alt="" aria-hidden="true"></span>')
-    return '<div class="tri">' + "".join(laminas) + sello + '</div>'
+    return ('<div class="foto-portada">'
+            + img("hero", 900, 1125, t["hero_alt"], ALTA)
+            + '</div>')
 
 # ── Marcas con las que trabajan ───────────────────────────────────────
 # Logos oficiales, bajados de los sitios de cada marca y servidos desde
