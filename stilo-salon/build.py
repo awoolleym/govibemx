@@ -591,7 +591,7 @@ C = {
  ],
  "svc_cards": [
    ("cabello", "Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html", "Ver cabello y color"),
-   ("tratamientos", "Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/cabello.html#tratamientos", "Ver tratamientos y alisados"),
+   ("tratamientos", "Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/guia-color-y-alisados.html#alisados", "Ver tratamientos y alisados"),
    ("unas", "Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html", "Ver uñas, manicure y pedicure"),
    ("pestanas", "Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html", "Ver pestañas y cejas"),
  ],
@@ -619,7 +619,7 @@ C = {
  ],
  "svc_cards": [
    ("cabello", "Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html", "See hair and color"),
-   ("tratamientos", "Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/hair.html#tratamientos", "See treatments and smoothing"),
+   ("tratamientos", "Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/color-and-smoothing-guide.html#alisados", "See treatments and smoothing"),
    ("unas", "Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html", "See nails, manicure and pedicure"),
    ("pestanas", "Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html", "See lashes and brows"),
  ],
@@ -815,9 +815,16 @@ def featured_table(lang):
 
 def home_body(lang):
     t, c = T[lang], C[lang]
+    # Foto cuadrada arriba de cada tarjeta: es trabajo real y a 560 px se
+    # sirve casi a tamaño nativo, así que se ve nítida. El icono se queda,
+    # montado sobre la esquina de la foto.
     cards = "".join(
-      f'<article class="card">{icono(k)}<h3>{e(n)}</h3><p>{e(d)}</p>'
-      f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(cta)}</a></article>'
+      f'<article class="card">'
+      f'<a class="card-foto" href="{h}" tabindex="-1" aria-hidden="true">'
+      f'<img src="/assets/card-{k}.jpg" width="560" height="560" alt="" loading="lazy">'
+      f'<span class="card-ico">{icono(k)}</span></a>'
+      f'<div class="card-cuerpo"><h3>{e(n)}</h3><p>{e(d)}</p>'
+      f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(cta)}</a></div></article>'
       for k, n, d, p, h, cta in c["svc_cards"])
     why = "".join(f'<div><h3>{e(h)}</h3><p>{e(b)}</p></div>' for h, b in c["why"])
     faqs = "".join(
@@ -1231,7 +1238,7 @@ def hair_guide(lang):
       "weeks, and that is when a <strong>root touch-up</strong> ($900) goes in. With balayage or babylights the grow-out is soft by "
       "design: you can stretch it to three or four months, and many clients only come in for a toner in between. That is the "
       "real advantage of freehand technique, and why it costs less over time.") + '</p>')
-    o.append(f'<h2>{"Los tres alisados, comparados" if es else "The three smoothing services, compared"}</h2>')
+    o.append(f'<h2 id="alisados">{"Los tres alisados, comparados" if es else "The three smoothing services, compared"}</h2>')
     o.append('<p>' + ("No son lo mismo y elegir mal es caro. Esta es la diferencia:"
       if es else "They are not the same, and choosing wrong is expensive. Here is the difference:") + '</p>')
     rows = ([("Nanoplastia", "$2,500", "2 h", "Alisa de verdad, sin formol. Reestructura la fibra.",
