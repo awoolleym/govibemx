@@ -2,3 +2,6 @@ _preview/
 # Originales de las fotos (Drive es la fuente): pesan decenas de MB y el
 # sitio sólo necesita los recortes optimizados que viven en assets/.
 _fotos*/
+# Carpeta de publicación: se regenera con publicar.py
+_dist/
+__pycache__/

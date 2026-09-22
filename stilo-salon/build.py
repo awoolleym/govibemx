@@ -9,7 +9,7 @@ Cuando cambie un precio, se cambia aquí y se vuelve a correr:  python3 build.py
 Salida: HTML estático plano, listo para Cloudflare Pages. Sin JavaScript para
 renderizar contenido — todo el texto viaja en el HTML para que Google lo lea.
 """
-import html
+import re, html
 from datetime import date
 import pathlib
 
@@ -2282,6 +2282,38 @@ def main():
         body = (f'<section><div class="wrap" style="max-width:74ch"><h1>{h1}</h1>'
                 + "".join(f"<p>{p}</p>" for p in ps) + '</div></section>')
         log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt)))
+
+    # 404: Cloudflare Pages la sirve para cualquier ruta que no exista.
+    # Es una sola página para los dos árboles (/ y /en/), así que lleva los
+    # dos idiomas.  No lleva canonical ni hreflang ni entra al sitemap:
+    # una página de error no se indexa.
+    body404 = """
+<section class="svc-cab"><div class="wrap svc-cab-in">
+  <div class="svc-cab-txt">
+    <p class="eyebrow">Error 404</p>
+    <h1>Esta página no existe</h1>
+    <p class="lede">Puede que el enlace est&eacute; viejo o que la direcci&oacute;n
+    tenga un error. Lo que buscas seguro est&aacute; aqu&iacute; abajo.</p>
+    <div class="btn-row" style="margin-top:1.6rem">
+      <a class="btn btn-primary" href="/">Ir al inicio</a>
+      <a class="btn btn-ghost" href="/precios.html">Ver precios</a>
+      <a class="btn btn-wa" href="%s">WhatsApp</a>
+    </div>
+    <p style="margin-top:2.2rem; font-size:.9rem; color:#7b6f74">
+      <strong>This page doesn&rsquo;t exist.</strong>
+      <a href="/en/">Go to the English home page</a> &middot;
+      <a href="/en/pricing.html">See prices</a>
+    </p>
+  </div>
+</div></section>""" % WA
+    h404 = page("es", "/404.html", "P\u00e1gina no encontrada | Stilo Sal\u00f3n",
+                "La p\u00e1gina que buscas no existe. Vuelve al inicio o consulta la lista de precios.",
+                body404, f"{SITE}/en/")
+    h404 = re.sub(r'\s*<link rel="canonical"[^>]*>', "", h404)
+    h404 = re.sub(r'\s*<link rel="alternate" hreflang="[^"]*"[^>]*>', "", h404)
+    h404 = re.sub(r'\s*<meta property="og:url"[^>]*>', "", h404)
+    h404 = h404.replace("<title>", '<meta name="robots" content="noindex,follow">\n<title>', 1)
+    log.append(write("404.html", h404))
 
     # sitemap / robots / Cloudflare
     urls = ["/", "/cabello.html", "/unas.html", "/pestanas-y-cejas.html", "/precios.html",
