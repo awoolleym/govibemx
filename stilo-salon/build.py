@@ -2009,6 +2009,9 @@ def topic_faq_ld(table, lang):
 
 # Fotos reales de trabajos del salón. Son exportaciones de Instagram a 640x640,
 # suficientes para galería pero NO para una portada a sangre completa.
+# Tres fotos por galería, ni una más: es un adelanto, no el catálogo.  Quien
+# quiera ver más pica "Ver todo el portafolio", que es justo el enlace que va
+# debajo.  Seis en una página y tres en otra se lee a descuido.
 GALERIA = {
  # Estas salen de assets/pf/, o sea del portafolio: ya vienen curadas,
  # recortadas a 3:4 y con la marca de agua puesta donde toca.  No se
@@ -2058,22 +2061,7 @@ GALERIA = {
             "Uñas largas coffin en dorado metálico y nude, Stilo Salón Roma Norte",
             "Coffin en dorado metálico · Uña tip con gel",
             "Long coffin nails in metallic gold and nude, Stilo Salón Roma Norte",
-            "Coffin in metallic gold · Gel tip"),
-           ("trabajo-unas-08.jpg",
-            "Uñas nude con diseño floral pintado a mano, Stilo Salón Roma Norte",
-            "Diseño floral a mano · Acrílico sobre uña natural",
-            "Nude nails with hand-painted floral art, Stilo Salón Roma Norte",
-            "Hand-painted floral · Acrylic over natural nail"),
-           ("trabajo-unas-04.jpg",
-            "Uñas en fucsia y morado con diseño, Stilo Salón Roma Norte",
-            "Fucsia con diseño · Acrílico sobre uña natural",
-            "Nails in fuchsia and purple with art, Stilo Salón Roma Norte",
-            "Fuchsia with nail art · Acrylic over natural nail"),
-           ("trabajo-unas-06.jpg",
-            "Manicure francés clásico con uña cuadrada, Stilo Salón Roma Norte",
-            "Francés clásico · Manicure Spa + Gel",
-            "Classic French manicure, square tip, Stilo Salón Roma Norte",
-            "Classic French · Spa Manicure + Gel")],
+            "Coffin in metallic gold · Gel tip")],
 }
 
 def galeria_html(key, lang):
