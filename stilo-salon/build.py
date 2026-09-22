@@ -49,6 +49,10 @@ WA_VALORA = ("https://wa.me/525522993258?text="
              "%20Les%20mando%20una%20foto%20y%20me%20dicen%20qu%C3%A9%20me%20conviene")
 
 
+# El trazo de WhatsApp vive aquí una sola vez: lo usan el botón flotante,
+# los iconos del pie y el de la portada.
+WA_PATH = ("M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.04 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.23-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.9.99 6.68 2.77a9.38 9.38 0 0 1 2.77 6.68c0 5.2-4.24 9.44-9.46 9.44zM20.5 3.49A11.36 11.36 0 0 0 12.04 0C5.76 0 .65 5.1.65 11.39c0 2 .52 3.96 1.52 5.68L.55 24l7.1-1.86a11.34 11.34 0 0 0 5.43 1.38h.01c6.28 0 11.39-5.11 11.39-11.4 0-3.04-1.18-5.9-3.33-8.05z")
+
 # ── Redes ─────────────────────────────────────────────────────────────
 # Solo entra lo que existe de verdad. Si mañana abren Facebook o TikTok,
 # se agrega una línea aquí y aparece en el pie de las 18 páginas.
@@ -66,7 +70,7 @@ _RED_SVG = {
  "ig": ('<rect x="3" y="3" width="18" height="18" rx="5.2"/>'
         '<circle cx="12" cy="12" r="4.1"/>'
         '<circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/>'),
- "wa": ('<path fill="currentColor" stroke="none" d="%s"/>' % 'M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.04 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.23-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.9.99 6.68 2.77a9.38 9.38 0 0 1 2.77 6.68c0 5.2-4.24 9.44-9.46 9.44zM20.5 3.49A11.36 11.36 0 0 0 12.04 0C5.76 0 .65 5.1.65 11.39c0 2 .52 3.96 1.52 5.68L.55 24l7.1-1.86a11.34 11.34 0 0 0 5.43 1.38h.01c6.28 0 11.39-5.11 11.39-11.4 0-3.04-1.18-5.9-3.33-8.05z'),
+ "wa": ('<path fill="currentColor" stroke="none" d="%s"/>' % WA_PATH),
  "gmb": ('<path d="M12 21.6s7-6.2 7-11.1a7 7 0 1 0-14 0c0 4.9 7 11.1 7 11.1z"/>'
          '<circle cx="12" cy="10.4" r="2.6"/>'),
  "fb": ('<path d="M14.1 21.4v-8.3h2.8l.42-3.25h-3.22V7.77c0-.94.26-1.58 1.61-1.58h1.72V3.28'
@@ -838,9 +842,20 @@ def home_body(lang):
   <div class="btn-row btn-row-hero">
     <a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
   </div>
-  <p class="hero-alt">{'o escríbenos por' if lang=='es' else 'or message us on'}
-    <a href="{WA}" rel="noopener">WhatsApp</a> ·
-    <a href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a></p>
+  <div class="hero-alt">
+    <span>{'o escríbenos' if lang=='es' else 'or reach us'}</span>
+    <a class="ic-red ic-wa" href="{WA}" rel="noopener"
+       aria-label="{t['wa_aria']}" title="{t['wa_aria']}">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="{WA_PATH}"/></svg></a>
+    <a class="ic-red ic-tel" href="tel:{NAP['tel1']}"
+       aria-label="{'Llámanos al' if lang=='es' else 'Call us at'} {NAP['tel1_display']}"
+       title="{NAP['tel1_display']}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M6.3 3.5h3l1.5 3.7-1.9 1.4a12.5 12.5 0 0 0 5.5 5.5l1.4-1.9 3.7 1.5v3a1.8 1.8 0 0 1-2 1.8A15.6 15.6 0 0 1 4.5 5.5a1.8 1.8 0 0 1 1.8-2z"/>
+      </svg></a>
+    <a class="hero-tel" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a>
+  </div>
 </div>
 </div></section>
 

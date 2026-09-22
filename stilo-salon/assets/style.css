@@ -1354,3 +1354,58 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   }
   .hero > .wrap > div { max-width: 72%; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ICONOS DE SERVICIO — más grandes y con brillo rosa
+   ═══════════════════════════════════════════════════════════════════ */
+.card-ico {
+  width: 78px; height: 78px;
+  left: 16px; bottom: 16px;
+  box-shadow: 0 6px 22px rgba(21,25,29,.14),
+              0 0 0 1px rgba(192,97,132,.18),
+              0 0 26px 4px rgba(192,97,132,.38);
+}
+.card-ico .ico { width: 44px; height: 44px; }
+.card:hover .card-ico {
+  transform: scale(1.06);
+  box-shadow: 0 8px 26px rgba(21,25,29,.16),
+              0 0 0 1px rgba(192,97,132,.3),
+              0 0 36px 8px rgba(192,97,132,.55);
+}
+@media (max-width: 520px) {
+  .card-ico { width: 64px; height: 64px; left: 13px; bottom: 13px; }
+  .card-ico .ico { width: 36px; height: 36px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WHATSAPP Y TELÉFONO DE LA PORTADA, COMO ICONOS
+   El renglón decía "o escríbenos por WhatsApp · 55 2299 3258" y pesaba
+   lo mismo que el botón principal. En icono rosa se reconoce de un
+   vistazo y deja de competir con "Reservar cita".
+   ═══════════════════════════════════════════════════════════════════ */
+.hero-alt {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 0; font-family: var(--sans); font-size: .88rem; color: var(--muted);
+  flex-wrap: wrap;
+}
+.ic-red {
+  display: inline-grid; place-items: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  color: var(--accent-deep);
+  border: 1px solid rgba(192,97,132,.35);
+  background: #fff;
+  transition: background .25s ease, color .25s ease,
+              box-shadow .25s ease, transform .25s ease;
+}
+.ic-red svg { width: 21px; height: 21px; display: block; }
+.ic-red:hover {
+  background: var(--accent-deep); color: #fff;
+  border-color: var(--accent-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(192,97,132,.35);
+}
+.hero-tel {
+  font-size: .88rem; color: var(--accent-deep);
+  text-decoration: none; letter-spacing: .01em;
+}
+.hero-tel:hover { text-decoration: underline; }
