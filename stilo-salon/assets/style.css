@@ -1425,10 +1425,14 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 @media (max-width: 520px) { .card-ico { margin-top: -32px; } }
 
 /* — Inclinación 3D en las cuatro — */
-.grid.g4 { perspective: 1100px; }
+/* La perspectiva va en CADA tarjeta, no en la rejilla. Puesta en la
+   rejilla el punto de fuga es el centro del grupo, así que la del
+   medio se inclina de frente y las de las orillas salen sesgadas: la
+   primera parecía la única con efecto. Con perspective() propia, cada
+   una gira sobre su propio centro y las cuatro se ven igual. */
 .grid.g4 .card {
   --rx: 0deg; --ry: 0deg;
-  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform: perspective(820px) rotateX(var(--rx)) rotateY(var(--ry));
   transition: transform .45s cubic-bezier(.16,1,.3,1),
               box-shadow .35s ease, border-color .35s ease;
   will-change: transform;
@@ -1441,4 +1445,12 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 
 @media (prefers-reduced-motion: reduce) {
   .grid.g4 .card { transform: none; transition: none; }
+}
+
+/* — Iconos, otro escalón — */
+.card-ico { width: 92px; height: 92px; margin: -46px 0 .8rem; }
+.card-ico .ico { width: 52px; height: 52px; }
+@media (max-width: 520px) {
+  .card-ico { width: 76px; height: 76px; margin-top: -38px; }
+  .card-ico .ico { width: 44px; height: 44px; }
 }

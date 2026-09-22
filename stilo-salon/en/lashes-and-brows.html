@@ -167,8 +167,8 @@
           var r = c.getBoundingClientRect();
           var px = (ev.clientX - r.left) / r.width  - .5;
           var py = (ev.clientY - r.top)  / r.height - .5;
-          c.style.setProperty('--ry', (px * 14).toFixed(2) + 'deg');
-          c.style.setProperty('--rx', (-py * 14).toFixed(2) + 'deg');
+          c.style.setProperty('--ry', (px * 17).toFixed(2) + 'deg');
+          c.style.setProperty('--rx', (-py * 17).toFixed(2) + 'deg');
           c.style.setProperty('--mx', (px * 100 + 50).toFixed(1) + '%');
           c.style.setProperty('--my', (py * 100 + 50).toFixed(1) + '%');
           pend = false;
