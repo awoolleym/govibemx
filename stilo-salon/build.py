@@ -1849,12 +1849,72 @@ def nails_guide(lang):
       if es else
       "Fills go every <strong>three to four weeks</strong>. This is not about selling more: as the nail grows, the product lifts at "
       "the base and leaves an air pocket where moisture gets in. That is where the natural nail gets damaged — not from the "
-      "acrylic itself. Waiting two months does not save money, it costs nail. A fill is always cheaper than a full set.") + '</p>')
+      "acrylic itself. Waiting two months does not save money, it costs nail. A fill is cheaper than a full set, though "
+      "not half the price — we explain why below.") + '</p>')
     o.append('<p>' + ("El <strong>retiro</strong> ($100) lo hacemos siempre con técnica y producto. Arrancarte el acrílico en casa "
       "se lleva capas de tu uña natural, y recuperarlas toma meses."
       if es else
       "<strong>Removal</strong> ($100) is always done with proper technique and product. Prying acrylic off at home takes layers of "
       "your natural nail with it, and those take months to grow back.") + '</p>')
+    # ── Por qué el retoque cuesta casi lo mismo ─────────────────────────
+    # Es la pregunta que más llega al salón. El diferencial real es de
+    # $50 a $100 según el servicio, o sea entre 12% y 22%: la clienta tiene
+    # razón en preguntar y la respuesta tiene que dar los números.
+    # REVISAR con el salón que el proceso descrito es el que siguen.
+    o.append(f'<h2 id="retoque">'
+             f'{"Por qué el retoque cuesta casi lo mismo que uno nuevo" if es else "Why a fill costs almost the same as a new set"}</h2>')
+    o.append('<p>' + ("Es la pregunta que más nos hacen, y es justa. Estos son los números, sin adornos:"
+      if es else
+      "It is the question we get most, and it is a fair one. Here are the numbers, plainly:") + '</p>')
+
+    filas = [("Acrílico sobre uña natural", "Acrylic over natural nail", "$400", "$350", "$50"),
+             ("Uña escultural con gel",     "Sculpted gel nail",         "desde $500", "desde $400", "$100"),
+             ("Uña tip con gel",            "Gel tip nail",              "desde $450", "desde $350", "$100")]
+    th = ("Servicio", "Nuevo", "Retoque", "Diferencia") if es else ("Service", "New set", "Fill", "Difference")
+    # Clase propia: la regla móvil genérica de table.price esconde la 3ª
+    # cabecera y la celda .dur, pensada para tablas de 3 columnas. Aquí son
+    # 4 y dejaba "Diferencia" encima de los precios de retoque.
+    o.append('<table class="price tabla-retoque"><thead><tr>'
+             + "".join(f'<th>{x}</th>' for x in th) + '</tr></thead><tbody>'
+             + "".join(f'<tr><td class="svc">{a if es else b}</td><td class="amt">{n if es else n.replace("desde","from")}</td>'
+                       f'<td class="amt">{r if es else r.replace("desde","from")}</td><td class="dif">{d}</td></tr>'
+                       for a, b, n, r, d in filas)
+             + '</tbody></table>')
+
+    o.append('<p>' + ("La respuesta honesta es que <strong>un retoque no es rellenar el hueco de la raíz</strong>. "
+      "Cuando tu uña crece no aparece nada más un espacio: toda la estructura se recorrió. El "
+      "<strong>apex</strong> —el punto más grueso, el que sostiene la fuerza de la uña— quedó fuera de lugar, y con él "
+      "la uña perdió el balance. Si sólo se rellena la raíz y se pinta encima, en cuatro o cinco días truena justo por "
+      "ahí."
+      if es else
+      "The honest answer is that <strong>a fill is not topping up the gap at the base</strong>. When your nail grows, it is "
+      "not just a gap that appears: the whole structure has moved. The <strong>apex</strong> — the thickest point, the one "
+      "that carries the nail's strength — is now in the wrong place, and the nail has lost its balance. Fill only the base "
+      "and paint over it, and in four or five days it snaps right there.") + '</p>')
+    o.append('<p>' + ("Lo que de verdad lleva un retoque bien hecho: desbastar casi todo el producto viejo y no sólo la raíz, "
+      "reparar los levantamientos y las grietas que casi siempre hay, reconstruir el apex en su lugar nuevo, rebalancear las "
+      "diez uñas para que queden parejas, y volver a hacer toda la superficie y todo el color. El tiempo en la silla es "
+      "prácticamente el mismo que el de un juego nuevo — a veces más, porque desbastar producto viejo tarda más que trabajar "
+      "sobre una uña limpia."
+      if es else
+      "What a proper fill actually takes: filing down almost all the old product, not just the base; repairing the lifting and "
+      "cracks there almost always are; rebuilding the apex in its new position; rebalancing all ten nails so they match; and "
+      "redoing the entire surface and the entire color. Chair time is practically the same as a new set — sometimes more, "
+      "because filing down old product takes longer than working on a clean nail.") + '</p>')
+    o.append('<p>' + ("<strong>Lo que sí te ahorras</strong> es el material de la extensión y el esculpido del largo, que ya están "
+      "hechos. Esa es la diferencia de $50 a $100, y es real. Un retoque que costara la mitad sería una uña que dura la mitad, "
+      "y eso no te lo vamos a vender."
+      if es else
+      "<strong>What you do save</strong> is the extension product and the sculpting of the length, which are already done. That is "
+      "the $50 to $100 difference, and it is real. A fill at half the price would be a nail that lasts half as long, and that is "
+      "not something we will sell you.") + '</p>')
+    o.append('<p>' + ("¿Cuándo conviene empezar de cero en lugar de retocar? Cuando ya llevas varios retoques encima y la uña se "
+      "siente pesada, o cuando hay levantamiento en varias uñas a la vez. Te lo decimos nosotras antes de empezar, no a la hora "
+      "de cobrar."
+      if es else
+      "When is it better to start fresh instead of filling? Once you have several fills stacked up and the nail starts to feel "
+      "heavy, or when there is lifting on several nails at once. We tell you before we start, not when it is time to pay.") + '</p>')
+
     o.append(f'<h2>{"Si traes la uña débil: empieza por aquí" if es else "If your nails are weak: start here"}</h2>')
     o.append('<p>' + ("Después de mucho tiempo con acrílico es normal que la uña quede delgada. Para eso están las "
       "<strong>vitaminas</strong> ($150 cada una), que no son color sino tratamiento: el <strong>calcio</strong> fortalece, el "
@@ -1913,7 +1973,9 @@ NAILS_FAQ = {
         ("¿El acrílico daña la uña natural?",
          "El daño no viene del acrílico, viene de dejarlo crecer demasiado: al crecer la uña, el material se despega en la raíz y entra humedad. Con retoque cada tres o cuatro semanas y retiro con técnica, la uña natural se mantiene bien."),
         ("¿Cada cuándo tengo que retocar?",
-         "Cada tres o cuatro semanas. El retoque siempre cuesta menos que el juego completo, y esperar más tiempo termina costando uña."),
+         "Cada tres o cuatro semanas. El retoque cuesta menos que el juego completo y esperar más tiempo termina costando uña."),
+        ("¿Por qué el retoque de uña escultural cuesta casi lo mismo que una nueva?",
+         "Porque un retoque no es rellenar el hueco de la raíz. Al crecer la uña toda la estructura se recorre y el apex, el punto que sostiene la fuerza, queda fuera de lugar. Hay que desbastar casi todo el producto viejo, reparar levantamientos, reconstruir el apex, rebalancear las diez uñas y rehacer superficie y color: el tiempo en la silla es casi el mismo. Lo que te ahorras es el material de la extensión y el esculpido del largo, y esa es la diferencia real: escultural con gel desde $500 nueva contra desde $400 de retoque, y acrílico $400 contra $350."),
         ("¿Puedo retirarme el gel o el acrílico en casa?",
          "No te lo recomendamos. Arrancarlo se lleva capas de tu uña natural y recuperarlas toma meses. El retiro con técnica cuesta $100."),
         ("Tengo la uña débil después de mucho acrílico, ¿qué hago?",
@@ -1927,7 +1989,9 @@ NAILS_FAQ = {
         ("Does acrylic damage the natural nail?",
          "The damage does not come from the acrylic, it comes from letting it grow out too long: as the nail grows, product lifts at the base and moisture gets in. With fills every three to four weeks and proper removal, the natural nail stays healthy."),
         ("How often do I need a fill?",
-         "Every three to four weeks. A fill always costs less than a full set, and waiting longer ends up costing nail."),
+         "Every three to four weeks. A fill costs less than a full set, and waiting longer ends up costing nail."),
+        ("Why does a sculpted nail fill cost almost the same as a new set?",
+         "Because a fill is not topping up the gap at the base. As the nail grows the whole structure moves and the apex, the point that carries the strength, ends up in the wrong place. We have to file down almost all the old product, repair lifting, rebuild the apex, rebalance all ten nails and redo surface and color: chair time is almost the same. What you save is the extension product and the sculpting of the length, and that is the real difference: sculpted gel from $500 new against from $400 for a fill, and acrylic $400 against $350."),
         ("Can I remove gel or acrylic at home?",
          "We do not recommend it. Prying it off takes layers of your natural nail with it, and those take months to grow back. Professional removal is $100."),
         ("My nails are weak after a long run of acrylic — what now?",
