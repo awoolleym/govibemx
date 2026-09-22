@@ -163,7 +163,6 @@ table.price td.svc { font-weight: 400; color: var(--ink); }
 table.price td.svc small { display: block; color: var(--muted); font-size: .82rem; margin-top: .15rem; }
 table.price td.amt { text-align: right; white-space: nowrap; font-family: var(--display); font-size: 1.05rem; font-weight: 500; color: var(--accent-deep); letter-spacing: .01em; }
 table.price td.dur { text-align: right; white-space: nowrap; color: var(--muted); font-size: .85rem; }
-table.price td.dif { text-align: right; white-space: nowrap; color: var(--muted); font-size: .85rem; }
 
 /* ---------- FAQ ---------- */
 details.faq { border-bottom: 1px solid var(--line); padding: 1.15rem 0; }
@@ -205,12 +204,6 @@ address { font-style: normal; line-height: 1.8; }
   .foot-grid { grid-template-columns: 1fr; gap: 2rem; }
   table.price td.dur { display: none; }
   table.price th:nth-child(3) { display: none; }
-  /* La de retoques tiene 4 columnas: ahí la que sobra en celular es la
-     última, no la tercera. Sin esto la cabecera "Diferencia" quedaba
-     encima de los precios de retoque. */
-  table.price.tabla-retoque th:nth-child(3) { display: table-cell; }
-  table.price.tabla-retoque th:nth-child(4),
-  table.price.tabla-retoque td.dif { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
