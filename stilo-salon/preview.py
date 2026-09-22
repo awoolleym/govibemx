@@ -16,6 +16,11 @@ def rel(from_file: pathlib.Path, target: str) -> str:
     t = target.lstrip("/")
     if t == "" or t.endswith("/"):
         t = (t + "index.html")
+    elif not pathlib.PurePath(t).suffix:
+        # El sitio publica /precios, sin extensión, porque Cloudflare
+        # resuelve el .html solo. Un servidor estático cualquiera no lo
+        # hace, así que aquí se devuelve el nombre real del archivo.
+        t = t + ".html"
     prefix = "../" * depth
     return (prefix + t) if (prefix + t) else "index.html"
 

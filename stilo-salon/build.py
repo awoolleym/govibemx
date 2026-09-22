@@ -770,9 +770,30 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 </html>
 """
 
+# El archivo en disco se llama precios.html, pero la URL pública es
+# /precios.  Cloudflare sirve el .html sin que se note, y quitarlo aquí
+# —en un solo lugar, al escribir— evita tener que acordarse en las 95
+# rutas que hay repartidas por este archivo.  El canonical, el hreflang,
+# el og:url, los enlaces internos, el sitemap y los _redirects salen
+# todos de aquí, así que no se pueden desalinear entre sí.
+#
+# Sin esto, el servidor redirige /precios.html a /precios con un 307
+# mientras el canonical sigue diciendo /precios.html: se le pide a Google
+# que indexe una dirección que se mueve.
+#
+# 404.html queda intacto a propósito: Cloudflare lo busca por ese nombre.
+RUTA_PUBLICA = re.compile(
+    r'((?:https://stilo-salon\.com)?/(?:[a-z0-9-]+/)*[a-z0-9-]+)\.html(?=["#<])')
+
+def sin_extension(texto):
+    return RUTA_PUBLICA.sub(
+        lambda m: m.group(0) if m.group(1).endswith("/404") else m.group(1), texto)
+
 def write(path, content):
     p = OUT / path
     p.parent.mkdir(parents=True, exist_ok=True)
+    if path.endswith((".html", ".xml")):
+        content = sin_extension(content)
     p.write_text(content, encoding="utf-8")
     return f"  {path}  ({len(content):,} bytes)"
 
@@ -2345,21 +2366,24 @@ def main():
         "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n"))
     # Rutas viejas del sitio de GoDaddy -> nuevas.  Evita perder el poco
     # posicionamiento que ya existe.
+    # Ojo con estas: ahora que las URLs públicas no llevan .html, las reglas
+    # viejas /cabello -> /cabello.html y /unas -> /unas.html apuntarían a su
+    # propio destino y harían un bucle de redirecciones.  Se eliminan: esas
+    # dos direcciones ya SON la página, no hay nada que redirigir.  Las demás
+    # siguen sirviendo porque vienen de rutas que ya no existen.
     log.append(write("_redirects",
-        "/cabello            /cabello.html            301\n"
-        "/u%C3%B1as          /unas.html               301\n"
-        "/unas               /unas.html               301\n"
-        "/extensiones        /pestanas-y-cejas.html   301\n"
-        "/lifting            /pestanas-y-cejas.html   301\n"
-        "/microblading       /pestanas-y-cejas.html   301\n"
-        "/dise%C3%B1o-de-ceja /pestanas-y-cejas.html  301\n"
-        "/servicios-y-costos /precios.html            301\n"
-        "/colores-y-dise%C3%B1os-lv-1 /unas.html      301\n"
+        "/u%C3%B1as          /unas                    301\n"
+        "/extensiones        /pestanas-y-cejas        301\n"
+        "/lifting            /pestanas-y-cejas        301\n"
+        "/microblading       /pestanas-y-cejas        301\n"
+        "/dise%C3%B1o-de-ceja /pestanas-y-cejas       301\n"
+        "/servicios-y-costos /precios                 301\n"
+        "/colores-y-dise%C3%B1os-lv-1 /unas           301\n"
         "/comun%C3%ADcate-con-nosotros /#contacto     301\n"
-        "/informacion        /pestanas-y-cejas.html   301\n"
+        "/informacion        /pestanas-y-cejas        301\n"
         "/citas              /#contacto               301\n"
         "/galeria            /                        301\n"
-        "/ols/products       /precios.html            301\n"))
+        "/ols/products       /precios                 301\n"))
     print("Stilo Salón — sitio generado:\n" + "\n".join(log))
     print(f"\n{len(urls)} páginas · fuente única de precios: PRICES en build.py")
 
