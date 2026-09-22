@@ -10,6 +10,7 @@ Salida: HTML estático plano, listo para Cloudflare Pages. Sin JavaScript para
 renderizar contenido — todo el texto viaja en el HTML para que Google lo lea.
 """
 import html
+from datetime import date
 import pathlib
 
 OUT = pathlib.Path(__file__).parent
@@ -328,6 +329,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
   <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.04 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.23-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.9.99 6.68 2.77a9.38 9.38 0 0 1 2.77 6.68c0 5.2-4.24 9.44-9.46 9.44zM20.5 3.49A11.36 11.36 0 0 0 12.04 0C5.76 0 .65 5.1.65 11.39c0 2 .52 3.96 1.52 5.68L.55 24l7.1-1.86a11.34 11.34 0 0 0 5.43 1.38h.01c6.28 0 11.39-5.11 11.39-11.4 0-3.04-1.18-5.9-3.33-8.05z"/></svg>
   <span class="wa-txt">{t['wa_cta']}</span>
 </a>
+{promo(lang)}
 <header class="site-head">
   <div class="wrap head-in">
     <a class="brand" href="{home}"><img src="/assets/logo-stilo-salon.png" width="640" height="252" alt="{t['logo_alt']}"></a>
@@ -391,6 +393,19 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     var o = n.classList.toggle('open');
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   }});
+
+  // La promo se retira sola al vencer.
+  // El sitio es estático: si nadie lo regenera, la franja se queda
+  // puesta con una oferta muerta. Esto la quita en cuanto pasa su
+  // fecha, sin depender de que alguien se acuerde.
+  var pr = document.querySelector('.promo[data-hasta]');
+  if (pr) {{
+    var hoy = new Date();
+    var h = hoy.getFullYear() + '-' +
+            String(hoy.getMonth() + 1).padStart(2, '0') + '-' +
+            String(hoy.getDate()).padStart(2, '0');
+    if (h > pr.getAttribute('data-hasta')) pr.remove();
+  }}
 
   // Inclinación 3D de las tarjetas de servicio.
   // Antes había translateZ pero sin perspectiva en el contenedor, así
@@ -793,6 +808,7 @@ MARCAS = [
   ("framesi.png",           "Framesi",            99, 34, ""),
   ("brazilian-blowout.svg", "Brazilian Blowout", 142, 19, ""),
   ("split-ender.png",       "Split Ender",       107, 23, " claro"),
+  ("inoar.png",             "Inoar",              94, 22, ""),
 ]
 
 def marcas(lang):
@@ -804,6 +820,51 @@ def marcas(lang):
            if lang == "es" else "We work with professional product")
     return (f'<section class="marcas"><div class="wrap">'
             f'<p class="marcas-t">{e(tit)}</p><ul>{ms}</ul></div></section>')
+
+
+# ── Promoción vigente ────────────────────────────────────────────────
+# Una sola llave controla toda la banda.
+#
+# Las fechas son lo importante. El sitio es estático: si nadie lo
+# regenera, una promo vencida se queda puesta, y eso es peor que no
+# tener promo — dice que el salón no atiende su propia página. Por eso
+# la fecha de fin viaja en el HTML y un JS la esconde sola en cuanto
+# pasa, aunque nadie toque nada.
+#
+# tema: "" deja la banda en tinta de marca. "patrio" solo le cambia el
+# color de fondo, nada más. Un disfraz de temporada en todo el sitio se
+# lee barato y hay que acordarse de quitarlo; una franja que se retira
+# sola, no.
+PROMO = dict(
+  activa = True,
+  desde  = "2026-09-01",
+  hasta  = "2026-09-30",
+  tema   = "patrio",
+  url    = None,          # None = WhatsApp; o una URL propia
+  es = dict(etiqueta="Mes patrio",
+            texto="Pregunta por nuestra promoción de septiembre",
+            cta="Preguntar por WhatsApp"),
+  en = dict(etiqueta="Independence month",
+            texto="Ask about our September offer",
+            cta="Ask on WhatsApp"),
+)
+
+def promo(lang):
+    """Franja de promoción. No se imprime fuera de su rango de fechas."""
+    if not PROMO["activa"]:
+        return ""
+    hoy = date.today().isoformat()
+    if not (PROMO["desde"] <= hoy <= PROMO["hasta"]):
+        return ""
+    d = PROMO[lang]
+    url = PROMO["url"] or WA
+    tema = (" promo-" + PROMO["tema"]) if PROMO["tema"] else ""
+    return (f'<div class="promo{tema}" data-hasta="{PROMO["hasta"]}">'
+            f'<div class="wrap promo-in">'
+            f'<span class="promo-tag">{e(d["etiqueta"])}</span>'
+            f'<span class="promo-txt">{e(d["texto"])}</span>'
+            f'<a class="promo-cta" href="{url}" rel="noopener">{e(d["cta"])}</a>'
+            f'</div></div>')
 
 
 # ── Adornos de la portada ─────────────────────────────────────────────
