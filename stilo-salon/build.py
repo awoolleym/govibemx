@@ -114,8 +114,7 @@ PRICES = {
     ("Split Ender", "Split Ender", "~600", "1 h", "elimina puntas abiertas", "removes split ends"),
     ("Alto Peinado", "Updo", "~600", "30 min", "", ""),
     ("Alaciado o Moldeado con Secadora", "Blow-Dry Styling", "~280", "1 h", "a partir del hombro", "shoulder length and up"),
-    ("Alaciado Express", "Express Straightening", "~280", "1 h", "a partir del hombro", "shoulder length and up"),
-  ]},
+    ("Alaciado Express", "Express Straightening", "~280", "1 h", "a partir del hombro", "shoulder length and up")]},
 "tratamientos": {
   "es": "Tratamientos y Alisados", "en": "Treatments & Smoothing",
   "items": [
@@ -125,8 +124,7 @@ PRICES = {
      "the keratin treatment · shoulder length and up"),
     ("Botox Capilar", "Hair Botox", "~1,800", "1 h", "a partir del hombro", "shoulder length and up"),
     ("Tratamiento Profundo Hidratante", "Deep Hydrating Treatment", "~520", "1 h", "a partir del hombro", "shoulder length and up"),
-    ("Ampolleta Hidratante Alfa Parf", "Alfaparf Hydrating Ampoule", "220", "", "", ""),
-  ]},
+    ("Ampolleta Hidratante Alfa Parf", "Alfaparf Hydrating Ampoule", "220", "", "", "")]},
 "mani-pedi": {
   "es": "Manicure y Pedicure", "en": "Manicure & Pedicure",
   "items": [
@@ -135,8 +133,7 @@ PRICES = {
     ("Manicure Spa + Gel", "Spa Manicure + Gel", "350", "", "spa completo con gel hasta 2 tonos", "full spa with gel up to 2 shades"),
     ("Pedicure Spa", "Spa Pedicure", "360", "", "tina con sales, limado de talón, masaje y esmalte", "salt soak, heel filing, massage and polish"),
     ("Pedicure Spa + Gel", "Spa Pedicure + Gel", "450", "", "spa completo con gel hasta 2 tonos", "full spa with gel up to 2 shades"),
-    ("Paquete Mani Spa + Pedi Spa con Gel", "Spa Mani + Pedi Package with Gel", "750", "", "ambos servicios con gel hasta 2 tonos lisos", "both services with gel up to 2 solid shades"),
-  ]},
+    ("Paquete Mani Spa + Pedi Spa con Gel", "Spa Mani + Pedi Package with Gel", "750", "", "ambos servicios con gel hasta 2 tonos lisos", "both services with gel up to 2 solid shades")]},
 "gel-esmalte": {
   "es": "Gel, Esmalte y Vitaminas", "en": "Gel, Polish & Nail Vitamins",
   "items": [
@@ -147,8 +144,7 @@ PRICES = {
     ("Calcio", "Calcium", "150", "", "fortalece la uña natural", "strengthens the natural nail"),
     ("Calcio + Gel", "Calcium + Gel", "280", "", "hasta 2 tonos lisos", "up to 2 solid shades"),
     ("Rubber", "Rubber Base", "150", "", "cubre imperfecciones y da volumen a uñas débiles", "covers imperfections, adds body to weak nails"),
-    ("Vitamina", "Nail Vitamin", "150", "", "protege y fortalece la uña natural", "protects and strengthens the natural nail"),
-  ]},
+    ("Vitamina", "Nail Vitamin", "150", "", "protege y fortalece la uña natural", "protects and strengthens the natural nail")]},
 "unas": {
   "es": "Acrílico y Esculturales", "en": "Acrylic & Sculpted Nails",
   "items": [
@@ -159,8 +155,7 @@ PRICES = {
     ("Uña Tip con Gel", "Gel Tip Nail", "~450", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
     ("Retoque de Uña Tip con Gel", "Gel Tip Fill", "~350", "", "hasta el #3, hasta 2 tonos lisos", "up to length #3, up to 2 solid shades"),
     ("Acripie", "Acrylic — Toes", "380", "", "", ""),
-    ("Retiro de Acrílico", "Acrylic Removal", "100", "", "", ""),
-  ]},
+    ("Retiro de Acrílico", "Acrylic Removal", "100", "", "", "")]},
 "pestanas": {
   "es": "Extensiones de Pestañas", "en": "Eyelash Extensions",
   "items": [
@@ -177,15 +172,13 @@ PRICES = {
     ("Retoque de Trabajo Externo", "Fill on Outside Work", "~500", "", "según la técnica que traigas", "depending on the technique applied elsewhere"),
     ("Lifting de Pestañas", "Lash Lift", "450", "", "incluye tinte y keratina", "includes tint and keratin"),
     ("Retiro de Pestañas", "Lash Removal", "200", "", "sin nueva aplicación", "without a new application"),
-    ("Retiro + Aplicación Nueva", "Removal + New Set", "150", "", "retiro cuando pasaron más de 21 días y se aplica set nuevo", "removal past 21 days, when a new set is applied"),
-  ]},
+    ("Retiro + Aplicación Nueva", "Removal + New Set", "150", "", "retiro cuando pasaron más de 21 días y se aplica set nuevo", "removal past 21 days, when a new set is applied")]},
 "cejas": {
   "es": "Cejas", "en": "Brows",
   "items": [
     ("Diseño de Ceja", "Brow Design", "450", "", "perfilado, diseño y laminación", "shaping, design and lamination"),
     ("Laminado de Ceja", "Brow Lamination", "450", "", "perfilado y laminación", "shaping and lamination"),
-    ("Ceja con Cera", "Brow Wax", "220", "", "", ""),
-  ]},
+    ("Ceja con Cera", "Brow Wax", "220", "", "", "")]},
 "depilacion": {
   "es": "Depilación con Cera y Maquillaje", "en": "Waxing & Makeup",
   "items": [
@@ -196,8 +189,7 @@ PRICES = {
     ("Mentón", "Chin", "150", "", "", ""),
     ("Patilla", "Sideburns", "120", "", "", ""),
     ("Nariz", "Nose", "120", "", "", ""),
-    ("Maquillaje", "Makeup Application", "950", "", "", ""),
-  ]},
+    ("Maquillaje", "Makeup Application", "950", "", "", "")]},
 }
 
 T = {  # cadenas de interfaz
@@ -816,14 +808,12 @@ C = {
  "why": [
    ("Nunca un ajuste al cobrar", "La lista completa está en el sitio, no en un mensaje privado. Si un servicio requiere ajuste por largo o densidad de cabello, te lo decimos antes de empezar — nunca al momento de cobrar."),
    ("Técnica al día", "Nanoplastia, botox capilar y Brazilian Blowout con producto profesional. Extensiones de pestañas en cinco técnicas distintas, desde el 1x1 clásico hasta el volumen ruso."),
-   ("Tiempos reales", "Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas."),
- ],
+   ("Tiempos reales", "Cada servicio de la lista incluye su duración. Un balayage son tres horas y lo decimos de frente, para que organices tu día sin sorpresas.")],
  "svc_cards": [
    ("cabello", "Cabello", "Corte, tinte, balayage, babylights, matiz y peinado.", "desde $330", "/cabello.html", "Ver cabello y color"),
    ("tratamientos", "Tratamientos", "Nanoplastia, Brazilian Blowout, botox capilar e hidratación profunda.", "desde $520", "/guia-color-y-alisados.html#alisados", "Ver tratamientos y alisados"),
    ("unas", "Uñas", "Manicure y pedicure spa, gel, acrílico, esculturales y vitaminas.", "desde $150", "/unas.html", "Ver uñas, manicure y pedicure"),
-   ("pestanas", "Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html", "Ver pestañas y cejas"),
- ],
+   ("pestanas", "Pestañas y Cejas", "Extensiones 1x1 a volumen ruso, lifting, laminado y diseño de ceja.", "desde $450", "/pestanas-y-cejas.html", "Ver pestañas y cejas")],
  "faq": [
    ("¿Cuál es su horario de atención?", "Lunes a viernes de 9:00 a 20:00 y sábados de 9:00 a 19:00. Domingos cerrado."),
    ("¿Dónde están ubicados?", "En Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. Estamos a unas cuadras del Metro Insurgentes."),
@@ -833,8 +823,7 @@ C = {
    ("¿Qué formas de pago aceptan?", "Efectivo y tarjetas de débito y crédito."),
    ("¿Aceptan meses sin intereses?", "Sí. Manejamos 3 meses sin intereses con todas las tarjetas de crédito en compras a partir de $2,000."),
    ("¿Los precios publicados son finales?", "Los precios marcados “desde” aplican a cabello a partir del hombro. Si tu cabello es más largo o más denso, el ajuste se te comunica antes de empezar el servicio, nunca al final."),
-   ("¿Sus servicios tienen garantía?", "Sí. Todos nuestros servicios tienen 72 horas de garantía, y las uñas en gel 5 días. Si algo no quedó como lo acordamos, regresa dentro de ese plazo y lo corregimos sin costo."),
- ],
+   ("¿Sus servicios tienen garantía?", "Sí. Todos nuestros servicios tienen 72 horas de garantía, y las uñas en gel 5 días. Si algo no quedó como lo acordamos, regresa dentro de ese plazo y lo corregimos sin costo.")],
  "visit_h2": "Estamos en el corazón de la Roma Norte",
 },
 "en": {
@@ -844,14 +833,12 @@ C = {
  "why": [
    ("No adjustments at the register", "The full list is on the site, not in a private message. If a service needs an adjustment for hair length or density, we tell you before we start — never at the register."),
    ("Current technique", "Nanoplasty, hair botox and Brazilian Blowout with professional product. Eyelash extensions in five distinct techniques, from classic 1x1 to Russian volume."),
-   ("Honest timing", "Every service on the list shows its duration. A balayage takes three hours and we say so up front, so you can plan your day."),
- ],
+   ("Honest timing", "Every service on the list shows its duration. A balayage takes three hours and we say so up front, so you can plan your day.")],
  "svc_cards": [
    ("cabello", "Hair", "Cuts, color, balayage, babylights, toner and styling.", "from $330", "/en/hair.html", "See hair and color"),
    ("tratamientos", "Treatments", "Nanoplasty, Brazilian Blowout, hair botox and deep hydration.", "from $520", "/en/color-and-smoothing-guide.html#alisados", "See treatments and smoothing"),
    ("unas", "Nails", "Spa manicure and pedicure, gel, acrylic, sculpted nails and vitamins.", "from $150", "/en/nails.html", "See nails, manicure and pedicure"),
-   ("pestanas", "Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html", "See lashes and brows"),
- ],
+   ("pestanas", "Lashes & Brows", "Extensions from 1x1 to Russian volume, lifts, lamination and brow design.", "from $450", "/en/lashes-and-brows.html", "See lashes and brows")],
  "faq": [
    ("What are your hours?", "Monday to Friday, 9:00 to 20:00, and Saturday, 9:00 to 19:00. Closed Sundays."),
    ("Where are you located?", "Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City — a few blocks from Metro Insurgentes."),
@@ -861,8 +848,7 @@ C = {
    ("What payment methods do you accept?", "Cash, and debit and credit cards."),
    ("Do you offer interest-free monthly payments?", "Yes. We offer 3 interest-free monthly payments with any credit card on purchases from $2,000 MXN."),
    ("Are the published prices final?", "Prices marked “from” apply to hair at shoulder length and above. If your hair is longer or denser, we tell you the adjustment before starting the service, never at the end."),
-   ("Do your services come with a guarantee?", "Yes. Every service carries a 72-hour guarantee, and gel nails 5 days. If something did not turn out the way we agreed, come back within that window and we will correct it at no cost."),
- ],
+   ("Do your services come with a guarantee?", "Yes. Every service carries a 72-hour guarantee, and gel nails 5 days. If something did not turn out the way we agreed, come back within that window and we will correct it at no cost.")],
  "visit_h2": "In the heart of Roma Norte",
 },
 }
@@ -918,8 +904,7 @@ def salon_ld(lang):
 
 FEATURED = [
   ("cabello", 1), ("cabello", 2), ("cabello", 8),
-  ("tratamientos", 0), ("pestanas", 0), ("mani-pedi", 2),
-]
+  ("tratamientos", 0), ("pestanas", 0), ("mani-pedi", 2)]
 
 
 # ── Amenidades ────────────────────────────────────────────────────────
@@ -946,8 +931,7 @@ AMENIDAD_ICONO = {
 AMENIDADES = [
   ("wifi",   "WiFi gratis",        "Free WiFi"),
   ("pet",    "Pet friendly",       "Pet friendly"),
-  ("bebida", "Bebida de cortesía", "Complimentary drink"),
-]
+  ("bebida", "Bebida de cortesía", "Complimentary drink")]
 
 def amenidades(lang):
     """Fila de amenidades de la portada."""
@@ -970,8 +954,7 @@ PORTADA = [
   ("tri-unas",     457,  640, "unas_alt",  "Uñas",              "Nails",
    "/unas.html",            "/en/nails.html"),
   ("tri-pestanas", 457,  640, "pest_alt",  "Pestañas y cejas",  "Lashes & brows",
-   "/pestanas-y-cejas.html","/en/lashes-and-brows.html"),
-]
+   "/pestanas-y-cejas.html","/en/lashes-and-brows.html")]
 
 def portada(lang):
     """Portada de una sola foto que se sale por el borde derecho.
@@ -1001,8 +984,7 @@ MARCAS = [
   ("framesi.png",           "Framesi",            99, 34, ""),
   ("brazilian-blowout.svg", "Brazilian Blowout", 142, 19, ""),
   ("split-ender.png",       "Split Ender",       107, 23, " claro"),
-  ("inoar.png",             "Inoar",              94, 22, ""),
-]
+  ("inoar.png",             "Inoar",              94, 22, "")]
 
 def marcas(lang):
     ms = "".join(
@@ -1120,15 +1102,12 @@ PORTAFOLIO = [
   ("cabello-174", "cabello", "rubios"),
   ("cabello-180", "cabello", "rubios"),
   ("cabello-13", "cabello", "morenas"),
-  ("cabello-37", "cabello", "morenas"),
   ("cabello-49", "cabello", "morenas"),
   ("cabello-50", "cabello", "morenas"),
   ("cabello-68", "cabello", "morenas"),
   ("cabello-72", "cabello", "morenas"),
   ("cabello-80", "cabello", "morenas"),
-  ("cabello-87", "cabello", "morenas"),
   ("cabello-91", "cabello", "morenas"),
-  ("cabello-92", "cabello", "morenas"),
   ("cabello-5", "cabello", "fantasia"),
   ("cabello-6", "cabello", "fantasia"),
   ("cabello-15", "cabello", "fantasia"),
@@ -1198,8 +1177,7 @@ PORTAFOLIO = [
   ("pestanas-205", "pestanas", ""),
   ("pestanas-209", "pestanas", ""),
   ("pestanas-213", "pestanas", ""),
-  ("pestanas-216", "pestanas", ""),
-]
+  ("pestanas-216", "pestanas", "")]
 
 def _pf_alt(lang, cat, tec):
     t = PF_ETI[lang][tec or cat][0]
@@ -1552,8 +1530,7 @@ SERVICE_PAGES = [
       "Los precios de color marcados “desde” aplican de hombro hacia arriba. El cabello más largo o más denso lleva más producto y más tiempo, y el ajuste te lo decimos <strong>antes</strong> de empezar, con el espejo enfrente. Nunca al momento de cobrar.",
       "En <strong id='tratamientos'>tratamientos y alisados</strong> trabajamos tres técnicas distintas, y la diferencia importa. La <strong>nanoplastia</strong> (desde $2,500) es un alisado sin formol que reestructura la fibra capilar y deja el cabello liso y con brillo por varios meses. El <strong>Brazilian Blowout</strong> (desde $2,500) es el que mucha gente pide como <strong>keratina</strong>: sella la cutícula y reduce el frizz manteniendo movimiento — no deja el cabello completamente lacio. El <strong>botox capilar</strong> (desde $1,800, una hora) no alisa: rellena y repara cabello poroso o maltratado por decoloración.",
       "Si no sabes cuál te conviene, escríbenos por WhatsApp con una foto de tu cabello y te decimos con honestidad cuál sí y cuál no. A veces la respuesta es un <strong>tratamiento profundo hidratante</strong> de $520 y no un alisado de $2,500.",
-      "Todos nuestros servicios tienen <strong>72 horas de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo. Y en compras desde $2,000 manejamos <strong>3 meses sin intereses</strong> con todas las tarjetas de crédito.",
-     ]),
+      "Todos nuestros servicios tienen <strong>72 horas de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo. Y en compras desde $2,000 manejamos <strong>3 meses sin intereses</strong> con todas las tarjetas de crédito."]),
    en=dict(eyebrow="Hair & color · Roma Norte",
      title="Haircuts, Color & Balayage in Roma Norte | Stilo Salón",
      desc="Women's cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Roma Norte, Mexico City.",
@@ -1566,8 +1543,7 @@ SERVICE_PAGES = [
       "Color prices marked “from” apply at shoulder length and above. Longer or denser hair takes more product and more time, and we tell you that adjustment <strong>before</strong> we begin, with the mirror in front of you. Never at the register.",
       "In <strong id='tratamientos'>treatments and smoothing</strong> we work three distinct techniques, and the difference matters. <strong>Nanoplasty</strong> (from $2,500) is a formaldehyde-free smoothing service that restructures the hair fiber, leaving it straight and glossy for several months. <strong>Brazilian Blowout</strong> (from $2,500) is the one most people ask for as a <strong>keratin treatment</strong>: it seals the cuticle and cuts frizz while keeping movement — it does not leave hair perfectly flat. <strong>Hair botox</strong> (from $1,800, one hour) does not straighten: it fills and repairs porous hair damaged by bleaching.",
       "If you are not sure which one suits you, message us on WhatsApp with a photo of your hair and we will tell you honestly which will work and which will not. Sometimes the answer is a $520 deep hydrating treatment rather than a $2,500 smoothing service.",
-      "Every service carries a <strong>72-hour guarantee</strong>: if something did not turn out the way we agreed, come back and we will correct it at no cost. On purchases from $2,000 we offer <strong>3 interest-free monthly payments</strong> with any credit card.",
-     ])),
+      "Every service carries a <strong>72-hour guarantee</strong>: if something did not turn out the way we agreed, come back and we will correct it at no cost. On purchases from $2,000 we offer <strong>3 interest-free monthly payments</strong> with any credit card."])),
  dict(key="nails", es_slug="/unas.html", en_slug="/en/nails.html",
    keys=["mani-pedi", "gel-esmalte", "unas"],
    es=dict(eyebrow="Uñas · Roma Norte",
@@ -1583,8 +1559,7 @@ SERVICE_PAGES = [
       "Las <strong>vitaminas</strong> ($150) son tratamientos para la uña natural, no color. El <strong>calcio</strong> fortalece, el <strong>rubber</strong> cubre imperfecciones y da cuerpo a uñas delgadas o débiles, y la <strong>vitamina</strong> protege mientras la uña se recupera. Si traes las uñas maltratadas después de mucho acrílico, empieza por aquí.",
       "En <strong>acrílico y esculturales</strong> manejamos acrílico sobre uña natural ($400), uña escultural con gel (desde $500) y uña tip con gel (desde $450). Los retoques son más económicos que el juego completo y te recomendamos hacerlos cada tres o cuatro semanas: esperar más tiempo daña la uña natural. El <strong>retiro</strong> ($100) lo hacemos siempre con técnica, nunca arrancando.",
       "Una nota honesta: no todas las manos necesitan acrílico. Si tu uña natural está en buen estado, un gel bien puesto se ve igual de bien y cuida más. Te lo vamos a decir.",
-      "Las <strong>uñas en gel tienen 5 días de garantía</strong> — el resto de nuestros servicios, 72 horas. Si se te despostilla algo dentro de ese plazo, regresas y lo corregimos sin costo.",
-     ]),
+      "Las <strong>uñas en gel tienen 5 días de garantía</strong> — el resto de nuestros servicios, 72 horas. Si se te despostilla algo dentro de ese plazo, regresas y lo corregimos sin costo."]),
    en=dict(eyebrow="Nails · Roma Norte",
      title="Nails, Manicure & Pedicure in Roma Norte | Stilo Salón",
      desc="Spa manicure from $220, gel from $180, acrylic from $400, sculpted nails from $500 MXN. Mani + pedi gel package $750. Roma Norte, Mexico City.",
@@ -1598,8 +1573,7 @@ SERVICE_PAGES = [
       "<strong>Nail vitamins</strong> ($150) are treatments for the natural nail, not color. <strong>Calcium</strong> strengthens, <strong>rubber base</strong> covers imperfections and adds body to thin or weak nails, and <strong>nail vitamin</strong> protects while the nail recovers. If your nails are worn down after a long stretch of acrylic, start here.",
       "In <strong>acrylic and sculpted nails</strong> we offer acrylic over the natural nail ($400), sculpted gel nails (from $500) and gel tips (from $450). Fills cost less than a full set, and we recommend them every three or four weeks — waiting longer damages the natural nail. <strong>Removal</strong> ($100) is always done properly, never by prying.",
       "One honest note: not every hand needs acrylic. If your natural nail is in good shape, a well-applied gel looks just as good and treats it better. We will tell you so.",
-      "<strong>Gel nails carry a 5-day guarantee</strong> — every other service, 72 hours. If anything chips within that window, come back and we will fix it at no cost.",
-     ])),
+      "<strong>Gel nails carry a 5-day guarantee</strong> — every other service, 72 hours. If anything chips within that window, come back and we will fix it at no cost."])),
  dict(key="lashes", es_slug="/pestanas-y-cejas.html", en_slug="/en/lashes-and-brows.html",
    keys=["pestanas", "cejas", "depilacion"],
    es=dict(eyebrow="Pestañas y cejas · Roma Norte",
@@ -1613,8 +1587,7 @@ SERVICE_PAGES = [
      desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.",
      h1="Eyelash extensions and brow design in Roma Norte",
      intro="Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.",
-     paras=[])),
-]
+     paras=[]))]
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GUÍA DE PESTAÑAS — contenido propio del salón. Es el mejor activo editorial
@@ -1656,8 +1629,7 @@ TECNICAS = [
      p="No la recomendamos si antes no usaste híbridas o clásicas: hay que ir preparando tu pestaña para el peso."),
    en=dict(n="Russian volume",
      q="Three extensions in a fan on each of your natural lashes.",
-     p="We do not recommend it if you have not worn hybrid or classic first — the natural lash needs to be prepared for the weight.")),
-]
+     p="We do not recommend it if you have not worn hybrid or classic first — the natural lash needs to be prepared for the weight."))]
 
 CUIDADOS = {
  "es": ["No mojar las pestañas durante las primeras 24 horas.",
@@ -2038,46 +2010,40 @@ def topic_faq_ld(table, lang):
 # Fotos reales de trabajos del salón. Son exportaciones de Instagram a 640x640,
 # suficientes para galería pero NO para una portada a sangre completa.
 GALERIA = {
- "hair": [("trabajo-cabello-01.jpg",
-           "Balayage en cabello largo hecho en Stilo Salón Roma Norte, de castaño a rubio",
+ # Estas salen de assets/pf/, o sea del portafolio: ya vienen curadas,
+ # recortadas a 3:4 y con la marca de agua puesta donde toca.  No se
+ # recortan a cuadro porque la marca va abajo y un recorte cuadrado se la
+ # comería; por eso esta galería es la única que va en vertical.
+ "hair": [("pf/cabello-3.jpg",
+           "Balayage rubio con ondas hecho en Stilo Salón Roma Norte",
            "Balayage · 3 horas · desde $2,300",
-           "Long-hair balayage at Stilo Salón Roma Norte, brown into blonde",
+           "Blonde balayage with waves at Stilo Salón Roma Norte",
            "Balayage · 3 hours · from $2,300"),
-          ("trabajo-cabello-03.jpg",
-           "Balayage con ondas y puntas rubias hecho en Stilo Salón Roma Norte",
-           "Balayage con ondas · Alto peinado desde $600",
-           "Balayage with waves and blonde ends at Stilo Salón Roma Norte",
-           "Balayage with waves · Updo from $600"),
-          ("trabajo-cabello-02.jpg",
-           "Balayage de raíz oscura a puntas claras hecho en Stilo Salón Roma Norte",
-           "Raíz oscura a puntas claras · Balayage desde $2,300",
-           "Dark roots to light ends balayage at Stilo Salón Roma Norte",
-           "Dark roots to light ends · Balayage from $2,300")],
- "lashes": [("trabajo-pestanas-03.jpg",
-             "Extensiones de pestañas de volumen en primer plano, hechas en Stilo Salón Roma Norte",
-             "Volumen ruso · 2 horas · $1,200",
-             "Close-up of volume eyelash extensions at Stilo Salón Roma Norte",
-             "Russian volume · 2 hours · $1,200"),
-            ("trabajo-pestanas-02.jpg",
-             "Extensiones de pestañas densas en ambos ojos, hechas en Stilo Salón Roma Norte",
-             "Extensiones híbridas · 2 horas · $1,100",
-             "Dense eyelash extensions on both eyes at Stilo Salón Roma Norte",
-             "Hybrid extensions · 2 hours · $1,100"),
-            ("trabajo-pestanas-04.jpg",
-             "Extensiones de pestañas con efecto natural y ceja definida, Stilo Salón Roma Norte",
-             "Técnica 1x1 · 1 h 30 · $750",
-             "Natural-effect lash extensions with defined brow, Stilo Salón Roma Norte",
-             "Classic 1x1 · 1 h 30 · $750"),
-            ("trabajo-pestanas-05.jpg",
-             "Extensiones de pestañas abiertas sobre ojo claro, hechas en Stilo Salón Roma Norte",
-             "Extensiones flat · 1 h 30 · $800",
-             "Lash extensions on a light eye, done at Stilo Salón Roma Norte",
-             "Flat extensions · 1 h 30 · $800"),
-            ("trabajo-pestanas-01.jpg",
-             "Lifting de pestañas: pestaña natural elevada desde la raíz, Stilo Salón Roma Norte",
-             "Lifting de pestañas · $450 · incluye tinte y keratina",
-             "Lash lift: natural lashes curled from the root, Stilo Salón Roma Norte",
-             "Lash lift · $450 · includes tint and keratin")],
+          ("pf/cabello-25.jpg",
+           "Balayage en cabello largo con barrido suave, Stilo Salón Roma Norte",
+           "Balayage en cabello largo · desde $2,300",
+           "Long-hair balayage with a soft sweep, Stilo Salón Roma Norte",
+           "Long-hair balayage · from $2,300"),
+          ("pf/cabello-32.jpg",
+           "Balayage de raíz oscura a puntas rubias con ondas, Stilo Salón Roma Norte",
+           "Raíz oscura a puntas claras · desde $2,300",
+           "Dark roots to blonde ends with waves, Stilo Salón Roma Norte",
+           "Dark roots to light ends · from $2,300")],
+ "lashes": [("pf/pestanas-110.jpg",
+             "Extensiones de pestañas de volumen en primer plano, Stilo Salón Roma Norte",
+             "Volumen · 2 horas · desde $1,100",
+             "Close-up of volume eyelash extensions, Stilo Salón Roma Norte",
+             "Volume · 2 hours · from $1,100"),
+            ("pf/pestanas-112.jpg",
+             "Extensiones de pestañas largas y definidas de perfil, Stilo Salón Roma Norte",
+             "Extensiones de pestañas · desde $750",
+             "Long, defined lash extensions in profile, Stilo Salón Roma Norte",
+             "Lash extensions · from $750"),
+            ("pf/pestanas-123.jpg",
+             "Extensiones de pestañas con efecto natural en ambos ojos, Stilo Salón Roma Norte",
+             "Efecto natural · 1 h 30 · desde $750",
+             "Natural-effect lash extensions on both eyes, Stilo Salón Roma Norte",
+             "Natural effect · 1 h 30 · from $750")],
  "nails": [("trabajo-unas-01.jpg",
             "Uñas con diseño de leopardo en blanco y dorado, Stilo Salón Roma Norte",
             "Diseño de leopardo · Uña escultural con gel",
@@ -2117,7 +2083,9 @@ def galeria_html(key, lang):
     figs = "".join(
       # El span es el marco que recorta: sin él, el acercamiento al pasar
       # el cursor se derrama sobre el pie de foto.
-      f'<figure><span class="g-foto"><img src="/assets/{f}" width="560" height="560" '
+      f'<figure><span class="g-foto"><img src="/assets/{f}" '
+      f'width="{720 if f.startswith("pf/") else 560}" '
+      f'height="{960 if f.startswith("pf/") else 560}" '
       f'loading="lazy" alt="{e(alt_es if es else alt_en)}"></span>'
       f'<figcaption>{e(cap_es if es else cap_en)}</figcaption></figure>'
       for f, alt_es, cap_es, alt_en, cap_en in items)
@@ -2125,7 +2093,8 @@ def galeria_html(key, lang):
     ancla = {"hair": "cabello", "nails": "unas", "lashes": "pestanas"}[key]
     destino = ("/portafolio.html#" if es else "/en/portfolio.html#") + ancla
     masq = ("Ver todo el portafolio" if es else "See the full portfolio")
-    return (f'<h2>{titulo}</h2><div class="galeria js-reveal">{figs}</div>'
+    alta = ' g-alta' if any(i[0].startswith("pf/") for i in items) else ''
+    return (f'<h2>{titulo}</h2><div class="galeria{alta} js-reveal">{figs}</div>'
             f'<p class="g-mas"><a href="{destino}">{e(masq)} &rarr;</a></p>')
 
 GUIA_META = {

@@ -231,6 +231,9 @@ address { font-style: normal; line-height: 1.8; }
 .galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 2rem 0; }
 .galeria figure { margin: 0; border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); background: var(--paper-2); }
 .galeria img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+/* Cabello y pestañas tiran de las fotos del portafolio, que son 3:4.
+   Recortarlas a cuadro se comería la marca de agua, que va abajo. */
+.galeria.g-alta img { aspect-ratio: 3 / 4; }
 .galeria figcaption { font-size: .82rem; color: var(--muted); padding: .7rem .9rem; }
 
 /* ═══════════════════════════════════════════════════════════════════
