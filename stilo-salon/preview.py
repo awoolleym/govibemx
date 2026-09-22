@@ -23,7 +23,8 @@ def main():
     OUT.mkdir()
     # copiar html + assets
     for f in SRC.rglob("*"):
-        if OUT in f.parents or f == OUT or "_preview" in f.parts or "_fotos" in f.parts:
+        if (OUT in f.parents or f == OUT or "_preview" in f.parts
+                or any(x.startswith("_fotos") for x in f.parts)):
             continue
         if f.suffix in (".html", ".css", ".woff2", ".jpg", ".webp", ".png", ".svg", ".ico") and f.is_file():
             dest = OUT / f.relative_to(SRC)
