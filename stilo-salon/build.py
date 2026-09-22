@@ -1423,15 +1423,13 @@ def home_body(lang):
 
 <section class="alt"><div class="wrap">
   <div class="sec-head"><p class="eyebrow">{'Dónde encontrarnos' if lang=='es' else 'Find us'}</p>
-  <h2>{'Búscanos, léenos, reserva' if lang=='es' else 'Look us up, read us, book'}</h2>
+  <h2>{'Búscanos y léenos' if lang=='es' else 'Look us up and read us'}</h2>
   <p class="lede">{f'Ya somos {OPINIONES} opiniones en Google. Si ya viniste, la tuya nos ayuda muchísimo a que más clientas nos encuentren.' if lang=='es' else f'We are at {OPINIONES} Google reviews. If you have been here, yours helps more clients find us.'}</p></div>
   <div class="perfiles">
     <a class="perfil" href="{GMB}" rel="noopener">
       <strong>Google</strong><span>{f'{OPINIONES} opiniones · cómo llegar' if lang=='es' else f'{OPINIONES} reviews · directions'}</span></a>
     <a class="perfil" href="https://www.instagram.com/stilosalon91/" rel="noopener">
       <strong>Instagram</strong><span>@stilosalon91</span></a>
-    <a class="perfil" href="https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb" rel="noopener">
-      <strong>Fresha</strong><span>{'Reserva y reseñas' if lang=='es' else 'Booking and reviews'}</span></a>
     <a class="perfil destacado" href="{RESENA}" target="_blank" rel="noopener">
       <strong>{'Escribe tu reseña' if lang=='es' else 'Write your review'}</strong><span>{'Se abre directo en Google · toma menos de un minuto' if lang=='es' else 'Opens straight in Google · under a minute'}</span></a>
   </div>
