@@ -62,7 +62,7 @@
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">Prices in Mexican pesos (MXN). </p>
   <div class="price-block" id="cabello">
-<h3>Cut, Color &amp; Styling</h3>
+<h2>Cut, Color &amp; Styling</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Women's Haircut<small>with blow-dry shaping</small></td><td class="amt">$330</td><td class="dur">30 min</td></tr>
@@ -82,7 +82,7 @@
 <tr><td class="svc">Express Straightening<small>shoulder length and up</small></td><td class="amt">from $280</td><td class="dur">1 h</td></tr>
 </tbody></table></div>
 <div class="price-block" id="tratamientos">
-<h3>Treatments &amp; Smoothing</h3>
+<h2>Treatments &amp; Smoothing</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Nanoplasty<small>formaldehyde-free smoothing</small></td><td class="amt">from $2,500</td><td class="dur">2 h</td></tr>
@@ -92,7 +92,7 @@
 <tr><td class="svc">Alfaparf Hydrating Ampoule</td><td class="amt">$220</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="mani-pedi">
-<h3>Manicure &amp; Pedicure</h3>
+<h2>Manicure &amp; Pedicure</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Spa Manicure<small>salts, exfoliation, massage and polish</small></td><td class="amt">$220</td><td class="dur">—</td></tr>
@@ -103,7 +103,7 @@
 <tr><td class="svc">Spa Mani + Pedi Package with Gel<small>both services with gel up to 2 solid shades</small></td><td class="amt">$750</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="gel-esmalte">
-<h3>Gel, Polish &amp; Nail Vitamins</h3>
+<h2>Gel, Polish &amp; Nail Vitamins</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Gel — Hands<small>up to 2 solid shades · extra shade $20</small></td><td class="amt">$180</td><td class="dur">—</td></tr>
@@ -116,7 +116,7 @@
 <tr><td class="svc">Nail Vitamin<small>protects and strengthens the natural nail</small></td><td class="amt">$150</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="unas">
-<h3>Acrylic &amp; Sculpted Nails</h3>
+<h2>Acrylic &amp; Sculpted Nails</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Acrylic over Natural Nail</td><td class="amt">$400</td><td class="dur">—</td></tr>
@@ -129,7 +129,7 @@
 <tr><td class="svc">Acrylic Removal</td><td class="amt">$100</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="pestanas">
-<h3>Eyelash Extensions</h3>
+<h2>Eyelash Extensions</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Classic 1x1 Set<small>classic technique, one extension per lash</small></td><td class="amt">$750</td><td class="dur">1 h 30</td></tr>
@@ -148,7 +148,7 @@
 <tr><td class="svc">Removal + New Set<small>removal past 21 days, when a new set is applied</small></td><td class="amt">$150</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="cejas">
-<h3>Brows</h3>
+<h2>Brows</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Brow Design<small>shaping, design and lamination</small></td><td class="amt">$450</td><td class="dur">—</td></tr>
@@ -156,7 +156,7 @@
 <tr><td class="svc">Brow Wax</td><td class="amt">$220</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="depilacion">
-<h3>Waxing &amp; Makeup</h3>
+<h2>Waxing &amp; Makeup</h2>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
 <tr><td class="svc">Full Face</td><td class="amt">$480</td><td class="dur">—</td></tr>
@@ -574,13 +574,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });

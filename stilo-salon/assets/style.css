@@ -297,12 +297,25 @@ address { font-style: normal; line-height: 1.8; }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
 
-/* — Encabezado que se encoge al bajar — */
-.site-head { transition: min-height .3s ease, box-shadow .3s ease, background .3s ease; }
+/* — Encabezado que se encoge al bajar —
+   Tres cosas que estaban mal y juntas hacían parpadear la barra:
+   1. La transición estaba declarada en .site-head, pero min-height vive
+      en .head-in. Las transiciones no se heredan, así que el encogido
+      nunca se animó: era un salto seco de 24px.
+   2. En celular el logo crecía al bajar. `.brand img` a 40px dentro de
+      una media query pierde contra `.site-head.scrolled .brand img` a
+      42px, que tiene más especificidad y no depende del ancho.
+   3. Encoger el encabezado acorta el documento 24px, y el encabezado va
+      en el flujo. En celular eso no compensa: la barra ya es compacta.
+      Ahí sólo cambia la sombra, sin mover un pixel de layout. */
+.site-head { transition: box-shadow .3s ease, background .3s ease; }
 .site-head.scrolled { box-shadow: 0 2px 20px rgba(21,25,29,.07); }
-.site-head.scrolled .head-in { min-height: 68px; }
-.brand img { transition: height .3s ease; }
-.site-head.scrolled .brand img { height: 42px; }
+@media (min-width: 641px) {
+  .head-in  { transition: min-height .3s ease; }
+  .brand img { transition: height .3s ease; }
+  .site-head.scrolled .head-in { min-height: 68px; }
+  .site-head.scrolled .brand img { height: 42px; }
+}
 
 /* — Galería: acercamiento suave — */
 .galeria figure { transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease; }
@@ -1659,3 +1672,36 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 /* Cada categoría trae su propia fila de chips; sólo se ve la de la activa. */
 .pf-filtros-caja { min-height: 0; }
 .pf-filtros[hidden] { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CELULAR: ÁREA DE TOQUE Y TEXTO MÍNIMO
+   Medido con navegador a 360, 390 y 414: varios enlaces que la clienta
+   sí toca medían 19 a 29px de alto. La recomendación de Apple y de
+   Google es 44px; por debajo de 40 se falla el toque y se abre otra
+   cosa. Aquí sólo crece el área que se puede tocar, no el tipo.
+   El texto en versalitas iba a 11.2px, por debajo del mínimo de 12px
+   que Google pide para móvil.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 760px) {
+  .eyebrow { font-size: .75rem; }
+  .promo-tag { font-size: .72rem; }
+
+  /* CTA de la franja de promoción y teléfonos: acciones de primer nivel */
+  .promo-cta,
+  .hero-tel,
+  address a[href^="tel:"],
+  .card .more,
+  .g-mas a,
+  .a-guia-c {
+    display: inline-block;
+    padding-block: .55rem;
+    min-height: 40px;
+    box-sizing: border-box;
+  }
+  /* En una dirección los teléfonos van uno debajo de otro: sin esto el
+     padding los encima. */
+  address a[href^="tel:"] { line-height: 1.6; }
+
+  .pf-tab { min-height: 42px; }
+  .pf-f   { min-height: 42px; padding-block: .6rem; }
+}

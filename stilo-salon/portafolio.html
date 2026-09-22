@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Portafolio | Stilo Salón Roma Norte, CDMX — Balayage, Color y Uñas</title>
-<meta name="description" content="Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, alisados, color fantasía, uñas en gel y extensiones de pestañas. Cada foto con el precio publicado del servicio.">
+<title>Portafolio de Trabajos | Stilo Salón Roma Norte, CDMX</title>
+<meta name="description" content="Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, alisados, uñas en gel y extensiones de pestañas, cada foto con su precio publicado.">
 <link rel="canonical" href="https://stilo-salon.com/portafolio.html">
 <link rel="alternate" hreflang="es-mx" href="https://stilo-salon.com/portafolio.html">
 <link rel="alternate" hreflang="en" href="https://stilo-salon.com/en/portfolio.html">
 <link rel="alternate" hreflang="x-default" href="https://stilo-salon.com/portafolio.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
-<meta property="og:title" content="Portafolio | Stilo Salón Roma Norte, CDMX — Balayage, Color y Uñas">
-<meta property="og:description" content="Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, alisados, color fantasía, uñas en gel y extensiones de pestañas. Cada foto con el precio publicado del servicio.">
+<meta property="og:title" content="Portafolio de Trabajos | Stilo Salón Roma Norte, CDMX">
+<meta property="og:description" content="Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, alisados, uñas en gel y extensiones de pestañas, cada foto con su precio publicado.">
 <meta property="og:url" content="https://stilo-salon.com/portafolio.html">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="https://stilo-salon.com/assets/og.png">
@@ -451,13 +451,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nails, Manicure &amp; Pedicure in Roma Norte, Mexico City | Stilo Salón</title>
+<title>Nails, Manicure &amp; Pedicure in Roma Norte | Stilo Salón</title>
 <meta name="description" content="Spa manicure from $220, gel from $180, acrylic from $400, sculpted nails from $500 MXN. Mani + pedi gel package $750. Roma Norte, Mexico City.">
 <link rel="canonical" href="https://stilo-salon.com/en/nails.html">
 <link rel="alternate" hreflang="es-mx" href="https://stilo-salon.com/unas.html">
@@ -11,7 +11,7 @@
 <link rel="alternate" hreflang="x-default" href="https://stilo-salon.com/unas.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Nails, Manicure &amp; Pedicure in Roma Norte, Mexico City | Stilo Salón">
+<meta property="og:title" content="Nails, Manicure &amp; Pedicure in Roma Norte | Stilo Salón">
 <meta property="og:description" content="Spa manicure from $220, gel from $180, acrylic from $400, sculpted nails from $500 MXN. Mani + pedi gel package $750. Roma Norte, Mexico City.">
 <meta property="og:url" content="https://stilo-salon.com/en/nails.html">
 <meta name="theme-color" content="#15191D">
@@ -504,13 +504,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });

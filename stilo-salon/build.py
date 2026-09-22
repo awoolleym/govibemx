@@ -266,12 +266,12 @@ def money(p):
     """'~2,300' -> ('desde', '$2,300')"""
     return (True, "$" + p[1:]) if p.startswith("~") else (False, "$" + p)
 
-def table(keys, lang):
+def table(keys, lang, nivel=3):
     t, out = T[lang], []
     for k in keys:
         grp = PRICES[k]
         out.append(f'<div class="price-block" id="{k}">')
-        out.append(f'<h3>{e(grp[lang])}</h3>')
+        out.append(f'<h{nivel}>{e(grp[lang])}</h{nivel}>')
         out.append('<table class="price">')
         out.append(f'<thead><tr><th>{t["service"]}</th>'
                    f'<th style="text-align:right">{t["price"]}</th>'
@@ -748,13 +748,19 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     }}, {{ passive: true }});
   }}
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {{
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {{
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) {{ fijo = true; head.classList.add('scrolled'); }}
+      else if (fijo && y < 32) {{ fijo = false; head.classList.remove('scrolled'); }}
       ticking = false;
     }});
   }}, {{ passive: true }});
@@ -988,9 +994,13 @@ def marcas(lang):
 # de origen; aquí salen recortadas a 3:4 (720×960) porque el cabello es
 # vertical y cuadrarlo corta justamente el trabajo que se quiere enseñar.
 #
-# La técnica de cada foto la clasifiqué mirándolas.  Balayage, babylights y
-# mechas se parecen mucho en foto: si alguna está mal etiquetada, se corrige
-# aquí y ya.  REVISAR con el salón.
+# La técnica de cada foto está clasificada a ojo, mirando el degradado, el
+# punto donde arranca la decoloración y el tono final.  Balayage, babylights
+# y mechas se parecen en foto, así que el criterio es el que le sirve a la
+# clienta que busca, no el del catálogo técnico: "balayage" para el barrido
+# de raíz oscura a puntas claras, "rubios" para todo lo que termina en rubio
+# frío o platino, "morenas y alisados" para el oscuro y el liso, "fantasía"
+# para el color vivo.  Si una queda mal puesta, se cambia esta línea y ya.
 PF_TEC = ["balayage", "rubios", "morenas", "fantasia"]
 
 PF_ETI = {
@@ -1342,7 +1352,7 @@ def home_body(lang):
     hi = "Roma Norte · Ciudad de México" if lang=="es" else "Roma Norte · Mexico City"
     return f"""
 <section class="hero">
-  <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
+  <img class="marca-agua" src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true" loading="lazy">
   {adornos()}
   {portada(lang)}
   <div class="wrap hero-grid"><div>
@@ -1462,7 +1472,7 @@ def home_body(lang):
 </div></section>
 """
 
-def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner="", alt_foto=""):
+def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner="", alt_foto="", nivel=3):
     t = T[lang]
     body = "".join(f"<p>{p}</p>" for p in paras)
     # La foto va al lado del texto, no en una tira horizontal arriba del
@@ -1483,7 +1493,7 @@ def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner=""
 <section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}{extra}</div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
-  {table(keys, lang)}
+  {table(keys, lang, nivel)}
   <div class="btn-row"><a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t['book']}</a>
   <a class="btn btn-wa" href="{WA}" rel="noopener">{t['book_wa']}</a>
   <a class="btn btn-ghost" href="tel:{NAP['tel1']}">{NAP['tel1_display']}</a></div>
@@ -1512,8 +1522,8 @@ SERVICE_PAGES = [
       "Todos nuestros servicios tienen <strong>72 horas de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo. Y en compras desde $2,000 manejamos <strong>3 meses sin intereses</strong> con todas las tarjetas de crédito.",
      ]),
    en=dict(eyebrow="Hair & color · Roma Norte",
-     title="Haircuts, Color & Balayage in Roma Norte, Mexico City | Stilo Salón",
-     desc="Women's cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Guadalajara 70-B, Roma Norte, Mexico City.",
+     title="Haircuts, Color & Balayage in Roma Norte | Stilo Salón",
+     desc="Women's cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Roma Norte, Mexico City.",
      h1="Haircuts, color and hair treatments in Roma Norte",
      intro="All the hair work we do, with its real price and duration. No quotes by private message, and no last-minute adjustments.",
      paras=[
@@ -1543,7 +1553,7 @@ SERVICE_PAGES = [
       "Las <strong>uñas en gel tienen 5 días de garantía</strong> — el resto de nuestros servicios, 72 horas. Si se te despostilla algo dentro de ese plazo, regresas y lo corregimos sin costo.",
      ]),
    en=dict(eyebrow="Nails · Roma Norte",
-     title="Nails, Manicure & Pedicure in Roma Norte, Mexico City | Stilo Salón",
+     title="Nails, Manicure & Pedicure in Roma Norte | Stilo Salón",
      desc="Spa manicure from $220, gel from $180, acrylic from $400, sculpted nails from $500 MXN. Mani + pedi gel package $750. Roma Norte, Mexico City.",
      h1="Nails, manicure and pedicure in Roma Norte",
      intro="From a simple polish to sculpted gel nails. The whole list with prices, so you can choose without asking.",
@@ -1560,13 +1570,13 @@ SERVICE_PAGES = [
  dict(key="lashes", es_slug="/pestanas-y-cejas.html", en_slug="/en/lashes-and-brows.html",
    keys=["pestanas", "cejas", "depilacion"],
    es=dict(eyebrow="Pestañas y cejas · Roma Norte",
-     title="Extensiones de Pestañas y Diseño de Cejas en Roma Norte, CDMX | Stilo Salón",
+     title="Extensiones de Pestañas y Cejas en Roma Norte | Stilo Salón",
      desc="Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258.",
      h1="Extensiones de pestañas y diseño de cejas en Roma Norte",
      intro="¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está toda la información detallada de esta maravillosa forma de lucir unos ojos y unas cejas de impacto.",
      paras=[]),
    en=dict(eyebrow="Lashes & brows · Roma Norte",
-     title="Eyelash Extensions & Brow Design in Roma Norte, Mexico City | Stilo Salón",
+     title="Eyelash Extensions & Brows in Roma Norte | Stilo Salón",
      desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.",
      h1="Eyelash extensions and brow design in Roma Norte",
      intro="Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.",
@@ -1859,7 +1869,6 @@ def nails_guide(lang):
     # precios ya están en la tabla de la página de uñas, y repetirlos aquí
     # sólo subraya lo chica que es la rebaja. Lo que convence es entender
     # el trabajo, no volver a leer el número.
-    # REVISAR con el salón que el proceso descrito es el que siguen.
     o.append(f'<h2 id="retoque">'
              f'{"Por qué el retoque cuesta casi lo mismo que uno nuevo" if es else "Why a fill costs almost the same as a new set"}</h2>')
     o.append('<p>' + ("Es la pregunta que más nos hacen, y es justa. La respuesta honesta es que "
@@ -2102,7 +2111,7 @@ GUIA_META = {
      h1="Color y alisados: la guía completa",
      lede="Lo que más nos preguntan en la silla, escrito: qué técnica de color es cuál, cada cuándo volver, y cuál alisado te toca.",
      eyebrow="Guía completa · Roma Norte"),
-   en=dict(title="Balayage, Babylights and Smoothing: the Complete Guide | Stilo Salón",
+   en=dict(title="Balayage, Babylights & Smoothing: the Guide | Stilo Salón",
      desc="The difference between balayage and babylights, how often to touch up roots, and which smoothing service suits you: nanoplasty, Brazilian Blowout or hair botox.",
      h1="Color and smoothing: the complete guide",
      lede="What people ask us most in the chair, written down: which color technique is which, how often to come back, and which smoothing service is yours.",
@@ -2145,16 +2154,14 @@ def main():
     # Home (ES + EN)
     for lang in ("es", "en"):
         home, alt = ("/", f"{SITE}/en/") if lang == "es" else ("/en/", f"{SITE}/")
-        title = ("Stilo Salón | Salón de Belleza en Roma Norte, CDMX — Cabello, Uñas y Pestañas"
+        title = ("Stilo Salón | Salón de Belleza en Roma Norte, CDMX"
                  if lang == "es" else
-                 "Stilo Salón | Beauty Salon in Roma Norte, Mexico City — Hair, Nails & Lashes")
+                 "Stilo Salón | Beauty Salon in Roma Norte, Mexico City")
         desc = ("Salón de belleza en Roma Norte, CDMX. Corte desde $330, balayage desde $2,300, "
-                "extensiones de pestañas desde $750. Precios publicados, sin sorpresas. "
-                "Reserva en línea o al 55 2299 3258."
+                "pestañas desde $750. Precios publicados, sin sorpresas. Reserva en línea."
                 if lang == "es" else
                 "Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, "
-                "lash extensions from $750 MXN. Published prices, no surprises. "
-                "Guadalajara 70-B. Book online or call 55 2299 3258.")
+                "lashes from $750 MXN. Published prices, no surprises. Book online.")
         out = "index.html" if lang == "es" else "en/index.html"
         log.append(write(out, page(lang, "", title, desc, home_body(lang), alt,
                                    salon_ld(lang) + faq_ld(lang))))
@@ -2216,15 +2223,13 @@ def main():
         slug = "/portafolio.html" if lang == "es" else "/en/portfolio.html"
         alt  = SITE + ("/en/portfolio.html" if lang == "es" else "/portafolio.html")
         if lang == "es":
-            title = "Portafolio | Stilo Salón Roma Norte, CDMX — Balayage, Color y Uñas"
-            desc = ("Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, "
-                    "alisados, color fantasía, uñas en gel y extensiones de pestañas. "
-                    "Cada foto con el precio publicado del servicio.")
+            title = "Portafolio de Trabajos | Stilo Salón Roma Norte, CDMX"
+            desc = ("Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, alisados, "
+                    "uñas en gel y extensiones de pestañas, cada foto con su precio publicado.")
         else:
-            title = "Portfolio | Stilo Salón Roma Norte, Mexico City — Balayage, Color & Nails"
-            desc = ("Real work from Stilo Salón in Roma Norte: balayage, blondes, "
-                    "smoothing, fantasy color, gel nails and lash extensions. "
-                    "Every photo with the service's published price.")
+            title = "Portfolio | Stilo Salón Roma Norte, Mexico City"
+            desc = ("Real work from Stilo Salón in Roma Norte: balayage, blondes, smoothing, "
+                    "gel nails and lash extensions, every photo with its published price.")
         log.append(write(slug.lstrip("/"), page(lang, slug, title, desc,
                                                 portafolio_body(lang), alt, salon_ld(lang))))
 
@@ -2250,7 +2255,7 @@ def main():
                  "length and above; any adjustment is discussed before we begin. From $2,000 you can "
                  "split the payment into 3 interest-free monthly instalments with any credit card.")
         body = svc_body(lang, "Roma Norte · CDMX" if lang=="es" else "Roma Norte · Mexico City",
-                        h1, intro, [], allk)
+                        h1, intro, [], allk, nivel=2)
         log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt, salon_ld(lang))))
     # Privacy
     for lang in ("es", "en"):

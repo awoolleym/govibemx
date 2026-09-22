@@ -62,7 +62,7 @@
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">Precios en pesos mexicanos (MXN). </p>
   <div class="price-block" id="cabello">
-<h3>Corte, Color y Peinado</h3>
+<h2>Corte, Color y Peinado</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Corte Dama<small>con moldeado</small></td><td class="amt">$330</td><td class="dur">30 min</td></tr>
@@ -82,7 +82,7 @@
 <tr><td class="svc">Alaciado Express<small>a partir del hombro</small></td><td class="amt">desde $280</td><td class="dur">1 h</td></tr>
 </tbody></table></div>
 <div class="price-block" id="tratamientos">
-<h3>Tratamientos y Alisados</h3>
+<h2>Tratamientos y Alisados</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Nanoplastia<small>alisado sin formol</small></td><td class="amt">desde $2,500</td><td class="dur">2 h</td></tr>
@@ -92,7 +92,7 @@
 <tr><td class="svc">Ampolleta Hidratante Alfa Parf</td><td class="amt">$220</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="mani-pedi">
-<h3>Manicure y Pedicure</h3>
+<h2>Manicure y Pedicure</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Manicure Spa<small>sales, exfoliación, masaje y esmalte</small></td><td class="amt">$220</td><td class="dur">—</td></tr>
@@ -103,7 +103,7 @@
 <tr><td class="svc">Paquete Mani Spa + Pedi Spa con Gel<small>ambos servicios con gel hasta 2 tonos lisos</small></td><td class="amt">$750</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="gel-esmalte">
-<h3>Gel, Esmalte y Vitaminas</h3>
+<h2>Gel, Esmalte y Vitaminas</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Gel Manos<small>hasta 2 tonos lisos · tono adicional $20</small></td><td class="amt">$180</td><td class="dur">—</td></tr>
@@ -116,7 +116,7 @@
 <tr><td class="svc">Vitamina<small>protege y fortalece la uña natural</small></td><td class="amt">$150</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="unas">
-<h3>Acrílico y Esculturales</h3>
+<h2>Acrílico y Esculturales</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Acrílico sobre uña natural</td><td class="amt">$400</td><td class="dur">—</td></tr>
@@ -129,7 +129,7 @@
 <tr><td class="svc">Retiro de Acrílico</td><td class="amt">$100</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="pestanas">
-<h3>Extensiones de Pestañas</h3>
+<h2>Extensiones de Pestañas</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Extensiones 1x1<small>técnica clásica, una extensión por pestaña</small></td><td class="amt">$750</td><td class="dur">1 h 30</td></tr>
@@ -148,7 +148,7 @@
 <tr><td class="svc">Retiro + Aplicación Nueva<small>retiro cuando pasaron más de 21 días y se aplica set nuevo</small></td><td class="amt">$150</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="cejas">
-<h3>Cejas</h3>
+<h2>Cejas</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Diseño de Ceja<small>perfilado, diseño y laminación</small></td><td class="amt">$450</td><td class="dur">—</td></tr>
@@ -156,7 +156,7 @@
 <tr><td class="svc">Ceja con Cera</td><td class="amt">$220</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="depilacion">
-<h3>Depilación con Cera y Maquillaje</h3>
+<h2>Depilación con Cera y Maquillaje</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
 <tr><td class="svc">Cara Completa</td><td class="amt">$480</td><td class="dur">—</td></tr>
@@ -574,13 +574,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });

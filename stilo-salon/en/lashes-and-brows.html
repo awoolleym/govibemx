@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eyelash Extensions &amp; Brow Design in Roma Norte, Mexico City | Stilo Salón</title>
+<title>Eyelash Extensions &amp; Brows in Roma Norte | Stilo Salón</title>
 <meta name="description" content="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.">
 <link rel="canonical" href="https://stilo-salon.com/en/lashes-and-brows.html">
 <link rel="alternate" hreflang="es-mx" href="https://stilo-salon.com/pestanas-y-cejas.html">
@@ -11,7 +11,7 @@
 <link rel="alternate" hreflang="x-default" href="https://stilo-salon.com/pestanas-y-cejas.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Eyelash Extensions &amp; Brow Design in Roma Norte, Mexico City | Stilo Salón">
+<meta property="og:title" content="Eyelash Extensions &amp; Brows in Roma Norte | Stilo Salón">
 <meta property="og:description" content="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.">
 <meta property="og:url" content="https://stilo-salon.com/en/lashes-and-brows.html">
 <meta name="theme-color" content="#15191D">
@@ -507,13 +507,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });

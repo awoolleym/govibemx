@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Haircuts, Color &amp; Balayage in Roma Norte, Mexico City | Stilo Salón</title>
-<meta name="description" content="Women&#x27;s cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Guadalajara 70-B, Roma Norte, Mexico City.">
+<title>Haircuts, Color &amp; Balayage in Roma Norte | Stilo Salón</title>
+<meta name="description" content="Women&#x27;s cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Roma Norte, Mexico City.">
 <link rel="canonical" href="https://stilo-salon.com/en/hair.html">
 <link rel="alternate" hreflang="es-mx" href="https://stilo-salon.com/cabello.html">
 <link rel="alternate" hreflang="en" href="https://stilo-salon.com/en/hair.html">
 <link rel="alternate" hreflang="x-default" href="https://stilo-salon.com/cabello.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Haircuts, Color &amp; Balayage in Roma Norte, Mexico City | Stilo Salón">
-<meta property="og:description" content="Women&#x27;s cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Guadalajara 70-B, Roma Norte, Mexico City.">
+<meta property="og:title" content="Haircuts, Color &amp; Balayage in Roma Norte | Stilo Salón">
+<meta property="og:description" content="Women&#x27;s cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Roma Norte, Mexico City.">
 <meta property="og:url" content="https://stilo-salon.com/en/hair.html">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="https://stilo-salon.com/assets/og.png">
@@ -497,13 +497,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });

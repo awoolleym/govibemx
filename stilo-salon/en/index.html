@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stilo Salón | Beauty Salon in Roma Norte, Mexico City — Hair, Nails &amp; Lashes</title>
-<meta name="description" content="Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, lash extensions from $750 MXN. Published prices, no surprises. Guadalajara 70-B. Book online or call 55 2299 3258.">
+<title>Stilo Salón | Beauty Salon in Roma Norte, Mexico City</title>
+<meta name="description" content="Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, lashes from $750 MXN. Published prices, no surprises. Book online.">
 <link rel="canonical" href="https://stilo-salon.com/en/">
 <link rel="alternate" hreflang="es-mx" href="https://stilo-salon.com/">
 <link rel="alternate" hreflang="en" href="https://stilo-salon.com/en/">
 <link rel="alternate" hreflang="x-default" href="https://stilo-salon.com/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Stilo Salón | Beauty Salon in Roma Norte, Mexico City — Hair, Nails &amp; Lashes">
-<meta property="og:description" content="Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, lash extensions from $750 MXN. Published prices, no surprises. Guadalajara 70-B. Book online or call 55 2299 3258.">
+<meta property="og:title" content="Stilo Salón | Beauty Salon in Roma Norte, Mexico City">
+<meta property="og:description" content="Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, lashes from $750 MXN. Published prices, no surprises. Book online.">
 <meta property="og:url" content="https://stilo-salon.com/en/">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="https://stilo-salon.com/assets/og.png">
@@ -51,7 +51,7 @@
 <main id="main">
 
 <section class="hero">
-  <img class="marca-agua" src="/assets/logo-stilo-salon.png" alt="" aria-hidden="true">
+  <img class="marca-agua" src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true" loading="lazy">
   <div class="deco" aria-hidden="true"><span class="d-marco"></span><img class="d-flor2" src="/assets/flor-marca.png" width="980" height="627" alt="" loading="lazy"><img class="d-flor3" src="/assets/flor-marca.png" width="980" height="627" alt="" loading="lazy"></div>
   <div class="foto-portada"><picture><source srcset="/assets/hero.webp" type="image/webp"><img src="/assets/hero.jpg" width="960" height="1010" alt="Client with long balayage at Stilo Salón, Roma Norte, with the salon behind her" fetchpriority="high"></picture></div>
   <div class="wrap hero-grid"><div>
@@ -582,13 +582,19 @@
     }, { passive: true });
   }
 
-  // Encabezado compacto al bajar
-  var head = document.querySelector('.site-head'), ticking = false;
+  // Encabezado compacto al bajar.
+  // Banda muerta a propósito: entra a 88 y no sale hasta 32. Con un solo
+  // umbral, el temblor normal del scroll en celular cruzaba el límite una
+  // y otra vez y la clase se encendía y apagaba sin parar — medido: 7
+  // cambios con 10 micro-scrolls. Eso era el parpadeo.
+  var head = document.querySelector('.site-head'), ticking = false, fijo = false;
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
-      head.classList.toggle('scrolled', window.scrollY > 40);
+      var y = window.scrollY || window.pageYOffset;
+      if (!fijo && y > 88) { fijo = true; head.classList.add('scrolled'); }
+      else if (fijo && y < 32) { fijo = false; head.classList.remove('scrolled'); }
       ticking = false;
     });
   }, { passive: true });
