@@ -2032,21 +2032,31 @@ GALERIA = {
            "Raíz oscura a puntas claras · desde $2,300",
            "Dark roots to blonde ends with waves, Stilo Salón Roma Norte",
            "Dark roots to light ends · from $2,300")],
+ # Tres encuadres distintos a propósito: el macro enseña densidad, el
+ # perfil enseña largo y curvatura, y el frontal enseña cómo queda la cara
+ # completa.  Ninguna lleva cubrebocas: las que lo traen fechan el trabajo
+ # en 2021.
+ #
+ # El pie de foto describe el EFECTO, no la técnica.  Clásicas, híbridas y
+ # volumen ruso no se distinguen con seguridad en una foto —es la misma
+ # razón por la que el portafolio no filtra pestañas por técnica—, así que
+ # ponerle nombre sería inventar. Va el precio de entrada, que sí es cierto
+ # para las cinco técnicas.
  "lashes": [("pf/pestanas-110.jpg",
-             "Extensiones de pestañas de volumen en primer plano, Stilo Salón Roma Norte",
-             "Volumen · 2 horas · desde $1,100",
-             "Close-up of volume eyelash extensions, Stilo Salón Roma Norte",
-             "Volume · 2 hours · from $1,100"),
+             "Primer plano de extensiones de pestañas densas, Stilo Salón Roma Norte",
+             "Efecto denso · Extensiones desde $750",
+             "Close-up of dense eyelash extensions, Stilo Salón Roma Norte",
+             "Dense effect · Extensions from $750"),
             ("pf/pestanas-112.jpg",
-             "Extensiones de pestañas largas y definidas de perfil, Stilo Salón Roma Norte",
-             "Extensiones de pestañas · desde $750",
-             "Long, defined lash extensions in profile, Stilo Salón Roma Norte",
-             "Lash extensions · from $750"),
-            ("pf/pestanas-123.jpg",
-             "Extensiones de pestañas con efecto natural en ambos ojos, Stilo Salón Roma Norte",
-             "Efecto natural · 1 h 30 · desde $750",
-             "Natural-effect lash extensions on both eyes, Stilo Salón Roma Norte",
-             "Natural effect · 1 h 30 · from $750")],
+             "Extensiones de pestañas largas vistas de perfil, Stilo Salón Roma Norte",
+             "Efecto alargado · Extensiones desde $750",
+             "Long eyelash extensions seen in profile, Stilo Salón Roma Norte",
+             "Lengthening effect · Extensions from $750"),
+            ("pf/pestanas-213.jpg",
+             "Extensiones de pestañas definidas en ambos ojos, Stilo Salón Roma Norte",
+             "Efecto abierto y definido · Extensiones desde $750",
+             "Defined eyelash extensions on both eyes, Stilo Salón Roma Norte",
+             "Open, defined effect · Extensions from $750")],
  "nails": [("trabajo-unas-01.jpg",
             "Uñas con diseño de leopardo en blanco y dorado, Stilo Salón Roma Norte",
             "Diseño de leopardo · Uña escultural con gel",
