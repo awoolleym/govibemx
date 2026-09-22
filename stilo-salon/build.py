@@ -1464,16 +1464,24 @@ def home_body(lang):
 </div></section>
 """
 
-def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner=""):
+def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner="", alt_foto=""):
     t = T[lang]
     body = "".join(f"<p>{p}</p>" for p in paras)
+    # La foto va al lado del texto, no en una tira horizontal arriba del
+    # contenido.  Antes era una imagen 16:9 aplastada por CSS a 240px de
+    # alto sobre 1080 de ancho — un recorte de 4.5:1 que decapitaba a la
+    # clienta y dejaba una franja de cabello sin contexto.
+    foto = (f'<figure class="svc-foto">'
+            f'{img(banner[:-4], 900, 1200, alt_foto, TARDE)}</figure>') if banner else ''
     return f"""
-<section style="padding-bottom:1.5rem"><div class="wrap">
-  <p class="eyebrow">{e(eyebrow)}</p>
-  <h1>{e(h1)}</h1>
-  <p class="lede">{e(intro)}</p>
+<section class="svc-cab"><div class="wrap svc-cab-in">
+  <div class="svc-cab-txt">
+    <p class="eyebrow">{e(eyebrow)}</p>
+    <h1>{e(h1)}</h1>
+    <p class="lede">{e(intro)}</p>
+  </div>
+  {foto}
 </div></section>
-{f'<div class="wrap"><figure class="banner">{img(banner[:-4], 1400, 787, "", TARDE)}</figure></div>' if banner else ''}
 <section class="alt" style="padding-top:0"><div class="wrap" style="max-width:74ch">{body}{extra}</div></section>
 <section><div class="wrap">
   <p class="muted" style="font-size:.9rem">{t['mxn']} {e(note)}</p>
@@ -2113,8 +2121,15 @@ def main():
             alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
             extra = galeria_html(sp["key"], lang) + enlace_guia(sp["key"], lang)
             bnr = {"hair":"h-cabello.jpg","nails":"h-unas.jpg","lashes":"h-pestanas.jpg"}[sp["key"]]
+            alt_f = {"hair":  ("Balayage rubio ceniza hecho en Stilo Salón, Roma Norte, CDMX",
+                               "Ash blonde balayage done at Stilo Salón, Roma Norte, Mexico City"),
+                     "nails": ("Uñas largas en gel con francés blanco hechas en Stilo Salón, Roma Norte",
+                               "Long gel nails with a white French tip done at Stilo Salón, Roma Norte"),
+                     "lashes":("Extensiones de pestañas de volumen aplicadas en Stilo Salón, Roma Norte",
+                               "Volume lash extensions applied at Stilo Salón, Roma Norte")}[sp["key"]]
+            alt_f = alt_f[0] if lang == "es" else alt_f[1]
             resumen = [RESUMEN[sp["key"]][lang]]
-            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], resumen, sp["keys"], extra=extra, banner=bnr)
+            body = svc_body(lang, d["eyebrow"], d["h1"], d["intro"], resumen, sp["keys"], extra=extra, banner=bnr, alt_foto=alt_f)
             ld = salon_ld(lang)   # el FAQPage vive en la guía, que es donde están las respuestas
             log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"], body, alt, ld)))
     # Páginas de guía: una por servicio, en los dos idiomas
