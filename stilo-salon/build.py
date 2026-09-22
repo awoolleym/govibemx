@@ -120,7 +120,9 @@ PRICES = {
   "es": "Tratamientos y Alisados", "en": "Treatments & Smoothing",
   "items": [
     ("Nanoplastia", "Nanoplasty", "~2,500", "2 h", "alisado sin formol", "formaldehyde-free smoothing"),
-    ("Brazilian Blowout", "Brazilian Blowout", "~2,500", "2 h", "a partir del hombro", "shoulder length and up"),
+    ("Brazilian Blowout", "Brazilian Blowout", "~2,500", "2 h",
+     "el tratamiento de keratina · a partir del hombro",
+     "the keratin treatment · shoulder length and up"),
     ("Botox Capilar", "Hair Botox", "~1,800", "1 h", "a partir del hombro", "shoulder length and up"),
     ("Tratamiento Profundo Hidratante", "Deep Hydrating Treatment", "~520", "1 h", "a partir del hombro", "shoulder length and up"),
     ("Ampolleta Hidratante Alfa Parf", "Alfaparf Hydrating Ampoule", "220", "", "", ""),
@@ -1519,7 +1521,7 @@ SERVICE_PAGES = [
       "En <strong>corte</strong> manejamos dama, caballero y niños. La diferencia entre el corte con moldeado ($330) y el corte con lavado y peinado ($420) es justamente el lavado y el peinado terminado: si vienes con prisa o ya con el cabello lavado, el primero te sirve; si quieres salir lista, el segundo.",
       "En <strong>color</strong> cubrimos desde lo más sencillo hasta lo más técnico. El <strong>retoque de raíz</strong> ($900) es el mantenimiento mensual de un color que ya traes. El <strong>tinte</strong> (desde $800) es color completo. El <strong>matiz</strong> y el <strong>baño de color</strong> (desde $900) corrigen o refrescan el tono sin levantar el color base. Y el <strong>balayage</strong> y los <strong>babylights</strong> (desde $2,300, tres horas) son técnicas de iluminación a mano alzada que crean dimensión natural, con crecimiento suave: no te dejan una línea de raíz marcada a las seis semanas.",
       "Los precios de color marcados “desde” aplican de hombro hacia arriba. El cabello más largo o más denso lleva más producto y más tiempo, y el ajuste te lo decimos <strong>antes</strong> de empezar, con el espejo enfrente. Nunca al momento de cobrar.",
-      "En <strong id='tratamientos'>tratamientos y alisados</strong> trabajamos tres técnicas distintas, y la diferencia importa. La <strong>nanoplastia</strong> (desde $2,500) es un alisado sin formol que reestructura la fibra capilar y deja el cabello liso y con brillo por varios meses. El <strong>Brazilian Blowout</strong> (desde $2,500) sella la cutícula y reduce el frizz manteniendo movimiento — no deja el cabello completamente lacio. El <strong>botox capilar</strong> (desde $1,800, una hora) no alisa: rellena y repara cabello poroso o maltratado por decoloración.",
+      "En <strong id='tratamientos'>tratamientos y alisados</strong> trabajamos tres técnicas distintas, y la diferencia importa. La <strong>nanoplastia</strong> (desde $2,500) es un alisado sin formol que reestructura la fibra capilar y deja el cabello liso y con brillo por varios meses. El <strong>Brazilian Blowout</strong> (desde $2,500) es el que mucha gente pide como <strong>keratina</strong>: sella la cutícula y reduce el frizz manteniendo movimiento — no deja el cabello completamente lacio. El <strong>botox capilar</strong> (desde $1,800, una hora) no alisa: rellena y repara cabello poroso o maltratado por decoloración.",
       "Si no sabes cuál te conviene, escríbenos por WhatsApp con una foto de tu cabello y te decimos con honestidad cuál sí y cuál no. A veces la respuesta es un <strong>tratamiento profundo hidratante</strong> de $520 y no un alisado de $2,500.",
       "Todos nuestros servicios tienen <strong>72 horas de garantía</strong>: si algo no quedó como lo acordamos, regresas y lo corregimos sin costo. Y en compras desde $2,000 manejamos <strong>3 meses sin intereses</strong> con todas las tarjetas de crédito.",
      ]),
@@ -1533,7 +1535,7 @@ SERVICE_PAGES = [
       "For <strong>cuts</strong> we serve women, men and children. The difference between the cut with blow-dry shaping ($330) and the cut with wash and style ($420) is exactly that — the wash and the finished style. If you are in a hurry or arrive with clean hair, the first works; if you want to walk out ready, take the second.",
       "In <strong>color</strong> we cover everything from the simplest to the most technical. A <strong>root touch-up</strong> ($900) is monthly maintenance on color you already have. <strong>Full color</strong> (from $800) covers the whole head. <strong>Toner</strong> and <strong>color gloss</strong> (from $900) correct or refresh the tone without lifting the base. And <strong>balayage</strong> and <strong>babylights</strong> (from $2,300, three hours) are freehand lightening techniques that build natural dimension with a soft grow-out — no hard root line at six weeks.",
       "Color prices marked “from” apply at shoulder length and above. Longer or denser hair takes more product and more time, and we tell you that adjustment <strong>before</strong> we begin, with the mirror in front of you. Never at the register.",
-      "In <strong id='tratamientos'>treatments and smoothing</strong> we work three distinct techniques, and the difference matters. <strong>Nanoplasty</strong> (from $2,500) is a formaldehyde-free smoothing service that restructures the hair fiber, leaving it straight and glossy for several months. <strong>Brazilian Blowout</strong> (from $2,500) seals the cuticle and cuts frizz while keeping movement — it does not leave hair perfectly flat. <strong>Hair botox</strong> (from $1,800, one hour) does not straighten: it fills and repairs porous hair damaged by bleaching.",
+      "In <strong id='tratamientos'>treatments and smoothing</strong> we work three distinct techniques, and the difference matters. <strong>Nanoplasty</strong> (from $2,500) is a formaldehyde-free smoothing service that restructures the hair fiber, leaving it straight and glossy for several months. <strong>Brazilian Blowout</strong> (from $2,500) is the one most people ask for as a <strong>keratin treatment</strong>: it seals the cuticle and cuts frizz while keeping movement — it does not leave hair perfectly flat. <strong>Hair botox</strong> (from $1,800, one hour) does not straighten: it fills and repairs porous hair damaged by bleaching.",
       "If you are not sure which one suits you, message us on WhatsApp with a photo of your hair and we will tell you honestly which will work and which will not. Sometimes the answer is a $520 deep hydrating treatment rather than a $2,500 smoothing service.",
       "Every service carries a <strong>72-hour guarantee</strong>: if something did not turn out the way we agreed, come back and we will correct it at no cost. On purchases from $2,000 we offer <strong>3 interest-free monthly payments</strong> with any credit card.",
      ])),
@@ -1793,14 +1795,14 @@ def hair_guide(lang):
       if es else "They are not the same, and choosing wrong is expensive. Here is the difference:") + '</p>')
     rows = ([("Nanoplastia", "$2,500", "2 h", "Alisa de verdad, sin formol. Reestructura la fibra.",
               "Quieres el cabello liso y con brillo varios meses."),
-             ("Brazilian Blowout", "$2,500", "2 h", "Sella la cutícula y baja el frizz, conservando movimiento.",
-              "Quierescontrolar el frizz pero no perder tu onda natural."),
+             ("Brazilian Blowout", "$2,500", "2 h", "Es el tratamiento de keratina. Sella la cutícula y baja el frizz, conservando movimiento.",
+              "Quieres controlar el frizz pero no perder tu onda natural."),
              ("Botox capilar", "$1,800", "1 h", "No alisa: rellena y repara.",
               "Tu cabello está poroso o maltratado por decoloración.")]
             if es else
             [("Nanoplasty", "$2,500", "2 h", "Genuinely straightens, formaldehyde-free. Restructures the fiber.",
               "You want straight, glossy hair for several months."),
-             ("Brazilian Blowout", "$2,500", "2 h", "Seals the cuticle and cuts frizz while keeping movement.",
+             ("Brazilian Blowout", "$2,500", "2 h", "This is the keratin treatment. Seals the cuticle and cuts frizz while keeping movement.",
               "You want frizz control without losing your natural wave."),
              ("Hair botox", "$1,800", "1 h", "Does not straighten: it fills and repairs.",
               "Your hair is porous or damaged from bleaching.")])
@@ -1937,6 +1939,8 @@ HAIR_FAQ = {
          "El balayage se pinta a mano alzada de medios a puntas y deja una transición suave que crece sin línea marcada. Los babylights son mechones muy finos tomados desde la raíz que imitan el aclarado natural del sol: se ven más parejos y menos contrastados. Ambos cuestan desde $2,300 y toman tres horas."),
         ("¿Cada cuándo debo retocar la raíz?",
          "Con tinte global o base, entre cuatro y seis semanas. Con balayage o babylights puedes estirarlo a tres o cuatro meses porque el crecimiento es suave por diseño."),
+        ("¿Hacen keratina?",
+         "Sí. En el salón le decimos Brazilian Blowout, que es su nombre comercial, pero es el tratamiento de keratina: cuesta $2,500, toma dos horas y sella la cutícula para bajar el frizz sin dejarte el cabello completamente lacio. Si lo que quieres es liso de verdad, entonces es nanoplastia."),
         ("¿Qué alisado me conviene?",
          "La nanoplastia alisa de verdad y sin formol. El Brazilian Blowout baja el frizz conservando movimiento. El botox capilar no alisa: rellena y repara cabello poroso o decolorado. Si no sabes cuál, mándanos una foto por WhatsApp."),
         ("¿Cuál es la diferencia entre matiz y baño de color?",
@@ -1949,6 +1953,8 @@ HAIR_FAQ = {
          "Balayage is painted freehand from mid-length to ends and leaves a soft transition that grows out without a hard line. Babylights are very fine sections taken from the root that imitate natural sun-lightening: more even, less contrasted. Both start at $2,300 and take three hours."),
         ("How often should I touch up my roots?",
          "With full color or a base, every four to six weeks. With balayage or babylights you can stretch it to three or four months, because the grow-out is soft by design."),
+        ("Do you do keratin treatments?",
+         "Yes. We call it Brazilian Blowout, its commercial name, but it is the keratin treatment: $2,500, two hours, and it seals the cuticle to cut frizz without leaving your hair perfectly flat. If you want genuinely straight hair, that is nanoplasty."),
         ("Which smoothing service should I choose?",
          "Nanoplasty genuinely straightens, formaldehyde-free. Brazilian Blowout reduces frizz while keeping movement. Hair botox does not straighten: it fills and repairs porous or bleached hair. If you are unsure, send us a photo on WhatsApp."),
         ("What is the difference between toner and color gloss?",
@@ -2109,12 +2115,12 @@ GUIA_META = {
  "hair": dict(
    es_slug="/guia-color-y-alisados.html", en_slug="/en/color-and-smoothing-guide.html",
    es=dict(title="Balayage, Babylights y Alisados: la Guía Completa | Stilo Salón",
-     desc="Diferencia entre balayage y babylights, cada cuándo retocar raíz, y cuál alisado te conviene: nanoplastia, Brazilian Blowout o botox capilar. Roma Norte, CDMX.",
+     desc="Balayage o babylights, cada cuándo retocar raíz y qué alisado te conviene: keratina (Brazilian Blowout), nanoplastia o botox capilar. Roma Norte, CDMX.",
      h1="Color y alisados: la guía completa",
      lede="Lo que más nos preguntan en la silla, escrito: qué técnica de color es cuál, cada cuándo volver, y cuál alisado te toca.",
      eyebrow="Guía completa · Roma Norte"),
    en=dict(title="Balayage, Babylights & Smoothing: the Guide | Stilo Salón",
-     desc="The difference between balayage and babylights, how often to touch up roots, and which smoothing service suits you: nanoplasty, Brazilian Blowout or hair botox.",
+     desc="Balayage or babylights, how often to touch up roots, and which smoothing suits you: keratin (Brazilian Blowout), nanoplasty or hair botox. Roma Norte, CDMX.",
      h1="Color and smoothing: the complete guide",
      lede="What people ask us most in the chair, written down: which color technique is which, how often to come back, and which smoothing service is yours.",
      eyebrow="Complete guide · Roma Norte")),
@@ -2242,8 +2248,8 @@ def main():
         alt  = SITE + ("/en/pricing.html" if lang == "es" else "/precios.html")
         title = ("Lista de Precios Completa | Stilo Salón Roma Norte, CDMX" if lang == "es"
                  else "Full Price List | Stilo Salón Roma Norte, Mexico City")
-        desc = ("Lista de precios completa de Stilo Salón: cabello, tratamientos, uñas, pestañas, "
-                "cejas y depilación. Más de 60 servicios con precio y duración. Roma Norte, CDMX."
+        desc = ("Precios de Stilo Salón: cabello, keratina, uñas, pestañas, cejas y "
+                "depilación. Más de 60 servicios con precio y duración. Roma Norte, CDMX."
                 if lang == "es" else
                 "Full price list for Stilo Salón: hair, treatments, nails, lashes, brows and waxing. "
                 "Over 60 services with price and duration. Roma Norte, Mexico City.")
@@ -2265,7 +2271,7 @@ def main():
         alt  = SITE + ("/en/privacy.html" if lang == "es" else "/aviso-de-privacidad.html")
         if lang == "es":
             title, h1 = "Aviso de Privacidad | Stilo Salón", "Aviso de Privacidad"
-            desc = ("Aviso de privacidad de Stilo Salón, salón de belleza en Roma Norte, CDMX. Qué datos recabamos para tu cita, para qué los usamos y cómo ejercer tus derechos ARCO.")
+            desc = ("Aviso de privacidad de Stilo Salón, Roma Norte, CDMX. Qué datos recabamos para tu cita, para qué los usamos y cómo ejercer tus derechos ARCO.")
             ps = ["<strong>Stilo Salón</strong>, con domicilio en Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México, es responsable del tratamiento de tus datos personales.",
                   "<strong>Qué datos recabamos.</strong> Únicamente los necesarios para agendar y dar seguimiento a tu cita: nombre, teléfono y, cuando aplica, el historial de servicios realizados en el salón.",
                   "<strong>Para qué los usamos.</strong> Para confirmar y recordarte tus citas, llevar el registro de los servicios que te hemos hecho, y contactarte si necesitamos reprogramar. No vendemos ni compartimos tus datos con terceros.",
@@ -2274,7 +2280,7 @@ def main():
                   "Última actualización: septiembre de 2026."]
         else:
             title, h1 = "Privacy Notice | Stilo Salón", "Privacy Notice"
-            desc = ("Privacy notice for Stilo Salón, a beauty salon in Roma Norte, Mexico City. What data we collect for your appointment, how we use it, and how to exercise your rights.")
+            desc = ("Privacy notice for Stilo Salón, Roma Norte, Mexico City. What data we collect for your appointment, how we use it, and how to exercise your rights.")
             ps = ["<strong>Stilo Salón</strong>, located at Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City, is responsible for the handling of your personal data.",
                   "<strong>What we collect.</strong> Only what is needed to book and follow up on your appointment: name, phone number and, where applicable, the history of services performed at the salon.",
                   "<strong>How we use it.</strong> To confirm and remind you of appointments, keep a record of the services we have performed, and contact you if we need to reschedule. We do not sell or share your data with third parties.",
