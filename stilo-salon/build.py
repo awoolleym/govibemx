@@ -1177,7 +1177,8 @@ PORTAFOLIO = [
   ("pestanas-205", "pestanas", ""),
   ("pestanas-209", "pestanas", ""),
   ("pestanas-213", "pestanas", ""),
-  ("pestanas-216", "pestanas", "")]
+  ("pestanas-216", "pestanas", ""),
+  ("pestanas-219", "pestanas", "")]
 
 def _pf_alt(lang, cat, tec):
     t = PF_ETI[lang][tec or cat][0]
@@ -2042,21 +2043,28 @@ GALERIA = {
  # razón por la que el portafolio no filtra pestañas por técnica—, así que
  # ponerle nombre sería inventar. Va el precio de entrada, que sí es cierto
  # para las cinco técnicas.
- "lashes": [("pf/pestanas-110.jpg",
-             "Primer plano de extensiones de pestañas densas, Stilo Salón Roma Norte",
-             "Efecto denso · Extensiones desde $750",
-             "Close-up of dense eyelash extensions, Stilo Salón Roma Norte",
-             "Dense effect · Extensions from $750"),
-            ("pf/pestanas-112.jpg",
-             "Extensiones de pestañas largas vistas de perfil, Stilo Salón Roma Norte",
-             "Efecto alargado · Extensiones desde $750",
-             "Long eyelash extensions seen in profile, Stilo Salón Roma Norte",
-             "Lengthening effect · Extensions from $750"),
-            ("pf/pestanas-213.jpg",
+ # Las tres las eligió el salón. Las dos primeras ya vivían en el
+ # portafolio (118 y 209); la tercera la subieron nueva y se procesó por el
+ # mismo camino que las demás: recorte 3:4 y marca de agua quemada.
+ #
+ # El pie describe el EFECTO, no la técnica: clásicas, híbridas y volumen
+ # ruso no se distinguen con seguridad en una foto, así que nombrarlas
+ # sería inventar. El precio de entrada sí es cierto para las cinco.
+ "lashes": [("pf/pestanas-118.jpg",
+             "Extensiones de pestañas largas y abiertas, Stilo Salón Roma Norte",
+             "Efecto abierto · Extensiones desde $750",
+             "Long, open eyelash extensions, Stilo Salón Roma Norte",
+             "Open effect · Extensions from $750"),
+            ("pf/pestanas-209.jpg",
              "Extensiones de pestañas definidas en ambos ojos, Stilo Salón Roma Norte",
-             "Efecto abierto y definido · Extensiones desde $750",
+             "Efecto definido · Extensiones desde $750",
              "Defined eyelash extensions on both eyes, Stilo Salón Roma Norte",
-             "Open, defined effect · Extensions from $750")],
+             "Defined effect · Extensions from $750"),
+            ("pf/pestanas-219.jpg",
+             "Extensiones de pestañas con efecto natural, Stilo Salón Roma Norte",
+             "Efecto natural · Extensiones desde $750",
+             "Natural-effect eyelash extensions, Stilo Salón Roma Norte",
+             "Natural effect · Extensions from $750")],
  "nails": [("trabajo-unas-01.jpg",
             "Uñas con diseño de leopardo en blanco y dorado, Stilo Salón Roma Norte",
             "Diseño de leopardo · Uña escultural con gel",
