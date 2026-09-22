@@ -1329,12 +1329,17 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .d-flor3 {
   position: absolute; z-index: 1; pointer-events: none;
   display: block; height: auto;
-  /* sube del canto: abajo del todo se la come el WhatsApp flotante,
-     que va fijo en esa esquina */
-  right: -5%; bottom: 9%;
-  width: clamp(150px, 30vw, 268px);
-  opacity: .45;
+  right: -8%; bottom: 2%; width: 42vw; opacity: .4;
   transform: scaleX(-1) rotate(166deg);
+}
+@media (min-width: 900px) {
+  /* Esquina inferior derecha DEL PANEL CLARO, no del hero: la pareja
+     en diagonal enmarca el texto, y la foto se queda limpia. */
+  .d-flor3 {
+    right: 52%; bottom: clamp(1.6rem, 4vh, 2.6rem);
+    width: clamp(140px, 17vw, 235px);
+    opacity: .45;
+  }
 }
 
 /* ── El texto de la portada, centrado en su panel ───────────────────
