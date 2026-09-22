@@ -1,3 +1,4 @@
 _preview/
-_fotos/
-_fotos2/
+# Originales de las fotos (Drive es la fuente): pesan decenas de MB y el
+# sitio sólo necesita los recortes optimizados que viven en assets/.
+_fotos*/

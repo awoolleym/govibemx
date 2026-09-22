@@ -218,9 +218,11 @@ T = {  # cadenas de interfaz
 
 NAV = {
  "es": [("/cabello.html","Cabello"),("/unas.html","Uñas"),
-        ("/pestanas-y-cejas.html","Pestañas y Cejas"),("/precios.html","Precios"),("__BOOK__","Citas")],
+        ("/pestanas-y-cejas.html","Pestañas y Cejas"),("/portafolio.html","Portafolio"),
+        ("/precios.html","Precios"),("__BOOK__","Citas")],
  "en": [("/en/hair.html","Hair"),("/en/nails.html","Nails"),
-        ("/en/lashes-and-brows.html","Lashes & Brows"),("/en/pricing.html","Pricing"),("__BOOK__","Book")],
+        ("/en/lashes-and-brows.html","Lashes & Brows"),("/en/portfolio.html","Portfolio"),
+        ("/en/pricing.html","Pricing"),("__BOOK__","Book")],
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -542,30 +544,159 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     }}, {{ passive: true }});
   }}
 
+  // ── Portafolio: categoría + técnica ──────────────────────────────────
+  var pf = document.querySelector('.pf');
+  if (pf) {{
+    var rejilla  = pf.querySelector('.pf-rejilla');
+    var piezas   = rejilla.querySelectorAll('figure');
+    var pestanas = pf.querySelectorAll('.pf-tab');
+    var chips    = pf.querySelectorAll('.pf-f');
+    var cajaF    = pf.querySelector('.pf-filtros');
+    var vacio    = pf.querySelector('.pf-vacio');
+    var cat = 'cabello', tec = '';
+
+    function pinta() {{
+      var n = 0;
+      for (var i = 0; i < piezas.length; i++) {{
+        var f = piezas[i];
+        var ok = f.getAttribute('data-cat') === cat &&
+                 (tec === '' || f.getAttribute('data-tec') === tec);
+        f.hidden = !ok;
+        // las piezas ocultas nunca cruzaron el observador, así que
+        // entrarían en opacidad 0 y se quedarían invisibles.
+        if (ok) {{ f.classList.add('seen'); n++; }}
+      }}
+      cajaF.hidden = (cat !== 'cabello');
+      vacio.hidden = (n > 0);
+    }}
+
+    function transicion() {{
+      rejilla.classList.add('cambiando');
+      setTimeout(function () {{
+        pinta();
+        rejilla.classList.remove('cambiando');
+      }}, 220);
+    }}
+
+    for (var a = 0; a < pestanas.length; a++) {{
+      (function (b) {{
+        b.addEventListener('click', function () {{
+          if (b.classList.contains('activo')) return;
+          for (var j = 0; j < pestanas.length; j++) {{
+            pestanas[j].classList.remove('activo');
+            pestanas[j].setAttribute('aria-pressed', 'false');
+          }}
+          b.classList.add('activo'); b.setAttribute('aria-pressed', 'true');
+          cat = b.getAttribute('data-cat'); tec = '';
+          for (var k = 0; k < chips.length; k++) {{
+            var on = chips[k].getAttribute('data-tec') === '';
+            chips[k].classList.toggle('activo', on);
+            chips[k].setAttribute('aria-pressed', on ? 'true' : 'false');
+          }}
+          transicion();
+        }});
+      }})(pestanas[a]);
+    }}
+
+    for (var c = 0; c < chips.length; c++) {{
+      (function (ch) {{
+        ch.addEventListener('click', function () {{
+          if (ch.classList.contains('activo')) return;
+          for (var j = 0; j < chips.length; j++) {{
+            chips[j].classList.remove('activo');
+            chips[j].setAttribute('aria-pressed', 'false');
+          }}
+          ch.classList.add('activo'); ch.setAttribute('aria-pressed', 'true');
+          tec = ch.getAttribute('data-tec');
+          transicion();
+        }});
+      }})(chips[c]);
+    }}
+
+    // #cabello / #unas / #pestanas, y también las técnicas: #balayage etc.
+    // Así las páginas de servicio pueden enlazar directo a su sección.
+    function desdeHash() {{
+      var h = (location.hash || '').replace('#', '');
+      if (!h) return;
+      var tb = pf.querySelector('.pf-tab[data-cat="' + h + '"]');
+      if (tb) {{ tb.click(); return; }}
+      var ch = pf.querySelector('.pf-f[data-tec="' + h + '"]');
+      if (ch) {{
+        // Las técnicas sólo existen dentro de Cabello: si la categoría
+        // activa es otra, el filtro dejaría la rejilla en blanco.
+        var cab = pf.querySelector('.pf-tab[data-cat="cabello"]');
+        if (cab) cab.click();
+        ch.click();
+      }}
+    }}
+
+    pinta();
+    desdeHash();
+    window.addEventListener('hashchange', desdeHash);
+  }}
+
   // ── Visor de galería ────────────────────────────────────────────────
-  var figs = document.querySelectorAll('.galeria figure');
+  var figs = document.querySelectorAll('.galeria figure, .pf-rejilla figure');
   if (figs.length) {{
     var visor = document.createElement('div');
     visor.className = 'visor';
     visor.setAttribute('role', 'dialog');
     visor.setAttribute('aria-modal', 'true');
     visor.innerHTML = '<button class="visor-cerrar" aria-label="Cerrar">&times;</button>' +
+                      '<button class="visor-nav visor-prev" aria-label="Anterior">&#8249;</button>' +
+                      '<button class="visor-nav visor-next" aria-label="Siguiente">&#8250;</button>' +
                       '<img alt=""><figcaption></figcaption>';
     document.body.appendChild(visor);
     var vImg = visor.querySelector('img');
     var vCap = visor.querySelector('figcaption');
     var abridor = null;
 
+    var vPrev = visor.querySelector('.visor-prev');
+    var vNext = visor.querySelector('.visor-next');
+
+    // Los hermanos visibles de la misma galería: en el portafolio eso
+    // depende del filtro activo, así que se recalcula al abrir.
+    function vecinos(fig) {{
+      var caja = fig.parentNode, out = [];
+      var todos = caja.querySelectorAll(':scope > figure');
+      for (var i = 0; i < todos.length; i++) {{
+        if (!todos[i].hidden) out.push(todos[i]);
+      }}
+      return out;
+    }}
+
     function abrir(fig) {{
       var im = fig.querySelector('img');
       var cap = fig.querySelector('figcaption');
       vImg.src = im.currentSrc || im.src;
       vImg.alt = im.alt || '';
-      vCap.textContent = cap ? cap.textContent : '';
+      // El pie del portafolio son dos nodos (<b> y <span>); textContent los
+      // pega sin espacio. Si vienen separados, los unimos con un punto medio.
+      if (cap && cap.children.length > 1) {{
+        var trozos = [];
+        for (var q = 0; q < cap.children.length; q++) {{
+          var tx = cap.children[q].textContent.trim();
+          if (tx) trozos.push(tx);
+        }}
+        vCap.textContent = trozos.join(' · ');
+      }} else {{
+        vCap.textContent = cap ? cap.textContent : '';
+      }}
       visor.classList.add('abierto');
       document.body.style.overflow = 'hidden';
       abridor = fig;
+      var g = vecinos(fig);
+      var solo = g.length < 2;
+      vPrev.hidden = solo; vNext.hidden = solo;
       visor.querySelector('.visor-cerrar').focus();
+    }}
+
+    function mover(paso) {{
+      if (!abridor) return;
+      var g = vecinos(abridor);
+      var i = g.indexOf(abridor);
+      if (i < 0) return;
+      abrir(g[(i + paso + g.length) % g.length]);
     }}
     function cerrar() {{
       visor.classList.remove('abierto');
@@ -585,9 +716,25 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     visor.addEventListener('click', function (ev) {{
       if (ev.target === visor || ev.target.classList.contains('visor-cerrar')) cerrar();
     }});
+    vPrev.addEventListener('click', function (ev) {{ ev.stopPropagation(); mover(-1); }});
+    vNext.addEventListener('click', function (ev) {{ ev.stopPropagation(); mover(1); }});
     document.addEventListener('keydown', function (ev) {{
-      if (ev.key === 'Escape' && visor.classList.contains('abierto')) cerrar();
+      if (!visor.classList.contains('abierto')) return;
+      if (ev.key === 'Escape') cerrar();
+      else if (ev.key === 'ArrowLeft') mover(-1);
+      else if (ev.key === 'ArrowRight') mover(1);
     }});
+    // Deslizar en celular
+    var x0 = null;
+    visor.addEventListener('touchstart', function (ev) {{
+      x0 = ev.changedTouches[0].clientX;
+    }}, {{ passive: true }});
+    visor.addEventListener('touchend', function (ev) {{
+      if (x0 === null) return;
+      var d = ev.changedTouches[0].clientX - x0;
+      x0 = null;
+      if (Math.abs(d) > 45) mover(d < 0 ? 1 : -1);
+    }}, {{ passive: true }});
   }}
 
   // Encabezado compacto al bajar
@@ -820,6 +967,191 @@ def marcas(lang):
            if lang == "es" else "We work with professional product")
     return (f'<section class="marcas"><div class="wrap">'
             f'<p class="marcas-t">{e(tit)}</p><ul>{ms}</ul></div></section>')
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PORTAFOLIO — el trabajo real del salón, por categoría
+#
+# 70 fotos propias, del carrete del salón, no de Instagram: las de IG venían
+# a 640px y eso era el techo de calidad de todo el sitio.  Estas son 1200×1600
+# de origen; aquí salen recortadas a 3:4 (720×960) porque el cabello es
+# vertical y cuadrarlo corta justamente el trabajo que se quiere enseñar.
+#
+# La técnica de cada foto la clasifiqué mirándolas.  Balayage, babylights y
+# mechas se parecen mucho en foto: si alguna está mal etiquetada, se corrige
+# aquí y ya.  REVISAR con el salón.
+PF_TEC = ["balayage", "rubios", "morenas", "fantasia"]
+
+PF_ETI = {
+ "es": {"balayage": ("Balayage", "desde $2,300"),
+        "rubios":   ("Rubios y babylights", "desde $2,300"),
+        "morenas":  ("Color y alisado", "desde $800"),
+        "fantasia": ("Color fantasía", "cotización en el salón"),
+        "unas":     ("Uñas en gel", "desde $250"),
+        "pestanas": ("Extensiones de pestañas", "desde $750")},
+ "en": {"balayage": ("Balayage", "from $2,300"),
+        "rubios":   ("Blondes & babylights", "from $2,300"),
+        "morenas":  ("Color & smoothing", "from $800"),
+        "fantasia": ("Fantasy color", "quoted in the salon"),
+        "unas":     ("Gel nails", "from $250"),
+        "pestanas": ("Lash extensions", "from $750")},
+}
+
+PF_CAT = {
+ "es": [("cabello", "Cabello"), ("unas", "Uñas"), ("pestanas", "Pestañas")],
+ "en": [("cabello", "Hair"), ("unas", "Nails"), ("pestanas", "Lashes")],
+}
+
+PF_FILTRO = {
+ "es": [("", "Todo"), ("balayage", "Balayage"), ("rubios", "Rubios"),
+        ("morenas", "Morenas y alisados"), ("fantasia", "Color fantasía")],
+ "en": [("", "All"), ("balayage", "Balayage"), ("rubios", "Blondes"),
+        ("morenas", "Brunettes & smoothing"), ("fantasia", "Fantasy color")],
+}
+
+PORTAFOLIO = [
+  ("cabello-52", "cabello", "balayage"),
+  ("cabello-94", "cabello", "balayage"),
+  ("cabello-89", "cabello", "balayage"),
+  ("cabello-62", "cabello", "balayage"),
+  ("cabello-96", "cabello", "balayage"),
+  ("cabello-2", "cabello", "balayage"),
+  ("cabello-3", "cabello", "balayage"),
+  ("cabello-8", "cabello", "balayage"),
+  ("cabello-12", "cabello", "balayage"),
+  ("cabello-16", "cabello", "balayage"),
+  ("cabello-20", "cabello", "balayage"),
+  ("cabello-23", "cabello", "balayage"),
+  ("cabello-25", "cabello", "balayage"),
+  ("cabello-28", "cabello", "balayage"),
+  ("cabello-32", "cabello", "balayage"),
+  ("cabello-33", "cabello", "balayage"),
+  ("cabello-35", "cabello", "balayage"),
+  ("cabello-41", "cabello", "balayage"),
+  ("cabello-48", "cabello", "balayage"),
+  ("cabello-53", "cabello", "balayage"),
+  ("cabello-55", "cabello", "balayage"),
+  ("cabello-58", "cabello", "balayage"),
+  ("cabello-60", "cabello", "balayage"),
+  ("cabello-65", "cabello", "balayage"),
+  ("cabello-70", "cabello", "balayage"),
+  ("cabello-75", "cabello", "balayage"),
+  ("cabello-83", "cabello", "balayage"),
+  ("cabello-85", "cabello", "balayage"),
+  ("cabello-93", "cabello", "balayage"),
+  ("cabello-103", "cabello", "balayage"),
+  ("cabello-104", "cabello", "balayage"),
+  ("cabello-105", "cabello", "balayage"),
+  ("cabello-31", "cabello", "rubios"),
+  ("cabello-27", "cabello", "rubios"),
+  ("cabello-44", "cabello", "rubios"),
+  ("cabello-47", "cabello", "rubios"),
+  ("cabello-51", "cabello", "rubios"),
+  ("cabello-67", "cabello", "rubios"),
+  ("cabello-69", "cabello", "rubios"),
+  ("cabello-74", "cabello", "rubios"),
+  ("cabello-79", "cabello", "rubios"),
+  ("cabello-82", "cabello", "rubios"),
+  ("cabello-86", "cabello", "rubios"),
+  ("cabello-88", "cabello", "rubios"),
+  ("cabello-100", "cabello", "rubios"),
+  ("cabello-106", "cabello", "rubios"),
+  ("cabello-13", "cabello", "morenas"),
+  ("cabello-37", "cabello", "morenas"),
+  ("cabello-49", "cabello", "morenas"),
+  ("cabello-50", "cabello", "morenas"),
+  ("cabello-68", "cabello", "morenas"),
+  ("cabello-72", "cabello", "morenas"),
+  ("cabello-80", "cabello", "morenas"),
+  ("cabello-87", "cabello", "morenas"),
+  ("cabello-91", "cabello", "morenas"),
+  ("cabello-92", "cabello", "morenas"),
+  ("cabello-5", "cabello", "fantasia"),
+  ("cabello-6", "cabello", "fantasia"),
+  ("cabello-43", "cabello", "fantasia"),
+  ("cabello-63", "cabello", "fantasia"),
+  ("cabello-64", "cabello", "fantasia"),
+  ("cabello-107", "cabello", "fantasia"),
+  ("cabello-15", "cabello", "fantasia"),
+  ("unas-21", "unas", ""),
+  ("unas-38", "unas", ""),
+  ("unas-42", "unas", ""),
+  ("unas-90", "unas", ""),
+  ("unas-99", "unas", ""),
+  ("unas-102", "unas", ""),
+  ("pestanas-98", "pestanas", ""),
+]
+
+def _pf_alt(lang, cat, tec):
+    t = PF_ETI[lang][tec or cat][0]
+    return (f"{t} hecho en Stilo Salón, Roma Norte, CDMX" if lang == "es"
+            else f"{t} done at Stilo Salón, Roma Norte, Mexico City")
+
+def portafolio_html(lang):
+    cuentas = {}
+    for _, cat, _ in PORTAFOLIO:
+        cuentas[cat] = cuentas.get(cat, 0) + 1
+
+    tabs = "".join(
+      f'<button class="pf-tab{" activo" if i == 0 else ""}" type="button" '
+      f'data-cat="{c}" aria-pressed="{"true" if i == 0 else "false"}">'
+      f'{e(n)} <span class="pf-n">{cuentas.get(c, 0)}</span></button>'
+      for i, (c, n) in enumerate(PF_CAT[lang]))
+
+    filtros = "".join(
+      f'<button class="pf-f{" activo" if t == "" else ""}" type="button" '
+      f'data-tec="{t}" aria-pressed="{"true" if t == "" else "false"}">{e(n)}</button>'
+      for t, n in PF_FILTRO[lang])
+
+    piezas = []
+    for f, cat, tec in PORTAFOLIO:
+        titulo, precio = PF_ETI[lang][tec or cat]
+        piezas.append(
+          f'<figure data-cat="{cat}" data-tec="{tec}"'
+          f'{"" if cat == "cabello" else " hidden"}>'
+          f'<picture>'
+          f'<source srcset="/assets/pf/{f}.webp" type="image/webp">'
+          f'<img src="/assets/pf/{f}.jpg" width="720" height="960" '
+          f'alt="{e(_pf_alt(lang, cat, tec))}" loading="lazy" decoding="async">'
+          f'</picture>'
+          f'<figcaption><b>{e(titulo)}</b><span>{e(precio)}</span></figcaption>'
+          f'</figure>')
+
+    vacio = ("Todavía no hay fotos en esta categoría."
+             if lang == "es" else "No photos in this category yet.")
+    return (f'<div class="pf">'
+            f'<div class="pf-tabs">{tabs}</div>'
+            f'<div class="pf-filtros">{filtros}</div>'
+            f'<div class="pf-rejilla js-reveal">{"".join(piezas)}</div>'
+            f'<p class="pf-vacio" hidden>{e(vacio)}</p>'
+            f'</div>')
+
+def portafolio_body(lang):
+    t = T[lang]
+    if lang == "es":
+        eyebrow = "Nuestro trabajo"
+        h1 = "Portafolio"
+        lede = ("Todo lo que ves aquí salió de esta silla, en Guadalajara 70-B. "
+                "Sin filtros de stock ni fotos compradas: son clientas reales, "
+                "con el precio publicado de cada servicio.")
+        cierre = "¿Viste algo que te gustó? Te lo hacemos."
+    else:
+        eyebrow = "Our work"
+        h1 = "Portfolio"
+        lede = ("Everything here came out of this chair, at Guadalajara 70-B. "
+                "No stock photos, no bought images: real clients, with the "
+                "published price of each service.")
+        cierre = "See something you like? We'll do it for you."
+    return (f'<section class="pf-cab"><div class="wrap">'
+            f'<p class="eyebrow">{e(eyebrow)}</p><h1>{e(h1)}</h1>'
+            f'<p class="lede">{e(lede)}</p></div></section>'
+            f'<section class="pf-sec"><div class="wrap">{portafolio_html(lang)}</div></section>'
+            f'<section class="alt"><div class="wrap" style="text-align:center">'
+            f'<p class="pf-cierre">{e(cierre)}</p>'
+            f'<div class="btn-row" style="justify-content:center">'
+            f'<a class="btn btn-primary" href="{BOOKING}" target="_blank" rel="noopener">{t["book"]}</a>'
+            f'<a class="btn btn-wa" href="{WA}" rel="noopener">{t["book_wa"]}</a>'
+            f'</div></div></section>')
 
 
 # ── Promoción vigente ────────────────────────────────────────────────
@@ -1371,9 +1703,12 @@ def hair_guide(lang):
              ("Hair botox", "$1,800", "1 h", "Does not straighten: it fills and repairs.",
               "Your hair is porous or damaged from bleaching.")])
     th = ("Servicio","Precio","Tiempo","Qué hace","Te conviene si") if es else ("Service","Price","Time","What it does","Choose it if")
-    o.append('<table class="price"><thead><tr>' + "".join(f'<th>{x}</th>' for x in th) + '</tr></thead><tbody>' +
+    # Cinco columnas no caben en un celular. Envuelta, la que se desliza es
+    # la tabla y no la página entera — que es lo que pasaba antes.
+    o.append('<div class="tabla-ancha">'
+      '<table class="price"><thead><tr>' + "".join(f'<th>{x}</th>' for x in th) + '</tr></thead><tbody>' +
       "".join(f'<tr><td class="svc">{a}</td><td class="amt">{b}</td><td class="dur">{c}</td>'
-              f'<td>{d}</td><td>{ee}</td></tr>' for a,b,c,d,ee in rows) + '</tbody></table>')
+              f'<td>{d}</td><td>{ee}</td></tr>' for a,b,c,d,ee in rows) + '</tbody></table></div>')
     o.append('<p>' + ("Si no sabes cuál te toca, mándanos una foto por WhatsApp. A veces la respuesta honesta es un "
       "<strong>tratamiento profundo hidratante</strong> de $520 y no un alisado de $2,500 — y preferimos decírtelo antes que cobrarte de más."
       if es else
@@ -1604,7 +1939,11 @@ def galeria_html(key, lang):
       f'<figcaption>{e(cap_es if es else cap_en)}</figcaption></figure>'
       for f, alt_es, cap_es, alt_en, cap_en in items)
     titulo = "Trabajos hechos aquí" if es else "Work done here"
-    return f'<h2>{titulo}</h2><div class="galeria js-reveal">{figs}</div>'
+    ancla = {"hair": "cabello", "nails": "unas", "lashes": "pestanas"}[key]
+    destino = ("/portafolio.html#" if es else "/en/portfolio.html#") + ancla
+    masq = ("Ver todo el portafolio" if es else "See the full portfolio")
+    return (f'<h2>{titulo}</h2><div class="galeria js-reveal">{figs}</div>'
+            f'<p class="g-mas"><a href="{destino}">{e(masq)} &rarr;</a></p>')
 
 GUIA_META = {
  "lashes": dict(
@@ -1728,6 +2067,23 @@ def main():
             log.append(write(slug.lstrip("/"), page(lang, slug, d["title"], d["desc"],
                                                     cuerpo, alt, salon_ld(lang) + FAQ_G[key](lang))))
 
+    # Portafolio
+    for lang in ("es", "en"):
+        slug = "/portafolio.html" if lang == "es" else "/en/portfolio.html"
+        alt  = SITE + ("/en/portfolio.html" if lang == "es" else "/portafolio.html")
+        if lang == "es":
+            title = "Portafolio | Stilo Salón Roma Norte, CDMX — Balayage, Color y Uñas"
+            desc = ("Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, "
+                    "alisados, color fantasía, uñas en gel y extensiones de pestañas. "
+                    "Cada foto con el precio publicado del servicio.")
+        else:
+            title = "Portfolio | Stilo Salón Roma Norte, Mexico City — Balayage, Color & Nails"
+            desc = ("Real work from Stilo Salón in Roma Norte: balayage, blondes, "
+                    "smoothing, fantasy color, gel nails and lash extensions. "
+                    "Every photo with the service's published price.")
+        log.append(write(slug.lstrip("/"), page(lang, slug, title, desc,
+                                                portafolio_body(lang), alt, salon_ld(lang))))
+
     # Full price list
     allk = list(PRICES.keys())
     for lang in ("es", "en"):
@@ -1781,6 +2137,7 @@ def main():
     # sitemap / robots / Cloudflare
     urls = ["/", "/cabello.html", "/unas.html", "/pestanas-y-cejas.html", "/precios.html",
             "/guia-extensiones-de-pestanas.html", "/guia-color-y-alisados.html", "/guia-unas.html",
+            "/portafolio.html", "/en/portfolio.html",
             "/aviso-de-privacidad.html", "/en/", "/en/hair.html", "/en/nails.html",
             "/en/lashes-and-brows.html", "/en/pricing.html", "/en/eyelash-extensions-guide.html",
             "/en/color-and-smoothing-guide.html", "/en/nails-guide.html", "/en/privacy.html"]
