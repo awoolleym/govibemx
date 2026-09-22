@@ -266,7 +266,7 @@
     var piezas   = rejilla.querySelectorAll('figure');
     var pestanas = pf.querySelectorAll('.pf-tab');
     var chips    = pf.querySelectorAll('.pf-f');
-    var cajaF    = pf.querySelector('.pf-filtros');
+    var cajasF   = pf.querySelectorAll('.pf-filtros');
     var vacio    = pf.querySelector('.pf-vacio');
     var cat = 'cabello', tec = '';
 
@@ -281,8 +281,17 @@
         // entrarían en opacidad 0 y se quedarían invisibles.
         if (ok) { f.classList.add('seen'); n++; }
       }
-      cajaF.hidden = (cat !== 'cabello');
+      // Cada categoría tiene su propio juego de chips; Pestañas no tiene.
+      for (var c = 0; c < cajasF.length; c++) {
+        cajasF[c].hidden = (cajasF[c].getAttribute('data-cat') !== cat);
+      }
       vacio.hidden = (n > 0);
+    }
+
+    // Devuelve el chip "Todo" de la categoría activa, o null si no hay chips.
+    function chipTodo(c) {
+      var caja = pf.querySelector('.pf-filtros[data-cat="' + c + '"]');
+      return caja ? caja.querySelector('.pf-f[data-tec=""]') : null;
     }
 
     function transicion() {
@@ -317,9 +326,10 @@
       (function (ch) {
         ch.addEventListener('click', function () {
           if (ch.classList.contains('activo')) return;
-          for (var j = 0; j < chips.length; j++) {
-            chips[j].classList.remove('activo');
-            chips[j].setAttribute('aria-pressed', 'false');
+          var hermanos = ch.parentNode.querySelectorAll('.pf-f');
+          for (var j = 0; j < hermanos.length; j++) {
+            hermanos[j].classList.remove('activo');
+            hermanos[j].setAttribute('aria-pressed', 'false');
           }
           ch.classList.add('activo'); ch.setAttribute('aria-pressed', 'true');
           tec = ch.getAttribute('data-tec');
@@ -337,10 +347,11 @@
       if (tb) { tb.click(); return; }
       var ch = pf.querySelector('.pf-f[data-tec="' + h + '"]');
       if (ch) {
-        // Las técnicas sólo existen dentro de Cabello: si la categoría
-        // activa es otra, el filtro dejaría la rejilla en blanco.
-        var cab = pf.querySelector('.pf-tab[data-cat="cabello"]');
-        if (cab) cab.click();
+        // Cada técnica vive dentro de una categoría: hay que activar la suya
+        // primero o el filtro dejaría la rejilla en blanco.
+        var dueno = ch.parentNode.getAttribute('data-cat');
+        var tb2 = pf.querySelector('.pf-tab[data-cat="' + dueno + '"]');
+        if (tb2) tb2.click();
         ch.click();
       }
     }

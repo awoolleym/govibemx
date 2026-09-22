@@ -551,7 +551,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     var piezas   = rejilla.querySelectorAll('figure');
     var pestanas = pf.querySelectorAll('.pf-tab');
     var chips    = pf.querySelectorAll('.pf-f');
-    var cajaF    = pf.querySelector('.pf-filtros');
+    var cajasF   = pf.querySelectorAll('.pf-filtros');
     var vacio    = pf.querySelector('.pf-vacio');
     var cat = 'cabello', tec = '';
 
@@ -566,8 +566,17 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         // entrarían en opacidad 0 y se quedarían invisibles.
         if (ok) {{ f.classList.add('seen'); n++; }}
       }}
-      cajaF.hidden = (cat !== 'cabello');
+      // Cada categoría tiene su propio juego de chips; Pestañas no tiene.
+      for (var c = 0; c < cajasF.length; c++) {{
+        cajasF[c].hidden = (cajasF[c].getAttribute('data-cat') !== cat);
+      }}
       vacio.hidden = (n > 0);
+    }}
+
+    // Devuelve el chip "Todo" de la categoría activa, o null si no hay chips.
+    function chipTodo(c) {{
+      var caja = pf.querySelector('.pf-filtros[data-cat="' + c + '"]');
+      return caja ? caja.querySelector('.pf-f[data-tec=""]') : null;
     }}
 
     function transicion() {{
@@ -602,9 +611,10 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
       (function (ch) {{
         ch.addEventListener('click', function () {{
           if (ch.classList.contains('activo')) return;
-          for (var j = 0; j < chips.length; j++) {{
-            chips[j].classList.remove('activo');
-            chips[j].setAttribute('aria-pressed', 'false');
+          var hermanos = ch.parentNode.querySelectorAll('.pf-f');
+          for (var j = 0; j < hermanos.length; j++) {{
+            hermanos[j].classList.remove('activo');
+            hermanos[j].setAttribute('aria-pressed', 'false');
           }}
           ch.classList.add('activo'); ch.setAttribute('aria-pressed', 'true');
           tec = ch.getAttribute('data-tec');
@@ -622,10 +632,11 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
       if (tb) {{ tb.click(); return; }}
       var ch = pf.querySelector('.pf-f[data-tec="' + h + '"]');
       if (ch) {{
-        // Las técnicas sólo existen dentro de Cabello: si la categoría
-        // activa es otra, el filtro dejaría la rejilla en blanco.
-        var cab = pf.querySelector('.pf-tab[data-cat="cabello"]');
-        if (cab) cab.click();
+        // Cada técnica vive dentro de una categoría: hay que activar la suya
+        // primero o el filtro dejaría la rejilla en blanco.
+        var dueno = ch.parentNode.getAttribute('data-cat');
+        var tb2 = pf.querySelector('.pf-tab[data-cat="' + dueno + '"]');
+        if (tb2) tb2.click();
         ch.click();
       }}
     }}
@@ -987,12 +998,16 @@ PF_ETI = {
         "rubios":   ("Rubios y babylights", "desde $2,300"),
         "morenas":  ("Color y alisado", "desde $800"),
         "fantasia": ("Color fantasía", "cotización en el salón"),
+        "diseno":   ("Uñas con diseño", "desde $250"),
+        "tono":     ("Uñas de un tono", "desde $250"),
         "unas":     ("Uñas en gel", "desde $250"),
         "pestanas": ("Extensiones de pestañas", "desde $750")},
  "en": {"balayage": ("Balayage", "from $2,300"),
         "rubios":   ("Blondes & babylights", "from $2,300"),
         "morenas":  ("Color & smoothing", "from $800"),
         "fantasia": ("Fantasy color", "quoted in the salon"),
+        "diseno":   ("Nail art", "from $250"),
+        "tono":     ("Single-shade nails", "from $250"),
         "unas":     ("Gel nails", "from $250"),
         "pestanas": ("Lash extensions", "from $750")},
 }
@@ -1002,19 +1017,19 @@ PF_CAT = {
  "en": [("cabello", "Hair"), ("unas", "Nails"), ("pestanas", "Lashes")],
 }
 
+# Un juego de filtros por categoría.  Pestañas no lleva: clásicas, híbridas
+# y volumen ruso no se distinguen con seguridad en una foto, y prefiero no
+# etiquetar mal un servicio que cuesta $750 a $1,200.
 PF_FILTRO = {
- "es": [("", "Todo"), ("balayage", "Balayage"), ("rubios", "Rubios"),
-        ("morenas", "Morenas y alisados"), ("fantasia", "Color fantasía")],
- "en": [("", "All"), ("balayage", "Balayage"), ("rubios", "Blondes"),
-        ("morenas", "Brunettes & smoothing"), ("fantasia", "Fantasy color")],
+ "es": {"cabello": [("", "Todo"), ("balayage", "Balayage"), ("rubios", "Rubios"),
+                    ("morenas", "Morenas y alisados"), ("fantasia", "Color fantasía")],
+        "unas":    [("", "Todo"), ("diseno", "Con diseño"), ("tono", "De un tono")]},
+ "en": {"cabello": [("", "All"), ("balayage", "Balayage"), ("rubios", "Blondes"),
+                    ("morenas", "Brunettes & smoothing"), ("fantasia", "Fantasy color")],
+        "unas":    [("", "All"), ("diseno", "Nail art"), ("tono", "Single shade")]},
 }
 
 PORTAFOLIO = [
-  ("cabello-52", "cabello", "balayage"),
-  ("cabello-94", "cabello", "balayage"),
-  ("cabello-89", "cabello", "balayage"),
-  ("cabello-62", "cabello", "balayage"),
-  ("cabello-96", "cabello", "balayage"),
   ("cabello-2", "cabello", "balayage"),
   ("cabello-3", "cabello", "balayage"),
   ("cabello-8", "cabello", "balayage"),
@@ -1029,21 +1044,28 @@ PORTAFOLIO = [
   ("cabello-35", "cabello", "balayage"),
   ("cabello-41", "cabello", "balayage"),
   ("cabello-48", "cabello", "balayage"),
+  ("cabello-52", "cabello", "balayage"),
   ("cabello-53", "cabello", "balayage"),
   ("cabello-55", "cabello", "balayage"),
   ("cabello-58", "cabello", "balayage"),
   ("cabello-60", "cabello", "balayage"),
+  ("cabello-62", "cabello", "balayage"),
   ("cabello-65", "cabello", "balayage"),
   ("cabello-70", "cabello", "balayage"),
   ("cabello-75", "cabello", "balayage"),
   ("cabello-83", "cabello", "balayage"),
   ("cabello-85", "cabello", "balayage"),
+  ("cabello-89", "cabello", "balayage"),
   ("cabello-93", "cabello", "balayage"),
+  ("cabello-94", "cabello", "balayage"),
+  ("cabello-96", "cabello", "balayage"),
   ("cabello-103", "cabello", "balayage"),
   ("cabello-104", "cabello", "balayage"),
   ("cabello-105", "cabello", "balayage"),
-  ("cabello-31", "cabello", "rubios"),
+  ("cabello-115", "cabello", "balayage"),
+  ("cabello-188", "cabello", "balayage"),
   ("cabello-27", "cabello", "rubios"),
+  ("cabello-31", "cabello", "rubios"),
   ("cabello-44", "cabello", "rubios"),
   ("cabello-47", "cabello", "rubios"),
   ("cabello-51", "cabello", "rubios"),
@@ -1056,6 +1078,8 @@ PORTAFOLIO = [
   ("cabello-88", "cabello", "rubios"),
   ("cabello-100", "cabello", "rubios"),
   ("cabello-106", "cabello", "rubios"),
+  ("cabello-174", "cabello", "rubios"),
+  ("cabello-180", "cabello", "rubios"),
   ("cabello-13", "cabello", "morenas"),
   ("cabello-37", "cabello", "morenas"),
   ("cabello-49", "cabello", "morenas"),
@@ -1068,18 +1092,74 @@ PORTAFOLIO = [
   ("cabello-92", "cabello", "morenas"),
   ("cabello-5", "cabello", "fantasia"),
   ("cabello-6", "cabello", "fantasia"),
+  ("cabello-15", "cabello", "fantasia"),
   ("cabello-43", "cabello", "fantasia"),
   ("cabello-63", "cabello", "fantasia"),
   ("cabello-64", "cabello", "fantasia"),
   ("cabello-107", "cabello", "fantasia"),
-  ("cabello-15", "cabello", "fantasia"),
-  ("unas-21", "unas", ""),
-  ("unas-38", "unas", ""),
-  ("unas-42", "unas", ""),
-  ("unas-90", "unas", ""),
-  ("unas-99", "unas", ""),
-  ("unas-102", "unas", ""),
+  ("unas-21", "unas", "diseno"),
+  ("unas-38", "unas", "diseno"),
+  ("unas-99", "unas", "diseno"),
+  ("unas-102", "unas", "diseno"),
+  ("unas-108", "unas", "diseno"),
+  ("unas-124", "unas", "diseno"),
+  ("unas-125", "unas", "diseno"),
+  ("unas-128", "unas", "diseno"),
+  ("unas-134", "unas", "diseno"),
+  ("unas-137", "unas", "diseno"),
+  ("unas-139", "unas", "diseno"),
+  ("unas-140", "unas", "diseno"),
+  ("unas-141", "unas", "diseno"),
+  ("unas-145", "unas", "diseno"),
+  ("unas-149", "unas", "diseno"),
+  ("unas-153", "unas", "diseno"),
+  ("unas-157", "unas", "diseno"),
+  ("unas-158", "unas", "diseno"),
+  ("unas-167", "unas", "diseno"),
+  ("unas-172", "unas", "diseno"),
+  ("unas-176", "unas", "diseno"),
+  ("unas-179", "unas", "diseno"),
+  ("unas-186", "unas", "diseno"),
+  ("unas-192", "unas", "diseno"),
+  ("unas-201", "unas", "diseno"),
+  ("unas-42", "unas", "tono"),
+  ("unas-90", "unas", "tono"),
+  ("unas-116", "unas", "tono"),
+  ("unas-120", "unas", "tono"),
+  ("unas-126", "unas", "tono"),
+  ("unas-154", "unas", "tono"),
+  ("unas-168", "unas", "tono"),
+  ("unas-171", "unas", "tono"),
+  ("unas-198", "unas", "tono"),
+  ("unas-210", "unas", "tono"),
+  ("unas-217", "unas", "tono"),
   ("pestanas-98", "pestanas", ""),
+  ("pestanas-110", "pestanas", ""),
+  ("pestanas-112", "pestanas", ""),
+  ("pestanas-113", "pestanas", ""),
+  ("pestanas-114", "pestanas", ""),
+  ("pestanas-118", "pestanas", ""),
+  ("pestanas-119", "pestanas", ""),
+  ("pestanas-123", "pestanas", ""),
+  ("pestanas-129", "pestanas", ""),
+  ("pestanas-132", "pestanas", ""),
+  ("pestanas-133", "pestanas", ""),
+  ("pestanas-159", "pestanas", ""),
+  ("pestanas-163", "pestanas", ""),
+  ("pestanas-164", "pestanas", ""),
+  ("pestanas-169", "pestanas", ""),
+  ("pestanas-175", "pestanas", ""),
+  ("pestanas-178", "pestanas", ""),
+  ("pestanas-183", "pestanas", ""),
+  ("pestanas-184", "pestanas", ""),
+  ("pestanas-189", "pestanas", ""),
+  ("pestanas-194", "pestanas", ""),
+  ("pestanas-195", "pestanas", ""),
+  ("pestanas-196", "pestanas", ""),
+  ("pestanas-205", "pestanas", ""),
+  ("pestanas-209", "pestanas", ""),
+  ("pestanas-213", "pestanas", ""),
+  ("pestanas-216", "pestanas", ""),
 ]
 
 def _pf_alt(lang, cat, tec):
@@ -1099,9 +1179,13 @@ def portafolio_html(lang):
       for i, (c, n) in enumerate(PF_CAT[lang]))
 
     filtros = "".join(
-      f'<button class="pf-f{" activo" if t == "" else ""}" type="button" '
-      f'data-tec="{t}" aria-pressed="{"true" if t == "" else "false"}">{e(n)}</button>'
-      for t, n in PF_FILTRO[lang])
+      f'<div class="pf-filtros" data-cat="{cat}"{"" if i == 0 else " hidden"}>' +
+      "".join(
+        f'<button class="pf-f{" activo" if t == "" else ""}" type="button" '
+        f'data-tec="{t}" aria-pressed="{"true" if t == "" else "false"}">{e(n)}</button>'
+        for t, n in chips) +
+      '</div>'
+      for i, (cat, chips) in enumerate(PF_FILTRO[lang].items()))
 
     piezas = []
     for f, cat, tec in PORTAFOLIO:
@@ -1121,7 +1205,7 @@ def portafolio_html(lang):
              if lang == "es" else "No photos in this category yet.")
     return (f'<div class="pf">'
             f'<div class="pf-tabs">{tabs}</div>'
-            f'<div class="pf-filtros">{filtros}</div>'
+            f'<div class="pf-filtros-caja">{filtros}</div>'
             f'<div class="pf-rejilla js-reveal">{"".join(piezas)}</div>'
             f'<p class="pf-vacio" hidden>{e(vacio)}</p>'
             f'</div>')

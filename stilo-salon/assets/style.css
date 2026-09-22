@@ -1642,3 +1642,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 @media (max-width: 560px) {
   .tabla-ancha { margin-inline: calc(var(--gut, 20px) * -1); padding-inline: var(--gut, 20px); }
 }
+
+/* Cada categoría trae su propia fila de chips; sólo se ve la de la activa. */
+.pf-filtros-caja { min-height: 0; }
+.pf-filtros[hidden] { display: none; }
