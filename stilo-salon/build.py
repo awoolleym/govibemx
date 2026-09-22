@@ -841,10 +841,10 @@ PROMO = dict(
   hasta  = "2026-09-30",
   tema   = "patrio",
   url    = None,          # None = WhatsApp; o una URL propia
-  es = dict(etiqueta="Mes patrio",
+  es = dict(etiqueta="🇲🇽 Mes patrio",
             texto="Pregunta por nuestra promoción de septiembre",
             cta="Preguntar por WhatsApp"),
-  en = dict(etiqueta="Independence month",
+  en = dict(etiqueta="🇲🇽 Independence month",
             texto="Ask about our September offer",
             cta="Ask on WhatsApp"),
 )

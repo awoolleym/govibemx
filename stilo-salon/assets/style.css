@@ -1489,8 +1489,32 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 /* Tema de temporada: SOLO cambia el fondo de esta franja. Vestir el
    sitio entero de temporada se lee barato y hay que acordarse de
    quitarlo. */
-.promo-patrio { background: #24503c; }
-.promo-patrio .promo-tag { border-color: rgba(255,255,255,.4); }
+/* Mes patrio: tricolor de verdad, con los tonos oficiales de la
+   bandera (#006847 · blanco · #CE1126). El texto vive en la franja
+   blanca del centro, así que se lee en tinta y no pierde contraste;
+   el verde y el rojo quedan de cabos, como un listón. */
+.promo-patrio {
+  background: linear-gradient(90deg,
+    #006847 0 12%, #ffffff 12% 88%, #CE1126 88% 100%);
+  color: var(--ink);
+  border-bottom: 1px solid rgba(21,25,29,.10);
+}
+.promo-patrio .promo-tag {
+  color: #006847; border-color: rgba(0,104,71,.45);
+  background: rgba(0,104,71,.06);
+}
+.promo-patrio .promo-txt { color: var(--ink-soft); }
+.promo-patrio .promo-cta {
+  color: #9b0d1c; border-bottom-color: rgba(155,13,28,.45);
+}
+.promo-patrio .promo-cta:hover { border-bottom-color: #9b0d1c; }
+@media (max-width: 560px) {
+  /* los cabos se encogen para que el texto no se ahogue */
+  .promo-patrio {
+    background: linear-gradient(90deg,
+      #006847 0 18px, #ffffff 18px calc(100% - 18px), #CE1126 calc(100% - 18px) 100%);
+  }
+}
 
 @media (max-width: 560px) {
   .promo-in { padding-top: .55rem; padding-bottom: .55rem; font-size: .8rem; }
