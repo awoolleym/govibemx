@@ -106,6 +106,36 @@
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   });
 
+  // Inclinación 3D de las tarjetas de servicio.
+  // Antes había translateZ pero sin perspectiva en el contenedor, así
+  // que no se movía nada. Ahora la rejilla tiene perspectiva y cada
+  // tarjeta gira siguiendo al cursor, con 7 grados de tope.
+  var tarjetas = document.querySelectorAll('.grid.g4 .card');
+  if (tarjetas.length && window.matchMedia('(hover: hover)').matches
+      && window.matchMedia('(min-width: 700px)').matches) {
+    for (var ti = 0; ti < tarjetas.length; ti++) (function (c) {
+      var pend = false;
+      c.addEventListener('mousemove', function (ev) {
+        if (pend) return;
+        pend = true;
+        requestAnimationFrame(function () {
+          var r = c.getBoundingClientRect();
+          var px = (ev.clientX - r.left) / r.width  - .5;
+          var py = (ev.clientY - r.top)  / r.height - .5;
+          c.style.setProperty('--ry', (px * 14).toFixed(2) + 'deg');
+          c.style.setProperty('--rx', (-py * 14).toFixed(2) + 'deg');
+          c.style.setProperty('--mx', (px * 100 + 50).toFixed(1) + '%');
+          c.style.setProperty('--my', (py * 100 + 50).toFixed(1) + '%');
+          pend = false;
+        });
+      });
+      c.addEventListener('mouseleave', function () {
+        c.style.setProperty('--ry', '0deg');
+        c.style.setProperty('--rx', '0deg');
+      });
+    })(tarjetas[ti]);
+  }
+
   // Entrar por un enlace debe dejarte arriba.
   // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
   // en una página que ya habías abierto, y al volver a entrar por un

@@ -392,6 +392,36 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     b.setAttribute('aria-expanded', o ? 'true' : 'false');
   }});
 
+  // Inclinación 3D de las tarjetas de servicio.
+  // Antes había translateZ pero sin perspectiva en el contenedor, así
+  // que no se movía nada. Ahora la rejilla tiene perspectiva y cada
+  // tarjeta gira siguiendo al cursor, con 7 grados de tope.
+  var tarjetas = document.querySelectorAll('.grid.g4 .card');
+  if (tarjetas.length && window.matchMedia('(hover: hover)').matches
+      && window.matchMedia('(min-width: 700px)').matches) {{
+    for (var ti = 0; ti < tarjetas.length; ti++) (function (c) {{
+      var pend = false;
+      c.addEventListener('mousemove', function (ev) {{
+        if (pend) return;
+        pend = true;
+        requestAnimationFrame(function () {{
+          var r = c.getBoundingClientRect();
+          var px = (ev.clientX - r.left) / r.width  - .5;
+          var py = (ev.clientY - r.top)  / r.height - .5;
+          c.style.setProperty('--ry', (px * 14).toFixed(2) + 'deg');
+          c.style.setProperty('--rx', (-py * 14).toFixed(2) + 'deg');
+          c.style.setProperty('--mx', (px * 100 + 50).toFixed(1) + '%');
+          c.style.setProperty('--my', (py * 100 + 50).toFixed(1) + '%');
+          pend = false;
+        }});
+      }});
+      c.addEventListener('mouseleave', function () {{
+        c.style.setProperty('--ry', '0deg');
+        c.style.setProperty('--rx', '0deg');
+      }});
+    }})(tarjetas[ti]);
+  }}
+
   // Entrar por un enlace debe dejarte arriba.
   // El navegador —y el visor de vista previa— recuerdan dónde te quedaste
   // en una página que ya habías abierto, y al volver a entrar por un
@@ -821,8 +851,11 @@ def home_body(lang):
       f'<article class="card">'
       f'<a class="card-foto" href="{h}" tabindex="-1" aria-hidden="true">'
       f'<img src="/assets/card-{k}.jpg" width="560" height="560" alt="" loading="lazy">'
-      f'<span class="card-ico">{icono(k)}</span></a>'
-      f'<div class="card-cuerpo"><h3>{e(n)}</h3><p>{e(d)}</p>'
+      f'</a>'
+      # El icono sale del marco de la foto y se monta a caballo sobre el
+      # canto: dentro de la imagen se perdía contra el trabajo.
+      f'<div class="card-cuerpo"><span class="card-ico">{icono(k)}</span>'
+      f'<h3>{e(n)}</h3><p>{e(d)}</p>'
       f'<p class="from">{e(p)}</p><a class="more" href="{h}">{e(cta)}</a></div></article>'
       for k, n, d, p, h, cta in c["svc_cards"])
     why = "".join(f'<div><h3>{e(h)}</h3><p>{e(b)}</p></div>' for h, b in c["why"])

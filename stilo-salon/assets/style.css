@@ -1409,3 +1409,36 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   text-decoration: none; letter-spacing: .01em;
 }
 .hero-tel:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TARJETAS DE SERVICIO — icono a caballo y 3D real
+   El icono estaba dentro de la foto y se perdía contra el trabajo.
+   Ahora se monta sobre el canto: mitad en la imagen, mitad en blanco,
+   que es donde el brillo rosa se ve.
+   ═══════════════════════════════════════════════════════════════════ */
+.card-cuerpo { padding-top: 0; }
+.card-ico {
+  position: relative; left: auto; bottom: auto;
+  margin: -39px 0 .7rem;              /* medio círculo sobre la foto */
+  z-index: 2;
+}
+@media (max-width: 520px) { .card-ico { margin-top: -32px; } }
+
+/* — Inclinación 3D en las cuatro — */
+.grid.g4 { perspective: 1100px; }
+.grid.g4 .card {
+  --rx: 0deg; --ry: 0deg;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .45s cubic-bezier(.16,1,.3,1),
+              box-shadow .35s ease, border-color .35s ease;
+  will-change: transform;
+}
+/* el título y el precio despegan del plano: sin perspectiva en la
+   rejilla, el translateZ que ya estaba no hacía nada */
+.grid.g4 .card:hover h3   { transform: translateZ(34px); }
+.grid.g4 .card:hover .from { transform: translateZ(24px); }
+.grid.g4 .card:hover .card-ico { transform: translateZ(46px) scale(1.06); }
+
+@media (prefers-reduced-motion: reduce) {
+  .grid.g4 .card { transform: none; transition: none; }
+}
