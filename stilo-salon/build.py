@@ -296,6 +296,14 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     canon = f"{SITE}{home}" if slug in ("", "index") else f"{SITE}{slug}"
     es_href = canon if lang == "es" else alt_href
     en_href = alt_href if lang == "es" else canon
+    # Los <link rel="alternate"> del head van absolutos porque Google lo
+    # exige.  Los enlaces que el visitante pica, no: si el botón EN apunta
+    # a https://stilo-salon.com/en/, te saca del servidor donde estás
+    # —una preview, una prueba, un dominio nuevo todavía sin conectar— y
+    # te manda al dominio real, que puede estar sirviendo otra cosa.
+    # En ruta relativa funciona en cualquier servidor, el de verdad incluido.
+    _ruta = lambda u: u[len(SITE):] or "/"
+    es_ruta, en_ruta = _ruta(es_href), _ruta(en_href)
     def _link(h, l):
         url = BOOKING if h == "__BOOK__" else h
         rel = ' target="_blank" rel="noopener"' if h == "__BOOK__" else ''
@@ -340,8 +348,8 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     <nav class="nav" id="nav" aria-label="{'Principal' if lang=='es' else 'Main'}">
       {nav}
       <div class="lang">
-        <a href="{es_href}" hreflang="es-mx"{' aria-current="true"' if lang=='es' else ''}>ES</a>
-        <a href="{en_href}" hreflang="en"{' aria-current="true"' if lang=='en' else ''}>EN</a>
+        <a href="{es_ruta}" hreflang="es-mx"{' aria-current="true"' if lang=='es' else ''}>ES</a>
+        <a href="{en_ruta}" hreflang="en"{' aria-current="true"' if lang=='en' else ''}>EN</a>
       </div>
     </nav>
   </div>
@@ -380,7 +388,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     </div>
     <div class="foot-bottom">
       <span>© 2026 Stilo Salón. {t['rights']}</span>
-      <span><a href="{'/aviso-de-privacidad.html' if lang=='es' else '/en/privacy.html'}">{t['privacy']}</a> · <a href="{en_href if lang=='es' else es_href}">{t['other']}</a></span>
+      <span><a href="{'/aviso-de-privacidad.html' if lang=='es' else '/en/privacy.html'}">{t['privacy']}</a> · <a href="{en_ruta if lang=='es' else es_ruta}">{t['other']}</a></span>
     </div>
   </div>
 </footer>
