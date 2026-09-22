@@ -56,3 +56,24 @@ el posicionamiento que ya existe.
 - [ ] Confirmar los años en el mercado: el texto dice "más de diez años".
 - [ ] Decidir si se suben los precios de corte y color antes de publicar
       (ver el estudio de mercado) — si sí, se edita `PRICES` y se regenera.
+
+## Marca de agua
+
+Las fotos del portafolio y de las galerías llevan el logo quemado dentro del
+JPEG. No es un logo puesto encima con CSS: eso no protege nada, porque clic
+derecho → guardar imagen baja el archivo limpio.
+
+```bash
+python3 marca_agua.py --muestra   # 4 fotos a /tmp para ver cómo queda
+python3 marca_agua.py             # aplica a las 130 + las 16 de galerías
+```
+
+Los tres números que controlan todo están arriba del script: `ANCHO`,
+`OPACIDAD` y `MARGEN`. `ESQUINA` decide de qué lado va por categoría — en
+uñas va arriba porque casi todas esas fotos ya llevan la tarjeta física del
+salón abajo.
+
+El script siempre parte de los originales limpios (`_fotos3/`, que está
+fuera de git; la fuente real es la carpeta "Fotos Web — Stilo Salón" del
+Drive) y nunca de `assets/`, para que correrlo dos veces no encime dos
+marcas. Verificado: dos corridas seguidas dan archivos idénticos.
