@@ -1515,36 +1515,37 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 /* Tema de temporada: SOLO cambia el fondo de esta franja. Vestir el
    sitio entero de temporada se lee barato y hay que acordarse de
    quitarlo. */
-/* Mes patrio: tricolor de verdad, con los tonos oficiales de la
-   bandera (#006847 · blanco · #CE1126). El texto vive en la franja
-   blanca del centro, así que se lee en tinta y no pierde contraste;
-   el verde y el rojo quedan de cabos, como un listón. */
-.promo-patrio {
-  background: linear-gradient(90deg,
-    #006847 0 12%, #ffffff 12% 88%, #CE1126 88% 100%);
-  color: var(--ink);
-  border-bottom: 1px solid rgba(21,25,29,.10);
+/* Halloween y Día de Muertos.  El naranja sobre negro de Halloween
+   gringo se ve de tienda de disfraces; aquí el fondo es un ciruela muy
+   oscuro (sigue siendo la tinta de la marca, sólo entibiada) y el color
+   lo pone el cempasúchil, que es la flor de la temporada de verdad.  El
+   rosa del acento de la marca entra en el hover, así que la franja no se
+   sale del sitio.  Un solo elemento vestido: el resto de la página no se
+   disfraza. */
+.promo-muertos {
+  background: linear-gradient(100deg, #190f16 0%, #2a1520 52%, #1d1018 100%);
+  border-bottom: 1px solid rgba(240,160,42,.22);
 }
-.promo-patrio .promo-tag {
-  color: #006847; border-color: rgba(0,104,71,.45);
-  background: rgba(0,104,71,.06);
+.promo-muertos .promo-tag {
+  color: #f2ab3c; border-color: rgba(242,171,60,.42);
+  background: rgba(242,171,60,.09);
 }
-.promo-patrio .promo-txt { color: var(--ink-soft); }
-.promo-patrio .promo-cta {
-  color: #9b0d1c; border-bottom-color: rgba(155,13,28,.45);
+.promo-muertos .promo-txt { color: #f0e2e8; }
+.promo-muertos .promo-cta {
+  color: #ffc46b; border-bottom-color: rgba(255,196,107,.45);
 }
-.promo-patrio .promo-cta:hover { border-bottom-color: #9b0d1c; }
-@media (max-width: 560px) {
-  /* los cabos se encogen para que el texto no se ahogue */
-  .promo-patrio {
-    background: linear-gradient(90deg,
-      #006847 0 18px, #ffffff 18px calc(100% - 18px), #CE1126 calc(100% - 18px) 100%);
-  }
+.promo-muertos .promo-cta:hover {
+  color: #ffd79a; border-bottom-color: #ffd79a;
 }
 
 @media (max-width: 560px) {
   .promo-in { padding-top: .55rem; padding-bottom: .55rem; font-size: .8rem; }
   .promo-txt { width: 100%; text-align: center; order: 3; }
+  /* "Halloween y Día de Muertos" es una etiqueta larga: al tamaño normal
+     se roba un renglón entero y la franja se come un sexto de la pantalla
+     del teléfono. Encogida cabe junto al botón, y la franja baja de tres
+     renglones a dos. */
+  .promo-muertos .promo-tag { font-size: .6rem; letter-spacing: .08em; padding: .18rem .5rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════

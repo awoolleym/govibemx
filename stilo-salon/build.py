@@ -58,7 +58,6 @@ WA_PATH = ("M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.7
 # Solo entra lo que existe de verdad. Si mañana abren Facebook o TikTok,
 # se agrega una línea aquí y aparece en el pie de las 18 páginas.
 IG = "https://www.instagram.com/stilosalon91/"
-FRESHA = "https://www.fresha.com/lvp/stilo-salon-guadalajara-ciudad-de-mexico-zn6WVb"
 # PENDIENTE: pegar aquí las URLs reales de Facebook y TikTok. En cuanto
 # dejen de estar vacías aparecen solas en el pie de las 18 páginas y en el
 # sameAs del JSON-LD.  Una URL equivocada es peor que ninguna: el sameAs es
@@ -362,8 +361,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
       <div>
         <h4>{'Síguenos' if lang=='es' else 'Follow us'}</h4>
         {redes(lang)}
-        <p><a href="{IG}" rel="noopener">@stilosalon91</a><br>
-        <a href="{FRESHA}" rel="noopener">{'Reserva en Fresha' if lang=='es' else 'Book on Fresha'}</a></p>
+        <p><a href="{IG}" rel="noopener">@stilosalon91</a></p>
         <p style="margin-top:1rem"><a class="foot-resena" href="{RESENA}" target="_blank" rel="noopener">{'★ Escribe tu reseña' if lang=='es' else '★ Write your review'}</a></p>
         <h4 style="margin-top:1.6rem">{t['hours']}</h4>
         <p>{t['mf']} · 9:00 – 20:00<br>{t['sat']} · 9:00 – 19:00<br>{t['sun']} · {t['closed']}</p>
@@ -1263,16 +1261,20 @@ def portafolio_body(lang):
 # sola, no.
 PROMO = dict(
   activa = True,
-  desde  = "2026-09-01",
-  hasta  = "2026-09-30",
-  tema   = "patrio",
+  # Arranca a media semana de octubre, no el día 1: las uñas y el
+  # maquillaje de temporada se apartan con una o dos semanas, y una franja
+  # colgada un mes entero deja de verse.  Termina el 3 de noviembre, un día
+  # después de Muertos, y se retira sola.
+  desde  = "2026-10-15",
+  hasta  = "2026-11-03",
+  tema   = "muertos",
   url    = None,          # None = WhatsApp; o una URL propia
-  es = dict(etiqueta="🇲🇽 Mes patrio",
-            texto="Pregunta por nuestra promoción de septiembre",
-            cta="Preguntar por WhatsApp"),
-  en = dict(etiqueta="🇲🇽 Independence month",
-            texto="Ask about our September offer",
-            cta="Ask on WhatsApp"),
+  es = dict(etiqueta="🎃 Halloween y Muertos",
+            texto="Uñas y maquillaje de temporada",
+            cta="Apartar por WhatsApp"),
+  en = dict(etiqueta="🎃 Halloween",
+            texto="Seasonal nail art and makeup",
+            cta="Book on WhatsApp"),
 )
 
 def promo(lang):
