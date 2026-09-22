@@ -7,6 +7,8 @@ import re, shutil, pathlib
 
 SRC = pathlib.Path(__file__).parent
 OUT = SRC / "_preview"
+# Banco de pruebas móvil: vive sólo en el preview, nunca en el sitio real.
+BANCO = SRC / "preview-movil.html"
 
 def rel(from_file: pathlib.Path, target: str) -> str:
     """'/en/hair.html' visto desde 'en/index.html' -> 'hair.html'"""
@@ -24,7 +26,8 @@ def main():
     # copiar html + assets
     for f in SRC.rglob("*"):
         if (OUT in f.parents or f == OUT or "_preview" in f.parts
-                or any(x.startswith("_fotos") for x in f.parts)):
+                or any(x.startswith("_fotos") for x in f.parts)
+                or f.name == BANCO.name):
             continue
         if f.suffix in (".html", ".css", ".woff2", ".jpg", ".webp", ".png", ".svg", ".ico") and f.is_file():
             dest = OUT / f.relative_to(SRC)
@@ -60,8 +63,17 @@ def main():
         # pero se quitan del preview para no confundir al navegador
         t2 = re.sub(r'\s*<link rel="canonical"[^>]*>\n?', "", t2)
         t2 = re.sub(r'\s*<link rel="alternate" hreflang="[^"]*"[^>]*>\n?', "", t2)
+        # enlace al banco de pruebas: sólo en el preview
+        t2 = t2.replace(
+            '<div class="foot-bottom">',
+            '<div class="foot-bottom"><span><a href="%smovil.html">Vista móvil</a></span>'
+            % ("../" * (len(f.relative_to(OUT).parts) - 1)),
+            1)
         if t2 != t:
             f.write_text(t2, encoding="utf-8"); n += 1
+
+    if BANCO.exists():
+        shutil.copy2(BANCO, OUT / "movil.html")
     print(f"preview listo: {n} páginas reescritas en {OUT.relative_to(SRC)}/")
 
 if __name__ == "__main__":
