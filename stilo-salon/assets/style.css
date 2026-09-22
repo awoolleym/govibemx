@@ -1241,7 +1241,7 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    propio material, recortada del mármol: la de ellos vale más que la
    mía, y de paso trae el verde de su identidad, que en el sitio no
    estaba en ningún lado. */
-.d-bot, .d-p { display: none; }
+.d-bot, .d-p, .d-flor { display: none; }
 .d-flor {
   position: absolute; z-index: 2;
   left: -4%; bottom: -8%;
@@ -1306,22 +1306,46 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   display: none; height: auto;
 }
 @media (min-width: 900px) {
-  /* La misma planta girada 180°: es la de abajo reflejada, con las
-     hojas abriendo hacia arriba. */
   .d-flor2 {
     display: block;
-    left: -5%; top: -6%;
-    width: clamp(190px, 18vw, 275px);
+    left: -6%; top: -8%;
+    width: clamp(185px, 17.5vw, 268px);
     opacity: .5;
-    transform: scale(-1, -1) rotate(-7deg);
+    transform: scaleX(-1) rotate(-14deg);
   }
 }
 @media (max-width: 899px) {
-  /* misma orientación que en escritorio: girada 180°, abriendo arriba */
   .d-flor2 {
     display: block;
-    right: -14%; left: auto; top: auto; bottom: -4%;
+    left: -16%; right: auto; top: -3%; bottom: auto;
     width: 46vw; opacity: .42;
-    transform: scale(-1, -1) rotate(6deg);
+    transform: scaleX(-1) rotate(-12deg);
   }
+}
+
+/* ── La tercera: espejo de la de arriba, en la esquina opuesta ──────
+   Girada 180° respecto a la de arriba a la izquierda, así que las dos
+   se leen como la misma pieza enfrentada en diagonal. */
+.d-flor3 {
+  position: absolute; z-index: 1; pointer-events: none;
+  display: block; height: auto;
+  /* sube del canto: abajo del todo se la come el WhatsApp flotante,
+     que va fijo en esa esquina */
+  right: -5%; bottom: 9%;
+  width: clamp(150px, 30vw, 268px);
+  opacity: .45;
+  transform: scaleX(-1) rotate(166deg);
+}
+
+/* ── El texto de la portada, centrado en su panel ───────────────────
+   Estaba pegado al margen del contenedor, que no coincide con el
+   panel claro: quedaba 275 px de aire a la izquierda y 97 a la
+   derecha. Aquí el contenedor ES el panel y el bloque va centrado. */
+@media (min-width: 900px) {
+  .hero > .wrap {
+    max-width: none; width: 48%;
+    margin-inline: 0; padding-inline: 0;
+    justify-content: center;
+  }
+  .hero > .wrap > div { max-width: 72%; }
 }

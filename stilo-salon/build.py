@@ -780,12 +780,13 @@ def marcas(lang):
 def adornos():
     return ('<div class="deco" aria-hidden="true">'
             '<span class="d-marco"></span>'
-            '<img class="d-flor" src="/assets/flor-marca.png" '
-            'width="980" height="627" alt="" loading="lazy">'
-            # La segunda es el mismo ramo, volteado y más chico: recortar
-            # pimpollos sueltos de la acuarela deja el canto cuadrado y se
-            # ven rotos, así que se repite la pieza entera.
+            # Dos veces la misma pieza, en esquinas opuestas: arriba a
+            # la izquierda y su espejo abajo a la derecha. Recortar
+            # pimpollos sueltos de la acuarela deja el canto cuadrado y
+            # se ven rotos, así que se repite entera.
             '<img class="d-flor2" src="/assets/flor-marca.png" '
+            'width="980" height="627" alt="" loading="lazy">'
+            '<img class="d-flor3" src="/assets/flor-marca.png" '
             'width="980" height="627" alt="" loading="lazy">'
             '</div>')
 
