@@ -1,0 +1,26 @@
+{
+  "schema_version": "2026-04-23",
+  "name": "stilo-salon",
+  "title": "Stilo Salón",
+  "description": "Precios, servicios y datos de contacto de Stilo Salón, Roma Norte, CDMX.",
+  "resources": [
+    {
+      "uri": "https://stilo-salon.com/llms.txt",
+      "name": "Resumen y lista de precios",
+      "description": "Los 67 servicios con precio y duración, horario, dirección y garantías.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://stilo-salon.com/precios",
+      "name": "Página de precios",
+      "description": "La lista completa, en HTML.",
+      "mimeType": "text/html"
+    },
+    {
+      "uri": "https://stilo-salon.com/sitemap.xml",
+      "name": "Mapa del sitio",
+      "description": "Las 20 páginas, español e inglés.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

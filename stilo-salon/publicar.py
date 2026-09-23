@@ -37,7 +37,11 @@ PAGINAS = [
 ]
 # Configuración que Pages lee (no se sirve como página).
 CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml", "llms.txt",
-          "favicon.ico", "apple-touch-icon.png", "site.webmanifest"]
+          "favicon.ico", "apple-touch-icon.png", "site.webmanifest",
+          ".well-known/agents.json", ".well-known/mcp.json"]
+# .well-known empieza con punto: al comprimir hay que excluir sólo los
+# archivos ocultos sueltos, no esa carpeta.  Con "zip -x '.*'" se perdía
+# entera y nadie se enteraba hasta ver el 404.
 # Todo assets/ menos lo que no haga falta servir.
 ASSETS_EXT = {".css", ".js", ".jpg", ".jpeg", ".webp", ".png", ".svg", ".ico", ".woff2"}
 

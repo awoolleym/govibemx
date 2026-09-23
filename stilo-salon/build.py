@@ -9,7 +9,7 @@ Cuando cambie un precio, se cambia aquí y se vuelve a correr:  python3 build.py
 Salida: HTML estático plano, listo para Cloudflare Pages. Sin JavaScript para
 renderizar contenido — todo el texto viaja en el HTML para que Google lo lea.
 """
-import re, html
+import json, re, html
 from datetime import date
 import pathlib
 
@@ -23,6 +23,7 @@ NAP = {
     "city": "Ciudad de México",
     "tel1": "+525522993258", "tel1_display": "55 2299 3258",
     "tel2": "+525552562137", "tel2_display": "55 5256 2137",
+    "email": "stilo91@hotmail.com",
 }
 BOOKING = "https://stilo-salon.versum.com/?trade=598440"
 # Ficha de Google. GMB_CORTO es el enlace que comparte el propio salón;
@@ -320,6 +321,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<meta name="mcp" content="/.well-known/mcp.json">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="{SITE}/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -882,7 +884,7 @@ def salon_ld(lang):
                  "postalCode":NAP["postal"],"addressCountry":"MX"},
       "areaServed":["Roma Norte","Roma Sur","Condesa","Juárez","Ciudad de México"],
       "sameAs":PERFILES,
-      "email":"stilo91@hotmail.com",
+      "email":NAP["email"],
       "hasMap":"https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX",
       "potentialAction":{"@type":"ReserveAction",
         "target":{"@type":"EntryPoint","urlTemplate":BOOKING,
@@ -2413,6 +2415,52 @@ def main():
               ""]
         return "\n".join(o)
     log.append(write("llms.txt", _llms()))
+
+    # ── Descubrimiento para agentes ──────────────────────────────────────
+    # Dos archivos que pidió un verificador de "AI readiness".  Ninguno de
+    # los dos es un estándar ratificado todavía: agents.json no tiene
+    # especificación pública y WebMCP es un borrador de grupo comunitario
+    # del W3C cuyo mecanismo real son APIs de JavaScript, no archivos
+    # estáticos.  Se escriben de todos modos porque no cuestan nada y el día
+    # que se asienten ya están.
+    #
+    # Lo que NO se hace: declarar herramientas que no existen.  Este sitio es
+    # estático, no tiene buscador ni formularios ni API.  Un agente que lea
+    # "capabilities: search" y no encuentre buscador se rompe, y la culpa
+    # sería nuestra.  Va sólo lo que es cierto.
+    log.append(write(".well-known/agents.json", json.dumps({
+        "schema_version": "1.0",
+        "name": "Stilo Salón",
+        "description": ("Salón de belleza en Roma Norte, Ciudad de México. "
+                        "Cabello, uñas, extensiones de pestañas y diseño de cejas, "
+                        "con la lista completa de 67 precios publicada."),
+        "url": f"{SITE}/",
+        "contact": NAP["email"],
+        "telephone": NAP["tel1"],
+        "languages": ["es-MX", "en"],
+        # Lo que de verdad se puede hacer desde aquí: leer y contactar.
+        "capabilities": ["read_prices", "read_services", "contact"],
+        "documentation": f"{SITE}/llms.txt",
+    }, ensure_ascii=False, indent=2) + "\n"))
+
+    log.append(write(".well-known/mcp.json", json.dumps({
+        "schema_version": "2026-04-23",
+        "name": "stilo-salon",
+        "title": "Stilo Salón",
+        "description": ("Precios, servicios y datos de contacto de Stilo Salón, "
+                        "Roma Norte, CDMX."),
+        # Sin "tools": un sitio estático no ejecuta nada.  Lo que sí tiene son
+        # recursos legibles, y eso es lo que se declara.
+        "resources": [
+            {"uri": f"{SITE}/llms.txt", "name": "Resumen y lista de precios",
+             "description": "Los 67 servicios con precio y duración, horario, dirección y garantías.",
+             "mimeType": "text/plain"},
+            {"uri": f"{SITE}/precios", "name": "Página de precios",
+             "description": "La lista completa, en HTML.", "mimeType": "text/html"},
+            {"uri": f"{SITE}/sitemap.xml", "name": "Mapa del sitio",
+             "description": "Las 20 páginas, español e inglés.", "mimeType": "application/xml"},
+        ],
+    }, ensure_ascii=False, indent=2) + "\n"))
     log.append(write("_headers",
         "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
