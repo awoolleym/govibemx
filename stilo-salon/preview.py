@@ -34,7 +34,8 @@ def main():
                 or any(x.startswith("_fotos") for x in f.parts)
                 or f.name == BANCO.name):
             continue
-        if f.suffix in (".html", ".css", ".woff2", ".jpg", ".webp", ".png", ".svg", ".ico") and f.is_file():
+        if f.suffix in (".html", ".css", ".woff2", ".jpg", ".webp", ".png",
+                        ".svg", ".ico", ".webmanifest") and f.is_file():
             dest = OUT / f.relative_to(SRC)
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(f, dest)
