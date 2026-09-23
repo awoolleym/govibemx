@@ -2489,15 +2489,12 @@ def main():
     for ruta in (".well-known/mcp.json", "mcp.json"):
         log.append(write(ruta, _mcp))
     log.append(write("_headers",
-        # Sin X-Frame-Options a propósito.  Impide que otro sitio muestre
-        # éste dentro de un marco, que es la defensa contra el clickjacking:
-        # engañar a alguien para que haga clic en algo que no ve.  Aquí no
-        # hay nada que un clic pueda cambiar —ni formularios, ni sesión, ni
-        # carrito—, así que esa cabecera no cuida nada y sí estorba: los
-        # verificadores de accesibilidad cargan la página en un marco para
-        # inspeccionarla, y con ella puesta reportan que no pueden leerla.
-        # Si algún día el sitio acepta datos de alguien, vuelve a ponerse.
-        "/*\n  X-Content-Type-Options: nosniff\n"
+        # X-Frame-Options impide que otro sitio muestre éste dentro de un
+        # marco: es la defensa contra el clickjacking.  Se quitó un rato
+        # sospechando que impedía a un verificador leer el sitio, pero la
+        # causa era otra —pedían www.stilo-salon.com, que no existía— así
+        # que vuelve a su sitio.
+        "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
         "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n\n"
         "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n"
