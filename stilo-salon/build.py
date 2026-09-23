@@ -2344,7 +2344,75 @@ def main():
                   f"<priority>{'1.0' if u in ('/', '/en/') else '0.8'}</priority></url>")
     sm.append("</urlset>")
     log.append(write("sitemap.xml", "\n".join(sm) + "\n"))
-    log.append(write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n"))
+    # "User-agent: *" ya cubre a GPTBot, ClaudeBot y compañía; nombrarlos no
+    # cambia nada técnicamente.  Van explícitos porque los verificadores de
+    # "AI readiness" los buscan por nombre, y porque deja dicho a propósito
+    # que este sitio SÍ quiere que los modelos lo lean: para un salón, que
+    # ChatGPT sepa sus precios es publicidad gratis, no una fuga.
+    log.append(write("robots.txt",
+        "User-agent: *\nAllow: /\n\n"
+        + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in
+                  ("GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot",
+                   "Claude-User", "Google-Extended", "PerplexityBot",
+                   "Applebot-Extended", "Bytespider", "CCBot"))
+        + f"Sitemap: {SITE}/sitemap.xml\n"))
+
+    # llms.txt: el resumen del negocio en texto plano, para los modelos que
+    # contestan "¿dónde me hago balayage en la Roma?".  Sale de PRICES, la
+    # misma fuente que la página de precios, así que no se puede desfasar.
+    # No es una página de marketing: son los hechos que alguien necesita
+    # para decidir, y la lista completa con precio, que es justo lo que casi
+    # ningún salón publica.
+    def _llms():
+        o = ["# Stilo Salón",
+             "",
+             "> Salón de belleza en Roma Norte, Ciudad de México. Cabello, uñas, "
+             "extensiones de pestañas y diseño de cejas. La lista de precios "
+             "completa está publicada: 67 servicios con precio y duración.",
+             "",
+             f"- Dirección: {NAP['street']}, {NAP['locality']}, {NAP['postal']}, {NAP['city']}, México.",
+             f"- Citas: {NAP['tel1_display']} · {NAP['tel2_display']} · WhatsApp {NAP['tel1_display']}.",
+             "- Horario: lunes a viernes 9:00–20:00 · sábado 9:00–19:00 · domingo cerrado.",
+             f"- Reseñas: {OPINIONES} en Google.",
+             "- Garantía: 72 horas en todos los servicios; 5 días en uñas de gel.",
+             "- Meses sin intereses: 3 en compras desde $2,000 con tarjeta de crédito.",
+             "- Idiomas del sitio: español (/) e inglés (/en/).",
+             "",
+             "Todos los precios están en pesos mexicanos (MXN) y son los vigentes. "
+             "Los marcados «desde» aplican a cabello a partir del hombro; si es más "
+             "largo o más denso, el ajuste se dice antes de empezar, nunca al cobrar.",
+             ""]
+        for g in PRICES.values():
+            o.append(f"## {g['es']}")
+            o.append("")
+            for it in g["items"]:
+                nom, _, precio, dur, nota, _ = it
+                # El ~ de PRICES significa "desde". Borrarlo convertiría un
+                # precio de arranque en un precio fijo, y un modelo citaría
+                # $2,300 de balayage como si fuera el total.
+                pr = str(precio)
+                linea = (f"- {nom}: desde ${pr[1:]}" if pr.startswith("~")
+                         else f"- {nom}: ${pr}")
+                if dur: linea += f" · {dur}"
+                if nota: linea += f" · {nota}"
+                o.append(linea)
+            o.append("")
+        o += ["## Páginas",
+              "",
+              f"- [Precios]({SITE}/precios): los 67 servicios con precio y duración.",
+              f"- [Cabello]({SITE}/cabello): corte, color, balayage, babylights y alisados.",
+              f"- [Uñas]({SITE}/unas): acrílico, gel, escultural, manicure y pedicure.",
+              f"- [Pestañas y cejas]({SITE}/pestanas-y-cejas): extensiones en cinco técnicas, lifting y diseño de ceja.",
+              f"- [Portafolio]({SITE}/portafolio): 128 fotos de trabajos hechos en el salón.",
+              "",
+              "## Guías",
+              "",
+              f"- [Color y alisados]({SITE}/guia-color-y-alisados): diferencia entre balayage y babylights, cada cuándo retocar raíz, y cuál alisado conviene. La keratina se vende aquí como Brazilian Blowout.",
+              f"- [Uñas]({SITE}/guia-unas): acrílico contra gel contra escultural, y por qué el retoque cuesta casi lo mismo que uno nuevo.",
+              f"- [Extensiones de pestañas]({SITE}/guia-extensiones-de-pestanas): las cinco técnicas, cuánto duran y cada cuándo retocar.",
+              ""]
+        return "\n".join(o)
+    log.append(write("llms.txt", _llms()))
     log.append(write("_headers",
         "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
@@ -2355,7 +2423,12 @@ def main():
         # en vivo: el resto de las extensiones las acierta todas, sólo ésta
         # no.  Se declara a mano.
         "/favicon.ico\n  Content-Type: image/vnd.microsoft.icon\n"
-        "  Cache-Control: public, max-age=604800\n"))
+        "  Cache-Control: public, max-age=604800\n\n"
+        # Es Markdown, pero se sirve como texto plano a propósito: así se lee
+        # en el navegador en vez de descargarse.  El charset va explícito
+        # porque el archivo lleva acentos y eñes en cada línea.
+        "/llms.txt\n  Content-Type: text/plain; charset=utf-8\n"
+        "  Cache-Control: public, max-age=86400\n"))
     # Rutas viejas del sitio de GoDaddy -> nuevas.  Evita perder el poco
     # posicionamiento que ya existe.
     # Ojo con estas: ahora que las URLs públicas no llevan .html, las reglas
