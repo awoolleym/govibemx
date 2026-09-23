@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """Genera el favicon y los iconos de la app desde cero.
 
-Por qué una "S" tipográfica y no el logo: el logo es una escritura de trazo
-finísimo, y a 16 px —el tamaño real de una pestaña— desaparece.  Peor: la
-palabra "Stilo" está escrita de un solo trazo continuo, sin un solo píxel
-vacío entre la S y la t, así que ni siquiera se puede recortar la inicial.
-Las tijeras sí se pueden aislar por color, pero miden 59x42 px en el
-original y estiradas a 512 quedan borrosas.
+Por qué no se usa el logo tal cual: la palabra "Stilo" está escrita de un
+solo trazo continuo —no hay una sola columna de píxeles vacía entre la S y
+la t, está comprobado—, así que la inicial no se puede recortar.  Las
+tijeras del logo sí se aíslan por color, pero miden 59x42 px y estiradas a
+512 quedan borrosas.  Por eso la S es tipográfica (Cormorant Garamond, la
+de los títulos del sitio) y las tijeras van dibujadas en vector aquí.
 
-La salida es la inicial en Cormorant Garamond, que es la tipografía de los
-títulos del sitio, blanca sobre el rosa de la marca.  Se lee a 16 px y en
-una barra de pestañas llena se distingue de un vistazo, que es lo único
-que le pedimos a un favicon.
+Por qué hay dos dibujos y no uno: la S con las tijeras se lee bien hasta 48
+px, y de ahí para abajo las dos cosas juntas se convierten en una mancha.
+La pestaña del navegador usa 16 o 32.  Así que el .ico lleva arte distinto
+en cada tamaño —para eso existe el formato—: la marca completa en 48, y la
+S sola en 32 y 16, donde es lo único que se distingue.  Los iconos grandes
+(pantalla de inicio, PWA) llevan siempre la marca completa.
 
     python3 iconos.py
 """
-import json, pathlib, urllib.request
+import json, math, pathlib, urllib.request
 from PIL import Image, ImageDraw, ImageFont
 
 RAIZ = pathlib.Path(__file__).parent
@@ -38,40 +40,82 @@ def fuente_ttf() -> pathlib.Path:
     return FUENTE_CACHE
 
 
-def marca(lado: int) -> Image.Image:
-    """La S centrada ópticamente por su caja real, no por la métrica.
+def tijeras(lado: int, color) -> Image.Image:
+    """Tijeras de peluquería, dibujadas al tamaño que se pidan.
 
-    El centrado por métrica deja la letra flotando alta, porque la caja de
-    la fuente reserva sitio para acentos y descendentes que la S no usa.
+    Se trazan a cuatro veces el tamaño final y se bajan con LANCZOS: así el
+    filo queda limpio sin depender del antialias del dibujante.  Las hojas
+    son triángulos que nacen anchos en el tornillo y mueren en punta, que es
+    lo que las hace legibles en chico; con grosor constante se leen como dos
+    palos.
     """
-    im = Image.new("RGBA", (lado, lado), ROSA)
+    S = lado * 4
+    im = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    ruta = str(fuente_ttf())
-    pt = lado
-    while pt > 4:
-        f = ImageFont.truetype(ruta, pt)
+    px, py = S * 0.46, S * 0.50                      # el tornillo
+    pt = lambda a, r: (px + r * math.cos(math.radians(a)),
+                       py + r * math.sin(math.radians(a)))
+    for ang in (-160, -128):                          # las dos hojas
+        d.polygon([pt(ang + 90, S * 0.052), pt(ang, S * 0.46),
+                   pt(ang - 90, S * 0.052)], fill=color)
+    raro, g = S * 0.105, max(2, int(S * 0.038))
+    for ang in (26, 66):                              # brazos y aros
+        c = pt(ang, S * 0.315)
+        d.line([(px, py), c], fill=color, width=g)
+        d.ellipse([c[0] - raro, c[1] - raro, c[0] + raro, c[1] + raro],
+                  outline=color, width=g)
+    d.ellipse([px - S * 0.035, py - S * 0.035,
+               px + S * 0.035, py + S * 0.035], fill=color)
+    return im.resize((lado, lado), Image.LANCZOS)
+
+
+def _ese(im: Image.Image, ocupa: float, dx=0.0, dy=0.0) -> Image.Image:
+    """La S centrada por su caja real, no por la métrica de la fuente.
+
+    La métrica reserva sitio para acentos y descendentes que la S no usa, así
+    que centrar por ella deja la letra flotando alta.
+    """
+    d = ImageDraw.Draw(im)
+    L, ruta, pt_ = im.width, str(fuente_ttf()), im.width
+    while pt_ > 4:
+        f = ImageFont.truetype(ruta, pt_)
         x0, y0, x1, y1 = d.textbbox((0, 0), LETRA, font=f)
-        if (y1 - y0) <= lado * OCUPA:
+        if (y1 - y0) <= L * ocupa:
             break
-        pt -= 1
-    f = ImageFont.truetype(ruta, pt)
+        pt_ -= 1
+    f = ImageFont.truetype(ruta, pt_)
     x0, y0, x1, y1 = d.textbbox((0, 0), LETRA, font=f)
-    d.text(((lado - (x1 - x0)) / 2 - x0, (lado - (y1 - y0)) / 2 - y0),
-           LETRA, font=f, fill=BLANCO)
+    d.text(((L - (x1 - x0)) / 2 - x0 + L * dx,
+            (L - (y1 - y0)) / 2 - y0 + L * dy), LETRA, font=f, fill=BLANCO)
     return im
+
+
+def marca(lado: int) -> Image.Image:
+    """La marca completa: la S con las tijeras colgando de su cola.
+
+    Es la misma idea del logo, donde el rasgo final termina en las tijeras.
+    """
+    im = _ese(Image.new("RGBA", (lado, lado), ROSA), 0.60, -0.09, -0.06)
+    t = tijeras(int(lado * 0.46), BLANCO)
+    im.paste(t, (int(lado * 0.52), int(lado * 0.50)), t)
+    return im
+
+
+def inicial(lado: int) -> Image.Image:
+    """Solo la S, para los tamaños donde las tijeras ya no se distinguen."""
+    return _ese(Image.new("RGBA", (lado, lado), ROSA), 0.66)
 
 
 def main():
     assets = RAIZ / "assets"
-    # El .ico lleva los tres tamaños dentro: el navegador escoge. Cada uno se
-    # dibuja a su tamaño en vez de reescalar el grande, así el trazo no se
-    # adelgaza hasta desaparecer en el de 16.
-    caras = [marca(n) for n in (16, 32, 48)]
+    # 48 lleva la marca completa; 32 y 16 solo la inicial, porque ahí las
+    # tijeras ya no se ven y solo ensucian la letra.
+    caras = [inicial(16), inicial(32), marca(48)]
     caras[2].save(RAIZ / "favicon.ico", format="ICO",
-                  sizes=[(16, 16), (32, 32), (48, 48)])
+                  sizes=[(16, 16), (32, 32), (48, 48)],
+                  append_images=caras[:2])
 
-    # iOS no admite transparencia ni redondea por su cuenta en todas las
-    # versiones; el fondo sólido evita el cuadro negro.
+    # iOS no admite transparencia; el fondo sólido evita el cuadro negro.
     marca(180).convert("RGB").save(RAIZ / "apple-touch-icon.png")
     for n in (192, 512):
         marca(n).convert("RGB").save(assets / f"icon-{n}.png")
@@ -89,8 +133,9 @@ def main():
         "start_url": "/",
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print("iconos listos: favicon.ico · apple-touch-icon.png · "
-          "assets/icon-192.png · assets/icon-512.png · site.webmanifest")
+    print("iconos listos: favicon.ico (S sola en 16 y 32, marca completa en 48) · "
+          "apple-touch-icon.png · assets/icon-192.png · assets/icon-512.png · "
+          "site.webmanifest")
 
 
 if __name__ == "__main__":
