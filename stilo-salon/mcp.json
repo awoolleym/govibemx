@@ -1,6 +1,7 @@
 {
   "schema_version": "2026-04-23",
   "name": "stilo-salon",
+  "version": "1.0.0",
   "title": "Stilo Salón",
   "description": "Precios, servicios y datos de contacto de Stilo Salón, Roma Norte, CDMX.",
   "resources": [

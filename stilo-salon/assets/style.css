@@ -420,9 +420,16 @@ details.faq[open] summary::after { transform: rotate(180deg); }
    El trazo del logo se repite como filigrana detrás de la portada: se
    reconoce la firma sin que compita con la foto ni con el texto. */
 .hero { position: relative; overflow: hidden; }
+/* La filigrana del logo y las flores del marco son fondo de CSS, no
+   <img>: no aportan información, sólo aire.  Con aspect-ratio ocupan el
+   mismo sitio que ocupaba la imagen, así que no hay salto de maquetación
+   al cargar.  El navegador ni siquiera pide el archivo cuando la regla
+   las oculta en móvil. */
 .marca-agua {
   position: absolute; right: -4%; top: 50%; transform: translateY(-50%);
-  width: min(52vw, 640px); opacity: .05; pointer-events: none; user-select: none;
+  width: min(52vw, 640px); aspect-ratio: 640 / 252;
+  background: url("logo-stilo-salon.png") center / contain no-repeat;
+  opacity: .05; pointer-events: none; user-select: none;
   z-index: 0;
 }
 .hero .wrap { position: relative; z-index: 1; }
@@ -1366,6 +1373,8 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    Cierra la composición en diagonal con la grande del canto de la foto. */
 .d-flor2 {
   position: absolute; z-index: 1; pointer-events: none;
+  aspect-ratio: 980 / 627;
+  background: url("flor-marca.png") center / contain no-repeat;
   display: none; height: auto;
 }
 @media (min-width: 900px) {
@@ -1391,6 +1400,8 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    se leen como la misma pieza enfrentada en diagonal. */
 .d-flor3 {
   position: absolute; z-index: 1; pointer-events: none;
+  aspect-ratio: 980 / 627;
+  background: url("flor-marca.png") center / contain no-repeat;
   display: block; height: auto;
   right: -8%; bottom: 2%; width: 42vw; opacity: .4;
   transform: scaleX(-1) rotate(166deg);

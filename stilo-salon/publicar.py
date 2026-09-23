@@ -37,9 +37,14 @@ PAGINAS = [
 ]
 # Configuración que Pages lee (no se sirve como página).
 CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml", "llms.txt",
+          "llms-full.txt", "sitemap.md", "AGENTS.md",
           "favicon.ico", "apple-touch-icon.png", "site.webmanifest",
           ".well-known/agents.json", ".well-known/mcp.json",
+          ".well-known/agents.md",
           "agents.json", "mcp.json"]
+# El espejo en Markdown de cada página: mismo nombre, otra extensión. Se
+# deriva de PAGINAS para que no se pueda agregar una página y olvidar el suyo.
+ESPEJOS = [p[:-5] + ".md" for p in PAGINAS if p != "404.html"]
 # .well-known empieza con punto: al comprimir hay que excluir sólo los
 # archivos ocultos sueltos, no esa carpeta.  Con "zip -x '.*'" se perdía
 # entera y nadie se enteraba hasta ver el 404.
@@ -47,7 +52,7 @@ CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml", "llms.txt",
 ASSETS_EXT = {".css", ".js", ".jpg", ".jpeg", ".webp", ".png", ".svg", ".ico", ".woff2"}
 
 def main():
-    faltan = [p for p in PAGINAS + CONFIG if not (SRC / p).exists()]
+    faltan = [p for p in PAGINAS + CONFIG + ESPEJOS if not (SRC / p).exists()]
     if faltan:
         sys.exit("Falta generar: " + ", ".join(faltan) + "\n¿Corriste build.py?")
 
@@ -66,7 +71,7 @@ def main():
     DIST.mkdir()
 
     n = 0
-    for rel in PAGINAS + CONFIG:
+    for rel in PAGINAS + CONFIG + ESPEJOS:
         dest = DIST / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(SRC / rel, dest)
@@ -82,7 +87,7 @@ def main():
 
     # Red de seguridad: que no se haya colado nada que no deba estar.
     prohibido = [str(f.relative_to(DIST)) for f in DIST.rglob("*")
-                 if f.is_file() and (f.suffix in (".py", ".md", ".sh")
+                 if f.is_file() and (f.suffix in (".py", ".sh")
                                      or f.name.startswith("preview")
                                      or "__pycache__" in f.parts)]
     if prohibido:

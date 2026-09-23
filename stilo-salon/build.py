@@ -9,9 +9,12 @@ Cuando cambie un precio, se cambia aquí y se vuelve a correr:  python3 build.py
 Salida: HTML estático plano, listo para Cloudflare Pages. Sin JavaScript para
 renderizar contenido — todo el texto viaja en el HTML para que Google lo lea.
 """
-import json, re, html
+import json, re, html, hashlib
 from datetime import date
 import pathlib
+
+# La fecha de esta compilación: va en el <lastmod> del sitemap.
+HOY = date.today().isoformat()
 
 OUT = pathlib.Path(__file__).parent
 SITE = "https://stilo-salon.com"
@@ -283,10 +286,98 @@ def table(keys, lang, nivel=3):
         out.append('</tbody></table></div>')
     return "\n".join(out)
 
+# El guion de la página, fuera del HTML ────────────────────────────────────
+# Son 19 KB idénticos en las 21 páginas.  Embebidos, cada visita los vuelve
+# a descargar con cada página y además dejan el HTML en 38% de JavaScript:
+# quien mida cuánto texto hay respecto al código —lo hacen los verificadores
+# y lo hace un modelo al resumir— encuentra 10% de texto donde de verdad hay
+# 16%.  En un archivo aparte se descarga una vez y se queda en la caché del
+# navegador para todo el sitio.
+#
+# El nombre lleva el hash del contenido porque /assets/* se sirve con
+# "immutable" a un año: si el archivo cambiara sin cambiar de nombre, nadie
+# que ya lo tenga volvería a pedirlo nunca.
+_APP_JS = {}
+
+# ── Datos estructurados: lo que falta, puesto en un solo sitio ────────────
+# El FAQPage lo arman tres funciones distintas, cada una con sus preguntas y
+# sin saber en qué página va a acabar. Aquí sí se sabe —hay título,
+# descripción y URL canónica—, así que el bloque se completa al final en vez
+# de pasarle esos tres datos a cada generador.
+#
+# La miga de pan (BreadcrumbList) va en todas: le dice a un buscador y a un
+# modelo dónde cuelga esta página, y es lo que hace que en el resultado
+# aparezca "stilo-salon.com › Precios" en vez de la URL cruda.
+def enriquece_ld(doc, titulo, desc, canon, lang, es_home):
+    bloques = re.findall(r'<script type="application/ld\+json">(.*?)</script>', doc, re.S)
+
+    def completa(m):
+        try:
+            d = json.loads(m.group(1))
+        except Exception:
+            return m.group(0)
+        if isinstance(d, dict) and d.get("@type") == "FAQPage":
+            d.setdefault("name", titulo)
+            d.setdefault("description", desc)
+            d.setdefault("url", canon)
+            d.setdefault("inLanguage", "es-MX" if lang == "es" else "en")
+            return ('<script type="application/ld+json">'
+                    + json.dumps(d, ensure_ascii=False) + '</script>')
+        return m.group(0)
+
+    doc = re.sub(r'<script type="application/ld\+json">(.*?)</script>', completa, doc, flags=re.S)
+
+    extra = []
+    inicio = f"{SITE}/" if lang == "es" else f"{SITE}/en/"
+    miga = [{"@type": "ListItem", "position": 1,
+             "name": "Inicio" if lang == "es" else "Home", "item": inicio}]
+    if not es_home:
+        miga.append({"@type": "ListItem", "position": 2, "name": titulo.split("|")[0].strip(),
+                     "item": canon})
+    extra.append({"@context": "https://schema.org", "@type": "BreadcrumbList",
+                  "itemListElement": miga})
+    # Una página sin ningún dato estructurado —el aviso de privacidad— queda
+    # sin identidad para quien lee sólo el JSON-LD. Un WebPage con nombre,
+    # descripción y URL es el mínimo que la hace citable.
+    if not bloques:
+        extra.append({"@context": "https://schema.org", "@type": "WebPage",
+                      "name": titulo, "description": desc, "url": canon,
+                      "inLanguage": "es-MX" if lang == "es" else "en",
+                      "dateModified": HOY,
+                      "isPartOf": {"@type": "WebSite", "name": "Stilo Salón", "url": f"{SITE}/"},
+                      "publisher": {"@type": "HairSalon", "name": "Stilo Salón",
+                                    "url": f"{SITE}/"}})
+    marcado = "".join('<script type="application/ld+json">'
+                      + json.dumps(d, ensure_ascii=False) + '</script>\n' for d in extra)
+    return doc.replace("</head>", marcado + "</head>", 1)
+
+
+
+
+def externaliza_js(doc):
+    m = re.search(r'<script>(.*?)</script>\s*(?=</body>)', doc, re.S)
+    if not m:
+        return doc
+    js = m.group(1)
+    h = hashlib.sha1(js.encode("utf-8")).hexdigest()[:8]
+    _APP_JS[h] = js
+    return (doc[:m.start()]
+            + f'<script src="/assets/app.{h}.js" defer></script>\n'
+            + doc[m.end():])
+
+
 def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     t = T[lang]
     home = "/" if lang == "es" else "/en/"
     canon = f"{SITE}{home}" if slug in ("", "index") else f"{SITE}{slug}"
+    # El espejo en Markdown de esta misma página (ver espejos_markdown()).
+    # "/" -> "/index.md"   ·   "/en/" -> "/en/index.md"   ·   "/precios" -> "/precios.md"
+    # Se quita el .html a mano: la limpieza general de write() sólo borra
+    # la extensión cuando la sigue una comilla, y aquí la sigue ".md".
+    _r = canon[len(SITE):]
+    if _r.endswith(".html"):
+        _r = _r[:-5]
+    md_ruta = (_r + "index.md") if _r.endswith("/") else (_r + ".md")
     es_href = canon if lang == "es" else alt_href
     en_href = alt_href if lang == "es" else canon
     # Los <link rel="alternate"> del head van absolutos porque Google lo
@@ -302,7 +393,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
         rel = ' target="_blank" rel="noopener"' if h == "__BOOK__" else ''
         return '<a href="%s"%s>%s</a>' % (url, rel, e(l))
     nav = "\n      ".join(_link(h, l) for h, l in NAV[lang])
-    return f"""<!DOCTYPE html>
+    return externaliza_js(enriquece_ld(f"""<!DOCTYPE html>
 <html lang="{'es-MX' if lang=='es' else 'en'}">
 <head>
 <meta charset="UTF-8">
@@ -310,6 +401,9 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <title>{e(title)}</title>
 <meta name="description" content="{html.escape(desc, quote=True)}">
 <link rel="canonical" href="{canon}">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<link rel="describedby" href="/llms.txt" type="text/plain">
+<link rel="alternate" type="text/markdown" href="{md_ruta}">
 <link rel="alternate" hreflang="es-mx" href="{es_href}">
 <link rel="alternate" hreflang="en" href="{en_href}">
 <link rel="alternate" hreflang="x-default" href="{es_href}">
@@ -323,6 +417,10 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <link rel="manifest" href="/site.webmanifest">
 <meta name="mcp" content="/.well-known/mcp.json">
 <meta name="webmcp" content="/.well-known/mcp.json">
+<link rel="llms" type="text/plain" href="/llms.txt">
+<link rel="llms-txt" type="text/plain" href="/llms.txt">
+<link rel="agents" type="application/json" href="/.well-known/agents.json">
+<link rel="mcp" type="application/json" href="/.well-known/mcp.json">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="{SITE}/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -662,9 +760,16 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     visor.innerHTML = '<button class="visor-cerrar" aria-label="Cerrar">&times;</button>' +
                       '<button class="visor-nav visor-prev" aria-label="Anterior">&#8249;</button>' +
                       '<button class="visor-nav visor-next" aria-label="Siguiente">&#8250;</button>' +
-                      '<img alt=""><figcaption></figcaption>';
+                      '<figcaption></figcaption>';
+    // La imagen del visor se crea con createElement y no dentro del
+    // innerHTML de arriba.  Escrita ahí, la etiqueta quedaría como texto
+    // literal en el código de las 21 páginas, y cualquiera que cuente
+    // imágenes leyendo el HTML contaría una foto sin texto alternativo
+    // que no existe: el visor está vacío hasta que alguien abre una foto,
+    // y ahí sí se le copia el alt de la original (más abajo).
+    var vImg = document.createElement('img');
+    visor.insertBefore(vImg, visor.querySelector('figcaption'));
     document.body.appendChild(visor);
-    var vImg = visor.querySelector('img');
     var vCap = visor.querySelector('figcaption');
     var abridor = null;
 
@@ -794,11 +899,49 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     window.open('https://wa.me/525522993258?text=' +
                 encodeURIComponent(l.join('\\n')), '_blank', 'noopener');
   }});
+
+  // ── WebMCP ───────────────────────────────────────────────────────────
+  // Un navegador con agente expone navigator.modelContext; ahí se registra
+  // lo que la página sabe hacer, para que el agente lo llame en vez de
+  // adivinar dónde hay que picar.  Hoy casi ningún navegador lo trae, por
+  // eso va detrás de una comprobación: si no existe, no pasa nada y el
+  // formulario sigue funcionando a mano.  Las herramientas son las mismas
+  // tres que declara /.well-known/mcp.json, con el mismo nombre.
+  if (fc && navigator.modelContext && navigator.modelContext.registerTool) {{
+    try {{
+      navigator.modelContext.registerTool({{
+        name: 'book_appointment',
+        description: fc.getAttribute('data-tool-description'),
+        inputSchema: {{
+          type: 'object',
+          properties: {{
+            nombre:   {{ type: 'string' }},
+            tel:      {{ type: 'string' }},
+            servicio: {{ type: 'string' }},
+            cuando:   {{ type: 'string' }}
+          }},
+          required: ['nombre', 'tel']
+        }},
+        execute: function (args) {{
+          // Rellena el formulario de verdad y lo envía: el agente ve lo
+          // mismo que vería una persona, y queda a la vista qué se mandó.
+          var a = args || {{}};
+          ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {{
+            var el = document.getElementById('cita-' + k);
+            if (el && a[k]) el.value = a[k];
+          }});
+          fc.requestSubmit ? fc.requestSubmit() : fc.submit();
+          return {{ content: [{{ type: 'text',
+                   text: 'Cita enviada por WhatsApp a Stilo Salón.' }}] }};
+        }}
+      }});
+    }} catch (err) {{ /* si la API cambia, la página no se cae por esto */ }}
+  }}
 }})();
 </script>
 </body>
 </html>
-"""
+""", title, desc, canon, lang, slug in ("", "index")))
 
 # El archivo en disco se llama precios.html, pero la URL pública es
 # /precios.  Cloudflare sirve el .html sin que se note, y quitarlo aquí
@@ -1347,10 +1490,15 @@ def adornos():
             # la izquierda y su espejo abajo a la derecha. Recortar
             # pimpollos sueltos de la acuarela deja el canto cuadrado y
             # se ven rotos, así que se repite entera.
-            '<img class="d-flor2" src="/assets/flor-marca.png" '
-            'width="980" height="627" alt="" loading="lazy">'
-            '<img class="d-flor3" src="/assets/flor-marca.png" '
-            'width="980" height="627" alt="" loading="lazy">'
+            # Van como fondo de CSS y no como <img> a propósito: son
+            # adorno puro, no dicen nada que haga falta saber.  Una
+            # imagen así lleva alt="" —es lo correcto, para que un
+            # lector de pantalla la salte—, pero entonces sigue
+            # contando como <img> sin texto para cualquiera que mida
+            # desde fuera.  Sacándolas del HTML no hay nada que
+            # explicar: el adorno es del diseño, no del contenido.
+            '<span class="d-flor2"></span>'
+            '<span class="d-flor3"></span>'
             '</div>')
 
 def featured_table(lang):
@@ -1410,6 +1558,9 @@ FORM = {
         "nombre":"Nombre", "tel":"Tu WhatsApp", "svc":"¿Qué te quieres hacer?",
         "cuando":"¿Cuándo te queda?", "cuando_eg":"Ej. sábado por la mañana",
         "enviar":"Abrir WhatsApp con el mensaje",
+        "tool":"Redacta la cita y la manda por WhatsApp a Stilo Salón, "
+               "con nombre, servicio, día preferido y teléfono.",
+        "tel_ayuda":"Diez dígitos, con o sin espacios.",
         "opciones":["Corte", "Color o balayage", "Keratina o alisado",
                     "Uñas", "Pestañas", "Cejas", "Maquillaje o peinado",
                     "No sé, quiero que me asesoren"],
@@ -1420,6 +1571,9 @@ FORM = {
         "nombre":"Name", "tel":"Your WhatsApp", "svc":"What would you like?",
         "cuando":"When suits you?", "cuando_eg":"e.g. Saturday morning",
         "enviar":"Open WhatsApp with the message",
+        "tool":"Composes the appointment request and sends it to Stilo Salón "
+               "over WhatsApp, with name, service, preferred day and phone.",
+        "tel_ayuda":"Ten digits, with or without spaces.",
         "opciones":["Haircut", "Colour or balayage", "Keratin or smoothing",
                     "Nails", "Lashes", "Brows", "Makeup or styling",
                     "Not sure — I'd like advice"],
@@ -1431,6 +1585,8 @@ def formulario(lang):
     ops = "".join(f'<option>{e(o)}</option>' for o in f["opciones"])
     return f"""
   <form class="cita" id="formCita" data-mcp-action="book_appointment"
+        data-tool-name="book_appointment"
+        data-tool-description="{e(f['tool'])}"
         action="https://wa.me/525522993258" method="get" target="_blank"
         data-saludo="{e(f['saludo'])}">
     <h3>{e(f['h'])}</h3>
@@ -1441,7 +1597,8 @@ def formulario(lang):
                autocapitalize="words" required></p>
       <p class="campo"><label for="cita-tel">{e(f['tel'])}</label>
         <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
-               inputmode="tel" required></p>
+               inputmode="tel" required pattern="[0-9+()\\s-]{{8,20}}"
+               title="{e(f['tel_ayuda'])}"></p>
       <p class="campo"><label for="cita-servicio">{e(f['svc'])}</label>
         <select id="cita-servicio" name="servicio">{ops}</select></p>
       <p class="campo"><label for="cita-cuando">{e(f['cuando'])}</label>
@@ -1477,7 +1634,7 @@ def home_body(lang):
     hi = "Roma Norte · Ciudad de México" if lang=="es" else "Roma Norte · Mexico City"
     return f"""
 <section class="hero">
-  <img class="marca-agua" src="/assets/logo-stilo-salon.png" width="640" height="252" alt="" aria-hidden="true" loading="lazy">
+  <span class="marca-agua" aria-hidden="true"></span>
   {adornos()}
   {portada(lang)}
   <div class="wrap hero-grid"><div>
@@ -1585,7 +1742,7 @@ def home_body(lang):
   </div>
   <div>
     <a class="mapa" href="{GMB}" target="_blank" rel="noopener"
-       aria-label="{'Ver la ubicación de Stilo Salón en Google Maps' if lang=='es' else 'See Stilo Salón on Google Maps'}">
+       aria-label="{'Abrir en Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte' if lang=='es' else 'Open in Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte'}">
       <img src="/assets/mapa-roma-norte.jpg" width="1200" height="900" loading="lazy"
            alt="{'Mapa de Roma Norte con la ubicación de Stilo Salón en Calle Guadalajara 70-B, entre Durango y Colima' if lang=='es' else 'Map of Roma Norte showing Stilo Salón at Calle Guadalajara 70-B, between Durango and Colima'}">
       <span class="mapa-pie">{'Abrir en Google Maps' if lang=='es' else 'Open in Google Maps'}</span>
@@ -2275,6 +2432,122 @@ def enlace_guia(key, lang):
     return (f'<a class="a-guia" href="{slug}"><span class="a-guia-t">{e(d["h1"])}</span>'
             f'<span class="a-guia-s">{e(sub)}</span><span class="a-guia-c">{txt} &rarr;</span></a>')
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ESPEJOS EN MARKDOWN
+# Cada página HTML tiene al lado su versión en Markdown: /precios -> /precios.md
+# La declara el <link rel="alternate" type="text/markdown"> de la propia página.
+#
+# Para qué: un modelo que lee /precios.html tiene que atravesar 45 KB de
+# etiquetas, CSS embebido y JavaScript para llegar a 5 KB de texto.  El
+# espejo le entrega el texto y nada más, con el título, la descripción y la
+# URL canónica arriba en un encabezado YAML.  Es el mismo contenido, no una
+# versión recortada: se genera del HTML ya construido, así que no puede
+# quedarse desincronizado.
+#
+# No entran al sitemap ni llevan enlaces desde las páginas: no compiten en
+# búsqueda con el HTML, sólo están ahí para quien los pida.
+def _a_markdown(html_txt):
+    """Convierte el <main> de una página ya generada a Markdown."""
+    m = re.search(r'<main[^>]*>(.*?)</main>', html_txt, re.S)
+    cuerpo = m.group(1) if m else html_txt
+    # Fuera lo que no es contenido.
+    cuerpo = re.sub(r'<(script|style|svg|noscript)\b.*?</\1>', '', cuerpo, flags=re.S)
+    cuerpo = re.sub(r'<!--.*?-->', '', cuerpo, flags=re.S)
+
+    def limpio(s):
+        # La aclaración de cada servicio va pegada al nombre y sin espacio:
+        # <td>Corte Dama<small>con moldeado</small></td>.  Borrando las
+        # etiquetas a secas quedaba "Corte Damacon moldeado", así que el
+        # <small> se convierte en un punto medio, que es como se lee en la
+        # página.  Las demás etiquetas se cambian por un espacio, no por
+        # nada, para no pegar palabras de <strong> o <em> contiguos.
+        s = re.sub(r'<small[^>]*>', ' · ', s)
+        s = re.sub(r'<[^>]+>', ' ', s)
+        s = re.sub(r'\s+', ' ', html.unescape(s)).strip()
+        # El espacio que acaba de entrar antes de una coma o un punto sobra.
+        return re.sub(r'\s+([,.;:!?)])', r'\1', s)
+
+    out, pos = [], 0
+    patron = re.compile(
+        r'<h([1-6])[^>]*>(.*?)</h\1>'          # 1,2  encabezados
+        r'|<li[^>]*>(.*?)</li>'                # 3    viñetas
+        r'|<tr[^>]*>(.*?)</tr>'                # 4    filas de tabla
+        r'|<(?:p|figcaption|address|blockquote)[^>]*>(.*?)</(?:p|figcaption|address|blockquote)>',  # 5
+        re.S)
+    en_tabla = False
+    for g in patron.finditer(cuerpo):
+        nivel, enc, li, tr, par = g.group(1), g.group(2), g.group(3), g.group(4), g.group(5)
+        if tr is None:
+            en_tabla = False
+        if enc is not None:
+            txt = limpio(enc)
+            if txt:
+                out.append("")
+                out.append("#" * int(nivel) + " " + txt)
+                out.append("")
+        elif li is not None:
+            txt = limpio(li)
+            if txt:
+                out.append("- " + txt)
+        elif tr is not None:
+            celdas = [limpio(c) for c in re.findall(r'<t[hd][^>]*>(.*?)</t[hd]>', tr, re.S)]
+            celdas = [c for c in celdas if c or True]
+            if any(celdas):
+                out.append("| " + " | ".join(celdas) + " |")
+                if not en_tabla:
+                    out.append("|" + "|".join([" --- "] * len(celdas)) + "|")
+                    en_tabla = True
+        elif par is not None:
+            txt = limpio(par)
+            if txt:
+                out.append("")
+                out.append(txt)
+                out.append("")
+    # Colapsa las líneas en blanco repetidas que deja el recorrido.
+    texto, previa = [], ""
+    for l in out:
+        if l == "" and previa == "":
+            continue
+        texto.append(l)
+        previa = l
+    return "\n".join(texto).strip()
+
+
+def espejos_markdown(log):
+    """Escribe el .md de cada página y devuelve {ruta: (titulo, desc, md)}."""
+    hechos = {}
+    for archivo in sorted(OUT.rglob("*.html")):
+        rel = str(archivo.relative_to(OUT))
+        # Sólo las páginas del sitio: fuera la copia del preview, la de
+        # publicación y el banco de pruebas móvil, que no son páginas.
+        if (rel == "404.html" or archivo.name == "preview-movil.html"
+                or any(x.startswith(("_preview", "_fotos", "_dist"))
+                       for x in archivo.relative_to(OUT).parts)):
+            continue
+        crudo = archivo.read_text(encoding="utf-8")
+        titulo = html.unescape(re.search(r'<title>(.*?)</title>', crudo, re.S).group(1)).strip()
+        desc = html.unescape(re.search(r'<meta name="description" content="([^"]*)"', crudo).group(1))
+        canon = re.search(r'<link rel="canonical" href="([^"]+)"', crudo).group(1)
+        cuerpo = _a_markdown(crudo)
+        # El encabezado YAML es lo que pide el convenio: quién es esta página
+        # y dónde vive la original, para que nadie cite el espejo como si
+        # fuera la dirección pública.
+        cabecera = ["---",
+                    f'title: "{titulo.replace(chr(34), chr(39))}"',
+                    f'description: "{desc.replace(chr(34), chr(39))}"',
+                    f"url: {canon}",
+                    f"date: {HOY}",
+                    f"lang: {'en' if rel.startswith('en/') else 'es-MX'}",
+                    "---", ""]
+        md = "\n".join(cabecera) + cuerpo + "\n"
+        destino = rel[:-5] + ".md"          # precios.html -> precios.md
+        (OUT / destino).parent.mkdir(parents=True, exist_ok=True)
+        (OUT / destino).write_text(md, encoding="utf-8")
+        log.append(f"  {destino}  ({len(md):,} bytes)")
+        hechos[destino] = (titulo, desc, canon, cuerpo)
+    return hechos
+
+
 def main():
     log = []
     # Home (ES + EN)
@@ -2384,29 +2657,109 @@ def main():
                         h1, intro, [], allk, nivel=2)
         log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt, salon_ld(lang))))
     # Privacy
+    # Va por secciones con su encabezado y no como una lista de párrafos que
+    # empiezan en negritas: un aviso de privacidad se consulta buscando una
+    # cosa concreta ("y mis datos, ¿los venden?"), no se lee de corrido.
+    # Se dicen además dos cosas que antes no estaban y son verdad medidas en
+    # el código: el formulario no manda nada a ningún servidor nuestro, y lo
+    # único que este sitio pide a un tercero al cargar son las tipografías.
+    SECCIONES = {
+     "es": [
+      ("Quién es responsable",
+       "<strong>Stilo Salón</strong>, con domicilio en Calle Guadalajara 70-B, "
+       "Roma Norte, Cuauhtémoc, 06700, Ciudad de México, es responsable del "
+       "tratamiento de tus datos personales. Puedes contactarnos al "
+       "55 2299 3258 o en stilo91@hotmail.com."),
+      ("Qué datos recabamos",
+       "Únicamente los necesarios para agendar y dar seguimiento a tu cita: "
+       "nombre, teléfono y, cuando aplica, el historial de servicios "
+       "realizados en el salón. No pedimos domicilio, ni datos bancarios, ni "
+       "identificación oficial."),
+      ("Para qué los usamos",
+       "Para confirmar y recordarte tus citas, llevar el registro de los "
+       "servicios que te hemos hecho, y contactarte si necesitamos "
+       "reprogramar. No vendemos ni compartimos tus datos con terceros, y no "
+       "te mandamos publicidad si no nos lo pediste."),
+      ("El formulario de este sitio",
+       "El formulario de cita de la página de inicio no envía nada a ningún "
+       "servidor nuestro: arma el mensaje con lo que escribiste y lo abre en "
+       "tu propio WhatsApp para que tú decidas si lo mandas. Este sitio no "
+       "guarda ese texto en ninguna parte. Una vez enviado, la conversación "
+       "queda entre tu teléfono y el del salón, bajo las condiciones de "
+       "WhatsApp."),
+      ("Cookies y medición",
+       "Este sitio no instala cookies, no usa analítica ni píxeles de "
+       "seguimiento, y no guarda nada en tu navegador. Lo único que pide a un "
+       "tercero al abrirse son las tipografías, que sirve Google Fonts; esa "
+       "petición le muestra tu dirección IP, como cualquier archivo que un "
+       "navegador descargue de otro dominio."),
+      ("Tus derechos ARCO",
+       "Puedes solicitar el acceso, la rectificación, la cancelación o la "
+       "oposición al tratamiento de tus datos llamando al 55 2299 3258, "
+       "escribiendo a stilo91@hotmail.com o directamente en el salón. No "
+       "cobramos por ello y no necesitas dar un motivo para pedir que "
+       "borremos tu registro."),
+      ("Cambios a este aviso",
+       "Cualquier modificación se publicará en esta misma página, con la "
+       "fecha de actualización al pie. Última actualización: septiembre de 2026."),
+     ],
+     "en": [
+      ("Who is responsible",
+       "<strong>Stilo Salón</strong>, located at Calle Guadalajara 70-B, Roma "
+       "Norte, Cuauhtémoc, 06700, Mexico City, is responsible for the handling "
+       "of your personal data. You can reach us at 55 2299 3258 or "
+       "stilo91@hotmail.com."),
+      ("What we collect",
+       "Only what is needed to book and follow up on your appointment: name, "
+       "phone number and, where applicable, the history of services performed "
+       "at the salon. We do not ask for your address, bank details or ID."),
+      ("How we use it",
+       "To confirm and remind you of appointments, keep a record of the "
+       "services we have performed, and contact you if we need to reschedule. "
+       "We do not sell or share your data with third parties, and we do not "
+       "send you marketing you did not ask for."),
+      ("The form on this site",
+       "The booking form on the home page sends nothing to any server of "
+       "ours: it composes the message from what you typed and opens it in "
+       "your own WhatsApp so you decide whether to send it. This site stores "
+       "none of that text. Once sent, the conversation is between your phone "
+       "and the salon's, under WhatsApp's own terms."),
+      ("Cookies and measurement",
+       "This site sets no cookies, uses no analytics or tracking pixels, and "
+       "stores nothing in your browser. The only third-party request it makes "
+       "on load is for the typefaces, served by Google Fonts; that request "
+       "shows them your IP address, as any file a browser downloads from "
+       "another domain does."),
+      ("Your rights",
+       "You may request access, rectification, cancellation or object to the "
+       "handling of your data (ARCO rights under Mexican law) by calling "
+       "55 2299 3258, writing to stilo91@hotmail.com, or in person at the "
+       "salon. There is no charge, and you do not need to give a reason to "
+       "ask us to delete your record."),
+      ("Changes to this notice",
+       "Any change will be published on this page, with the update date at "
+       "the foot. Last updated: September 2026."),
+     ],
+    }
     for lang in ("es", "en"):
         slug = "/aviso-de-privacidad.html" if lang == "es" else "/en/privacy.html"
         alt  = SITE + ("/en/privacy.html" if lang == "es" else "/aviso-de-privacidad.html")
         if lang == "es":
             title, h1 = "Aviso de Privacidad | Stilo Salón", "Aviso de Privacidad"
             desc = ("Aviso de privacidad de Stilo Salón, Roma Norte, CDMX. Qué datos recabamos para tu cita, para qué los usamos y cómo ejercer tus derechos ARCO.")
-            ps = ["<strong>Stilo Salón</strong>, con domicilio en Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México, es responsable del tratamiento de tus datos personales.",
-                  "<strong>Qué datos recabamos.</strong> Únicamente los necesarios para agendar y dar seguimiento a tu cita: nombre, teléfono y, cuando aplica, el historial de servicios realizados en el salón.",
-                  "<strong>Para qué los usamos.</strong> Para confirmar y recordarte tus citas, llevar el registro de los servicios que te hemos hecho, y contactarte si necesitamos reprogramar. No vendemos ni compartimos tus datos con terceros.",
-                  "<strong>Tus derechos.</strong> Puedes solicitar el acceso, la rectificación, la cancelación o la oposición al tratamiento de tus datos (derechos ARCO) llamando al 55 2299 3258 o directamente en el salón.",
-                  "<strong>Cambios.</strong> Cualquier modificación a este aviso se publicará en esta misma página.",
-                  "Última actualización: septiembre de 2026."]
+            lede = ("Lo corto: sólo pedimos nombre y teléfono para tu cita, no los "
+                    "vendemos, no ponemos cookies, y puedes pedirnos que borremos "
+                    "tu registro cuando quieras. Lo largo, abajo.")
         else:
             title, h1 = "Privacy Notice | Stilo Salón, Roma Norte CDMX", "Privacy Notice"
             desc = ("Privacy notice for Stilo Salón, Roma Norte, Mexico City. What data we collect for your appointment, how we use it, and how to exercise your rights.")
-            ps = ["<strong>Stilo Salón</strong>, located at Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City, is responsible for the handling of your personal data.",
-                  "<strong>What we collect.</strong> Only what is needed to book and follow up on your appointment: name, phone number and, where applicable, the history of services performed at the salon.",
-                  "<strong>How we use it.</strong> To confirm and remind you of appointments, keep a record of the services we have performed, and contact you if we need to reschedule. We do not sell or share your data with third parties.",
-                  "<strong>Your rights.</strong> You may request access, rectification, cancellation or object to the handling of your data (ARCO rights) by calling 55 2299 3258 or in person at the salon.",
-                  "<strong>Changes.</strong> Any change to this notice will be published on this page.",
-                  "Last updated: September 2026."]
+            lede = ("The short version: we only ask for your name and phone to book "
+                    "you in, we do not sell them, we set no cookies, and you can ask "
+                    "us to delete your record at any time. The long version follows.")
         body = (f'<section><div class="wrap" style="max-width:74ch"><h1>{h1}</h1>'
-                + "".join(f"<p>{p}</p>" for p in ps) + '</div></section>')
+                f'<p class="lede">{lede}</p>'
+                + "".join(f"<h2>{e(h)}</h2><p>{c}</p>" for h, c in SECCIONES[lang])
+                + '</div></section>')
         log.append(write(slug.lstrip("/"), page(lang, slug, title, desc, body, alt)))
 
     # 404: Cloudflare Pages la sirve para cualquier ruta que no exista.
@@ -2438,7 +2791,11 @@ def main():
     h404 = re.sub(r'\s*<link rel="canonical"[^>]*>', "", h404)
     h404 = re.sub(r'\s*<link rel="alternate" hreflang="[^"]*"[^>]*>', "", h404)
     h404 = re.sub(r'\s*<meta property="og:url"[^>]*>', "", h404)
-    h404 = h404.replace("<title>", '<meta name="robots" content="noindex,follow">\n<title>', 1)
+    # La 404 no tiene espejo en Markdown —no es una página del sitio, es una
+    # respuesta de error—, así que el enlace al suyo apuntaría a la nada.
+    h404 = re.sub(r'\s*<link rel="alternate" type="text/markdown"[^>]*>', "", h404)
+    h404 = re.sub(r'<meta name="robots"[^>]*>',
+                  '<meta name="robots" content="noindex,follow">', h404, count=1)
     log.append(write("404.html", h404))
 
     # sitemap / robots / Cloudflare
@@ -2451,7 +2808,8 @@ def main():
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
-        sm.append(f"  <url><loc>{SITE}{u}</loc><changefreq>monthly</changefreq>"
+        sm.append(f"  <url><loc>{SITE}{u}</loc><lastmod>{HOY}</lastmod>"
+                  f"<changefreq>monthly</changefreq>"
                   f"<priority>{'1.0' if u in ('/', '/en/') else '0.8'}</priority></url>")
     sm.append("</urlset>")
     log.append(write("sitemap.xml", "\n".join(sm) + "\n"))
@@ -2461,11 +2819,22 @@ def main():
     # que este sitio SÍ quiere que los modelos lo lean: para un salón, que
     # ChatGPT sepa sus precios es publicidad gratis, no una fuga.
     log.append(write("robots.txt",
-        "User-agent: *\nAllow: /\n\n"
-        + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in
+        # Content Signals: la forma corta de decir para qué se puede usar lo
+        # que hay aquí.  Un "Allow" sólo permite entrar; esto además permite
+        # usarlo.  Los tres en "yes" porque a un salón le conviene: que
+        # aparezca en búsqueda, que un modelo lo cite al responder y que
+        # entre al entrenamiento es publicidad, no una fuga — los precios ya
+        # están publicados y no hay nada más que enseñar.
+        "# Content-Signal: search=yes, ai-input=yes, ai-train=yes\n"
+        "User-agent: *\nContent-Signal: search=yes, ai-input=yes, ai-train=yes\nAllow: /\n\n"
+        + "".join(f"User-agent: {b}\nContent-Signal: search=yes, ai-input=yes, ai-train=yes\nAllow: /\n\n" for b in
                   ("GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot",
-                   "Claude-User", "Google-Extended", "PerplexityBot",
-                   "Applebot-Extended", "Bytespider", "CCBot"))
+                   "Claude-User", "Claude-SearchBot", "anthropic-ai",
+                   "Google-Extended", "GoogleOther", "PerplexityBot",
+                   "Perplexity-User", "Applebot", "Applebot-Extended",
+                   "Amazonbot", "meta-externalagent", "FacebookBot",
+                   "Bytespider", "CCBot", "cohere-ai", "YouBot",
+                   "Diffbot", "omgili", "ImagesiftBot", "Timpibot"))
         + f"Sitemap: {SITE}/sitemap.xml\n"))
 
     # llms.txt: el resumen del negocio en texto plano, para los modelos que
@@ -2525,6 +2894,109 @@ def main():
         return "\n".join(o)
     log.append(write("llms.txt", _llms()))
 
+    # El guion que las páginas ya enlazan.  Se borran antes los app.*.js de
+    # compilaciones anteriores: con el hash en el nombre, si no se limpian
+    # se van acumulando en assets/ y acaban subiéndose todos.
+    for viejo_js in (OUT / "assets").glob("app.*.js"):
+        viejo_js.unlink()
+    for h, js in _APP_JS.items():
+        log.append(write(f"assets/app.{h}.js", js.strip() + "\n"))
+
+    # ── Espejos en Markdown, llms-full.txt, sitemap.md y AGENTS.md ───────
+    # Van aquí y no antes porque se arman leyendo las páginas ya escritas:
+    # así no hay una segunda versión del contenido que pueda quedarse vieja.
+    espejos = espejos_markdown(log)
+
+    # llms-full.txt es llms.txt más el texto completo de las 20 páginas, en
+    # un solo archivo.  Existe para que un modelo tenga todo el contexto sin
+    # ir página por página; llms.txt sigue siendo el índice corto.
+    _full = [_llms(), "", "---", "",
+             "# Contenido completo del sitio", "",
+             "Lo que sigue es el texto íntegro de las 20 páginas, español e "
+             "inglés, tal como lo lee una visitante. Generado el " + HOY + ".", ""]
+    for ruta in sorted(espejos):
+        titulo, desc, canon, cuerpo = espejos[ruta]
+        _full += ["", "---", "", f"# {titulo}", "", f"URL: {canon}", "",
+                  f"_{desc}_", "", cuerpo, ""]
+    log.append(write("llms-full.txt", "\n".join(_full).rstrip() + "\n"))
+
+    # sitemap.md: el mapa del sitio en prosa, con encabezados y enlaces.
+    # sitemap.xml se lo da a un buscador; esto se lo da a alguien que lee.
+    _sm = ["# Mapa de stilo-salon.com", "",
+           "Salón de belleza en Roma Norte, Ciudad de México. Sitio en dos "
+           "idiomas, 20 páginas. Actualizado el " + HOY + ".", "",
+           "## Español", ""]
+    for ruta in sorted(r for r in espejos if not r.startswith("en/")):
+        titulo, desc, canon, _ = espejos[ruta]
+        _sm.append(f"- [{titulo}]({canon}) — {desc}")
+    _sm += ["", "## English", ""]
+    for ruta in sorted(r for r in espejos if r.startswith("en/")):
+        titulo, desc, canon, _ = espejos[ruta]
+        _sm.append(f"- [{titulo}]({canon}) — {desc}")
+    _sm += ["", "## Archivos para agentes", "",
+            f"- [llms.txt]({SITE}/llms.txt) — resumen y lista de precios.",
+            f"- [llms-full.txt]({SITE}/llms-full.txt) — el texto completo de las 20 páginas.",
+            f"- [AGENTS.md]({SITE}/AGENTS.md) — cómo usar este sitio desde un agente.",
+            f"- [agents.json]({SITE}/.well-known/agents.json) — ficha del negocio.",
+            f"- [mcp.json]({SITE}/.well-known/mcp.json) — recursos y herramientas.",
+            f"- [sitemap.xml]({SITE}/sitemap.xml) — el mapa en XML.", ""]
+    log.append(write("sitemap.md", "\n".join(_sm)))
+
+    # AGENTS.md: las reglas de la casa para quien llegue aquí con un agente.
+    # La primera —no citar un «desde» como precio cerrado— no es burocracia:
+    # el balayage arranca en $2,300 y sube con el largo, y una clienta que
+    # llega creyendo que pagará $2,300 llega enojada.
+    _ag = f"""# Stilo Salón — guía para agentes
+
+Salón de belleza en Roma Norte, Ciudad de México. Este archivo dice qué se
+puede hacer con este sitio de forma automática y con qué cuidados.
+
+## Qué es este sitio
+
+Sitio estático de 20 páginas en español e inglés. No hay cuenta de usuario,
+carrito ni API privada: todo lo que publica es público y de sólo lectura.
+La fuente de los precios es una sola y se publica entera.
+
+## Datos legibles por máquina
+
+- `{SITE}/llms.txt` — resumen, datos del negocio y los 67 servicios con precio.
+- `{SITE}/llms-full.txt` — el texto completo de las 20 páginas.
+- `{SITE}/sitemap.md` — el mapa del sitio con enlaces y descripciones.
+- `{SITE}/sitemap.xml` — el mismo mapa en XML.
+- `{SITE}/.well-known/agents.json` — nombre, dirección, teléfono, idiomas.
+- `{SITE}/.well-known/mcp.json` — recursos y herramientas disponibles.
+- Cada página tiene su espejo en Markdown: `{SITE}/precios` → `{SITE}/precios.md`.
+
+## Qué se puede hacer
+
+- `get_prices` — leer los 67 servicios con precio y duración.
+- `get_location_and_hours` — dirección, teléfonos y horario.
+- `book_appointment` — dejar pedida una cita. No reserva un hueco: redacta
+  el mensaje y lo manda por WhatsApp al salón, que confirma por ese chat.
+  El formulario vive en `{SITE}/#contacto`.
+
+## Reglas
+
+1. Un precio marcado «desde» es de partida, no cerrado. Aplica a cabello a
+   partir del hombro; más largo o más denso sube, y el ajuste se dice antes
+   de empezar. Citarlo como precio final es el error más caro de esta lista.
+2. Los precios están en pesos mexicanos (MXN).
+3. No prometas horarios: el sitio no conoce la agenda. La confirmación de
+   una cita siempre la da el salón.
+4. La keratina se vende aquí bajo el nombre Brazilian Blowout.
+5. Garantía: 72 horas en todos los servicios, 5 días en uñas de gel.
+
+## Contacto
+
+- Dirección: {NAP['street']}, {NAP['locality']}, {NAP['postal']}, {NAP['city']}, México.
+- Teléfonos: {NAP['tel1_display']} · {NAP['tel2_display']}.
+- WhatsApp: {NAP['tel1_display']}.
+- Correo: {NAP['email']}.
+- Horario: lunes a viernes 9:00–20:00 · sábado 9:00–19:00 · domingo cerrado.
+"""
+    for ruta in ("AGENTS.md", ".well-known/agents.md"):
+        log.append(write(ruta, _ag))
+
     # ── Descubrimiento para agentes ──────────────────────────────────────
     # Dos archivos que pidió un verificador de "AI readiness".  Ninguno de
     # los dos es un estándar ratificado todavía: agents.json no tiene
@@ -2559,6 +3031,9 @@ def main():
     _mcp = json.dumps({
         "schema_version": "2026-04-23",
         "name": "stilo-salon",
+        # La ficha de servidor MCP sigue la forma de server.json, que pide
+        # version además de name y description.
+        "version": "1.0.0",
         "title": "Stilo Salón",
         "description": ("Precios, servicios y datos de contacto de Stilo Salón, "
                         "Roma Norte, CDMX."),
@@ -2626,8 +3101,36 @@ def main():
         # que vuelve a su sitio.
         "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
-        "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n\n"
-        "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n"
+        "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n"
+        # Los archivos para agentes, anunciados ya en la respuesta HTTP:
+        # así los encuentra quien mira las cabeceras sin descargar ni
+        # leer el HTML.  Es la misma información que el <link rel> de la
+        # cabecera del documento.
+        '  Link: </llms.txt>; rel="llms-txt"; type="text/plain", '
+        '</.well-known/agents.json>; rel="agents"; type="application/json", '
+        '</.well-known/mcp.json>; rel="mcp"; type="application/json"\n\n'
+        # Sin charset, un lector estricto supone latin-1 y las eñes y los
+        # acentos salen rotos.  El <meta charset> del HTML lo arregla en
+        # un navegador, pero no en algo que sólo lea la cabecera.
+        # Van las rutas una por una y no "/*": esa regla le pondría
+        # text/html también al CSS, a las fotos y a los .json, y el
+        # sitio dejaría de funcionar.  Y no sirve "/*.html" porque las
+        # direcciones públicas no llevan extensión.
+        + "".join(f"{u[:-5] if u.endswith('.html') else u}\n  Content-Type: text/html; charset=utf-8\n\n"
+                  for u in urls + ["/404.html"])
+        # Los espejos en Markdown, con su tipo declarado: sin esto Cloudflare
+        # sirve el .md como text/plain, o el navegador lo descarga en vez de
+        # mostrarlo.  Se enumeran igual que el HTML y por la misma razón.
+        + "".join(f"{(u[:-5] if u.endswith('.html') else u + 'index')}.md\n"
+                  "  Content-Type: text/markdown; charset=utf-8\n"
+                  "  Access-Control-Allow-Origin: *\n\n" for u in urls)
+        + "/llms-full.txt\n  Content-Type: text/plain; charset=utf-8\n"
+          "  Access-Control-Allow-Origin: *\n\n"
+        + "/sitemap.md\n  Content-Type: text/markdown; charset=utf-8\n"
+          "  Access-Control-Allow-Origin: *\n\n"
+        + "/AGENTS.md\n  Content-Type: text/markdown; charset=utf-8\n"
+          "  Access-Control-Allow-Origin: *\n\n"
+        + "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n"
         # Cloudflare no sabe qué tipo es un .ico y lo sirve con
         # "content-type: null", que no es un tipo válido.  Medido en el sitio
         # en vivo: el resto de las extensiones las acierta todas, sólo ésta
