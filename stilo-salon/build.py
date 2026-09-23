@@ -2109,7 +2109,7 @@ def galeria_html(key, lang):
 GUIA_META = {
  "lashes": dict(
    es_slug="/guia-extensiones-de-pestanas.html", en_slug="/en/eyelash-extensions-guide.html",
-   es=dict(title="La Biblia de las Extensiones de Pestañas y Cejas | Stilo Salón",
+   es=dict(title="Extensiones de Pestañas y Cejas: la Biblia | Stilo Salón",
      desc="¿Cuánto duran las extensiones de pestañas? ¿Qué técnica te conviene? ¿Cada cuándo retocar? La guía completa de Stilo Salón, Roma Norte, CDMX.",
      h1="La biblia de las extensiones de pestañas y cejas",
      lede="¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está todo, escrito por quienes las aplican.",
@@ -2121,7 +2121,7 @@ GUIA_META = {
      eyebrow="Complete guide · Roma Norte")),
  "hair": dict(
    es_slug="/guia-color-y-alisados.html", en_slug="/en/color-and-smoothing-guide.html",
-   es=dict(title="Balayage, Babylights y Alisados: la Guía Completa | Stilo Salón",
+   es=dict(title="Balayage, Babylights y Alisados: la Guía | Stilo Salón",
      desc="Balayage o babylights, cada cuándo retocar raíz y qué alisado te conviene: keratina (Brazilian Blowout), nanoplastia o botox capilar. Roma Norte, CDMX.",
      h1="Color y alisados: la guía completa",
      lede="Lo que más nos preguntan en la silla, escrito: qué técnica de color es cuál, cada cuándo volver, y cuál alisado te toca.",
@@ -2286,7 +2286,7 @@ def main():
                   "<strong>Cambios.</strong> Cualquier modificación a este aviso se publicará en esta misma página.",
                   "Última actualización: septiembre de 2026."]
         else:
-            title, h1 = "Privacy Notice | Stilo Salón", "Privacy Notice"
+            title, h1 = "Privacy Notice | Stilo Salón, Roma Norte CDMX", "Privacy Notice"
             desc = ("Privacy notice for Stilo Salón, Roma Norte, Mexico City. What data we collect for your appointment, how we use it, and how to exercise your rights.")
             ps = ["<strong>Stilo Salón</strong>, located at Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Mexico City, is responsible for the handling of your personal data.",
                   "<strong>What we collect.</strong> Only what is needed to book and follow up on your appointment: name, phone number and, where applicable, the history of services performed at the salon.",
