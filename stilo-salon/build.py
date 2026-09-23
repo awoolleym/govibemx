@@ -322,6 +322,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="mcp" content="/.well-known/mcp.json">
+<meta name="webmcp" content="/.well-known/mcp.json">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="{SITE}/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1346,6 +1347,22 @@ def featured_table(lang):
             f'<th style="text-align:right">{t["dur"]}</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table>')
 
+# Las fotos de las tarjetas van dentro de un enlace aria-hidden, así que un
+# lector de pantalla no las anuncia dos veces; el alt está por Google
+# Imágenes y porque describir trabajo real nunca sobra.  Las flores de
+# adorno y la marca de agua siguen con alt="" a propósito: describir un
+# ornamento es ruido para quien no ve.
+ALT_CARD = {
+ "es": {"cabello": "Balayage rubio en cabello largo hecho en Stilo Salón, Roma Norte",
+        "unas": "Uñas esculturales con diseño hechas en Stilo Salón, Roma Norte",
+        "pestanas": "Extensiones de pestañas de volumen hechas en Stilo Salón, Roma Norte",
+        "tratamientos": "Cabello alaciado tras un tratamiento en Stilo Salón, Roma Norte"},
+ "en": {"cabello": "Blonde balayage on long hair done at Stilo Salón, Roma Norte",
+        "unas": "Sculpted nails with custom art done at Stilo Salón, Roma Norte",
+        "pestanas": "Volume eyelash extensions done at Stilo Salón, Roma Norte",
+        "tratamientos": "Smoothed hair after a treatment at Stilo Salón, Roma Norte"},
+}
+
 def home_body(lang):
     t, c = T[lang], C[lang]
     # Foto cuadrada arriba de cada tarjeta: es trabajo real y a 560 px se
@@ -1354,7 +1371,8 @@ def home_body(lang):
     cards = "".join(
       f'<article class="card">'
       f'<a class="card-foto" href="{h}" tabindex="-1" aria-hidden="true">'
-      f'<img src="/assets/card-{k}.jpg" width="560" height="560" alt="" loading="lazy">'
+      f'<img src="/assets/card-{k}.jpg" width="560" height="560" '
+      f'alt="{e(ALT_CARD[lang][k])}" loading="lazy">'
       f'</a>'
       # El icono sale del marco de la foto y se monta a caballo sobre el
       # canto: dentro de la imagen se perdía contra el trabajo.
@@ -2428,7 +2446,7 @@ def main():
     # estático, no tiene buscador ni formularios ni API.  Un agente que lea
     # "capabilities: search" y no encuentre buscador se rompe, y la culpa
     # sería nuestra.  Va sólo lo que es cierto.
-    log.append(write(".well-known/agents.json", json.dumps({
+    _agents = json.dumps({
         "schema_version": "1.0",
         "name": "Stilo Salón",
         "description": ("Salón de belleza en Roma Norte, Ciudad de México. "
@@ -2441,9 +2459,9 @@ def main():
         # Lo que de verdad se puede hacer desde aquí: leer y contactar.
         "capabilities": ["read_prices", "read_services", "contact"],
         "documentation": f"{SITE}/llms.txt",
-    }, ensure_ascii=False, indent=2) + "\n"))
+    }, ensure_ascii=False, indent=2) + "\n"
 
-    log.append(write(".well-known/mcp.json", json.dumps({
+    _mcp = json.dumps({
         "schema_version": "2026-04-23",
         "name": "stilo-salon",
         "title": "Stilo Salón",
@@ -2460,7 +2478,16 @@ def main():
             {"uri": f"{SITE}/sitemap.xml", "name": "Mapa del sitio",
              "description": "Las 20 páginas, español e inglés.", "mimeType": "application/xml"},
         ],
-    }, ensure_ascii=False, indent=2) + "\n"))
+    }, ensure_ascii=False, indent=2) + "\n"
+
+    # Cada uno en dos rutas.  La de .well-known es la que piden las
+    # convenciones; la de la raíz existe porque una carpeta que empieza con
+    # punto se pierde con facilidad —al comprimir, al copiar, al descomprimir
+    # con ciertas herramientas— y ese fallo es mudo: sólo se ve como un 404.
+    for ruta in (".well-known/agents.json", "agents.json"):
+        log.append(write(ruta, _agents))
+    for ruta in (".well-known/mcp.json", "mcp.json"):
+        log.append(write(ruta, _mcp))
     log.append(write("_headers",
         "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"

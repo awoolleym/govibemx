@@ -5,3 +5,4 @@ _fotos*/
 # Carpeta de publicación: se regenera con publicar.py
 _dist/
 __pycache__/
+_dist.zip

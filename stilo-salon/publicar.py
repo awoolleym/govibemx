@@ -19,7 +19,7 @@ enumerado aquí no se sube, aunque alguien lo agregue al proyecto mañana.
     python3 build.py && python3 publicar.py
     # y se sube _dist/  (wrangler pages deploy _dist  ·  o se arrastra)
 """
-import shutil, sys, pathlib
+import shutil, sys, pathlib, zipfile
 
 SRC = pathlib.Path(__file__).parent
 DIST = SRC / "_dist"
@@ -38,7 +38,8 @@ PAGINAS = [
 # Configuración que Pages lee (no se sirve como página).
 CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml", "llms.txt",
           "favicon.ico", "apple-touch-icon.png", "site.webmanifest",
-          ".well-known/agents.json", ".well-known/mcp.json"]
+          ".well-known/agents.json", ".well-known/mcp.json",
+          "agents.json", "mcp.json"]
 # .well-known empieza con punto: al comprimir hay que excluir sólo los
 # archivos ocultos sueltos, no esa carpeta.  Con "zip -x '.*'" se perdía
 # entera y nadie se enteraba hasta ver el 404.
@@ -89,9 +90,28 @@ def main():
                  + "\n  ".join(prohibido))
 
     peso = sum(f.stat().st_size for f in DIST.rglob("*") if f.is_file())
+    # El zip se arma aquí y no a mano: escrito a mano se cuela
+    # "zip -x '.*'", que excluye todo lo que empieza con punto y se lleva la
+    # carpeta .well-known entera sin decir nada.  Aquí se listan los archivos
+    # explícitamente, así que lo que está en _dist es lo que va en el zip.
+    zipf = SRC / "_dist.zip"
+    if zipf.exists():
+        zipf.unlink()
+    archivos = sorted(f for f in DIST.rglob("*") if f.is_file())
+    with zipfile.ZipFile(zipf, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+        for f in archivos:
+            z.write(f, f.relative_to(DIST))
+    # Comprobación: lo que se comprimió tiene que ser exactamente lo que hay.
+    with zipfile.ZipFile(zipf) as z:
+        dentro = {i.filename for i in z.infolist() if not i.is_dir()}
+    esperado = {str(f.relative_to(DIST)) for f in archivos}
+    if dentro != esperado:
+        sys.exit(f"El zip no coincide con _dist. Falta: {sorted(esperado-dentro)[:5]}")
+
     print(f"_dist/ listo — {n} páginas y archivos de config, {a} assets, "
           f"{peso/1e6:.1f} MB")
-    print("Subir con:  npx wrangler pages deploy _dist")
+    print(f"_dist.zip — {len(dentro)} archivos, {zipf.stat().st_size/1e6:.1f} MB")
+    print("Subir el zip al Worker, o:  npx wrangler pages deploy _dist")
 
 if __name__ == "__main__":
     main()
