@@ -594,6 +594,30 @@
       ticking = false;
     });
   }, { passive: true });
+
+  // ── Formulario de cita ───────────────────────────────────────────────
+  // Arma el mensaje y abre WhatsApp.  Nada sale hacia un servidor nuestro:
+  // el sitio es estático y no hay dónde guardar.  Si esto no corre (JS
+  // apagado, error antes), el action del formulario abre el chat igual.
+  var fc = document.getElementById('formCita');
+  if (fc) fc.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var v = function (id) {
+      var el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    };
+    var l = [fc.getAttribute('data-saludo')];
+    // Los rótulos van en el mensaje para que llegue legible al teléfono
+    // del salón, no como cuatro palabras sueltas.
+    var campos = [['cita-nombre', 'Nombre'], ['cita-servicio', 'Servicio'],
+                  ['cita-cuando', 'Cuando'], ['cita-tel', 'WhatsApp']];
+    for (var i = 0; i < campos.length; i++) {
+      var val = v(campos[i][0]);
+      if (val) l.push(campos[i][1] + ': ' + val);
+    }
+    window.open('https://wa.me/525522993258?text=' +
+                encodeURIComponent(l.join('\n')), '_blank', 'noopener');
+  });
 })();
 </script>
 </body>

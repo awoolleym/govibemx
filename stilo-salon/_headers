@@ -14,3 +14,19 @@
 /llms.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *
+
+/robots.txt
+  Access-Control-Allow-Origin: *
+
+/sitemap.xml
+  Access-Control-Allow-Origin: *
+
+/agents.json
+  Access-Control-Allow-Origin: *
+
+/mcp.json
+  Access-Control-Allow-Origin: *
+
+/.well-known/*
+  Access-Control-Allow-Origin: *

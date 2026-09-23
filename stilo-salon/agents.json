@@ -12,7 +12,8 @@
   "capabilities": [
     "read_prices",
     "read_services",
-    "contact"
+    "contact",
+    "book_appointment"
   ],
   "documentation": "https://stilo-salon.com/llms.txt"
 }

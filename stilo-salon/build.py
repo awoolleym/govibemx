@@ -770,6 +770,30 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
       ticking = false;
     }});
   }}, {{ passive: true }});
+
+  // ── Formulario de cita ───────────────────────────────────────────────
+  // Arma el mensaje y abre WhatsApp.  Nada sale hacia un servidor nuestro:
+  // el sitio es estático y no hay dónde guardar.  Si esto no corre (JS
+  // apagado, error antes), el action del formulario abre el chat igual.
+  var fc = document.getElementById('formCita');
+  if (fc) fc.addEventListener('submit', function (ev) {{
+    ev.preventDefault();
+    var v = function (id) {{
+      var el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }};
+    var l = [fc.getAttribute('data-saludo')];
+    // Los rótulos van en el mensaje para que llegue legible al teléfono
+    // del salón, no como cuatro palabras sueltas.
+    var campos = [['cita-nombre', 'Nombre'], ['cita-servicio', 'Servicio'],
+                  ['cita-cuando', 'Cuando'], ['cita-tel', 'WhatsApp']];
+    for (var i = 0; i < campos.length; i++) {{
+      var val = v(campos[i][0]);
+      if (val) l.push(campos[i][1] + ': ' + val);
+    }}
+    window.open('https://wa.me/525522993258?text=' +
+                encodeURIComponent(l.join('\\n')), '_blank', 'noopener');
+  }});
 }})();
 </script>
 </body>
@@ -1363,6 +1387,72 @@ ALT_CARD = {
         "tratamientos": "Smoothed hair after a treatment at Stilo Salón, Roma Norte"},
 }
 
+# ─────────────────────────────────────────────────────────────────────────────
+# FORMULARIO DE CITA
+# No hay servidor: el sitio es estático.  El formulario no manda nada a
+# ningún lado, arma el mensaje y abre WhatsApp con él ya escrito.  Los datos
+# no pasan por nosotros ni se guardan, así que no hay nada que declarar en el
+# aviso de privacidad ni nada que se pueda filtrar.
+#
+# Por qué existe si ya hay un botón de WhatsApp: el botón abre un chat con
+# "quiero agendar una cita" y luego vienen cuatro mensajes de ida y vuelta
+# para sacar nombre, servicio y horario.  Con esto llega todo en el primer
+# mensaje.
+#
+# El action apunta a wa.me por si el navegador no corre el JavaScript: el
+# formulario abre el chat igual, sólo que sin el texto armado.
+# data-mcp-action y los autocomplete son para que un agente que llegue a la
+# página entienda qué hace el formulario y qué va en cada campo.
+FORM = {
+ "es": {"h":"Pide tu cita en un mensaje",
+        "p":"Llena esto y se abre tu WhatsApp con el mensaje ya escrito. "
+            "Nada se guarda en el sitio.",
+        "nombre":"Nombre", "tel":"Tu WhatsApp", "svc":"¿Qué te quieres hacer?",
+        "cuando":"¿Cuándo te queda?", "cuando_eg":"Ej. sábado por la mañana",
+        "enviar":"Abrir WhatsApp con el mensaje",
+        "opciones":["Corte", "Color o balayage", "Keratina o alisado",
+                    "Uñas", "Pestañas", "Cejas", "Maquillaje o peinado",
+                    "No sé, quiero que me asesoren"],
+        "saludo":"Hola, quiero una cita en Stilo Salón."},
+ "en": {"h":"Book in one message",
+        "p":"Fill this in and your WhatsApp opens with the message already "
+            "written. Nothing is stored on the site.",
+        "nombre":"Name", "tel":"Your WhatsApp", "svc":"What would you like?",
+        "cuando":"When suits you?", "cuando_eg":"e.g. Saturday morning",
+        "enviar":"Open WhatsApp with the message",
+        "opciones":["Haircut", "Colour or balayage", "Keratin or smoothing",
+                    "Nails", "Lashes", "Brows", "Makeup or styling",
+                    "Not sure — I'd like advice"],
+        "saludo":"Hi, I'd like an appointment at Stilo Salón."},
+}
+
+def formulario(lang):
+    f = FORM[lang]
+    ops = "".join(f'<option>{e(o)}</option>' for o in f["opciones"])
+    return f"""
+  <form class="cita" id="formCita" data-mcp-action="book_appointment"
+        action="https://wa.me/525522993258" method="get" target="_blank"
+        data-saludo="{e(f['saludo'])}">
+    <h3>{e(f['h'])}</h3>
+    <p class="muted">{e(f['p'])}</p>
+    <div class="cita-campos">
+      <p class="campo"><label for="cita-nombre">{e(f['nombre'])}</label>
+        <input id="cita-nombre" name="nombre" type="text" autocomplete="name"
+               autocapitalize="words" required></p>
+      <p class="campo"><label for="cita-tel">{e(f['tel'])}</label>
+        <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
+               inputmode="tel" required></p>
+      <p class="campo"><label for="cita-servicio">{e(f['svc'])}</label>
+        <select id="cita-servicio" name="servicio">{ops}</select></p>
+      <p class="campo"><label for="cita-cuando">{e(f['cuando'])}</label>
+        <input id="cita-cuando" name="cuando" type="text" autocomplete="off"
+               placeholder="{e(f['cuando_eg'])}"></p>
+    </div>
+    <button class="btn btn-wa" type="submit">{e(f['enviar'])}</button>
+  </form>
+"""
+
+
 def home_body(lang):
     t, c = T[lang], C[lang]
     # Foto cuadrada arriba de cada tarjeta: es trabajo real y a 560 px se
@@ -1502,6 +1592,7 @@ def home_body(lang):
     </a>
     <p class="mapa-cred">{'Mapa © colaboradores de' if lang=='es' else 'Map © '}
       <a href="https://www.openstreetmap.org/copyright" rel="noopener nofollow">OpenStreetMap</a></p>
+{formulario(lang)}
   </div>
   </div>
 </div></section>
@@ -2456,8 +2547,12 @@ def main():
         "contact": NAP["email"],
         "telephone": NAP["tel1"],
         "languages": ["es-MX", "en"],
-        # Lo que de verdad se puede hacer desde aquí: leer y contactar.
-        "capabilities": ["read_prices", "read_services", "contact"],
+        # Lo que de verdad se puede hacer desde aquí: leer, contactar y
+        # dejar pedida una cita.  "book_appointment" es el mismo nombre
+        # que la herramienta de mcp.json y el data-mcp-action del
+        # formulario, a propósito: los tres hablan de lo mismo.
+        "capabilities": ["read_prices", "read_services", "contact",
+                         "book_appointment"],
         "documentation": f"{SITE}/llms.txt",
     }, ensure_ascii=False, indent=2) + "\n"
 
@@ -2477,6 +2572,41 @@ def main():
              "description": "La lista completa, en HTML.", "mimeType": "text/html"},
             {"uri": f"{SITE}/sitemap.xml", "name": "Mapa del sitio",
              "description": "Las 20 páginas, español e inglés.", "mimeType": "application/xml"},
+        ],
+        # Los recursos dicen qué se puede LEER; las herramientas, qué se
+        # puede HACER.  Sin esta lista, un agente que llega al sitio sabe
+        # los precios pero no tiene forma de saber que la cita se pide por
+        # WhatsApp y no por un carrito.  Las tres son las únicas acciones
+        # que existen de verdad en un sitio estático: no hay servidor que
+        # reciba una reserva, así que no se promete una.
+        "tools": [
+            {"name": "book_appointment",
+             "title": "Pedir cita",
+             "description": "Abre WhatsApp con la cita ya redactada. El salón "
+                            "confirma por ese mismo chat; el sitio no reserva "
+                            "horarios por su cuenta.",
+             "url": f"{SITE}/#contacto",
+             "inputSchema": {
+                 "type": "object",
+                 "properties": {
+                     "nombre":   {"type": "string", "description": "Nombre de la clienta."},
+                     "tel":      {"type": "string", "description": "WhatsApp a diez dígitos."},
+                     "servicio": {"type": "string", "description": "Qué servicio quiere."},
+                     "cuando":   {"type": "string", "description": "Día y hora que le queda, en texto libre."},
+                 },
+                 "required": ["nombre", "tel"],
+             }},
+            {"name": "get_prices",
+             "title": "Consultar precios",
+             "description": "Los 67 servicios con precio en pesos y duración. "
+                            "Los que dicen «desde» son precio de partida, no fijo.",
+             "url": f"{SITE}/llms.txt",
+             "inputSchema": {"type": "object", "properties": {}}},
+            {"name": "get_location_and_hours",
+             "title": "Ubicación y horario",
+             "description": "Dirección en Roma Norte, teléfonos y horario de la semana.",
+             "url": f"{SITE}/#contacto",
+             "inputSchema": {"type": "object", "properties": {}}},
         ],
     }, ensure_ascii=False, indent=2) + "\n"
 
@@ -2508,7 +2638,22 @@ def main():
         # en el navegador en vez de descargarse.  El charset va explícito
         # porque el archivo lleva acentos y eñes en cada línea.
         "/llms.txt\n  Content-Type: text/plain; charset=utf-8\n"
-        "  Cache-Control: public, max-age=86400\n"))
+        "  Cache-Control: public, max-age=86400\n  Access-Control-Allow-Origin: *\n\n"
+        # Los archivos que existen PARA que los lea otro sitio tienen que
+        # permitirlo.  Sin esta cabecera, cualquier verificador que corra
+        # dentro del navegador —los de "AI readiness" lo hacen— pide
+        # /llms.txt o /.well-known/agents.json con fetch() desde su propio
+        # dominio, el navegador cancela la respuesta por origen cruzado y
+        # el verificador lo reporta como "archivo no encontrado".  Medido:
+        # los seis archivos responden 200 y ninguno traía
+        # Access-Control-Allow-Origin.  Es información pública —la misma
+        # que ya está en el HTML—, así que abrirla no expone nada; el HTML
+        # de las páginas se queda como está, sin CORS.
+        "/robots.txt\n  Access-Control-Allow-Origin: *\n\n"
+        "/sitemap.xml\n  Access-Control-Allow-Origin: *\n\n"
+        "/agents.json\n  Access-Control-Allow-Origin: *\n\n"
+        "/mcp.json\n  Access-Control-Allow-Origin: *\n\n"
+        "/.well-known/*\n  Access-Control-Allow-Origin: *\n"))
     # Rutas viejas del sitio de GoDaddy -> nuevas.  Evita perder el poco
     # posicionamiento que ya existe.
     # Ojo con estas: ahora que las URLs públicas no llevan .html, las reglas

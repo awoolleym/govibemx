@@ -182,6 +182,28 @@
     </a>
     <p class="mapa-cred">Map © 
       <a href="https://www.openstreetmap.org/copyright" rel="noopener nofollow">OpenStreetMap</a></p>
+
+  <form class="cita" id="formCita" data-mcp-action="book_appointment"
+        action="https://wa.me/525522993258" method="get" target="_blank"
+        data-saludo="Hi, I'd like an appointment at Stilo Salón.">
+    <h3>Book in one message</h3>
+    <p class="muted">Fill this in and your WhatsApp opens with the message already written. Nothing is stored on the site.</p>
+    <div class="cita-campos">
+      <p class="campo"><label for="cita-nombre">Name</label>
+        <input id="cita-nombre" name="nombre" type="text" autocomplete="name"
+               autocapitalize="words" required></p>
+      <p class="campo"><label for="cita-tel">Your WhatsApp</label>
+        <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
+               inputmode="tel" required></p>
+      <p class="campo"><label for="cita-servicio">What would you like?</label>
+        <select id="cita-servicio" name="servicio"><option>Haircut</option><option>Colour or balayage</option><option>Keratin or smoothing</option><option>Nails</option><option>Lashes</option><option>Brows</option><option>Makeup or styling</option><option>Not sure — I'd like advice</option></select></p>
+      <p class="campo"><label for="cita-cuando">When suits you?</label>
+        <input id="cita-cuando" name="cuando" type="text" autocomplete="off"
+               placeholder="e.g. Saturday morning"></p>
+    </div>
+    <button class="btn btn-wa" type="submit">Open WhatsApp with the message</button>
+  </form>
+
   </div>
   </div>
 </div></section>
@@ -602,6 +624,30 @@
       ticking = false;
     });
   }, { passive: true });
+
+  // ── Formulario de cita ───────────────────────────────────────────────
+  // Arma el mensaje y abre WhatsApp.  Nada sale hacia un servidor nuestro:
+  // el sitio es estático y no hay dónde guardar.  Si esto no corre (JS
+  // apagado, error antes), el action del formulario abre el chat igual.
+  var fc = document.getElementById('formCita');
+  if (fc) fc.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var v = function (id) {
+      var el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    };
+    var l = [fc.getAttribute('data-saludo')];
+    // Los rótulos van en el mensaje para que llegue legible al teléfono
+    // del salón, no como cuatro palabras sueltas.
+    var campos = [['cita-nombre', 'Nombre'], ['cita-servicio', 'Servicio'],
+                  ['cita-cuando', 'Cuando'], ['cita-tel', 'WhatsApp']];
+    for (var i = 0; i < campos.length; i++) {
+      var val = v(campos[i][0]);
+      if (val) l.push(campos[i][1] + ': ' + val);
+    }
+    window.open('https://wa.me/525522993258?text=' +
+                encodeURIComponent(l.join('\n')), '_blank', 'noopener');
+  });
 })();
 </script>
 </body>

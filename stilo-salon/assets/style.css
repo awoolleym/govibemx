@@ -1080,6 +1080,40 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 }
 .mapa-cred a { color: var(--muted); }
 
+/* ── Formulario de cita ──────────────────────────────────────────────
+   Va debajo del mapa, en la misma columna.  No manda nada a ningún
+   servidor: arma el texto y abre WhatsApp (ver formulario() en build.py).
+   Los campos son de una sola columna a propósito — se llena casi siempre
+   desde el teléfono, y dos columnas en 380 px obligan a hacer zoom.
+   El tamaño de letra de los inputs es 16px y no menos: por debajo de eso
+   Safari en iPhone hace zoom solo al enfocar un campo y desmaqueta la
+   página. */
+.cita {
+  margin-top: 1.6rem; padding: 1.5rem;
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.cita h3 { margin: 0 0 .3rem; }
+.cita > .muted { font-size: .86rem; margin: 0 0 1.2rem; }
+.cita-campos { display: grid; gap: .9rem; }
+.campo { margin: 0; display: grid; gap: .32rem; }
+.campo label {
+  font-family: var(--sans); font-size: .74rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+.cita input, .cita select {
+  font: inherit; font-size: 16px; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: 10px; padding: .62rem .8rem; width: 100%;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.cita input::placeholder { color: var(--muted); }
+.cita input:focus-visible, .cita select:focus-visible {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+.cita .btn-wa { margin-top: 1.2rem; width: 100%; justify-content: center; }
+
 /* ═══════════════════════════════════════════════════════════════════
    PORTADA — TRÍPTICO
    Tres láminas verticales escalonadas, una por línea del salón. Es el
