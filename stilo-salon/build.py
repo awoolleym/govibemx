@@ -2349,7 +2349,13 @@ def main():
         "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
         "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n\n"
-        "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n"))
+        "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n"
+        # Cloudflare no sabe qué tipo es un .ico y lo sirve con
+        # "content-type: null", que no es un tipo válido.  Medido en el sitio
+        # en vivo: el resto de las extensiones las acierta todas, sólo ésta
+        # no.  Se declara a mano.
+        "/favicon.ico\n  Content-Type: image/vnd.microsoft.icon\n"
+        "  Cache-Control: public, max-age=604800\n"))
     # Rutas viejas del sitio de GoDaddy -> nuevas.  Evita perder el poco
     # posicionamiento que ya existe.
     # Ojo con estas: ahora que las URLs públicas no llevan .html, las reglas
