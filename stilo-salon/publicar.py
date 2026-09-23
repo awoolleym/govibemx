@@ -36,7 +36,8 @@ PAGINAS = [
     "en/nails-guide.html", "en/eyelash-extensions-guide.html", "en/privacy.html",
 ]
 # Configuración que Pages lee (no se sirve como página).
-CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml"]
+CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml",
+          "favicon.ico", "apple-touch-icon.png", "site.webmanifest"]
 # Todo assets/ menos lo que no haga falta servir.
 ASSETS_EXT = {".css", ".js", ".jpg", ".jpeg", ".webp", ".png", ".svg", ".ico", ".woff2"}
 

@@ -317,6 +317,9 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <meta property="og:title" content="{html.escape(title, quote=True)}">
 <meta property="og:description" content="{html.escape(desc, quote=True)}">
 <meta property="og:url" content="{canon}">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#15191D">
 <meta property="og:image" content="{SITE}/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
