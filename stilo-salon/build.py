@@ -369,6 +369,75 @@ def externaliza_js(doc):
             + doc[m.end():])
 
 
+# ── WebMCP, en la cabecera de todas las páginas ───────────────────────────
+# Estaba junto al formulario, al 79% del documento.  Ahí lo encuentra quien
+# lee la página entera, pero no quien mira sólo la cabecera —y las tres
+# herramientas son del sitio, no de la portada: desde /precios también se
+# puede pedir cita, sólo que el formulario vive en la portada.
+#
+# Van dos cosas: el bloque JSON con las herramientas, que es la declaración
+# legible sin ejecutar nada, y el registro en modelContext, que es la API de
+# verdad.  El registro no necesita el DOM —lee el bloque de arriba, que ya
+# está—, y la búsqueda del formulario se hace dentro de la acción, cuando
+# alguien la llama y la página ya está montada.
+def webmcp_head(lang):
+    t_ = T[lang]
+    return (f'<script type="application/json" id="webmcp-tools">'
+            f'{json.dumps(HERRAMIENTAS, ensure_ascii=False)}</script>\n'
+            '<script id="webmcp-registro">\n'
+            '(function () {\n'
+            "  var d = document.getElementById('webmcp-tools');\n"
+            '  if (!d) return;\n'
+            '  var tools;\n'
+            '  try { tools = JSON.parse(d.textContent); } catch (e) { return; }\n'
+            '  function pedirCita(args) {\n'
+            "    var fc = document.getElementById('formCita');\n"
+            '    // El formulario sólo existe en la portada.  Desde cualquier\n'
+            '    // otra página, la acción lleva hasta él en vez de fallar.\n'
+            f"    if (!fc) {{ location.href = '{'/' if lang == 'es' else '/en/'}#contacto'; \n"
+            "      return { content: [{ type: 'text', text: 'Abriendo el formulario de cita.' }] }; }\n"
+            '    var a = args || {};\n'
+            "    ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {\n"
+            "      var el = document.getElementById('cita-' + k);\n"
+            '      if (el && a[k]) el.value = a[k];\n'
+            '    });\n'
+            '    fc.requestSubmit ? fc.requestSubmit() : fc.submit();\n'
+            "    return { content: [{ type: 'text',\n"
+            "             text: 'Cita enviada por WhatsApp a Stilo Salon.' }] };\n"
+            '  }\n'
+            '  var acciones = {\n'
+            '    book_appointment: pedirCita,\n'
+            '    get_prices: function () {\n'
+            f"      return {{ content: [{{ type: 'text', text: '{SITE}/llms.txt' }}] }};\n"
+            '    },\n'
+            '    get_location_and_hours: function () {\n'
+            "      return { content: [{ type: 'text',\n"
+            f"               text: '{NAP['street']}, {NAP['locality']}, {NAP['postal']}, {NAP['city']}. ' +\n"
+            "                     'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +\n"
+            f"                     'Tel {NAP['tel1_display']}.' }}] }};\n"
+            '    }\n'
+            '  };\n'
+            '  /* La API se ha movido de sitio: empezó en navigator.modelContext y\n'
+            '     pasó a document.modelContext, así que se mira en los dos.  Y el\n'
+            '     método bueno es registerTool: provideContext salió de la\n'
+            '     especificación en marzo de 2026. */\n'
+            '  var mc = document.modelContext || navigator.modelContext;\n'
+            '  if (!mc) return;\n'
+            '  function completa(t) {\n'
+            '    return { name: t.name, description: t.description,\n'
+            '             inputSchema: t.inputSchema, execute: acciones[t.name] };\n'
+            '  }\n'
+            '  try {\n'
+            "    if (typeof mc.registerTool === 'function') {\n"
+            '      tools.forEach(function (t) { mc.registerTool(completa(t)); });\n'
+            "    } else if (typeof mc.provideContext === 'function') {\n"
+            '      mc.provideContext({ tools: tools.map(completa) });\n'
+            '    }\n'
+            '  } catch (err) { /* si la API cambia otra vez, la página no se cae */ }\n'
+            '})();\n'
+            '</script>')
+
+
 def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
     t = T[lang]
     home = "/" if lang == "es" else "/en/"
@@ -420,6 +489,7 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
 <link rel="manifest" href="/site.webmanifest">
 <meta name="mcp" content="/.well-known/mcp.json">
 <meta name="webmcp" content="/.well-known/mcp.json">
+{webmcp_head(lang)}
 <link rel="llms" type="text/plain" href="/llms.txt">
 <link rel="llms-txt" type="text/plain" href="/llms.txt">
 <link rel="agents" type="application/json" href="/.well-known/agents.json">
@@ -1630,65 +1700,6 @@ def formulario(lang):
     </div>
     <button class="btn btn-wa" type="submit">{e(f['enviar'])}</button>
   </form>
-  <script type="application/json" id="webmcp-tools">{json.dumps(HERRAMIENTAS, ensure_ascii=False)}</script>
-  <script id="webmcp-registro">
-  /* WebMCP. Las herramientas van escritas en el bloque JSON de arriba y no
-     sólo en /.well-known/mcp.json: así quien lee la página las ve sin tener
-     que ir a buscar otro archivo, y son las mismas tres, salidas de la
-     misma lista al compilar.
-     navigator.modelContext lo pone el navegador cuando trae agente; hoy casi
-     ninguno lo trae, por eso va detrás de la comprobación. Si no existe, no
-     pasa nada: el formulario se llena a mano como siempre. */
-  (function () {{
-    var d = document.getElementById('webmcp-tools');
-    if (!d) return;
-    var tools;
-    try {{ tools = JSON.parse(d.textContent); }} catch (e) {{ return; }}
-    var fc = document.getElementById('formCita');
-    // Rellena el formulario de verdad y lo envía: el agente hace lo mismo
-    // que haría una persona, y queda a la vista qué se mandó.
-    function pedirCita(args) {{
-      var a = args || {{}};
-      ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {{
-        var el = document.getElementById('cita-' + k);
-        if (el && a[k]) el.value = a[k];
-      }});
-      if (fc) fc.requestSubmit ? fc.requestSubmit() : fc.submit();
-      return {{ content: [{{ type: 'text',
-               text: 'Cita enviada por WhatsApp a Stilo Salón.' }}] }};
-    }}
-    var acciones = {{
-      book_appointment: pedirCita,
-      get_prices: function () {{
-        return {{ content: [{{ type: 'text', text: '{SITE}/llms.txt' }}] }};
-      }},
-      get_location_and_hours: function () {{
-        return {{ content: [{{ type: 'text',
-                 text: '{NAP["street"]}, {NAP["locality"]}, {NAP["postal"]}, {NAP["city"]}. ' +
-                       'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +
-                       'Tel {NAP["tel1_display"]}.' }}] }};
-      }}
-    }};
-    /* La API se ha movido de sitio dos veces: empezó en navigator.modelContext
-       y pasó a document.modelContext, así que se mira en los dos.  Y el
-       método bueno es registerTool: provideContext salió de la
-       especificación en marzo de 2026 y sólo queda aquí por si algún
-       navegador viejo lo trae. */
-    var mc = document.modelContext || navigator.modelContext;
-    if (!mc) return;
-    function completa(t) {{
-      return {{ name: t.name, description: t.description,
-               inputSchema: t.inputSchema, execute: acciones[t.name] }};
-    }}
-    try {{
-      if (typeof mc.registerTool === 'function') {{
-        tools.forEach(function (t) {{ mc.registerTool(completa(t)); }});
-      }} else if (typeof mc.provideContext === 'function') {{
-        mc.provideContext({{ tools: tools.map(completa) }});
-      }}
-    }} catch (err) {{ /* si la API cambia otra vez, la página no se cae */ }}
-  }})();
-  </script>
 """
 
 
