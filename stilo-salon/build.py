@@ -1186,14 +1186,19 @@ def marcas(lang):
 # y mechas se parecen en foto, así que el criterio es el que le sirve a la
 # clienta que busca, no el del catálogo técnico: "balayage" para el barrido
 # de raíz oscura a puntas claras, "rubios" para todo lo que termina en rubio
-# frío o platino, "morenas y alisados" para el oscuro y el liso, "fantasía"
+# frío o platino, "cafés y alisados" para el oscuro y el liso, "fantasía"
 # para el color vivo.  Si una queda mal puesta, se cambia esta línea y ya.
-PF_TEC = ["balayage", "rubios", "morenas", "fantasia"]
+#
+# Decía "morenas" y estaba mal: en México morena es el tono de piel, no el
+# del cabello, así que la etiqueta terminaba describiendo a la clienta en
+# vez del trabajo.  Y descolgaba del resto — balayage, rubios, fantasía
+# nombran el color que se hizo.  "Cafés" nombra lo mismo que los otros.
+PF_TEC = ["balayage", "rubios", "cafes", "fantasia"]
 
 PF_ETI = {
  "es": {"balayage": ("Balayage", "desde $2,300"),
         "rubios":   ("Rubios y babylights", "desde $2,300"),
-        "morenas":  ("Color y alisado", "desde $800"),
+        "cafes":    ("Color y alisado", "desde $800"),
         "fantasia": ("Color fantasía", "cotización en el salón"),
         "diseno":   ("Uñas con diseño", "desde $250"),
         "tono":     ("Uñas de un tono", "desde $250"),
@@ -1201,7 +1206,7 @@ PF_ETI = {
         "pestanas": ("Extensiones de pestañas", "desde $750")},
  "en": {"balayage": ("Balayage", "from $2,300"),
         "rubios":   ("Blondes & babylights", "from $2,300"),
-        "morenas":  ("Color & smoothing", "from $800"),
+        "cafes":    ("Color & smoothing", "from $800"),
         "fantasia": ("Fantasy color", "quoted in the salon"),
         "diseno":   ("Nail art", "from $250"),
         "tono":     ("Single-shade nails", "from $250"),
@@ -1219,10 +1224,10 @@ PF_CAT = {
 # etiquetar mal un servicio que cuesta $750 a $1,200.
 PF_FILTRO = {
  "es": {"cabello": [("", "Todo"), ("balayage", "Balayage"), ("rubios", "Rubios"),
-                    ("morenas", "Morenas y alisados"), ("fantasia", "Color fantasía")],
+                    ("cafes", "Cafés y alisados"), ("fantasia", "Color fantasía")],
         "unas":    [("", "Todo"), ("diseno", "Con diseño"), ("tono", "De un tono")]},
  "en": {"cabello": [("", "All"), ("balayage", "Balayage"), ("rubios", "Blondes"),
-                    ("morenas", "Brunettes & smoothing"), ("fantasia", "Fantasy color")],
+                    ("cafes", "Brunettes & smoothing"), ("fantasia", "Fantasy color")],
         "unas":    [("", "All"), ("diseno", "Nail art"), ("tono", "Single shade")]},
 }
 
@@ -1277,13 +1282,13 @@ PORTAFOLIO = [
   ("cabello-106", "cabello", "rubios"),
   ("cabello-174", "cabello", "rubios"),
   ("cabello-180", "cabello", "rubios"),
-  ("cabello-13", "cabello", "morenas"),
-  ("cabello-49", "cabello", "morenas"),
-  ("cabello-50", "cabello", "morenas"),
-  ("cabello-68", "cabello", "morenas"),
-  ("cabello-72", "cabello", "morenas"),
-  ("cabello-80", "cabello", "morenas"),
-  ("cabello-91", "cabello", "morenas"),
+  ("cabello-13", "cabello", "cafes"),
+  ("cabello-49", "cabello", "cafes"),
+  ("cabello-50", "cabello", "cafes"),
+  ("cabello-68", "cabello", "cafes"),
+  ("cabello-72", "cabello", "cafes"),
+  ("cabello-80", "cabello", "cafes"),
+  ("cabello-91", "cabello", "cafes"),
   ("cabello-5", "cabello", "fantasia"),
   ("cabello-6", "cabello", "fantasia"),
   ("cabello-15", "cabello", "fantasia"),
