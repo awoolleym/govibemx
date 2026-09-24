@@ -1,0 +1,1756 @@
+/* Stilo Salón — sistema de diseño
+   Colores y tipografías tomados del manual de marca (stilo_imagotipo.pdf):
+     tinta  #15191D   ·   rosa  #C06184
+     Principal: Samantha (script) — vive solo en el logo, no como webfont
+     Secundaria: Caviar Dreams Bold — en web usamos Jost, la equivalente
+     libre más cercana (ambas geométricas derivadas de Futura)
+   El rosa de marca solo va en superficies y trazos; para texto y enlaces
+   usamos --accent-deep.
+   Corregido: --accent-deep era #B35A7B y daba 4.37 sobre el papel — se
+   queda a un pelo del 4.5 que pide AA para texto chico. Medido contra
+   todas las superficies del sitio, #9A4867 pasa AA en todas salvo el
+   extremo más hondo del degradado de portada, donde solo hay texto
+   grande. A ojo es el mismo rosa. */
+
+/* Parisienne — el acento script del H1.
+   La servimos nosotros (22 KB) en vez de pedirla a Google: es una sola
+   palabra visible de entrada, así que no puede depender de un tercero. */
+@font-face {
+  font-family: "Parisienne";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("parisienne.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122;
+}
+
+:root {
+  --ink:         #15191D;
+  --ink-soft:    #3a4045;
+  --muted:       #6b7278;
+  --line:        #e6e2e4;
+  --paper:       #fdfbfc;
+  --paper-2:     #f7eff2;
+  --accent:      #c06184;
+  --accent-deep: #9A4867;
+  --accent-tint: #f6e6ec;
+  --ok:          #2f6b4f;
+
+  --display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  --sans:    "Jost", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --wrap: 1120px;
+  --r:    14px;
+  --shadow: 0 1px 2px rgba(23,19,15,.05), 0 8px 28px rgba(23,19,15,.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: 20px; }
+
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; line-height: 1.12; margin: 0 0 .5em; letter-spacing: -.005em; }
+h1 { font-weight: 300; }
+h1 { font-size: clamp(2.9rem, 7vw, 4.9rem); }
+h2 { font-size: clamp(2.1rem, 4.4vw, 3rem); }
+h3 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); }
+p  { margin: 0 0 1.1em; }
+a  { color: var(--accent-deep); }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: .74rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent-deep); margin-bottom: 1rem;
+}
+.lede { font-size: clamp(1.05rem, 2vw, 1.22rem); color: var(--ink-soft); max-width: 62ch; }
+.muted { color: var(--muted); }
+
+/* ---------- Header ---------- */
+.site-head {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(253,251,252,.93);
+  backdrop-filter: saturate(150%) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.head-in { display: flex; align-items: center; gap: 1.5rem; min-height: 92px; }
+.brand { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+.brand img { height: 56px; width: auto; display: block; }
+@media (max-width: 640px) { .brand img { height: 40px; } }
+.nav { display: flex; gap: 1.6rem; margin-left: auto; align-items: center; }
+.nav a { color: var(--ink-soft); text-decoration: none; font-size: .93rem; font-weight: 400; }
+.nav a:hover, .nav a[aria-current="page"] { color: var(--accent-deep); }
+
+.lang { display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: #fff; }
+.lang a { font-size: .74rem; letter-spacing: .08em; padding: 4px 11px; border-radius: 999px; text-decoration: none; color: var(--muted); font-weight: 500; }
+.lang a[aria-current="true"] { background: var(--ink); color: var(--paper); }
+
+.menu-btn { display: none; margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font: inherit; font-size: .85rem; cursor: pointer; color: var(--ink); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .82rem 1.5rem; border-radius: 999px;
+  font-size: .93rem; font-weight: 500; text-decoration: none;
+  border: 1px solid transparent; cursor: pointer; transition: .18s ease;
+}
+.btn-primary { background: var(--ink); color: var(--paper); }
+.btn-primary:hover { background: var(--accent-deep); }
+.btn-ghost { border-color: var(--ink); color: var(--ink); }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+.btn-wa { background: var(--ok); color: #fff; }
+.btn-wa:hover { filter: brightness(1.1); }
+.btn-row { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.8rem; }
+
+/* ---------- Sections ---------- */
+section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
+.sec-head { max-width: 70ch; margin-bottom: 2.8rem; }
+.alt { background: var(--paper-2); }
+.ink-sec { background: var(--ink); color: var(--paper-2); }
+.ink-sec h2, .ink-sec h3 { color: #fff; }
+.ink-sec .lede, .ink-sec p { color: #c3cace; }
+.ink-sec .eyebrow { color: var(--accent); }
+
+/* ---------- Hero ---------- */
+.hero { padding: clamp(3.5rem, 9vw, 7rem) 0 clamp(3rem, 7vw, 5rem); }
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.hero h1 { margin-bottom: 1.2rem; }
+.hero-figure {
+  aspect-ratio: 4/5; border-radius: var(--r); overflow: hidden;
+  background: linear-gradient(150deg, var(--accent-tint), var(--paper-2) 55%, #ecd9e1);
+  display: grid; place-items: center; box-shadow: var(--shadow);
+}
+.hero-figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ph { text-align: center; color: var(--accent-deep); font-family: var(--sans); font-size: 1.05rem; padding: 1.5rem; opacity: .75; }
+
+/* trust bar */
+.trust { display: flex; flex-wrap: wrap; gap: 1.2rem 2.4rem; padding: 1.4rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 2.6rem; }
+.trust div { font-size: .88rem; color: var(--ink-soft); }
+.trust strong { display: block; font-family: var(--display); font-size: 1.6rem; color: var(--ink); font-weight: 300; line-height: 1.1; }
+
+/* ---------- Cards ---------- */
+.grid { display: grid; gap: 1.4rem; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+
+.card { background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 1.7rem; box-shadow: var(--shadow); }
+.card h3 { margin-bottom: .4rem; }
+.card p { font-size: .95rem; color: var(--muted); margin-bottom: 1rem; }
+.card .from { font-family: var(--display); font-size: 1.3rem; color: var(--accent-deep); font-weight: 400; letter-spacing: .01em; }
+.card a.more { font-size: .9rem; font-weight: 500; text-decoration: none; display: inline-block; margin-top: .9rem; }
+.card a.more::after { content: " →"; }
+
+/* ---------- Price tables ---------- */
+.price-block { margin-bottom: 2.6rem; }
+.price-block h3 { padding-bottom: .6rem; border-bottom: 2px solid var(--accent); display: inline-block; }
+table.price { width: 100%; border-collapse: collapse; margin-top: .6rem; }
+table.price th { text-align: left; font-family: var(--sans); font-size: .72rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: .7rem .5rem; border-bottom: 1px solid var(--line); }
+table.price td { padding: .85rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; font-size: .96rem; }
+table.price td.svc { font-weight: 400; color: var(--ink); }
+table.price td.svc small { display: block; color: var(--muted); font-size: .82rem; margin-top: .15rem; }
+table.price td.amt { text-align: right; white-space: nowrap; font-family: var(--display); font-size: 1.05rem; font-weight: 500; color: var(--accent-deep); letter-spacing: .01em; }
+table.price td.dur { text-align: right; white-space: nowrap; color: var(--muted); font-size: .85rem; }
+
+/* ---------- FAQ ---------- */
+details.faq { border-bottom: 1px solid var(--line); padding: 1.15rem 0; }
+details.faq summary { cursor: pointer; font-family: var(--display); font-size: 1.1rem; font-weight: 400; list-style: none; display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: "+"; color: var(--accent); font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
+details.faq[open] summary::after { content: "–"; }
+details.faq p { margin: .9rem 0 .2rem; color: var(--ink-soft); font-size: .97rem; }
+
+/* ---------- Footer ---------- */
+.site-foot { background: var(--ink); color: #a9b0b4; padding: 4rem 0 2rem; font-size: .92rem; }
+.site-foot h4 { color: #fff; font-family: var(--sans); font-size: .74rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; margin-bottom: 1rem; }
+.site-foot a { color: #d5dadd; text-decoration: none; }
+.site-foot a:hover { color: var(--accent); }
+.foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 2.4rem; }
+.foot-brand img { height: 74px; width: auto; display: block; margin-bottom: 1rem; }
+.foot-bottom { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #2b3033; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font-size: .82rem; color: #7d858a; }
+address { font-style: normal; line-height: 1.8; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 12px; top: 12px; background: #fff; padding: .7rem 1.1rem; border-radius: 8px; z-index: 100; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .g4 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(2, 1fr); }
+  .foot-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-figure { aspect-ratio: 16/10; max-height: 340px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .nav { display: none; }
+  .nav.open { display: flex; position: absolute; top: 92px; left: 0; right: 0; background: var(--paper); flex-direction: column; align-items: flex-start; gap: 0; padding: .5rem 20px 1.2rem; border-bottom: 1px solid var(--line); }
+  .nav.open a { padding: .7rem 0; width: 100%; border-bottom: 1px solid var(--line); }
+  .nav.open .lang { margin-top: .8rem; }
+  .menu-btn { display: block; }
+  .g2, .g3, .g4 { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr; gap: 2rem; }
+  table.price td.dur { display: none; }
+  table.price th:nth-child(3) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
+
+/* Banner decorativo de las páginas de servicio */
+/* Encabezado de página de servicio: el texto manda, la foto acompaña.
+   En vertical, que es como viene el trabajo (cabello, manos, un ojo). */
+.svc-cab { padding-bottom: clamp(1.4rem, 4vw, 2.4rem); }
+.svc-cab-in { display: grid; grid-template-columns: 1fr minmax(230px, 33%);
+  gap: clamp(1.8rem, 5vw, 4rem); align-items: center; }
+.svc-foto { margin: 0; border-radius: 3px; overflow: hidden;
+  box-shadow: 0 18px 44px rgba(21,25,29,.11); }
+/* height:auto es obligatorio: el atributo height="1200" del <img> le gana
+   al aspect-ratio y estira la foto. */
+.svc-foto img { width: 100%; height: auto; aspect-ratio: 3/4;
+  object-fit: cover; display: block; }
+@media (max-width: 760px) {
+  .svc-cab-in { grid-template-columns: 1fr; gap: 1.6rem; }
+  .svc-foto img { aspect-ratio: 4/3; }
+}
+
+/* Galería de trabajos reales del salón */
+.galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 2rem 0; }
+.galeria figure { margin: 0; border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); background: var(--paper-2); }
+.galeria img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+/* Cabello y pestañas tiran de las fotos del portafolio, que son 3:4.
+   Recortarlas a cuadro se comería la marca de agua, que va abajo. */
+.galeria.g-alta img { aspect-ratio: 3 / 4; }
+.galeria figcaption { font-size: .82rem; color: var(--muted); padding: .7rem .9rem; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOVIMIENTO
+   Todo en CSS y transform/opacity (que corren en GPU). Sin librerías,
+   sin WebGL: el sitio tiene que cargar rápido en celular, que es donde
+   está la clienta y lo que Google mide para rankear.
+   Todo se apaga solo con prefers-reduced-motion (al final del archivo).
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* — Aparición al hacer scroll — */
+.anim .reveal { opacity: 0; transform: translateY(26px); }
+.anim .reveal.seen { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.anim .reveal.d1.seen { transition-delay: .08s; }
+.anim .reveal.d2.seen { transition-delay: .16s; }
+.anim .reveal.d3.seen { transition-delay: .24s; }
+
+/* — Tarjetas con inclinación 3D al pasar el cursor — */
+.card {
+  transform-style: preserve-3d;
+  transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease, border-color .35s ease;
+  will-change: transform;
+}
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 6px rgba(21,25,29,.06), 0 22px 50px rgba(192,97,132,.17);
+}
+.card .from, .card h3 { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+.card:hover h3  { transform: translateZ(26px); }
+.card:hover .from { transform: translateZ(18px); }
+.card a.more::after { transition: transform .3s ease; display: inline-block; }
+.card:hover a.more::after { transform: translateX(5px); }
+
+/* — Trazo del logo dibujándose en la portada — */
+.hero-figure { position: relative; }
+.swoosh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.swoosh path {
+  fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round;
+  stroke-dasharray: 2400; stroke-dashoffset: 2400;
+  animation: draw 2.6s cubic-bezier(.33,.9,.35,1) .35s forwards;
+}
+.swoosh path.thin { stroke-width: 1.1; opacity: .5; animation-delay: .8s; animation-duration: 3s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* — Portada: entrada escalonada — */
+.anim .hero h1, .anim .hero .eyebrow, .anim .hero .lede, .anim .hero .btn-row, .anim .hero .trust { animation: rise .85s cubic-bezier(.16,1,.3,1) both; }
+.hero .eyebrow  { animation-delay: .05s; }
+.hero h1        { animation-delay: .13s; }
+.hero .lede     { animation-delay: .22s; }
+.hero .btn-row  { animation-delay: .34s; }
+.hero .trust    { animation-delay: .44s; }
+@keyframes rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.anim .hero-figure img { animation: fadeScale 1.3s cubic-bezier(.16,1,.3,1) both; }
+@keyframes fadeScale { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+
+/* — Botones — */
+.btn { position: relative; overflow: hidden; }
+.btn::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%);
+  transform: translateX(-120%); transition: transform .65s ease;
+}
+.btn:hover::before { transform: translateX(120%); }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+/* — Encabezado que se encoge al bajar —
+   Tres cosas que estaban mal y juntas hacían parpadear la barra:
+   1. La transición estaba declarada en .site-head, pero min-height vive
+      en .head-in. Las transiciones no se heredan, así que el encogido
+      nunca se animó: era un salto seco de 24px.
+   2. En celular el logo crecía al bajar. `.brand img` a 40px dentro de
+      una media query pierde contra `.site-head.scrolled .brand img` a
+      42px, que tiene más especificidad y no depende del ancho.
+   3. Encoger el encabezado acorta el documento 24px, y el encabezado va
+      en el flujo. En celular eso no compensa: la barra ya es compacta.
+      Ahí sólo cambia la sombra, sin mover un pixel de layout. */
+.site-head { transition: box-shadow .3s ease, background .3s ease; }
+.site-head.scrolled { box-shadow: 0 2px 20px rgba(21,25,29,.07); }
+@media (min-width: 641px) {
+  .head-in  { transition: min-height .3s ease; }
+  .brand img { transition: height .3s ease; }
+  .site-head.scrolled .head-in { min-height: 68px; }
+  .site-head.scrolled .brand img { height: 42px; }
+}
+
+/* — Galería: acercamiento suave — */
+.galeria figure { transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease; }
+.galeria figure:hover { transform: translateY(-5px); box-shadow: 0 18px 44px rgba(192,97,132,.22); }
+.galeria img { transition: transform .7s cubic-bezier(.16,1,.3,1); }
+.galeria figure:hover img { transform: scale(1.07); }
+
+/* — Filas de precio — */
+table.price tbody tr { transition: background .22s ease; }
+table.price tbody tr:hover { background: var(--accent-tint); }
+table.price tbody tr:hover td.amt { color: var(--accent); }
+
+/* — Números de la barra de confianza — */
+.trust strong { display: block; font-variant-numeric: tabular-nums; }
+
+/* — FAQ — */
+details.faq summary { transition: color .22s ease; }
+details.faq summary:hover { color: var(--accent-deep); }
+details.faq summary::after { transition: transform .28s ease; }
+details.faq[open] summary::after { transform: rotate(180deg); }
+
+/* — Banner de servicio — */
+.svc-foto img { transition: transform 1.1s cubic-bezier(.16,1,.3,1); }
+.svc-foto:hover img { transform: scale(1.04); }
+
+/* — Enlaces del menú — */
+.nav a { position: relative; }
+.nav a::after {
+  content: ""; position: absolute; left: 0; bottom: -4px; height: 1.5px; width: 100%;
+  background: var(--accent); transform: scaleX(0); transform-origin: right;
+  transition: transform .3s cubic-bezier(.16,1,.3,1);
+}
+.nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim .reveal { opacity: 1 !important; transform: none !important; }
+  .swoosh path { stroke-dashoffset: 0 !important; animation: none !important; }
+}
+
+/* ── WhatsApp flotante: visible en toda la página, en todas las páginas ──
+   En México es el canal por el que realmente escriben, así que nunca queda
+   a más de un toque de distancia. */
+.wa-flot {
+  position: fixed; right: 20px; bottom: 20px; z-index: 60;
+  display: inline-flex; align-items: center; gap: .55rem;
+  background: var(--ok); color: #fff; text-decoration: none;
+  padding: 13px 18px 13px 15px; border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(21,25,29,.2), 0 2px 6px rgba(21,25,29,.12);
+  font-size: .93rem; font-weight: 500; line-height: 1;
+  transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease, background .25s ease;
+}
+.wa-flot:hover { background: #276a48; transform: translateY(-3px); box-shadow: 0 12px 34px rgba(47,107,79,.34); }
+.wa-flot:active { transform: translateY(-1px); }
+.wa-flot:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.wa-flot svg { flex-shrink: 0; }
+/* Latido discreto para que se note, tres veces y se detiene */
+@keyframes wa-pulso {
+  0%,100% { box-shadow: 0 6px 24px rgba(21,25,29,.2), 0 0 0 0 rgba(47,107,79,.5); }
+  50%     { box-shadow: 0 6px 24px rgba(21,25,29,.2), 0 0 0 14px rgba(47,107,79,0); }
+}
+.wa-flot { animation: wa-pulso 2.4s ease-out 1.6s 3; }
+/* En celular solo el ícono, para no tapar contenido */
+@media (max-width: 640px) {
+  .wa-flot { right: 14px; bottom: 14px; padding: 14px; }
+  .wa-txt { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .wa-flot { animation: none; } }
+
+/* ── Perfiles y reseñas ── */
+.perfiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.perfil {
+  display: block; padding: 1.3rem 1.4rem; background: #fff;
+  border: 1px solid var(--line); border-radius: var(--r); text-decoration: none;
+  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
+}
+.perfil strong { display: block; color: var(--ink); font-size: 1.02rem; font-weight: 500; margin-bottom: .2rem; }
+.perfil span { display: block; color: var(--muted); font-size: .87rem; }
+.perfil:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 14px 34px rgba(192,97,132,.16); }
+.perfil.destacado { background: var(--accent); border-color: var(--accent); }
+.perfil.destacado strong { color: #fff; }
+.perfil.destacado span { color: rgba(255,255,255,.85); }
+.perfil.destacado:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
+
+/* Llamada a reseña en el footer: es la palanca más barata para el local pack */
+.foot-resena {
+  display: inline-block; padding: .55rem 1rem; border-radius: 999px;
+  border: 1px solid var(--accent); color: var(--accent) !important;
+  font-size: .85rem; transition: background .25s ease, color .25s ease;
+}
+.foot-resena:hover { background: var(--accent); color: #fff !important; }
+
+/* Línea de apoyo bajo la bienvenida: presente, sin competirle al saludo */
+.lede-fino {
+  font-size: .97rem; letter-spacing: .04em; color: var(--muted);
+  border-left: 2px solid var(--accent); padding-left: .95rem; margin: 1.4rem 0 0;
+}
+
+/* ── La marca, presente sin gritar ──────────────────────────────────────
+   El trazo del logo se repite como filigrana detrás de la portada: se
+   reconoce la firma sin que compita con la foto ni con el texto. */
+.hero { position: relative; overflow: hidden; }
+/* La filigrana del logo y las flores del marco son fondo de CSS, no
+   <img>: no aportan información, sólo aire.  Con aspect-ratio ocupan el
+   mismo sitio que ocupaba la imagen, así que no hay salto de maquetación
+   al cargar.  El navegador ni siquiera pide el archivo cuando la regla
+   las oculta en móvil. */
+.marca-agua {
+  position: absolute; right: -4%; top: 50%; transform: translateY(-50%);
+  width: min(52vw, 640px); aspect-ratio: 640 / 252;
+  background: url("logo-stilo-salon.png") center / contain no-repeat;
+  opacity: .05; pointer-events: none; user-select: none;
+  z-index: 0;
+}
+.hero .wrap { position: relative; z-index: 1; }
+@media (max-width: 900px) { .marca-agua { display: none; } }
+
+/* Sello de marca sobre la foto de portada */
+.sello {
+  position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%);
+  background: var(--paper); border-radius: 999px; padding: .7rem 1.5rem;
+  box-shadow: 0 8px 30px rgba(21,25,29,.13); z-index: 2; white-space: nowrap;
+}
+.sello img { height: 30px; width: auto; display: block; }
+@media (max-width: 900px) { .sello { display: none; } }
+.hero-figure { position: relative; overflow: visible; }
+.hero-figure picture, .hero-figure img { border-radius: var(--r); overflow: hidden; }
+
+/* ── Parallax suave de la foto de portada ── */
+.anim .hero-figure img { will-change: transform; }
+
+/* ── Visor de galería ── */
+.visor {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: rgba(21,25,29,.93); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 4vmin;
+}
+.visor.abierto { display: flex; }
+.visor img { max-width: 94vw; max-height: 86vh; border-radius: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+.visor figcaption { position: absolute; bottom: 4vmin; left: 0; right: 0; text-align: center;
+  color: #e9e2e5; font-size: .93rem; letter-spacing: .04em; }
+.visor-cerrar {
+  position: absolute; top: 3vmin; right: 3vmin; background: none; border: 1px solid rgba(255,255,255,.35);
+  color: #fff; width: 44px; height: 44px; border-radius: 999px; font-size: 1.3rem; cursor: pointer;
+  transition: background .25s ease, border-color .25s ease;
+}
+.visor-cerrar:hover { background: rgba(255,255,255,.14); border-color: #fff; }
+.galeria figure { cursor: zoom-in; }
+
+/* ── Detalles de elegancia ── */
+.eyebrow { font-size: .7rem; letter-spacing: .24em; }
+.sec-head { margin-bottom: 3.4rem; }
+.lede { font-weight: 300; }
+h2 + .lede, .sec-head .lede { margin-top: .9rem; }
+/* filete fino bajo los títulos de sección */
+.sec-head h2::after {
+  content: ""; display: block; width: 52px; height: 1px; background: var(--accent);
+  margin-top: 1.1rem; transform-origin: left; transform: scaleX(0);
+  transition: transform .8s cubic-bezier(.16,1,.3,1) .15s;
+}
+.sec-head.seen h2::after, html:not(.anim) .sec-head h2::after { transform: scaleX(1); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ICONOS Y ÁLBUMES
+   El registro femenino se busca por la forma, no por el rosa: trazo
+   fino, curvas suaves, mucho aire. El color de marca se usa con cuenta.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ico {
+  width: 46px; height: 46px; display: block; margin-bottom: 1.1rem;
+  fill: none; stroke: var(--accent); stroke-width: 1.4;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: stroke .4s ease, transform .5s cubic-bezier(.16,1,.3,1);
+}
+.card:hover .ico { stroke: var(--accent-deep); transform: scale(1.09) rotate(-3deg); }
+/* El trazo se dibuja al entrar en pantalla */
+.anim .reveal .ico path, .anim .reveal .ico circle {
+  stroke-dasharray: 240; stroke-dashoffset: 240;
+}
+.anim .reveal.seen .ico path, .anim .reveal.seen .ico circle {
+  stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s cubic-bezier(.33,.9,.35,1) .25s;
+}
+
+/* ── Galería con aire de álbum ──
+   Las fotos se alternan ligeramente inclinadas, como puestas a mano
+   sobre la página. Al pasar el cursor se enderezan y suben. */
+.galeria { gap: 1.6rem; }
+.galeria figure {
+  background: #fff; padding: 12px 12px 0; border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(21,25,29,.07), 0 14px 34px rgba(192,97,132,.12);
+  position: relative;
+}
+.galeria figure:nth-child(odd)  { transform: rotate(-1.1deg); }
+.galeria figure:nth-child(even) { transform: rotate(1.4deg); }
+.galeria figure:hover { transform: rotate(0deg) translateY(-8px); z-index: 2; }
+.galeria img { border-radius: 2px; }
+.galeria figcaption {
+  font-family: var(--display); font-size: 1.02rem; color: var(--ink-soft);
+  text-align: center; padding: .85rem .6rem 1rem; letter-spacing: .01em;
+}
+/* pequeño lazo de papel en la esquina */
+.galeria figure::before {
+  content: ""; position: absolute; top: -9px; left: 50%; transform: translateX(-50%) rotate(-4deg);
+  width: 58px; height: 18px; background: var(--accent-tint);
+  border: 1px solid rgba(192,97,132,.28); border-radius: 2px; opacity: .9;
+}
+
+/* ── Tarjetas de servicio: un poco más suaves ── */
+.card { border-radius: 18px; }
+.card h3 { font-size: 1.5rem; }
+.card .from { letter-spacing: .06em; font-size: 1.15rem; }
+.card::after {
+  content: ""; position: absolute; inset: 0; border-radius: 18px; pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%),
+              rgba(192,97,132,.09), transparent 62%);
+  opacity: 0; transition: opacity .4s ease;
+}
+.card { position: relative; }
+.card:hover::after { opacity: 1; }
+
+/* ── Puente entre la página de servicio y su guía ── */
+.a-guia {
+  display: block; margin: 2.6rem 0 0; padding: 1.7rem 1.9rem;
+  background: var(--accent-tint); border: 1px solid rgba(192,97,132,.24);
+  border-radius: 18px; text-decoration: none;
+  transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease, background .3s ease;
+}
+.a-guia:hover { transform: translateY(-4px); background: #f9eef2;
+  box-shadow: 0 16px 40px rgba(192,97,132,.18); }
+.a-guia-t { display: block; font-family: var(--display); font-size: 1.45rem;
+  color: var(--ink); line-height: 1.2; margin-bottom: .35rem; }
+.a-guia-s { display: block; color: var(--muted); font-size: .94rem; margin-bottom: .8rem; }
+.a-guia-c { display: block; color: var(--accent-deep); font-size: .89rem;
+  font-weight: 500; letter-spacing: .05em; }
+.a-guia:hover .a-guia-c { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROFUNDIDAD DE COLOR
+   La página venía toda clara y plana. Se introduce un recorrido: la
+   portada arranca en crema y va cayendo hacia el rosa de marca; la
+   banda oscura gana un halo; y entre secciones hay transiciones en
+   vez de cortes secos.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.hero {
+  /* Fondo de estudio: la página anterior tenía a la modelo sobre un
+     ciclorama rosa y esa era su seña. Aquí se recrea con el rosa de
+     marca en vez del de la foto de stock. Medido: la tinta y la tinta
+     suave siguen pasando AA sobre el extremo más hondo. */
+  background:
+    radial-gradient(112% 82% at 80% 6%, #fbe4ee 0%, rgba(251,228,238,0) 58%),
+    radial-gradient(90% 70% at 8% 96%, #f7dbe8 0%, rgba(247,219,232,0) 62%),
+    linear-gradient(163deg, #fdf8fa 0%, #fae9f1 32%, #f6dbe6 66%, #f2cfdf 100%);
+}
+/* velo rosa difuso en la esquina, detrás de todo */
+.hero::before {
+  content: ""; position: absolute; top: -18%; right: -12%;
+  width: 62vw; height: 62vw; max-width: 780px; max-height: 780px;
+  background: radial-gradient(circle, rgba(192,97,132,.17), transparent 68%);
+  pointer-events: none; z-index: 0;
+}
+
+/* Sección de servicios: arranca donde terminó la portada y aclara */
+.alt { background: linear-gradient(180deg, #f3e3ea 0%, #faf3f6 34%, #f7eff2 100%); }
+
+/* Banda oscura: deja de ser un bloque plano */
+.ink-sec {
+  background:
+    radial-gradient(900px circle at 78% 18%, rgba(192,97,132,.22), transparent 62%),
+    radial-gradient(700px circle at 8% 92%, rgba(192,97,132,.13), transparent 60%),
+    linear-gradient(160deg, #1b2025 0%, #15191d 52%, #10141a 100%);
+  position: relative;
+}
+/* filo superior con el color de marca, como un hilo */
+.ink-sec::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* Barra de confianza sobre un lavado rosa */
+.trust {
+  background: linear-gradient(90deg, rgba(192,97,132,.07), rgba(192,97,132,.02) 70%, transparent);
+  border-radius: 12px; padding: 1.4rem 1.2rem;
+  border-top: 1px solid rgba(192,97,132,.22);
+  border-bottom: 1px solid rgba(192,97,132,.22);
+}
+
+/* Pie: transición hacia el negro en vez de corte */
+.site-foot {
+  background:
+    radial-gradient(800px circle at 82% 0%, rgba(192,97,132,.14), transparent 58%),
+    linear-gradient(180deg, #1b2025 0%, #15191d 100%);
+}
+
+/* Tarjetas con un lavado apenas perceptible, para que floten */
+.card { background: linear-gradient(170deg, #ffffff 0%, #fefcfd 62%, #fdf7f9 100%); }
+
+/* Los degradados no deben tapar el contenido */
+.hero > .wrap, .ink-sec > .wrap { position: relative; z-index: 1; }
+
+/* Barra de confianza: rejilla pareja en vez de línea que se desborda */
+.trust { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.6rem; }
+.trust > div { display: flex; flex-direction: column; gap: .15rem; }
+.trust strong { font-size: 1.75rem; line-height: 1; }
+.trust div { font-size: .85rem; }
+@media (min-width: 1100px) { .trust { gap: 1.2rem 2rem; } }
+@media (max-width: 480px) { .trust { grid-template-columns: 1fr 1fr; gap: 1rem; } }
+
+/* Señal discreta de que el enlace abre en otra pestaña */
+.btn-primary[target="_blank"]::after,
+.perfil.destacado[target="_blank"] .a-ext { content: ""; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA FIRMA
+   El script va en UNA palabra, nunca en párrafos ni en títulos largos.
+   Así acompaña al logo en vez de competirle, y no se pierde legibilidad.
+   ═══════════════════════════════════════════════════════════════════ */
+.h1-firma { line-height: 1.02; }
+.h1-firma em {
+  font-family: "Parisienne", "Cormorant Garamond", cursive;
+  font-style: normal; font-weight: 400;
+  font-size: 1.42em; line-height: .9;
+  color: var(--accent-deep);
+  display: inline-block; padding-right: .06em;
+  /* leve inclinación, como trazo hecho a mano */
+  transform: rotate(-1.6deg);
+}
+@media (max-width: 640px) { .h1-firma em { font-size: 1.3em; } }
+
+/* La portada gana altura y presencia */
+.hero { padding: clamp(4rem, 11vw, 8.5rem) 0 clamp(3.5rem, 8vw, 6rem); }
+.hero-grid { align-items: center; gap: clamp(2rem, 6vw, 5rem); }
+.hero h1 { margin-bottom: 1.6rem; }
+@media (min-width: 900px) {
+  .hero-grid { grid-template-columns: 1.08fr .92fr; }
+  .hero-figure { transform: translateY(0); }
+  /* la foto se sale un poco del margen: rompe la caja y da amplitud */
+  .hero-figure picture img { border-radius: 20px 20px 20px 90px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   AMENIDADES
+   Wifi, mascotas y bebida son objeciones que se resuelven antes de
+   agendar, así que viven en la portada y no enterradas en "nosotros".
+   ═══════════════════════════════════════════════════════════════════ */
+.amenidades {
+  list-style: none; margin: 1.5rem 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .5rem .55rem;
+}
+.amenidades li {
+  display: inline-flex; align-items: center; gap: .48rem;
+  font-family: var(--sans); font-size: .83rem; letter-spacing: .01em;
+  color: var(--ink-soft); background: var(--paper);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: .42rem .85rem .42rem .7rem;
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.amenidades li:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(192,97,132,.14);
+}
+.ico-am { width: 17px; height: 17px; color: var(--accent-deep); flex: none; }
+.anim .hero .amenidades { animation: rise .85s cubic-bezier(.16,1,.3,1) .54s both; }
+@media (max-width: 420px) { .amenidades li { font-size: .78rem; padding: .38rem .7rem .38rem .58rem; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA FOTO DE PORTADA
+   Es la única prueba visual antes de que la clienta haga scroll, así
+   que ocupa más: se sale del margen derecho (el hero recorta, no hay
+   scroll horizontal), lleva un marco desplazado detrás y responde al
+   cursor con una inclinación muy leve.
+   ═══════════════════════════════════════════════════════════════════ */
+.hero .hero-figure { --tx: 0deg; --ty: 0deg; }
+
+/* marco de acento, girado, asomando por detrás */
+.hero .hero-figure .marco {
+  position: absolute; inset: 0; z-index: 0;
+  border: 1px solid var(--accent);
+  border-radius: 20px 20px 20px 90px;
+  /* asoma por la izquierda: por la derecha la foto ya se sale del margen */
+  transform: rotate(-2.5deg) translate(-24px, 22px);
+  opacity: .6; pointer-events: none;
+}
+/* halo suave: despega la foto del fondo sin una sombra dura */
+.hero .hero-figure::before {
+  content: ""; position: absolute; z-index: 0;
+  inset: 8% -12% -10% -8%;
+  background: radial-gradient(60% 55% at 60% 55%, rgba(192,97,132,.28), transparent 70%);
+  filter: blur(38px); pointer-events: none;
+}
+@media (min-width: 900px) {
+  /* la columna de texto conserva su ancho: la foto crece saliéndose
+     del margen derecho, no quitándole espacio al texto */
+  .hero-grid { grid-template-columns: 1.12fr .88fr; }
+  .hero .hero-figure {
+    aspect-ratio: 4/4.5;
+    margin-right: calc(-1 * min(7vw, 84px));
+    box-shadow: 0 30px 70px -28px rgba(21,25,29,.38);
+  }
+}
+@media (max-width: 899px) {
+  .hero .hero-figure .marco { transform: rotate(-2deg) translate(-10px, 10px); border-radius: var(--r); }
+  .hero .hero-figure { aspect-ratio: 4/3.4; max-height: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CITA DE VALORACIÓN
+   Para la clienta que no sabe qué pedir. Sin esto, la duda termina en
+   que no escribe; con esto, la duda es el motivo de escribir.
+   ═══════════════════════════════════════════════════════════════════ */
+.valora {
+  background: linear-gradient(135deg, var(--accent-tint), var(--paper-2) 60%, #efdde5);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.valora-in {
+  display: grid; grid-template-columns: 1.55fr 1fr;
+  gap: clamp(1.6rem, 4vw, 3.5rem); align-items: center;
+}
+.valora h2 { margin: .3rem 0 .8rem; }
+.valora .lede { margin: 0; }
+.valora .btn-row { margin: 0; justify-content: flex-start; }
+@media (max-width: 860px) { .valora-in { grid-template-columns: 1fr; } }
+
+/* ── Iconos de redes en el pie ── */
+.redes { display: flex; gap: .55rem; margin: .2rem 0 1rem; }
+.redes a {
+  display: inline-grid; place-items: center; width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,.22); border-radius: 50%;
+  color: inherit; transition: background .25s ease, border-color .25s ease, transform .25s ease;
+}
+.redes a:hover {
+  background: var(--accent); border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.redes svg { width: 19px; height: 19px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA ROTATORIA
+   Tres láminas en cruce suave. El H1 no se mueve: lo que rota es la
+   prueba visual, para que las tres líneas del salón se vean sin bajar.
+   ═══════════════════════════════════════════════════════════════════ */
+.portada .lamina {
+  position: absolute; inset: 0; z-index: 1;
+  opacity: 0; visibility: hidden;
+  transition: opacity .9s ease, visibility .9s;
+}
+.portada .lamina.activa { opacity: 1; visibility: visible; }
+.portada .lamina picture,
+.portada .lamina img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* etiqueta de la lámina: dice qué estás viendo y lleva a esa página */
+.lamina-pie {
+  position: absolute; left: 14px; top: 14px; z-index: 3;
+  font-family: var(--sans); font-size: .76rem; letter-spacing: .06em;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--ink); background: rgba(253,251,252,.92);
+  padding: .42rem .85rem; border-radius: 999px;
+  backdrop-filter: blur(6px);
+  transition: background .25s ease, color .25s ease;
+}
+.lamina-pie:hover { background: var(--accent); color: #fff; }
+
+.portada .puntos {
+  position: absolute; z-index: 3; left: 50%; bottom: 14px;
+  transform: translateX(-50%);
+  display: flex; gap: .45rem;
+}
+.portada .punto {
+  width: 9px; height: 9px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(253,251,252,.85); background: rgba(21,25,29,.25);
+  cursor: pointer; transition: background .25s ease, transform .25s ease;
+}
+.portada .punto.activa { background: var(--paper); transform: scale(1.3); }
+.portada .punto:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+/* el sello vive abajo al centro: los puntos se corren para no encimarse */
+@media (min-width: 901px) { .portada .puntos { bottom: 26px; } }
+
+/* Sin movimiento pedido: se queda la primera y los puntos siguen sirviendo */
+@media (prefers-reduced-motion: reduce) {
+  .portada .lamina { transition: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MARCAS
+   En tipografía, no en logos: se ve mejor, pesa cero y no usamos
+   marcas registradas de terceros sin sus archivos oficiales.
+   ═══════════════════════════════════════════════════════════════════ */
+.marcas {
+  padding: clamp(1.6rem, 3.5vw, 2.4rem) 0;
+  background: var(--paper-2);
+  border-top: 1px solid rgba(192,97,132,.22);
+  border-bottom: 1px solid rgba(192,97,132,.22);
+}
+.marcas .wrap {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: .9rem clamp(1.4rem, 4vw, 3rem);
+}
+.marcas-t {
+  margin: 0; font-family: var(--sans); font-size: .74rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent-deep);
+  flex: none;
+}
+.marcas ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 1.1rem clamp(1.6rem, 4vw, 3.2rem);
+}
+/* Los logos van en gris: en color, cuatro paletas ajenas rompen la
+   nuestra. En hover recuperan su peso. */
+.marcas .m-logo img {
+  /* los atributos width/height reservan el hueco; --h manda el alto real */
+  display: block; height: var(--h); width: auto;
+  filter: grayscale(1) contrast(.9);
+  opacity: .72;
+  transition: opacity .25s ease, filter .25s ease;
+}
+/* los que vienen más tenues de origen necesitan más cuerpo */
+.marcas .m-logo.claro img { filter: grayscale(1) brightness(.62) contrast(1.1); opacity: .85; }
+.marcas .m-logo img:hover { opacity: 1; }
+@media (max-width: 480px) { .marcas .m-logo img { transform: scale(.88); transform-origin: left center; } }
+@media (max-width: 640px) {
+  .marcas .wrap { flex-direction: column; align-items: flex-start; gap: .7rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA A TODO LO ANCHO
+   La banda llega al borde derecho de la pantalla, no al del contenedor.
+   El texto vive sobre un velo del color de marca: así la foto puede ser
+   grande sin que la tipografía pelee con ella.
+   Anula lo anterior a propósito — la portada dejó de ser una tarjeta.
+   ═══════════════════════════════════════════════════════════════════ */
+.hero { position: relative; overflow: hidden; padding: 0; }
+.hero > .wrap {
+  position: relative; z-index: 2;
+  padding-top: clamp(2.2rem, 5vw, 3.8rem);
+  padding-bottom: clamp(2.2rem, 4.5vw, 3.4rem);
+}
+.hero .banda { position: relative; }
+.banda .lamina { position: absolute; inset: 0; }
+.banda .lamina picture,
+.banda .lamina img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* velo: de opaco sobre el texto a transparente sobre la foto */
+.banda .velo { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+@media (min-width: 900px) {
+  .hero-grid { display: block; }
+  .hero > .wrap > div { max-width: 42%; }
+  /* la banda llega al borde de la pantalla, no al del contenedor */
+  .hero .banda {
+    position: absolute; z-index: 1;
+    top: 0; bottom: 0; right: 0; left: 44%;
+  }
+  /* Sin velo. Un degradado de color derramándose sobre la foto siempre
+     se ensucia, porque los colores de la foto no son los del degradado:
+     sobre la lámina de pestañas el rosa caía encima de piel y gris y
+     quedaba lodoso. En su lugar, canto limpio y la foto proyectando
+     sombra sobre el campo de color: se lee como un plano encima del
+     fondo, que es lo que hace una revista. */
+  .banda .velo { background: none; }
+  .hero .banda { box-shadow: -22px 0 54px -16px rgba(21,25,29,.22); }
+  /* más baja y con la banda más ancha: así la foto tiende a cuadrada
+     en vez de ser una tira vertical */
+  .hero > .wrap { min-height: clamp(440px, 56vh, 600px); display: flex; align-items: center; }
+  .banda .lamina-pie { left: auto; right: 22px; top: 22px; }
+  .banda .puntos { left: auto; right: 22px; bottom: 22px; transform: none; }
+  .banda .sello { left: auto; right: 22px; bottom: 22px; display: none; }
+}
+
+@media (max-width: 899px) {
+  /* en el teléfono la banda va arriba, a todo lo ancho */
+  .hero .banda { height: clamp(300px, 78vw, 430px); }
+  /* en el teléfono, mismo criterio: canto limpio y sombra hacia abajo */
+  .banda .velo { background: none; }
+  .hero .banda { box-shadow: 0 18px 44px -20px rgba(21,25,29,.28); }
+  .banda .lamina-pie { left: 16px; top: 16px; right: auto; }
+  .banda .puntos { left: 50%; bottom: 14px; transform: translateX(-50%); }
+  .banda .sello { display: none; }
+  .hero > .wrap { padding-top: 1.6rem; }
+}
+
+/* lo que era de la tarjeta ya no aplica a la portada */
+.hero .banda .marco { display: none; }
+.hero .banda::before { content: none; }
+
+/* ── Las cifras salen del hero ──────────────────────────────────────
+   Dentro de la portada la empujaban a 1046 px de alto: la banda de
+   marcas quedaba fuera de la primera pantalla. Fuera, además, caben
+   las cuatro en fila en vez de apretadas en dos por dos. */
+.cifras { padding: clamp(1.6rem, 3.5vw, 2.4rem) 0 0; }
+.cifras .trust {
+  margin: 0; padding: 0; border: 0;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem clamp(1rem, 2.5vw, 2.2rem);
+}
+@media (max-width: 760px) { .cifras .trust { grid-template-columns: 1fr 1fr; } }
+
+/* ── La marca recupera su peso en la portada ────────────────────────
+   Al pasar a banda a todo lo ancho, la marca de agua y el sello se
+   habían quedado fuera y el logo vivía solo en el encabezado. Vuelven,
+   pero al revés que antes: la filigrana ya no pelea con la foto, se
+   apoya en el campo de color de la izquierda, que está limpio. */
+.hero .marca-agua {
+  display: block; z-index: 0;
+  right: auto; top: auto;
+  left: -6%; bottom: -4%;
+  transform: none;
+  width: min(60vw, 620px);
+  opacity: .1;
+}
+@media (max-width: 899px) {
+  /* anclada abajo, no a media altura: detrás del párrafo enturbiaba
+     la lectura, y ahí abajo las pastillas de amenidades la tapan */
+  .hero .marca-agua {
+    display: block;
+    left: -16%; top: auto; bottom: -2%;
+    width: 112vw; opacity: .055;
+  }
+}
+
+/* El sello firma la foto: esquina donde el velo ya aclaró el fondo */
+@media (min-width: 900px) {
+  .hero .banda .sello {
+    display: block;
+    left: 26px; right: auto; bottom: 26px;
+    transform: none;
+    padding: .75rem 1.6rem;
+  }
+  .hero .banda .sello img { height: 34px; }
+}
+
+/* ── Anclas y encabezado fijo ───────────────────────────────────────
+   El encabezado es sticky: sin esto, saltar a un ancla deja el título
+   escondido detrás de él y parece que caíste en medio de la nada. */
+:target, [id] { scroll-margin-top: 96px; }
+@media (max-width: 640px) { :target, [id] { scroll-margin-top: 78px; } }
+
+/* ── Tarjetas de servicio con foto cuadrada ─────────────────────────
+   El icono solo decía de qué trata; la foto enseña el trabajo. Se
+   quedan los dos: el icono monta sobre la esquina de la foto. */
+.card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.card-foto {
+  position: relative; display: block; aspect-ratio: 1 / 1;
+  overflow: hidden; background: var(--paper-2);
+}
+.card-foto img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .6s cubic-bezier(.16,1,.3,1);
+}
+.card:hover .card-foto img { transform: scale(1.05); }
+.card-ico {
+  position: absolute; left: 14px; bottom: 14px;
+  display: grid; place-items: center;
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--paper); box-shadow: 0 6px 22px rgba(21,25,29,.18);
+  transition: transform .4s cubic-bezier(.16,1,.3,1), background .3s ease;
+}
+.card-ico .ico { width: 34px; height: 34px; margin: 0; }
+.card:hover .card-ico { transform: scale(1.08); }
+@media (max-width: 520px) {
+  .card-ico { width: 54px; height: 54px; }
+  .card-ico .ico { width: 30px; height: 30px; }
+}
+.card-cuerpo { padding: 1.1rem 1.25rem 1.35rem; display: flex; flex-direction: column; flex: 1; }
+.card-cuerpo h3 { margin: 0 0 .4rem; }
+.card-cuerpo .from { margin-top: auto; }
+
+/* ── La portada, más compacta ───────────────────────────────────────
+   El párrafo de bienvenida es largo y era lo que estiraba la banda a
+   tira vertical. Aquí va un punto más chico y con menos interlínea:
+   ahorra unos 70 px de alto y la foto queda casi cuadrada. */
+@media (min-width: 900px) {
+  .hero .lede {
+    font-size: clamp(.96rem, 1.15vw, 1.06rem);
+    line-height: 1.62;
+    max-width: 46ch;
+  }
+  .hero h1 { margin-bottom: 1.1rem; }
+  .hero .btn-row { margin-top: 1.5rem; }
+  .hero .amenidades { margin-top: 1.15rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GALERÍA — versión sobria
+   Antes era un álbum: marco blanco, fotos torcidas y un lacito de
+   papel. Simpático, pero de manualidad, no de salón caro. Aquí manda
+   la foto: cuadrada, grande, con aire alrededor y el pie discreto.
+   Y se arregla el bug que las alargaba: el atributo height del <img>
+   le ganaba al aspect-ratio, así que salían 343x640 en vez de cuadradas.
+   ═══════════════════════════════════════════════════════════════════ */
+.galeria {
+  /* se sale del contenedor de lectura (74ch): una galería estrecha se
+     siente apretada, y el aire es lo que se lee como caro */
+  width: min(100vw - 3rem, 1120px);
+  margin: clamp(2.2rem, 4vw, 3.2rem) auto clamp(1.6rem, 3vw, 2.4rem);
+  position: relative; left: 50%; transform: translateX(-50%);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 26vw, 320px), 1fr));
+  gap: clamp(1rem, 2.2vw, 1.9rem);
+}
+.galeria figure {
+  background: none; padding: 0; box-shadow: none;
+  border-radius: 0; transform: none;
+}
+.galeria figure:nth-child(odd),
+.galeria figure:nth-child(even) { transform: none; }
+.galeria figure::before { content: none; }
+
+.g-foto {
+  display: block; overflow: hidden; border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(21,25,29,.05), 0 14px 34px rgba(21,25,29,.11);
+  transition: box-shadow .45s ease;
+}
+.galeria figure img {
+  width: 100%; height: auto; aspect-ratio: 1; object-fit: cover;
+  display: block; border-radius: 0;
+  transition: transform .8s cubic-bezier(.16,1,.3,1);
+}
+.galeria figure:hover { transform: none; box-shadow: none; }
+.galeria figure:hover .g-foto { box-shadow: 0 2px 4px rgba(21,25,29,.07), 0 26px 56px rgba(21,25,29,.16); }
+.galeria figure:hover img { transform: scale(1.045); }
+
+.galeria figcaption {
+  font-family: var(--sans); font-weight: 300;
+  font-size: .82rem; letter-spacing: .015em; line-height: 1.5;
+  color: var(--muted); text-align: left;
+  padding: .85rem .1rem 0;
+}
+/* filete que aparece al pasar el cursor, como un subrayado fino */
+.galeria figcaption { position: relative; }
+.galeria figcaption::after {
+  content: ""; position: absolute; left: .1rem; top: 0;
+  width: 26px; height: 1px; background: var(--accent);
+  opacity: 0; transform: scaleX(.3); transform-origin: left;
+  transition: opacity .4s ease, transform .5s cubic-bezier(.16,1,.3,1);
+}
+.galeria figure:hover figcaption::after { opacity: 1; transform: scaleX(1); }
+
+/* ── Mapa de la sección "dónde encontrarnos" ────────────────────────
+   Ahí había una foto de uñas: bonita, pero en esa sección lo que la
+   clienta busca es dónde estamos. El mapa es estático (se genera en
+   build) y no un iframe de Google: no mete cookies de terceros ni
+   scripts, carga como una imagen y se puede teñir a la paleta. */
+.mapa {
+  display: block; position: relative; overflow: hidden;
+  border-radius: var(--r); aspect-ratio: 4 / 3;
+  box-shadow: 0 1px 2px rgba(21,25,29,.05), 0 16px 40px rgba(21,25,29,.12);
+  text-decoration: none;
+}
+.mapa img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .8s cubic-bezier(.16,1,.3,1);
+}
+.mapa:hover img { transform: scale(1.04); }
+.mapa-pie {
+  position: absolute; left: 16px; bottom: 16px;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--sans); font-size: .86rem; font-weight: 500;
+  padding: .6rem 1.1rem; border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(21,25,29,.18);
+  transition: background .25s ease, color .25s ease;
+}
+.mapa-pie::after { content: " →"; }
+.mapa:hover .mapa-pie { background: var(--accent-deep); color: #fff; }
+.mapa-cred {
+  font-size: .72rem; color: var(--muted); margin: .55rem 0 0; text-align: right;
+}
+.mapa-cred a { color: var(--muted); }
+
+/* ── Formulario de cita ──────────────────────────────────────────────
+   Va debajo del mapa, en la misma columna.  No manda nada a ningún
+   servidor: arma el texto y abre WhatsApp (ver formulario() en build.py).
+   Los campos son de una sola columna a propósito — se llena casi siempre
+   desde el teléfono, y dos columnas en 380 px obligan a hacer zoom.
+   El tamaño de letra de los inputs es 16px y no menos: por debajo de eso
+   Safari en iPhone hace zoom solo al enfocar un campo y desmaqueta la
+   página. */
+.cita {
+  margin-top: 1.6rem; padding: 1.5rem;
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.cita h3 { margin: 0 0 .3rem; }
+.cita > .muted { font-size: .86rem; margin: 0 0 1.2rem; }
+.cita-campos { display: grid; gap: .9rem; }
+.campo { margin: 0; display: grid; gap: .32rem; }
+.campo label {
+  font-family: var(--sans); font-size: .74rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+.cita input, .cita select {
+  font: inherit; font-size: 16px; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: 10px; padding: .62rem .8rem; width: 100%;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.cita input::placeholder { color: var(--muted); }
+.cita input:focus-visible, .cita select:focus-visible {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+.cita .btn-wa { margin-top: 1.2rem; width: 100%; justify-content: center; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA — TRÍPTICO
+   Tres láminas verticales escalonadas, una por línea del salón. Es el
+   primer encuadre de toda la página, así que enseña las tres cosas que
+   hacemos a la vez en vez de turnarlas: nada se mueve solo, nada hay
+   que esperar. Se salen por el borde derecho, que es lo que le da
+   el aire de doble página de revista.
+   Anula lo que quedaba de la banda anterior.
+   ═══════════════════════════════════════════════════════════════════ */
+.tri { display: grid; }
+.tri-l {
+  position: relative; display: block; overflow: hidden;
+  text-decoration: none; border-radius: 2px;
+  background: var(--paper-2);
+}
+.tri-l picture, .tri-l img {
+  width: 100%; height: 100%; display: block; object-fit: cover;
+  transition: transform .9s cubic-bezier(.16,1,.3,1);
+}
+.tri-l:hover img { transform: scale(1.05); }
+/* la etiqueta vive sobre un velo que solo cubre su propio renglón */
+.tri-t {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  font-family: var(--sans); font-size: .72rem; font-weight: 400;
+  letter-spacing: .14em; text-transform: uppercase; color: #fff;
+  padding: 2.6rem .9rem .9rem;
+  background: linear-gradient(0deg, rgba(21,25,29,.68) 0%, rgba(21,25,29,0) 100%);
+}
+.tri-t::after {
+  content: " →"; opacity: 0; margin-left: -.4rem;
+  transition: opacity .35s ease, margin-left .35s ease;
+}
+.tri-l:hover .tri-t::after { opacity: 1; margin-left: .1rem; }
+
+@media (min-width: 900px) {
+  .hero .tri {
+    position: absolute; z-index: 1; top: 0; bottom: 0; right: 0; left: 46%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    align-items: stretch; align-content: stretch;
+    padding: 0;
+  }
+  /* escalonado: sin esto son tres rectángulos iguales y parece una tabla */
+  .tri-l:nth-child(1) { margin: clamp(2.6rem, 6vh, 5rem) 0 clamp(4.5rem, 10vh, 8rem); }
+  .tri-l:nth-child(2) { margin: 0 0 clamp(1.6rem, 4vh, 3rem); }
+  .tri-l:nth-child(3) { margin: clamp(5rem, 11vh, 9rem) 0 0; }
+  .tri-l { box-shadow: 0 2px 6px rgba(21,25,29,.07), 0 24px 54px -18px rgba(21,25,29,.28); }
+  .tri-l:hover { z-index: 3; }
+  .hero > .wrap > div { max-width: 43%; }
+  .hero > .wrap { min-height: clamp(520px, 64vh, 680px); }
+}
+
+@media (max-width: 899px) {
+  /* en el teléfono no caben tres en fila sin volverse estampillas:
+     fila que se arrastra, con parada en cada lámina */
+  .hero .tri {
+    grid-auto-flow: column;
+    grid-auto-columns: 62vw;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 20px 6px;
+    margin: 0 0 1.4rem;
+    scrollbar-width: none;
+  }
+  .hero .tri::-webkit-scrollbar { display: none; }
+  .tri-l { scroll-snap-align: center; aspect-ratio: 3 / 4.2; }
+}
+
+/* El sello de marca en el hueco bajo la primera lámina */
+.tri-sello { display: none; }
+@media (min-width: 900px) {
+  .tri-sello {
+    display: block; position: absolute; z-index: 4;
+    left: 0; bottom: clamp(.6rem, 2.5vh, 2rem);
+    background: var(--paper); border-radius: 999px;
+    padding: .7rem 1.5rem; white-space: nowrap;
+    box-shadow: 0 6px 24px rgba(21,25,29,.14);
+  }
+  .tri-sello img { height: 30px; width: auto; display: block; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ADORNOS DE PORTADA
+   Marco de línea, botánico y pétalos. Todo trazo, nada de relleno:
+   así acompañan sin competirle a las fotos ni al título.
+   ═══════════════════════════════════════════════════════════════════ */
+/* z-index 2, igual que el bloque de texto: como los adornos van antes en
+   el marcado, el texto gana el empate y nunca queda tapado. Y como las
+   fotos están en 1, los adornos sí se montan sobre ellas. */
+.deco { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.deco svg { position: absolute; overflow: visible; fill: none;
+            stroke: var(--accent-deep); stroke-linecap: round; stroke-linejoin: round; }
+
+/* — Botánico: cruza el límite entre el campo de color y las fotos — */
+.d-bot { display: none; }
+.d-bot .t { stroke-width: 1.7; }
+.d-bot .h { stroke-width: 1.15; opacity: .78; }
+.d-bot .f { stroke-width: 1.3; opacity: .9; }
+
+/* — Pétalos sueltos, arriba a la izquierda — */
+.d-p { stroke-width: 1.15; opacity: .42; }
+.d-p1 { width: 26px; left: 4%;  top: 14%; transform: rotate(-18deg); }
+.d-p2 { width: 17px; left: 12%; top: 9%;  transform: rotate(34deg); opacity: .32; }
+.d-p3 { width: 21px; left: 21%; top: 17%; transform: rotate(-52deg); opacity: .36; }
+.d-p4 { width: 14px; left: 30%; top: 8%;  transform: rotate(12deg); opacity: .3; }
+.d-p5 { width: 24px; left: 7%;  top: 27%; transform: rotate(62deg); opacity: .26; }
+.d-p6 { width: 16px; left: 26%; top: 30%; transform: rotate(-8deg); opacity: .24; }
+.d-p7 { display: none; }
+@media (max-width: 899px) { .d-p3, .d-p4, .d-p5, .d-p6 { display: none; } }
+
+@media (min-width: 900px) {
+  /* Montado sobre el canto de la primera lámina, como la flor de la
+     referencia: es lo que cose el campo de color con las fotos. */
+  .d-bot {
+    display: block;
+    left: 29%; bottom: -12%;
+    width: clamp(300px, 32vw, 430px); height: auto;
+    opacity: .62;
+    transform: rotate(-10deg);
+  }
+  /* — Marco de línea: se monta sobre la primera lámina — */
+  .d-marco {
+    position: absolute;
+    left: 38%; right: 30%;
+    top: clamp(1.6rem, 5vh, 3.4rem); bottom: clamp(4rem, 10vh, 7rem);
+    border: 1px solid rgba(154, 72, 103, .5);
+    border-radius: 2px;
+  }
+  .d-p7 { display: block; width: 19px; left: 40%; top: 6%; transform: rotate(48deg); opacity: .34; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA LIMPIA — una sola foto
+   El campo pierde el rosa a propósito: contra blanco, la foto y el
+   trazo de los adornos se ven más caros que contra un fondo teñido.
+   El rosa no desaparece del sitio, se concentra donde manda (botones,
+   acentos, pétalos) en vez de bañarlo todo.
+   Anula el tríptico y la banda anteriores.
+   ═══════════════════════════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 34%, var(--paper) 74%, #fdf9fb 100%);
+}
+.hero::before { content: none; }
+
+.foto-portada { position: relative; overflow: hidden; }
+.foto-portada picture, .foto-portada img {
+  width: 100%; height: 100%; display: block; object-fit: cover;
+}
+
+@media (min-width: 900px) {
+  .hero .foto-portada {
+    position: absolute; z-index: 1;
+    top: 0; bottom: 0; right: 0; left: 48%;
+    box-shadow: -26px 0 60px -22px rgba(21,25,29,.20);
+  }
+  .hero > .wrap > div { max-width: 43%; }
+  .hero > .wrap { min-height: clamp(540px, 66vh, 700px); }
+
+  /* El marco va entero sobre la foto y en blanco, como en la
+     referencia: sobre el campo limpio una línea blanca no se vería. */
+  /* Marco abierto, no cuadro cerrado: en la referencia el rectángulo
+     se sale de la imagen y nunca cierra. Aquí se va más allá del borde
+     derecho de la pantalla y pierde ese lado, así que quedan tres
+     trazos en escuadra. */
+  .d-marco {
+    left: 52%; right: -6%;
+    top: clamp(2.4rem, 7vh, 4.6rem); bottom: clamp(2.4rem, 7vh, 4.6rem);
+    border: 7px solid rgba(255,255,255,.95);
+    border-right: 0;
+    border-radius: 0;
+    box-shadow: 0 0 22px rgba(21,25,29,.10);
+  }
+  /* El botánico cose el campo limpio con la foto: el tallo cae sobre
+     el blanco, donde el trazo fino sí se lee, y las hojas alcanzan
+     el canto de la imagen. */
+  .d-bot { left: 31%; bottom: -14%; width: clamp(300px, 30vw, 400px); opacity: .5; }
+}
+
+@media (max-width: 899px) {
+  .hero .foto-portada { height: clamp(300px, 78vw, 430px); margin-bottom: 1.4rem; }
+  .hero .foto-portada { box-shadow: 0 18px 44px -20px rgba(21,25,29,.26); }
+}
+
+/* ── La flor de marca ───────────────────────────────────────────────
+   Sustituye al botánico que yo había dibujado. Es la acuarela de su
+   propio material, recortada del mármol: la de ellos vale más que la
+   mía, y de paso trae el verde de su identidad, que en el sitio no
+   estaba en ningún lado. */
+.d-bot, .d-p, .d-flor { display: none; }
+.d-flor {
+  position: absolute; z-index: 2;
+  left: -4%; bottom: -8%;
+  width: clamp(200px, 26vw, 330px); height: auto;
+  opacity: .92; pointer-events: none;
+  transform: rotate(-6deg);
+}
+@media (min-width: 900px) {
+  /* cruza del campo limpio al canto de la foto, como la flor de la
+     referencia cruza sus dos mitades */
+  .d-flor {
+    left: 27%; bottom: 1%;
+    width: clamp(300px, 33vw, 470px);
+    transform: rotate(-4deg);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTADA — MÁS AIRE
+   Tres cosas que la apretaban: tres botones en dos filas, las
+   pastillas de amenidades pegadas al canto de abajo, y solo 43 px
+   entre el texto y la foto. Todo eso sale o se separa.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  /* el texto termina antes: el hueco con la foto pasa de 43 a ~100 px */
+  .hero > .wrap > div { max-width: 38%; }
+  /* la flor se anclaba a un porcentaje y en pantallas anchas se salía
+     del hero, que recorta: de ahí el corte abrupto. Ahora va a una
+     distancia fija del canto y siempre cabe entera. */
+  /* Montada sobre el canto de la foto, no en el hueco: en el hueco se
+     le encimaba al párrafo, y ahí no cabe nada de este tamaño. Sobre
+     la foto sí se lee, porque es acuarea a color y no trazo fino —
+     es justo lo que hace la flor de la referencia. */
+  /* Abajo a la izquierda, apoyada en el canto de la foto. Antes estaba
+     más arriba y más metida en la imagen: tapaba el cabello, que es lo
+     que se vende. Aquí cae en el aire que dejan el botón y la línea de
+     WhatsApp, y solo roza el borde de la foto. */
+  .d-flor {
+    left: 34%; right: auto;
+    /* el giro ensancha la caja: sin este margen la flor vuelve a
+       salirse por abajo y el hero la recorta */
+    bottom: clamp(.8rem, 2vh, 1.4rem);
+    width: clamp(250px, 24vw, 350px);
+    transform: rotate(-3deg);
+  }
+}
+.hero .btn-row-hero { margin-top: 2rem; margin-bottom: .9rem; }
+.hero-alt {
+  margin: 0; font-family: var(--sans); font-size: .9rem; color: var(--muted);
+}
+.hero-alt a { color: var(--accent-deep); text-decoration: none; font-weight: 400; }
+.hero-alt a:hover { text-decoration: underline; }
+
+/* La franja de cifras baja y recoge las amenidades */
+.cifras { padding: clamp(2.6rem, 6vw, 4.4rem) 0 clamp(.6rem, 2vw, 1.4rem); }
+.cifras .amenidades { margin: 0 0 clamp(1.8rem, 4vw, 2.8rem); }
+
+/* Segunda flor: el mismo ramo espejeado, arriba a la izquierda, tenue.
+   Cierra la composición en diagonal con la grande del canto de la foto. */
+.d-flor2 {
+  position: absolute; z-index: 1; pointer-events: none;
+  aspect-ratio: 980 / 627;
+  background: url("flor-marca.png") center / contain no-repeat;
+  display: none; height: auto;
+}
+@media (min-width: 900px) {
+  .d-flor2 {
+    display: block;
+    left: -6%; top: -8%;
+    width: clamp(185px, 17.5vw, 268px);
+    opacity: .5;
+    transform: scaleX(-1) rotate(-14deg);
+  }
+}
+@media (max-width: 899px) {
+  .d-flor2 {
+    display: block;
+    left: -16%; right: auto; top: -3%; bottom: auto;
+    width: 46vw; opacity: .42;
+    transform: scaleX(-1) rotate(-12deg);
+  }
+}
+
+/* ── La tercera: espejo de la de arriba, en la esquina opuesta ──────
+   Girada 180° respecto a la de arriba a la izquierda, así que las dos
+   se leen como la misma pieza enfrentada en diagonal. */
+.d-flor3 {
+  position: absolute; z-index: 1; pointer-events: none;
+  aspect-ratio: 980 / 627;
+  background: url("flor-marca.png") center / contain no-repeat;
+  display: block; height: auto;
+  right: -8%; bottom: 2%; width: 42vw; opacity: .4;
+  transform: scaleX(-1) rotate(166deg);
+}
+@media (min-width: 900px) {
+  /* Esquina inferior derecha DEL PANEL CLARO, no del hero: la pareja
+     en diagonal enmarca el texto, y la foto se queda limpia. */
+  .d-flor3 {
+    right: 52%; bottom: clamp(1.6rem, 4vh, 2.6rem);
+    width: clamp(140px, 17vw, 235px);
+    opacity: .45;
+  }
+}
+
+/* ── El texto de la portada, centrado en su panel ───────────────────
+   Estaba pegado al margen del contenedor, que no coincide con el
+   panel claro: quedaba 275 px de aire a la izquierda y 97 a la
+   derecha. Aquí el contenedor ES el panel y el bloque va centrado. */
+@media (min-width: 900px) {
+  .hero > .wrap {
+    max-width: none; width: 48%;
+    margin-inline: 0; padding-inline: 0;
+    justify-content: center;
+  }
+  .hero > .wrap > div { max-width: 72%; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ICONOS DE SERVICIO — más grandes y con brillo rosa
+   ═══════════════════════════════════════════════════════════════════ */
+.card-ico {
+  width: 78px; height: 78px;
+  left: 16px; bottom: 16px;
+  box-shadow: 0 6px 22px rgba(21,25,29,.14),
+              0 0 0 1px rgba(192,97,132,.18),
+              0 0 26px 4px rgba(192,97,132,.38);
+}
+.card-ico .ico { width: 44px; height: 44px; }
+.card:hover .card-ico {
+  transform: scale(1.06);
+  box-shadow: 0 8px 26px rgba(21,25,29,.16),
+              0 0 0 1px rgba(192,97,132,.3),
+              0 0 36px 8px rgba(192,97,132,.55);
+}
+@media (max-width: 520px) {
+  .card-ico { width: 64px; height: 64px; left: 13px; bottom: 13px; }
+  .card-ico .ico { width: 36px; height: 36px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WHATSAPP Y TELÉFONO DE LA PORTADA, COMO ICONOS
+   El renglón decía "o escríbenos por WhatsApp · 55 2299 3258" y pesaba
+   lo mismo que el botón principal. En icono rosa se reconoce de un
+   vistazo y deja de competir con "Reservar cita".
+   ═══════════════════════════════════════════════════════════════════ */
+.hero-alt {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 0; font-family: var(--sans); font-size: .88rem; color: var(--muted);
+  flex-wrap: wrap;
+}
+.ic-red {
+  display: inline-grid; place-items: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  color: var(--accent-deep);
+  border: 1px solid rgba(192,97,132,.35);
+  background: #fff;
+  transition: background .25s ease, color .25s ease,
+              box-shadow .25s ease, transform .25s ease;
+}
+.ic-red svg { width: 21px; height: 21px; display: block; }
+.ic-red:hover {
+  background: var(--accent-deep); color: #fff;
+  border-color: var(--accent-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(192,97,132,.35);
+}
+.hero-tel {
+  font-size: .88rem; color: var(--accent-deep);
+  text-decoration: none; letter-spacing: .01em;
+}
+.hero-tel:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TARJETAS DE SERVICIO — icono a caballo y 3D real
+   El icono estaba dentro de la foto y se perdía contra el trabajo.
+   Ahora se monta sobre el canto: mitad en la imagen, mitad en blanco,
+   que es donde el brillo rosa se ve.
+   ═══════════════════════════════════════════════════════════════════ */
+.card-cuerpo { padding-top: 0; }
+.card-ico {
+  position: relative; left: auto; bottom: auto;
+  margin: -39px 0 .7rem;              /* medio círculo sobre la foto */
+  z-index: 2;
+}
+@media (max-width: 520px) { .card-ico { margin-top: -32px; } }
+
+/* — Inclinación 3D en las cuatro — */
+/* La perspectiva va en CADA tarjeta, no en la rejilla. Puesta en la
+   rejilla el punto de fuga es el centro del grupo, así que la del
+   medio se inclina de frente y las de las orillas salen sesgadas: la
+   primera parecía la única con efecto. Con perspective() propia, cada
+   una gira sobre su propio centro y las cuatro se ven igual. */
+.grid.g4 .card {
+  --rx: 0deg; --ry: 0deg;
+  transform: perspective(820px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .45s cubic-bezier(.16,1,.3,1),
+              box-shadow .35s ease, border-color .35s ease;
+  will-change: transform;
+}
+/* el título y el precio despegan del plano: sin perspectiva en la
+   rejilla, el translateZ que ya estaba no hacía nada */
+.grid.g4 .card:hover h3   { transform: translateZ(34px); }
+.grid.g4 .card:hover .from { transform: translateZ(24px); }
+.grid.g4 .card:hover .card-ico { transform: translateZ(46px) scale(1.06); }
+
+@media (prefers-reduced-motion: reduce) {
+  .grid.g4 .card { transform: none; transition: none; }
+}
+
+/* — Iconos, otro escalón — */
+.card-ico { width: 92px; height: 92px; margin: -46px 0 .8rem; }
+.card-ico .ico { width: 52px; height: 52px; }
+@media (max-width: 520px) {
+  .card-ico { width: 76px; height: 76px; margin-top: -38px; }
+  .card-ico .ico { width: 44px; height: 44px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FRANJA DE PROMOCIÓN
+   Va encima del encabezado, que es donde se ve sin buscarla. Es una
+   sola línea: etiqueta, oferta y un enlace. Nada de banner.
+   Se retira sola al pasar su fecha (ver el JS), porque una promo
+   vencida en la portada dice que nadie cuida la página.
+   ═══════════════════════════════════════════════════════════════════ */
+.promo {
+  background: var(--ink); color: var(--paper-2);
+  font-family: var(--sans); font-size: .85rem;
+}
+.promo-in {
+  display: flex; align-items: center; justify-content: center;
+  gap: .5rem .9rem; flex-wrap: wrap;
+  padding-top: .62rem; padding-bottom: .62rem;
+}
+.promo-tag {
+  font-size: .68rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: #fff; border: 1px solid rgba(255,255,255,.34);
+  border-radius: 999px; padding: .2rem .7rem;
+}
+.promo-txt { color: #e8e3e5; }
+.promo-cta {
+  color: #fff; text-decoration: none; font-weight: 500;
+  border-bottom: 1px solid rgba(255,255,255,.45);
+  padding-bottom: 1px; white-space: nowrap;
+}
+.promo-cta::after { content: " →"; }
+.promo-cta:hover { border-bottom-color: #fff; }
+
+/* Tema de temporada: SOLO cambia el fondo de esta franja. Vestir el
+   sitio entero de temporada se lee barato y hay que acordarse de
+   quitarlo. */
+/* Halloween y Día de Muertos.  El naranja sobre negro de Halloween
+   gringo se ve de tienda de disfraces; aquí el fondo es un ciruela muy
+   oscuro (sigue siendo la tinta de la marca, sólo entibiada) y el color
+   lo pone el cempasúchil, que es la flor de la temporada de verdad.  El
+   rosa del acento de la marca entra en el hover, así que la franja no se
+   sale del sitio.  Un solo elemento vestido: el resto de la página no se
+   disfraza. */
+.promo-muertos {
+  background: linear-gradient(100deg, #190f16 0%, #2a1520 52%, #1d1018 100%);
+  border-bottom: 1px solid rgba(240,160,42,.22);
+}
+.promo-muertos .promo-tag {
+  color: #f2ab3c; border-color: rgba(242,171,60,.42);
+  background: rgba(242,171,60,.09);
+}
+.promo-muertos .promo-txt { color: #f0e2e8; }
+.promo-muertos .promo-cta {
+  color: #ffc46b; border-bottom-color: rgba(255,196,107,.45);
+}
+.promo-muertos .promo-cta:hover {
+  color: #ffd79a; border-bottom-color: #ffd79a;
+}
+
+@media (max-width: 560px) {
+  .promo-in { padding-top: .55rem; padding-bottom: .55rem; font-size: .8rem; }
+  .promo-txt { width: 100%; text-align: center; order: 3; }
+  /* "Halloween y Día de Muertos" es una etiqueta larga: al tamaño normal
+     se roba un renglón entero y la franja se come un sexto de la pantalla
+     del teléfono. Encogida cabe junto al botón, y la franja baja de tres
+     renglones a dos. */
+  .promo-muertos .promo-tag { font-size: .6rem; letter-spacing: .08em; padding: .18rem .5rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PORTAFOLIO
+   La rejilla es de 3:4 fija, no mosaico libre: el cabello es vertical
+   y todas las fotos ya vienen recortadas igual, así que una retícula
+   pareja se ve intencional y no accidental.  Lo que le da aire de
+   catálogo es el escalón — la columna de en medio va más abajo — y el
+   pie de foto debajo de la imagen, no encima.
+   ═══════════════════════════════════════════════════════════════════ */
+.pf-cab { padding-bottom: 0; }
+.pf-sec { padding-top: clamp(1.6rem, 4vw, 2.4rem); }
+
+/* — Categorías — */
+.pf-tabs { display: flex; flex-wrap: wrap; gap: clamp(1.1rem, 3vw, 2.2rem); align-items: baseline;
+  border-bottom: 1px solid var(--line); padding-bottom: .85rem; }
+.pf-tab {
+  background: none; border: 0; padding: 0 0 .15rem; cursor: pointer;
+  font-family: var(--display); font-size: clamp(1.35rem, 3.2vw, 1.9rem); font-weight: 400;
+  line-height: 1.1; color: var(--muted); position: relative;
+  transition: color .35s ease;
+}
+.pf-tab .pf-n {
+  font-family: var(--sans); font-size: .62rem; font-weight: 500; letter-spacing: .1em;
+  vertical-align: super; margin-left: .12em; color: var(--muted); transition: color .35s ease;
+}
+.pf-tab::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -.9rem; height: 2px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform .45s cubic-bezier(.16,1,.3,1);
+}
+.pf-tab:hover { color: var(--ink-soft); }
+.pf-tab.activo { color: var(--ink); }
+.pf-tab.activo .pf-n { color: var(--accent-deep); }
+.pf-tab.activo::after { transform: scaleX(1); }
+
+/* — Técnicas — */
+.pf-filtros { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.5rem 0 0; }
+.pf-filtros[hidden] { display: none; }
+.pf-f {
+  background: none; cursor: pointer; border: 1px solid var(--line); border-radius: 999px;
+  padding: .42rem .95rem; font-family: var(--sans); font-size: .76rem; font-weight: 400;
+  letter-spacing: .05em; color: var(--ink-soft);
+  transition: border-color .3s ease, color .3s ease, background .3s ease;
+}
+.pf-f:hover { border-color: var(--accent); color: var(--accent-deep); }
+.pf-f.activo { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* — Rejilla — */
+.pf-rejilla {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.1rem, 2.4vw, 1.9rem);
+  margin: clamp(1.8rem, 4vw, 2.8rem) 0 0;
+  transition: opacity .22s ease;
+}
+.pf-rejilla.cambiando { opacity: 0; }
+/* el escalón: la columna de en medio baja, y vuelve a subir al final */
+@media (min-width: 900px) {
+  .pf-rejilla > figure:nth-child(3n+2) { margin-top: 3.2rem; }
+}
+.pf-rejilla > figure { margin: 0; cursor: zoom-in; }
+.pf-rejilla > figure[hidden] { display: none; }
+.pf-rejilla picture {
+  display: block; overflow: hidden; border-radius: 3px;
+  background: var(--paper-2); box-shadow: 0 1px 3px rgba(21,25,29,.05);
+  transition: box-shadow .5s ease, transform .5s cubic-bezier(.16,1,.3,1);
+}
+/* height:auto es obligatorio: el atributo height="960" del <img> es una
+   pista de presentación que le gana al aspect-ratio y deja la foto de
+   340x960 en vez de 340x453. */
+.pf-rejilla img { width: 100%; height: auto; aspect-ratio: 3/4; object-fit: cover; display: block;
+  transition: transform .9s cubic-bezier(.16,1,.3,1); }
+.pf-rejilla figcaption {
+  padding: .72rem .1rem 0; font-family: var(--sans); font-size: .78rem;
+  display: flex; flex-wrap: wrap; gap: .1rem .6rem; align-items: baseline;
+}
+.pf-rejilla figcaption b { font-weight: 400; color: var(--ink); letter-spacing: .01em;
+  transition: color .35s ease; }
+.pf-rejilla figcaption span { color: var(--muted); font-size: .72rem; }
+@media (hover: hover) {
+  .pf-rejilla > figure:hover picture {
+    transform: translateY(-6px); box-shadow: 0 18px 40px rgba(192,97,132,.20);
+  }
+  .pf-rejilla > figure:hover img { transform: scale(1.05); }
+  .pf-rejilla > figure:hover figcaption b { color: var(--accent-deep); }
+}
+.pf-rejilla > figure:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+
+.pf-vacio { margin: 3rem 0; text-align: center; color: var(--muted); }
+.pf-cierre { font-family: var(--display); font-size: clamp(1.4rem, 3.4vw, 2rem);
+  margin-bottom: 1.4rem; }
+
+@media (max-width: 899px) { .pf-rejilla { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) {
+  .pf-rejilla { grid-template-columns: 1fr; gap: 1.5rem; }
+  .pf-tabs { gap: 1rem; }
+}
+
+/* — Visor: flechas para recorrer el portafolio — */
+.visor-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.35);
+  color: #fff; width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  font-size: 1.3rem; line-height: 1; display: flex; align-items: center; justify-content: center;
+  transition: background .3s ease, border-color .3s ease;
+}
+.visor-nav:hover { background: rgba(255,255,255,.18); border-color: #fff; }
+.visor-prev { left: clamp(.6rem, 3vw, 2.4rem); }
+.visor-next { right: clamp(.6rem, 3vw, 2.4rem); }
+.visor-nav[hidden] { display: none; }
+@media (max-width: 560px) { .visor-nav { width: 40px; height: 40px; } }
+
+.g-mas { margin: 1.4rem 0 0; font-family: var(--sans); font-size: .9rem; }
+.g-mas a { text-decoration: none; border-bottom: 1px solid rgba(154,72,103,.4); padding-bottom: 2px; }
+.g-mas a:hover { border-bottom-color: var(--accent-deep); }
+
+/* Tabla comparativa de 5 columnas: en celular se desliza ella sola en vez
+   de arrastrar toda la página de lado. */
+.tabla-ancha { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tabla-ancha table.price { min-width: 34rem; }
+@media (max-width: 560px) {
+  .tabla-ancha { margin-inline: calc(var(--gut, 20px) * -1); padding-inline: var(--gut, 20px); }
+}
+
+/* Cada categoría trae su propia fila de chips; sólo se ve la de la activa. */
+.pf-filtros-caja { min-height: 0; }
+.pf-filtros[hidden] { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CELULAR: ÁREA DE TOQUE Y TEXTO MÍNIMO
+   Medido con navegador a 360, 390 y 414: varios enlaces que la clienta
+   sí toca medían 19 a 29px de alto. La recomendación de Apple y de
+   Google es 44px; por debajo de 40 se falla el toque y se abre otra
+   cosa. Aquí sólo crece el área que se puede tocar, no el tipo.
+   El texto en versalitas iba a 11.2px, por debajo del mínimo de 12px
+   que Google pide para móvil.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 760px) {
+  .eyebrow { font-size: .75rem; }
+  .promo-tag { font-size: .72rem; }
+
+  /* CTA de la franja de promoción y teléfonos: acciones de primer nivel */
+  .promo-cta,
+  .hero-tel,
+  address a[href^="tel:"],
+  .card .more,
+  .g-mas a,
+  .a-guia-c {
+    display: inline-block;
+    padding-block: .55rem;
+    min-height: 40px;
+    box-sizing: border-box;
+  }
+  /* En una dirección los teléfonos van uno debajo de otro: sin esto el
+     padding los encima. */
+  address a[href^="tel:"] { line-height: 1.6; }
+
+  .pf-tab { min-height: 42px; }
+  .pf-f   { min-height: 42px; padding-block: .6rem; }
+}

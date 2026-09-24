@@ -1,0 +1,208 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Link: </llms.txt>; rel="describedby"; type="text/plain", </llms.txt>; rel="llms-txt"; type="text/plain", </.well-known/agents.json>; rel="agents"; type="application/json", </.well-known/mcp.json>; rel="mcp"; type="application/json"
+
+/
+  Content-Type: text/html; charset=utf-8
+
+/cabello
+  Content-Type: text/html; charset=utf-8
+
+/unas
+  Content-Type: text/html; charset=utf-8
+
+/pestanas-y-cejas
+  Content-Type: text/html; charset=utf-8
+
+/precios
+  Content-Type: text/html; charset=utf-8
+
+/guia-extensiones-de-pestanas
+  Content-Type: text/html; charset=utf-8
+
+/guia-color-y-alisados
+  Content-Type: text/html; charset=utf-8
+
+/guia-unas
+  Content-Type: text/html; charset=utf-8
+
+/portafolio
+  Content-Type: text/html; charset=utf-8
+
+/en/portfolio
+  Content-Type: text/html; charset=utf-8
+
+/aviso-de-privacidad
+  Content-Type: text/html; charset=utf-8
+
+/en/
+  Content-Type: text/html; charset=utf-8
+
+/en/hair
+  Content-Type: text/html; charset=utf-8
+
+/en/nails
+  Content-Type: text/html; charset=utf-8
+
+/en/lashes-and-brows
+  Content-Type: text/html; charset=utf-8
+
+/en/pricing
+  Content-Type: text/html; charset=utf-8
+
+/en/eyelash-extensions-guide
+  Content-Type: text/html; charset=utf-8
+
+/en/color-and-smoothing-guide
+  Content-Type: text/html; charset=utf-8
+
+/en/nails-guide
+  Content-Type: text/html; charset=utf-8
+
+/en/privacy
+  Content-Type: text/html; charset=utf-8
+
+/404
+  Content-Type: text/html; charset=utf-8
+
+/index.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/>; rel="canonical"
+
+/cabello.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/cabello>; rel="canonical"
+
+/unas.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/unas>; rel="canonical"
+
+/pestanas-y-cejas.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/pestanas-y-cejas>; rel="canonical"
+
+/precios.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/precios>; rel="canonical"
+
+/guia-extensiones-de-pestanas.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/guia-extensiones-de-pestanas>; rel="canonical"
+
+/guia-color-y-alisados.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/guia-color-y-alisados>; rel="canonical"
+
+/guia-unas.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/guia-unas>; rel="canonical"
+
+/portafolio.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/portafolio>; rel="canonical"
+
+/en/portfolio.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/portfolio>; rel="canonical"
+
+/aviso-de-privacidad.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/aviso-de-privacidad>; rel="canonical"
+
+/en/index.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/>; rel="canonical"
+
+/en/hair.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/hair>; rel="canonical"
+
+/en/nails.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/nails>; rel="canonical"
+
+/en/lashes-and-brows.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/lashes-and-brows>; rel="canonical"
+
+/en/pricing.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/pricing>; rel="canonical"
+
+/en/eyelash-extensions-guide.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/eyelash-extensions-guide>; rel="canonical"
+
+/en/color-and-smoothing-guide.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/color-and-smoothing-guide>; rel="canonical"
+
+/en/nails-guide.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/nails-guide>; rel="canonical"
+
+/en/privacy.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Link: <https://stilo-salon.com/en/privacy>; rel="canonical"
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/sitemap.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/AGENTS.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.ico
+  Content-Type: image/vnd.microsoft.icon
+  Cache-Control: public, max-age=604800
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *
+
+/robots.txt
+  Access-Control-Allow-Origin: *
+
+/sitemap.xml
+  Access-Control-Allow-Origin: *
+
+/agents.json
+  Access-Control-Allow-Origin: *
+
+/mcp.json
+  Access-Control-Allow-Origin: *
+
+/.well-known/*
+  Access-Control-Allow-Origin: *

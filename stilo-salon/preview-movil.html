@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vista móvil · Stilo Salón</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* Banco de pruebas, no escaparate: el sitio es lo brillante y el marco
+     se queda callado. Por eso va en oscuro y con un solo acento, el rosa
+     de la marca. Es un look deliberado y único, sin tema claro. */
+  :root{
+    --fondo:#171416; --panel:#221c20; --linea:#3a3036;
+    --tinta:#f3ecef; --suave:#a2939b; --acento:#d8799c; --acento-ap:#3a2129;
+    --r:10px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--fondo); color:var(--tinta);
+    font-family:"Jost",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-weight:300; min-height:100%;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  a{color:var(--acento)}
+
+  .barra{
+    width:100%; background:var(--panel); border-bottom:1px solid var(--linea);
+    padding:.85rem 16px calc(.85rem + env(safe-area-inset-bottom,0px));
+    display:flex; flex-wrap:wrap; gap:.7rem 1.1rem; align-items:center;
+    justify-content:center; position:sticky; top:env(safe-area-inset-top,0px); z-index:5;
+  }
+  .rotulo{
+    font-size:.66rem; letter-spacing:.17em; text-transform:uppercase;
+    color:var(--suave); margin-right:.15rem;
+  }
+  select,.chip,.boton{
+    font:inherit; font-size:.85rem; color:var(--tinta);
+    background:transparent; border:1px solid var(--linea);
+    border-radius:999px; padding:.42rem .9rem; cursor:pointer;
+    transition:border-color .2s ease,background .2s ease,color .2s ease;
+  }
+  select{border-radius:var(--r); max-width:min(300px,70vw)}
+  select option{background:var(--panel); color:var(--tinta)}
+  .chip:hover,.boton:hover,select:hover{border-color:var(--acento)}
+  .chip[aria-pressed="true"]{
+    background:var(--acento-ap); border-color:var(--acento); color:var(--acento);
+  }
+  .grupo{display:flex; gap:.4rem; align-items:center}
+  :focus-visible{outline:2px solid var(--acento); outline-offset:3px}
+
+  .escena{
+    flex:1; width:100%; display:flex; flex-direction:column; align-items:center;
+    gap:.9rem; padding:clamp(1rem,3vw,2rem) 16px 2rem;
+  }
+  /* El marco: bisel oscuro, esquinas de teléfono y una muesca. Nada más:
+     cualquier adorno extra compite con el sitio que está adentro. */
+  .tel{
+    background:#0c0a0b; border:1px solid var(--linea); border-radius:38px;
+    padding:11px; box-shadow:0 26px 70px rgba(0,0,0,.55);
+    max-width:100%; position:relative;
+  }
+  .tel::before{
+    content:""; position:absolute; top:19px; left:50%; transform:translateX(-50%);
+    width:86px; height:5px; border-radius:99px; background:#2b2529; z-index:2;
+  }
+  .pantalla{
+    border-radius:28px; overflow:hidden; background:#fff; display:block;
+    max-width:100%;
+  }
+  iframe{display:block; border:0; width:100%; height:100%; background:#fff}
+  .pie{
+    font-size:.78rem; color:var(--suave); text-align:center; max-width:56ch;
+    line-height:1.55;
+  }
+  .pie code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92em;
+    color:var(--tinta);
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="barra">
+  <span class="rotulo">Página</span>
+  <select id="pagina" aria-label="Página que se muestra en el teléfono">
+    <optgroup label="Español">
+      <option value="index.html">Portada</option>
+      <option value="cabello.html">Cabello</option>
+      <option value="unas.html">Uñas</option>
+      <option value="pestanas-y-cejas.html">Pestañas y cejas</option>
+      <option value="portafolio.html">Portafolio</option>
+      <option value="precios.html">Precios</option>
+      <option value="guia-color-y-alisados.html">Guía · color y alisados</option>
+      <option value="guia-unas.html">Guía · uñas</option>
+      <option value="guia-extensiones-de-pestanas.html">Guía · pestañas</option>
+      <option value="aviso-de-privacidad.html">Aviso de privacidad</option>
+    </optgroup>
+    <optgroup label="English">
+      <option value="en/index.html">Home</option>
+      <option value="en/hair.html">Hair</option>
+      <option value="en/nails.html">Nails</option>
+      <option value="en/lashes-and-brows.html">Lashes &amp; brows</option>
+      <option value="en/portfolio.html">Portfolio</option>
+      <option value="en/pricing.html">Pricing</option>
+      <option value="en/color-and-smoothing-guide.html">Guide · color</option>
+      <option value="en/nails-guide.html">Guide · nails</option>
+      <option value="en/eyelash-extensions-guide.html">Guide · lashes</option>
+      <option value="en/privacy.html">Privacy</option>
+    </optgroup>
+  </select>
+
+  <span class="rotulo">Equipo</span>
+  <div class="grupo" id="anchos">
+    <button class="chip" type="button" data-w="375" data-h="667" aria-pressed="false">iPhone SE</button>
+    <button class="chip" type="button" data-w="390" data-h="844" aria-pressed="true">iPhone 15</button>
+    <button class="chip" type="button" data-w="414" data-h="896" aria-pressed="false">Plus / Max</button>
+  </div>
+
+  <button class="boton" type="button" id="recargar">Recargar</button>
+  <a class="boton" id="completo" href="index.html" style="text-decoration:none">Abrir completa &rarr;</a>
+</div>
+
+<div class="escena">
+  <div class="tel" id="marco">
+    <div class="pantalla" id="pantalla" style="width:390px;height:844px">
+      <iframe id="lienzo" src="index.html" title="Stilo Salón en tamaño de teléfono"></iframe>
+    </div>
+  </div>
+  <p class="pie">
+    El sitio de verdad, dentro de un teléfono. Se toca y se navega igual que en
+    el celular. <strong>Sólo existe en el preview</strong>: no se publica al sitio real.
+  </p>
+</div>
+
+<script>
+(function () {
+  var sel = document.getElementById('pagina');
+  var lienzo = document.getElementById('lienzo');
+  var pantalla = document.getElementById('pantalla');
+  var completo = document.getElementById('completo');
+  var chips = document.querySelectorAll('#anchos .chip');
+  var an = 390, al = 844;
+
+  // El alto real del teléfono no siempre cabe en la ventana. Encogerlo es
+  // honesto: el sitio sigue viendo un ancho de celular, que es lo que
+  // decide el diseño; sólo ve menos alto.
+  function ajusta() {
+    // 22px de bisel + el aire de arriba y abajo + la nota del pie:
+    // si no se descuentan, el teléfono se sale de la ventana y la nota
+    // queda cortada.
+    var barra = document.querySelector('.barra').offsetHeight;
+    var hueco = window.innerHeight - barra - 170;
+    var h = Math.max(420, Math.min(al, hueco));
+    var w = Math.min(an, window.innerWidth - 60);
+    pantalla.style.width = w + 'px';
+    pantalla.style.height = h + 'px';
+  }
+
+  sel.addEventListener('change', function () {
+    lienzo.src = sel.value;
+    completo.href = sel.value;
+  });
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      chips.forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+      c.setAttribute('aria-pressed', 'true');
+      an = +c.dataset.w; al = +c.dataset.h;
+      ajusta();
+    });
+  });
+
+  document.getElementById('recargar').addEventListener('click', function () {
+    lienzo.src = lienzo.src;
+  });
+
+  window.addEventListener('resize', ajusta);
+  ajusta();
+})();
+</script>
+
+</body>
+</html>

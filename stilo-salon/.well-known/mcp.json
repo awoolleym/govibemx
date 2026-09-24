@@ -1,0 +1,81 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/draft/2026-04-23/server.json",
+  "schema_version": "2026-04-23",
+  "name": "stilo-salon",
+  "version": "1.0.0",
+  "title": "Stilo Salón",
+  "description": "Precios, servicios y datos de contacto de Stilo Salón, Roma Norte, CDMX.",
+  "resources": [
+    {
+      "uri": "https://stilo-salon.com/llms.txt",
+      "name": "Resumen y lista de precios",
+      "description": "Los 67 servicios con precio y duración, horario, dirección y garantías.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://stilo-salon.com/precios",
+      "name": "Página de precios",
+      "description": "La lista completa, en HTML.",
+      "mimeType": "text/html"
+    },
+    {
+      "uri": "https://stilo-salon.com/sitemap.xml",
+      "name": "Mapa del sitio",
+      "description": "Las 20 páginas, español e inglés.",
+      "mimeType": "application/xml"
+    }
+  ],
+  "tools": [
+    {
+      "name": "book_appointment",
+      "title": "Pedir cita",
+      "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.",
+      "url": "https://stilo-salon.com/#contacto",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre de la clienta."
+          },
+          "tel": {
+            "type": "string",
+            "description": "WhatsApp a diez dígitos."
+          },
+          "servicio": {
+            "type": "string",
+            "description": "Qué servicio quiere."
+          },
+          "cuando": {
+            "type": "string",
+            "description": "Día y hora que le queda, en texto libre."
+          }
+        },
+        "required": [
+          "nombre",
+          "tel"
+        ]
+      }
+    },
+    {
+      "name": "get_prices",
+      "title": "Consultar precios",
+      "description": "Los 67 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.",
+      "url": "https://stilo-salon.com/llms.txt",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_location_and_hours",
+      "title": "Ubicación y horario",
+      "description": "Dirección en Roma Norte, teléfonos y horario de la semana.",
+      "url": "https://stilo-salon.com/#contacto",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ]
+}
