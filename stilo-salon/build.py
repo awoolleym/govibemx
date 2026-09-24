@@ -375,67 +375,15 @@ def externaliza_js(doc):
 # herramientas son del sitio, no de la portada: desde /precios también se
 # puede pedir cita, sólo que el formulario vive en la portada.
 #
-# Van dos cosas: el bloque JSON con las herramientas, que es la declaración
-# legible sin ejecutar nada, y el registro en modelContext, que es la API de
-# verdad.  El registro no necesita el DOM —lee el bloque de arriba, que ya
-# está—, y la búsqueda del formulario se hace dentro de la acción, cuando
-# alguien la llama y la página ya está montada.
+# Aquí va sólo la declaración: el bloque JSON, que es lo que se puede leer
+# sin ejecutar nada.  El registro en modelContext vive en assets/app.js, que
+# se descarga una vez para todo el sitio.  Puesto aquí eran 2.7 KB de código
+# repetidos en las 21 páginas, y se notó: la proporción de texto contra HTML
+# empeoró en cuatro páginas y el auditor bajó un punto.  La declaración pesa
+# 1.1 KB y son datos, no código; ésa sí gana estando arriba.
 def webmcp_head(lang):
-    t_ = T[lang]
     return (f'<script type="application/json" id="webmcp-tools">'
-            f'{json.dumps(HERRAMIENTAS, ensure_ascii=False)}</script>\n'
-            '<script id="webmcp-registro">\n'
-            '(function () {\n'
-            "  var d = document.getElementById('webmcp-tools');\n"
-            '  if (!d) return;\n'
-            '  var tools;\n'
-            '  try { tools = JSON.parse(d.textContent); } catch (e) { return; }\n'
-            '  function pedirCita(args) {\n'
-            "    var fc = document.getElementById('formCita');\n"
-            '    // El formulario sólo existe en la portada.  Desde cualquier\n'
-            '    // otra página, la acción lleva hasta él en vez de fallar.\n'
-            f"    if (!fc) {{ location.href = '{'/' if lang == 'es' else '/en/'}#contacto'; \n"
-            "      return { content: [{ type: 'text', text: 'Abriendo el formulario de cita.' }] }; }\n"
-            '    var a = args || {};\n'
-            "    ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {\n"
-            "      var el = document.getElementById('cita-' + k);\n"
-            '      if (el && a[k]) el.value = a[k];\n'
-            '    });\n'
-            '    fc.requestSubmit ? fc.requestSubmit() : fc.submit();\n'
-            "    return { content: [{ type: 'text',\n"
-            "             text: 'Cita enviada por WhatsApp a Stilo Salon.' }] };\n"
-            '  }\n'
-            '  var acciones = {\n'
-            '    book_appointment: pedirCita,\n'
-            '    get_prices: function () {\n'
-            f"      return {{ content: [{{ type: 'text', text: '{SITE}/llms.txt' }}] }};\n"
-            '    },\n'
-            '    get_location_and_hours: function () {\n'
-            "      return { content: [{ type: 'text',\n"
-            f"               text: '{NAP['street']}, {NAP['locality']}, {NAP['postal']}, {NAP['city']}. ' +\n"
-            "                     'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +\n"
-            f"                     'Tel {NAP['tel1_display']}.' }}] }};\n"
-            '    }\n'
-            '  };\n'
-            '  /* La API se ha movido de sitio: empezó en navigator.modelContext y\n'
-            '     pasó a document.modelContext, así que se mira en los dos.  Y el\n'
-            '     método bueno es registerTool: provideContext salió de la\n'
-            '     especificación en marzo de 2026. */\n'
-            '  var mc = document.modelContext || navigator.modelContext;\n'
-            '  if (!mc) return;\n'
-            '  function completa(t) {\n'
-            '    return { name: t.name, description: t.description,\n'
-            '             inputSchema: t.inputSchema, execute: acciones[t.name] };\n'
-            '  }\n'
-            '  try {\n'
-            "    if (typeof mc.registerTool === 'function') {\n"
-            '      tools.forEach(function (t) { mc.registerTool(completa(t)); });\n'
-            "    } else if (typeof mc.provideContext === 'function') {\n"
-            '      mc.provideContext({ tools: tools.map(completa) });\n'
-            '    }\n'
-            '  } catch (err) { /* si la API cambia otra vez, la página no se cae */ }\n'
-            '})();\n'
-            '</script>')
+            f'{json.dumps(HERRAMIENTAS, ensure_ascii=False)}</script>')
 
 
 def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
@@ -973,6 +921,62 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
                 encodeURIComponent(l.join('\\n')), '_blank', 'noopener');
   }});
 
+  // ── WebMCP ───────────────────────────────────────────────────────────
+  // Las tres herramientas van declaradas en el bloque JSON de la cabecera
+  // de cada página; aquí sólo se registran.  El código vive en este archivo
+  // y no en el HTML porque es el mismo para las 21 páginas: puesto en la
+  // cabecera eran 2.7 KB repetidos veintiuna veces, y se notó —la
+  // proporción de texto contra HTML empeoró en cuatro páginas—.
+  //
+  // modelContext lo pone el navegador cuando trae agente.  Empezó en
+  // navigator y pasó a document, así que se mira en los dos; y el método
+  // bueno es registerTool, porque provideContext salió de la
+  // especificación en marzo de 2026.
+  var decl = document.getElementById('webmcp-tools');
+  var mc = document.modelContext || navigator.modelContext;
+  if (decl && mc) {{
+    var tools = null;
+    try {{ tools = JSON.parse(decl.textContent); }} catch (e) {{ tools = null; }}
+    var acciones = {{
+      book_appointment: function (args) {{
+        var f = document.getElementById('formCita');
+        // El formulario sólo existe en la portada.  Desde cualquier otra
+        // página la acción lleva hasta él en vez de fallar en silencio.
+        if (!f) {{
+          location.href = (document.documentElement.lang === 'en' ? '/en/' : '/') + '#contacto';
+          return {{ content: [{{ type: 'text', text: 'Abriendo el formulario de cita.' }}] }};
+        }}
+        var a = args || {{}};
+        ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {{
+          var el = document.getElementById('cita-' + k);
+          if (el && a[k]) el.value = a[k];
+        }});
+        f.requestSubmit ? f.requestSubmit() : f.submit();
+        return {{ content: [{{ type: 'text',
+                 text: 'Cita enviada por WhatsApp a Stilo Salon.' }}] }};
+      }},
+      get_prices: function () {{
+        return {{ content: [{{ type: 'text', text: '{SITE}/llms.txt' }}] }};
+      }},
+      get_location_and_hours: function () {{
+        return {{ content: [{{ type: 'text',
+                 text: '{NAP["street"]}, {NAP["locality"]}, {NAP["postal"]}, {NAP["city"]}. ' +
+                       'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +
+                       'Tel {NAP["tel1_display"]}.' }}] }};
+      }}
+    }};
+    var completa = function (t) {{
+      return {{ name: t.name, description: t.description,
+               inputSchema: t.inputSchema, execute: acciones[t.name] }};
+    }};
+    try {{
+      if (tools && typeof mc.registerTool === 'function') {{
+        tools.forEach(function (t) {{ mc.registerTool(completa(t)); }});
+      }} else if (tools && typeof mc.provideContext === 'function') {{
+        mc.provideContext({{ tools: tools.map(completa) }});
+      }}
+    }} catch (err) {{ /* si la API cambia otra vez, la página no se cae */ }}
+  }}
 }})();
 </script>
 </body>

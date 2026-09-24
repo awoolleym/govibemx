@@ -409,4 +409,60 @@
                 encodeURIComponent(l.join('\n')), '_blank', 'noopener');
   });
 
+  // ── WebMCP ───────────────────────────────────────────────────────────
+  // Las tres herramientas van declaradas en el bloque JSON de la cabecera
+  // de cada página; aquí sólo se registran.  El código vive en este archivo
+  // y no en el HTML porque es el mismo para las 21 páginas: puesto en la
+  // cabecera eran 2.7 KB repetidos veintiuna veces, y se notó —la
+  // proporción de texto contra HTML empeoró en cuatro páginas—.
+  //
+  // modelContext lo pone el navegador cuando trae agente.  Empezó en
+  // navigator y pasó a document, así que se mira en los dos; y el método
+  // bueno es registerTool, porque provideContext salió de la
+  // especificación en marzo de 2026.
+  var decl = document.getElementById('webmcp-tools');
+  var mc = document.modelContext || navigator.modelContext;
+  if (decl && mc) {
+    var tools = null;
+    try { tools = JSON.parse(decl.textContent); } catch (e) { tools = null; }
+    var acciones = {
+      book_appointment: function (args) {
+        var f = document.getElementById('formCita');
+        // El formulario sólo existe en la portada.  Desde cualquier otra
+        // página la acción lleva hasta él en vez de fallar en silencio.
+        if (!f) {
+          location.href = (document.documentElement.lang === 'en' ? '/en/' : '/') + '#contacto';
+          return { content: [{ type: 'text', text: 'Abriendo el formulario de cita.' }] };
+        }
+        var a = args || {};
+        ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {
+          var el = document.getElementById('cita-' + k);
+          if (el && a[k]) el.value = a[k];
+        });
+        f.requestSubmit ? f.requestSubmit() : f.submit();
+        return { content: [{ type: 'text',
+                 text: 'Cita enviada por WhatsApp a Stilo Salon.' }] };
+      },
+      get_prices: function () {
+        return { content: [{ type: 'text', text: 'https://stilo-salon.com/llms.txt' }] };
+      },
+      get_location_and_hours: function () {
+        return { content: [{ type: 'text',
+                 text: 'Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. ' +
+                       'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +
+                       'Tel 55 2299 3258.' }] };
+      }
+    };
+    var completa = function (t) {
+      return { name: t.name, description: t.description,
+               inputSchema: t.inputSchema, execute: acciones[t.name] };
+    };
+    try {
+      if (tools && typeof mc.registerTool === 'function') {
+        tools.forEach(function (t) { mc.registerTool(completa(t)); });
+      } else if (tools && typeof mc.provideContext === 'function') {
+        mc.provideContext({ tools: tools.map(completa) });
+      }
+    } catch (err) { /* si la API cambia otra vez, la página no se cae */ }
+  }
 })();

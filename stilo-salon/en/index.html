@@ -23,58 +23,6 @@
 <meta name="mcp" content="/.well-known/mcp.json">
 <meta name="webmcp" content="/.well-known/mcp.json">
 <script type="application/json" id="webmcp-tools">[{"name": "book_appointment", "title": "Pedir cita", "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {"nombre": {"type": "string", "description": "Nombre de la clienta."}, "tel": {"type": "string", "description": "WhatsApp a diez dígitos."}, "servicio": {"type": "string", "description": "Qué servicio quiere."}, "cuando": {"type": "string", "description": "Día y hora que le queda, en texto libre."}}, "required": ["nombre", "tel"]}}, {"name": "get_prices", "title": "Consultar precios", "description": "Los 67 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.", "url": "https://stilo-salon.com/llms.txt", "inputSchema": {"type": "object", "properties": {}}}, {"name": "get_location_and_hours", "title": "Ubicación y horario", "description": "Dirección en Roma Norte, teléfonos y horario de la semana.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {}}}]</script>
-<script id="webmcp-registro">
-(function () {
-  var d = document.getElementById('webmcp-tools');
-  if (!d) return;
-  var tools;
-  try { tools = JSON.parse(d.textContent); } catch (e) { return; }
-  function pedirCita(args) {
-    var fc = document.getElementById('formCita');
-    // El formulario sólo existe en la portada.  Desde cualquier
-    // otra página, la acción lleva hasta él en vez de fallar.
-    if (!fc) { location.href = '/en/#contacto'; 
-      return { content: [{ type: 'text', text: 'Abriendo el formulario de cita.' }] }; }
-    var a = args || {};
-    ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {
-      var el = document.getElementById('cita-' + k);
-      if (el && a[k]) el.value = a[k];
-    });
-    fc.requestSubmit ? fc.requestSubmit() : fc.submit();
-    return { content: [{ type: 'text',
-             text: 'Cita enviada por WhatsApp a Stilo Salon.' }] };
-  }
-  var acciones = {
-    book_appointment: pedirCita,
-    get_prices: function () {
-      return { content: [{ type: 'text', text: 'https://stilo-salon.com/llms.txt' }] };
-    },
-    get_location_and_hours: function () {
-      return { content: [{ type: 'text',
-               text: 'Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. ' +
-                     'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +
-                     'Tel 55 2299 3258.' }] };
-    }
-  };
-  /* La API se ha movido de sitio: empezó en navigator.modelContext y
-     pasó a document.modelContext, así que se mira en los dos.  Y el
-     método bueno es registerTool: provideContext salió de la
-     especificación en marzo de 2026. */
-  var mc = document.modelContext || navigator.modelContext;
-  if (!mc) return;
-  function completa(t) {
-    return { name: t.name, description: t.description,
-             inputSchema: t.inputSchema, execute: acciones[t.name] };
-  }
-  try {
-    if (typeof mc.registerTool === 'function') {
-      tools.forEach(function (t) { mc.registerTool(completa(t)); });
-    } else if (typeof mc.provideContext === 'function') {
-      mc.provideContext({ tools: tools.map(completa) });
-    }
-  } catch (err) { /* si la API cambia otra vez, la página no se cae */ }
-})();
-</script>
 <link rel="llms" type="text/plain" href="/llms.txt">
 <link rel="llms-txt" type="text/plain" href="/llms.txt">
 <link rel="agents" type="application/json" href="/.well-known/agents.json">
@@ -315,6 +263,6 @@
     </div>
   </div>
 </footer>
-<script src="/assets/app.9aa03fee.js" defer></script>
+<script src="/assets/app.d0ef8d44.js" defer></script>
 </body>
 </html>
