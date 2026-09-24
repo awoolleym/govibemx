@@ -191,7 +191,10 @@
     <p class="mapa-cred">Map © 
       <a href="https://www.openstreetmap.org/copyright" rel="noopener nofollow">OpenStreetMap</a></p>
 
-  <form class="cita" id="formCita" data-mcp-action="book_appointment"
+  <form class="cita" id="formCita"
+        toolname="book_appointment"
+        tooldescription="Composes the appointment request and sends it to Stilo Salón over WhatsApp, with name, service, preferred day and phone."
+        data-mcp-action="book_appointment"
         data-tool-name="book_appointment"
         data-tool-description="Composes the appointment request and sends it to Stilo Salón over WhatsApp, with name, service, preferred day and phone."
         action="https://wa.me/525522993258" method="get" target="_blank"
@@ -201,16 +204,20 @@
     <div class="cita-campos">
       <p class="campo"><label for="cita-nombre">Name</label>
         <input id="cita-nombre" name="nombre" type="text" autocomplete="name"
-               autocapitalize="words" required data-mcp-param="nombre"></p>
+               autocapitalize="words" required data-mcp-param="nombre"
+               toolparamdescription="The client's name, as she wants to be addressed."></p>
       <p class="campo"><label for="cita-tel">Your WhatsApp</label>
         <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
                inputmode="tel" required pattern="[0-9+()\s-]{8,20}"
-               title="Ten digits, with or without spaces." data-mcp-param="tel"></p>
+               title="Ten digits, with or without spaces." data-mcp-param="tel"
+               toolparamdescription="Her WhatsApp number, ten digits, with or without spaces."></p>
       <p class="campo"><label for="cita-servicio">What would you like?</label>
-        <select id="cita-servicio" name="servicio" data-mcp-param="servicio"><option>Haircut</option><option>Colour or balayage</option><option>Keratin or smoothing</option><option>Nails</option><option>Lashes</option><option>Brows</option><option>Makeup or styling</option><option>Not sure — I'd like advice</option></select></p>
+        <select id="cita-servicio" name="servicio" data-mcp-param="servicio"
+                toolparamdescription="The service she wants, from the list."><option>Haircut</option><option>Colour or balayage</option><option>Keratin or smoothing</option><option>Nails</option><option>Lashes</option><option>Brows</option><option>Makeup or styling</option><option>Not sure — I'd like advice</option></select></p>
       <p class="campo"><label for="cita-cuando">When suits you?</label>
         <input id="cita-cuando" name="cuando" type="text" autocomplete="off"
-               placeholder="e.g. Saturday morning" data-mcp-param="cuando"></p>
+               placeholder="e.g. Saturday morning" data-mcp-param="cuando"
+               toolparamdescription="When suits her, free text: 'Saturday morning'."></p>
     </div>
     <button class="btn btn-wa" type="submit">Open WhatsApp with the message</button>
   </form>
@@ -253,21 +260,24 @@
                        'Tel 55 2299 3258.' }] };
       }
     };
-    var mc = navigator.modelContext;
+    /* La API se ha movido de sitio dos veces: empezó en navigator.modelContext
+       y pasó a document.modelContext, así que se mira en los dos.  Y el
+       método bueno es registerTool: provideContext salió de la
+       especificación en marzo de 2026 y sólo queda aquí por si algún
+       navegador viejo lo trae. */
+    var mc = document.modelContext || navigator.modelContext;
     if (!mc) return;
+    function completa(t) {
+      return { name: t.name, description: t.description,
+               inputSchema: t.inputSchema, execute: acciones[t.name] };
+    }
     try {
-      if (typeof mc.provideContext === 'function') {
-        mc.provideContext({ tools: tools.map(function (t) {
-          return { name: t.name, description: t.description,
-                   inputSchema: t.inputSchema, execute: acciones[t.name] };
-        }) });
-      } else if (typeof mc.registerTool === 'function') {
-        tools.forEach(function (t) {
-          mc.registerTool({ name: t.name, description: t.description,
-                            inputSchema: t.inputSchema, execute: acciones[t.name] });
-        });
+      if (typeof mc.registerTool === 'function') {
+        tools.forEach(function (t) { mc.registerTool(completa(t)); });
+      } else if (typeof mc.provideContext === 'function') {
+        mc.provideContext({ tools: tools.map(completa) });
       }
-    } catch (err) { /* si la API cambia, la página no se cae por esto */ }
+    } catch (err) { /* si la API cambia otra vez, la página no se cae */ }
   })();
   </script>
 

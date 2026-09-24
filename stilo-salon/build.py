@@ -1569,6 +1569,10 @@ FORM = {
         "tool":"Redacta la cita y la manda por WhatsApp a Stilo Salón, "
                "con nombre, servicio, día preferido y teléfono.",
         "tel_ayuda":"Diez dígitos, con o sin espacios.",
+        "p_nombre":"Nombre de la clienta, como quiere que le digan.",
+        "p_tel":"Su WhatsApp a diez dígitos, con o sin espacios.",
+        "p_svc":"El servicio que quiere, de la lista.",
+        "p_cuando":"Cuándo le queda, en texto libre: «sábado por la mañana».",
         "opciones":["Corte", "Color o balayage", "Keratina o alisado",
                     "Uñas", "Pestañas", "Cejas", "Maquillaje o peinado",
                     "No sé, quiero que me asesoren"],
@@ -1582,6 +1586,10 @@ FORM = {
         "tool":"Composes the appointment request and sends it to Stilo Salón "
                "over WhatsApp, with name, service, preferred day and phone.",
         "tel_ayuda":"Ten digits, with or without spaces.",
+        "p_nombre":"The client's name, as she wants to be addressed.",
+        "p_tel":"Her WhatsApp number, ten digits, with or without spaces.",
+        "p_svc":"The service she wants, from the list.",
+        "p_cuando":"When suits her, free text: 'Saturday morning'.",
         "opciones":["Haircut", "Colour or balayage", "Keratin or smoothing",
                     "Nails", "Lashes", "Brows", "Makeup or styling",
                     "Not sure — I'd like advice"],
@@ -1592,7 +1600,10 @@ def formulario(lang):
     f = FORM[lang]
     ops = "".join(f'<option>{e(o)}</option>' for o in f["opciones"])
     return f"""
-  <form class="cita" id="formCita" data-mcp-action="book_appointment"
+  <form class="cita" id="formCita"
+        toolname="book_appointment"
+        tooldescription="{e(f['tool'])}"
+        data-mcp-action="book_appointment"
         data-tool-name="book_appointment"
         data-tool-description="{e(f['tool'])}"
         action="https://wa.me/525522993258" method="get" target="_blank"
@@ -1602,16 +1613,20 @@ def formulario(lang):
     <div class="cita-campos">
       <p class="campo"><label for="cita-nombre">{e(f['nombre'])}</label>
         <input id="cita-nombre" name="nombre" type="text" autocomplete="name"
-               autocapitalize="words" required data-mcp-param="nombre"></p>
+               autocapitalize="words" required data-mcp-param="nombre"
+               toolparamdescription="{e(f['p_nombre'])}"></p>
       <p class="campo"><label for="cita-tel">{e(f['tel'])}</label>
         <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
                inputmode="tel" required pattern="[0-9+()\\s-]{{8,20}}"
-               title="{e(f['tel_ayuda'])}" data-mcp-param="tel"></p>
+               title="{e(f['tel_ayuda'])}" data-mcp-param="tel"
+               toolparamdescription="{e(f['p_tel'])}"></p>
       <p class="campo"><label for="cita-servicio">{e(f['svc'])}</label>
-        <select id="cita-servicio" name="servicio" data-mcp-param="servicio">{ops}</select></p>
+        <select id="cita-servicio" name="servicio" data-mcp-param="servicio"
+                toolparamdescription="{e(f['p_svc'])}">{ops}</select></p>
       <p class="campo"><label for="cita-cuando">{e(f['cuando'])}</label>
         <input id="cita-cuando" name="cuando" type="text" autocomplete="off"
-               placeholder="{e(f['cuando_eg'])}" data-mcp-param="cuando"></p>
+               placeholder="{e(f['cuando_eg'])}" data-mcp-param="cuando"
+               toolparamdescription="{e(f['p_cuando'])}"></p>
     </div>
     <button class="btn btn-wa" type="submit">{e(f['enviar'])}</button>
   </form>
@@ -1654,21 +1669,24 @@ def formulario(lang):
                        'Tel {NAP["tel1_display"]}.' }}] }};
       }}
     }};
-    var mc = navigator.modelContext;
+    /* La API se ha movido de sitio dos veces: empezó en navigator.modelContext
+       y pasó a document.modelContext, así que se mira en los dos.  Y el
+       método bueno es registerTool: provideContext salió de la
+       especificación en marzo de 2026 y sólo queda aquí por si algún
+       navegador viejo lo trae. */
+    var mc = document.modelContext || navigator.modelContext;
     if (!mc) return;
+    function completa(t) {{
+      return {{ name: t.name, description: t.description,
+               inputSchema: t.inputSchema, execute: acciones[t.name] }};
+    }}
     try {{
-      if (typeof mc.provideContext === 'function') {{
-        mc.provideContext({{ tools: tools.map(function (t) {{
-          return {{ name: t.name, description: t.description,
-                   inputSchema: t.inputSchema, execute: acciones[t.name] }};
-        }}) }});
-      }} else if (typeof mc.registerTool === 'function') {{
-        tools.forEach(function (t) {{
-          mc.registerTool({{ name: t.name, description: t.description,
-                            inputSchema: t.inputSchema, execute: acciones[t.name] }});
-        }});
+      if (typeof mc.registerTool === 'function') {{
+        tools.forEach(function (t) {{ mc.registerTool(completa(t)); }});
+      }} else if (typeof mc.provideContext === 'function') {{
+        mc.provideContext({{ tools: tools.map(completa) }});
       }}
-    }} catch (err) {{ /* si la API cambia, la página no se cae por esto */ }}
+    }} catch (err) {{ /* si la API cambia otra vez, la página no se cae */ }}
   }})();
   </script>
 """
