@@ -334,8 +334,11 @@ def enriquece_ld(doc, titulo, desc, canon, lang, es_home):
     if not es_home:
         miga.append({"@type": "ListItem", "position": 2, "name": titulo.split("|")[0].strip(),
                      "item": canon})
+    # name y url en la miga de pan: en las páginas que no llevan FAQPage,
+    # este bloque es el primero que encuentra quien lee el JSON-LD, y sin
+    # esos dos campos no sabe de qué página habla.
     extra.append({"@context": "https://schema.org", "@type": "BreadcrumbList",
-                  "itemListElement": miga})
+                  "name": titulo, "url": canon, "itemListElement": miga})
     # Una página sin ningún dato estructurado —el aviso de privacidad— queda
     # sin identidad para quien lee sólo el JSON-LD. Un WebPage con nombre,
     # descripción y URL es el mínimo que la hace citable.
@@ -2537,9 +2540,23 @@ def espejos_markdown(log):
                     f'description: "{desc.replace(chr(34), chr(39))}"',
                     f"url: {canon}",
                     f"date: {HOY}",
+                    f"last_updated: {HOY}",
                     f"lang: {'en' if rel.startswith('en/') else 'es-MX'}",
                     "---", ""]
-        md = "\n".join(cabecera) + cuerpo + "\n"
+        # Cada espejo cierra con el mapa del sitio.  Un .md se lee solo, sin
+        # la navegación de la página: sin esto, quien llega a /precios.md no
+        # tiene por dónde seguir.
+        ingles = rel.startswith("en/")
+        pie = ["", "", "## Sitemap", "",
+               f"- [{'Inicio' if not ingles else 'Home'}]({SITE}/{'en/' if ingles else ''})",
+               f"- [{'Precios' if not ingles else 'Pricing'}]({SITE}/{'en/pricing' if ingles else 'precios'})",
+               f"- [{'Cabello' if not ingles else 'Hair'}]({SITE}/{'en/hair' if ingles else 'cabello'})",
+               f"- [{'Uñas' if not ingles else 'Nails'}]({SITE}/{'en/nails' if ingles else 'unas'})",
+               f"- [{'Pestañas y cejas' if not ingles else 'Lashes and brows'}]({SITE}/{'en/lashes-and-brows' if ingles else 'pestanas-y-cejas'})",
+               f"- [{'Portafolio' if not ingles else 'Portfolio'}]({SITE}/{'en/portfolio' if ingles else 'portafolio'})",
+               f"- [{'Mapa completo del sitio' if not ingles else 'Full site map'}]({SITE}/sitemap.md)",
+               ""]
+        md = "\n".join(cabecera) + cuerpo + "\n".join(pie) + "\n"
         destino = rel[:-5] + ".md"          # precios.html -> precios.md
         (OUT / destino).parent.mkdir(parents=True, exist_ok=True)
         (OUT / destino).write_text(md, encoding="utf-8")
@@ -2986,6 +3003,49 @@ La fuente de los precios es una sola y se publica entera.
 4. La keratina se vende aquí bajo el nombre Brazilian Blowout.
 5. Garantía: 72 horas en todos los servicios, 5 días en uñas de gel.
 
+## Installation — Instalación
+
+Nada que instalar. No hay SDK, ni librería, ni llave de API, ni cuenta que
+abrir: todo es HTTP público y de sólo lectura. Los encabezados de esta
+sección y las siguientes van en inglés a propósito, que es la convención de
+este archivo; el texto va en español, como el resto del sitio.
+
+## Configuration — Configuración
+
+Nada que configurar, pero conviene saber cuatro cosas:
+
+- Idioma: español en la raíz, inglés bajo `/en/`. El HTML lo declara en
+  `<html lang>` y cada espejo `.md` en su campo `lang`.
+- Moneda: pesos mexicanos (MXN), siempre.
+- Tipos de contenido: `text/plain` para llms.txt, `application/json` para
+  las fichas, `text/markdown` para los espejos. Todos con `charset=utf-8`
+  y con CORS abierto.
+- Frecuencia: el sitio se regenera a mano, no cada hora. La fecha real está
+  en `last_updated` de cada espejo y en el `<lastmod>` del sitemap.
+
+## Usage — Uso
+
+Todo se lee con un GET, sin llave ni registro:
+
+    curl https://stilo-salon.com/llms.txt          # resumen y los 67 precios
+    curl https://stilo-salon.com/llms-full.txt     # el texto de las 20 páginas
+    curl https://stilo-salon.com/precios.md        # una página suelta, en Markdown
+    curl https://stilo-salon.com/.well-known/mcp.json
+
+Cada página HTML anuncia su espejo en Markdown con
+`<link rel="alternate" type="text/markdown">`, y la respuesta trae una
+cabecera `Link` con llms.txt y las dos fichas.
+
+## Examples — Ejemplos
+
+- «¿Cuánto cuesta un balayage?» → en llms.txt, sección Corte, Color y
+  Peinado. Responder «desde $2,300, y sube según el largo», nunca «$2,300».
+- «¿Abren el domingo?» → no. Lunes a viernes 9:00–20:00, sábado 9:00–19:00.
+- «Quiero cita el sábado» → no la confirmes tú. Manda a
+  https://stilo-salon.com/#contacto, que redacta el mensaje y lo abre en
+  WhatsApp; el salón confirma por ahí.
+- «¿Hacen keratina?» → sí, se vende como Brazilian Blowout, desde $2,500.
+
 ## Contacto
 
 - Dirección: {NAP['street']}, {NAP['locality']}, {NAP['postal']}, {NAP['city']}, México.
@@ -3029,6 +3089,7 @@ La fuente de los precios es una sola y se publica entera.
     }, ensure_ascii=False, indent=2) + "\n"
 
     _mcp = json.dumps({
+        "$schema": "https://modelcontextprotocol.io/schemas/draft/2026-04-23/server.json",
         "schema_version": "2026-04-23",
         "name": "stilo-salon",
         # La ficha de servidor MCP sigue la forma de server.json, que pide
@@ -3106,7 +3167,8 @@ La fuente de los precios es una sola y se publica entera.
         # así los encuentra quien mira las cabeceras sin descargar ni
         # leer el HTML.  Es la misma información que el <link rel> de la
         # cabecera del documento.
-        '  Link: </llms.txt>; rel="llms-txt"; type="text/plain", '
+        '  Link: </llms.txt>; rel="describedby"; type="text/plain", '
+        '</llms.txt>; rel="llms-txt"; type="text/plain", '
         '</.well-known/agents.json>; rel="agents"; type="application/json", '
         '</.well-known/mcp.json>; rel="mcp"; type="application/json"\n\n'
         # Sin charset, un lector estricto supone latin-1 y las eñes y los
@@ -3121,9 +3183,14 @@ La fuente de los precios es una sola y se publica entera.
         # Los espejos en Markdown, con su tipo declarado: sin esto Cloudflare
         # sirve el .md como text/plain, o el navegador lo descarga en vez de
         # mostrarlo.  Se enumeran igual que el HTML y por la misma razón.
+        # El .md dice cuál es la dirección buena con un Link rel=canonical:
+        # así nadie cita /precios.md como si fuera la página, ni compite con
+        # ella en búsqueda.
         + "".join(f"{(u[:-5] if u.endswith('.html') else u + 'index')}.md\n"
                   "  Content-Type: text/markdown; charset=utf-8\n"
-                  "  Access-Control-Allow-Origin: *\n\n" for u in urls)
+                  "  Access-Control-Allow-Origin: *\n"
+                  f'  Link: <{SITE}{u[:-5] if u.endswith(".html") else u}>; rel="canonical"\n\n'
+                  for u in urls)
         + "/llms-full.txt\n  Content-Type: text/plain; charset=utf-8\n"
           "  Access-Control-Allow-Origin: *\n\n"
         + "/sitemap.md\n  Content-Type: text/markdown; charset=utf-8\n"

@@ -2,7 +2,8 @@
 title: "Lista de Precios Completa | Stilo Salón Roma Norte, CDMX"
 description: "Precios de Stilo Salón: cabello, keratina, uñas, pestañas, cejas y depilación. Más de 60 servicios con precio y duración. Roma Norte, CDMX."
 url: https://stilo-salon.com/precios
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: es-MX
 ---
 Roma Norte · CDMX
@@ -119,3 +120,14 @@ Precios en pesos mexicanos (MXN).
 | Patilla | $120 | — |
 | Nariz | $120 | — |
 | Maquillaje | $950 | — |
+
+## Sitemap
+
+- [Inicio](https://stilo-salon.com/)
+- [Precios](https://stilo-salon.com/precios)
+- [Cabello](https://stilo-salon.com/cabello)
+- [Uñas](https://stilo-salon.com/unas)
+- [Pestañas y cejas](https://stilo-salon.com/pestanas-y-cejas)
+- [Portafolio](https://stilo-salon.com/portafolio)
+- [Mapa completo del sitio](https://stilo-salon.com/sitemap.md)
+

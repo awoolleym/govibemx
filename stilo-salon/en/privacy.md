@@ -2,7 +2,8 @@
 title: "Privacy Notice | Stilo Salón, Roma Norte CDMX"
 description: "Privacy notice for Stilo Salón, Roma Norte, Mexico City. What data we collect for your appointment, how we use it, and how to exercise your rights."
 url: https://stilo-salon.com/en/privacy
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 # Privacy Notice
@@ -36,3 +37,14 @@ You may request access, rectification, cancellation or object to the handling of
 ## Changes to this notice
 
 Any change will be published on this page, with the update date at the foot. Last updated: September 2026.
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+

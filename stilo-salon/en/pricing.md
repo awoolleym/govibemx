@@ -2,7 +2,8 @@
 title: "Full Price List | Stilo Salón Roma Norte, Mexico City"
 description: "Full price list for Stilo Salón: hair, treatments, nails, lashes, brows and waxing. Over 60 services with price and duration. Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/pricing
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 Roma Norte · Mexico City
@@ -119,3 +120,14 @@ Prices in Mexican pesos (MXN).
 | Sideburns | $120 | — |
 | Nose | $120 | — |
 | Makeup Application | $950 | — |
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+

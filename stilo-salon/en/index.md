@@ -2,7 +2,8 @@
 title: "Stilo Salón | Beauty Salon in Roma Norte, Mexico City"
 description: "Beauty salon in Roma Norte, Mexico City. Cuts from $330, balayage from $2,300, lashes from $750 MXN. Published prices, no surprises. Book online."
 url: https://stilo-salon.com/en/
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 Roma Norte · Mexico City
@@ -133,3 +134,14 @@ Your WhatsApp
 What would you like? Haircut Colour or balayage Keratin or smoothing Nails Lashes Brows Makeup or styling Not sure — I'd like advice
 
 When suits you?
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+

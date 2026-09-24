@@ -2,7 +2,8 @@
 title: "Balayage, Babylights & Smoothing: the Guide | Stilo Salón"
 description: "Balayage or babylights, how often to touch up roots, and which smoothing suits you: keratin (Brazilian Blowout), nanoplasty or hair botox. Roma Norte, CDMX."
 url: https://stilo-salon.com/en/color-and-smoothing-guide
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 Complete guide · Roma Norte
@@ -40,3 +41,14 @@ The Split Ender (from $600, one hour) is a tool that trims only the split ends �
 ## Guarantee and payment
 
 Every service carries a 72-hour guarantee: if something did not turn out the way we agreed, come back within that window and we will correct it at no cost. We take cash and debit and credit cards, and from $2,000 you can split the payment into 3 interest-free monthly instalments with any credit card — which is exactly the range balayage, nanoplasty and Brazilian Blowout fall into.
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+

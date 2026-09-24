@@ -2,7 +2,8 @@
 title: "Acrylic, Gel or Sculpted: the Nail Guide | Stilo Salón"
 description: "What suits you between acrylic, gel and sculpted nails, how often to fill without damaging the natural nail, and what to do if your nails are weak."
 url: https://stilo-salon.com/en/nails-guide
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 Complete guide · Roma Norte
@@ -40,3 +41,14 @@ And an honest recommendation: if your natural nail is healthy, a well-applied ge
 ## Guarantee
 
 Gel nails carry a 5-day guarantee, and every other service 72 hours. If anything chips or did not turn out the way we agreed within that window, come back and we will fix it at no cost.
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+

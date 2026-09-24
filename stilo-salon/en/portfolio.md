@@ -2,7 +2,8 @@
 title: "Portfolio | Stilo Salón Roma Norte, Mexico City"
 description: "Real work from Stilo Salón in Roma Norte: balayage, blondes, smoothing, gel nails and lash extensions, every photo with its published price."
 url: https://stilo-salon.com/en/portfolio
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 Our work
@@ -270,3 +271,14 @@ Lash extensions from $750
 No photos in this category yet.
 
 See something you like? We'll do it for you.
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+

@@ -2,7 +2,8 @@
 title: "Extensiones de Pestañas y Cejas: la Biblia | Stilo Salón"
 description: "¿Cuánto duran las extensiones de pestañas? ¿Qué técnica te conviene? ¿Cada cuándo retocar? La guía completa de Stilo Salón, Roma Norte, CDMX."
 url: https://stilo-salon.com/guia-extensiones-de-pestanas
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: es-MX
 ---
 Guía completa · Roma Norte
@@ -80,3 +81,14 @@ El lifting eleva tu pestaña natural desde la raíz para dar un efecto natural. 
 El diseño de ceja ($450) combina trazado, depilación y planchado, mapeado a tu rostro. El laminado de ceja ($450) sigue el mismo proceso, pero el planchado va hacia arriba, que es lo que da el efecto de ceja más poblada y peinada.
 
 También hacemos depilación con cera de rostro y axilas, y maquillaje ($950) para eventos. La lista completa está abajo.
+
+## Sitemap
+
+- [Inicio](https://stilo-salon.com/)
+- [Precios](https://stilo-salon.com/precios)
+- [Cabello](https://stilo-salon.com/cabello)
+- [Uñas](https://stilo-salon.com/unas)
+- [Pestañas y cejas](https://stilo-salon.com/pestanas-y-cejas)
+- [Portafolio](https://stilo-salon.com/portafolio)
+- [Mapa completo del sitio](https://stilo-salon.com/sitemap.md)
+

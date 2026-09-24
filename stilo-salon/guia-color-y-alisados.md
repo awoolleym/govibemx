@@ -2,7 +2,8 @@
 title: "Balayage, Babylights y Alisados: la Guía | Stilo Salón"
 description: "Balayage o babylights, cada cuándo retocar raíz y qué alisado te conviene: keratina (Brazilian Blowout), nanoplastia o botox capilar. Roma Norte, CDMX."
 url: https://stilo-salon.com/guia-color-y-alisados
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: es-MX
 ---
 Guía completa · Roma Norte
@@ -40,3 +41,14 @@ El Split Ender (desde $600, una hora) es una herramienta que recorta únicamente
 ## Garantía y formas de pago
 
 Todos nuestros servicios tienen 72 horas de garantía: si algo no quedó como lo acordamos, regresas dentro de ese plazo y lo corregimos sin costo. Aceptamos efectivo y tarjetas de débito y crédito, y a partir de $2,000 puedes pagar a 3 meses sin intereses con cualquier tarjeta de crédito — que es justo el rango en el que caen el balayage, la nanoplastia y el Brazilian Blowout.
+
+## Sitemap
+
+- [Inicio](https://stilo-salon.com/)
+- [Precios](https://stilo-salon.com/precios)
+- [Cabello](https://stilo-salon.com/cabello)
+- [Uñas](https://stilo-salon.com/unas)
+- [Pestañas y cejas](https://stilo-salon.com/pestanas-y-cejas)
+- [Portafolio](https://stilo-salon.com/portafolio)
+- [Mapa completo del sitio](https://stilo-salon.com/sitemap.md)
+

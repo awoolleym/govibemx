@@ -2,7 +2,8 @@
 title: "The Eyelash Extension & Brow Bible | Stilo Salón"
 description: "How long do eyelash extensions last? Which technique suits you? How often to get a fill? The complete guide from Stilo Salón, Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/eyelash-extensions-guide
-date: 2026-09-23
+date: 2026-09-24
+last_updated: 2026-09-24
 lang: en
 ---
 Complete guide · Roma Norte
@@ -80,3 +81,14 @@ A lash lift raises your natural lash from the root for a natural effect. No synt
 Brow design ($450) combines mapping, waxing and pressing, shaped to your face. Brow lamination ($450) follows the same process, but the hair is pressed upward, which is what creates the fuller, brushed-up look.
 
 We also offer facial and underarm waxing, and makeup application ($950) for events. The full list is below.
+
+## Sitemap
+
+- [Home](https://stilo-salon.com/en/)
+- [Pricing](https://stilo-salon.com/en/pricing)
+- [Hair](https://stilo-salon.com/en/hair)
+- [Nails](https://stilo-salon.com/en/nails)
+- [Lashes and brows](https://stilo-salon.com/en/lashes-and-brows)
+- [Portfolio](https://stilo-salon.com/en/portfolio)
+- [Full site map](https://stilo-salon.com/sitemap.md)
+
