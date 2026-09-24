@@ -6,3 +6,5 @@ _fotos*/
 _dist/
 __pycache__/
 _dist.zip
+# Caché local de wrangler
+.wrangler/
