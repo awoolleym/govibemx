@@ -201,19 +201,75 @@
     <div class="cita-campos">
       <p class="campo"><label for="cita-nombre">Nombre</label>
         <input id="cita-nombre" name="nombre" type="text" autocomplete="name"
-               autocapitalize="words" required></p>
+               autocapitalize="words" required data-mcp-param="nombre"></p>
       <p class="campo"><label for="cita-tel">Tu WhatsApp</label>
         <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
                inputmode="tel" required pattern="[0-9+()\s-]{8,20}"
-               title="Diez dígitos, con o sin espacios."></p>
+               title="Diez dígitos, con o sin espacios." data-mcp-param="tel"></p>
       <p class="campo"><label for="cita-servicio">¿Qué te quieres hacer?</label>
-        <select id="cita-servicio" name="servicio"><option>Corte</option><option>Color o balayage</option><option>Keratina o alisado</option><option>Uñas</option><option>Pestañas</option><option>Cejas</option><option>Maquillaje o peinado</option><option>No sé, quiero que me asesoren</option></select></p>
+        <select id="cita-servicio" name="servicio" data-mcp-param="servicio"><option>Corte</option><option>Color o balayage</option><option>Keratina o alisado</option><option>Uñas</option><option>Pestañas</option><option>Cejas</option><option>Maquillaje o peinado</option><option>No sé, quiero que me asesoren</option></select></p>
       <p class="campo"><label for="cita-cuando">¿Cuándo te queda?</label>
         <input id="cita-cuando" name="cuando" type="text" autocomplete="off"
-               placeholder="Ej. sábado por la mañana"></p>
+               placeholder="Ej. sábado por la mañana" data-mcp-param="cuando"></p>
     </div>
     <button class="btn btn-wa" type="submit">Abrir WhatsApp con el mensaje</button>
   </form>
+  <script type="application/json" id="webmcp-tools">[{"name": "book_appointment", "title": "Pedir cita", "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {"nombre": {"type": "string", "description": "Nombre de la clienta."}, "tel": {"type": "string", "description": "WhatsApp a diez dígitos."}, "servicio": {"type": "string", "description": "Qué servicio quiere."}, "cuando": {"type": "string", "description": "Día y hora que le queda, en texto libre."}}, "required": ["nombre", "tel"]}}, {"name": "get_prices", "title": "Consultar precios", "description": "Los 67 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.", "url": "https://stilo-salon.com/llms.txt", "inputSchema": {"type": "object", "properties": {}}}, {"name": "get_location_and_hours", "title": "Ubicación y horario", "description": "Dirección en Roma Norte, teléfonos y horario de la semana.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {}}}]</script>
+  <script id="webmcp-registro">
+  /* WebMCP. Las herramientas van escritas en el bloque JSON de arriba y no
+     sólo en /.well-known/mcp.json: así quien lee la página las ve sin tener
+     que ir a buscar otro archivo, y son las mismas tres, salidas de la
+     misma lista al compilar.
+     navigator.modelContext lo pone el navegador cuando trae agente; hoy casi
+     ninguno lo trae, por eso va detrás de la comprobación. Si no existe, no
+     pasa nada: el formulario se llena a mano como siempre. */
+  (function () {
+    var d = document.getElementById('webmcp-tools');
+    if (!d) return;
+    var tools;
+    try { tools = JSON.parse(d.textContent); } catch (e) { return; }
+    var fc = document.getElementById('formCita');
+    // Rellena el formulario de verdad y lo envía: el agente hace lo mismo
+    // que haría una persona, y queda a la vista qué se mandó.
+    function pedirCita(args) {
+      var a = args || {};
+      ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {
+        var el = document.getElementById('cita-' + k);
+        if (el && a[k]) el.value = a[k];
+      });
+      if (fc) fc.requestSubmit ? fc.requestSubmit() : fc.submit();
+      return { content: [{ type: 'text',
+               text: 'Cita enviada por WhatsApp a Stilo Salón.' }] };
+    }
+    var acciones = {
+      book_appointment: pedirCita,
+      get_prices: function () {
+        return { content: [{ type: 'text', text: 'https://stilo-salon.com/llms.txt' }] };
+      },
+      get_location_and_hours: function () {
+        return { content: [{ type: 'text',
+                 text: 'Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México. ' +
+                       'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +
+                       'Tel 55 2299 3258.' }] };
+      }
+    };
+    var mc = navigator.modelContext;
+    if (!mc) return;
+    try {
+      if (typeof mc.provideContext === 'function') {
+        mc.provideContext({ tools: tools.map(function (t) {
+          return { name: t.name, description: t.description,
+                   inputSchema: t.inputSchema, execute: acciones[t.name] };
+        }) });
+      } else if (typeof mc.registerTool === 'function') {
+        tools.forEach(function (t) {
+          mc.registerTool({ name: t.name, description: t.description,
+                            inputSchema: t.inputSchema, execute: acciones[t.name] });
+        });
+      }
+    } catch (err) { /* si la API cambia, la página no se cae por esto */ }
+  })();
+  </script>
 
   </div>
   </div>
@@ -255,6 +311,6 @@
     </div>
   </div>
 </footer>
-<script src="/assets/app.b63ae6d3.js" defer></script>
+<script src="/assets/app.9aa03fee.js" defer></script>
 </body>
 </html>

@@ -409,41 +409,4 @@
                 encodeURIComponent(l.join('\n')), '_blank', 'noopener');
   });
 
-  // ── WebMCP ───────────────────────────────────────────────────────────
-  // Un navegador con agente expone navigator.modelContext; ahí se registra
-  // lo que la página sabe hacer, para que el agente lo llame en vez de
-  // adivinar dónde hay que picar.  Hoy casi ningún navegador lo trae, por
-  // eso va detrás de una comprobación: si no existe, no pasa nada y el
-  // formulario sigue funcionando a mano.  Las herramientas son las mismas
-  // tres que declara /.well-known/mcp.json, con el mismo nombre.
-  if (fc && navigator.modelContext && navigator.modelContext.registerTool) {
-    try {
-      navigator.modelContext.registerTool({
-        name: 'book_appointment',
-        description: fc.getAttribute('data-tool-description'),
-        inputSchema: {
-          type: 'object',
-          properties: {
-            nombre:   { type: 'string' },
-            tel:      { type: 'string' },
-            servicio: { type: 'string' },
-            cuando:   { type: 'string' }
-          },
-          required: ['nombre', 'tel']
-        },
-        execute: function (args) {
-          // Rellena el formulario de verdad y lo envía: el agente ve lo
-          // mismo que vería una persona, y queda a la vista qué se mandó.
-          var a = args || {};
-          ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {
-            var el = document.getElementById('cita-' + k);
-            if (el && a[k]) el.value = a[k];
-          });
-          fc.requestSubmit ? fc.requestSubmit() : fc.submit();
-          return { content: [{ type: 'text',
-                   text: 'Cita enviada por WhatsApp a Stilo Salón.' }] };
-        }
-      });
-    } catch (err) { /* si la API cambia, la página no se cae por esto */ }
-  }
 })();

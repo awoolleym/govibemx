@@ -903,43 +903,6 @@ def page(lang, slug, title, desc, body, alt_href, extra_ld=""):
                 encodeURIComponent(l.join('\\n')), '_blank', 'noopener');
   }});
 
-  // ── WebMCP ───────────────────────────────────────────────────────────
-  // Un navegador con agente expone navigator.modelContext; ahí se registra
-  // lo que la página sabe hacer, para que el agente lo llame en vez de
-  // adivinar dónde hay que picar.  Hoy casi ningún navegador lo trae, por
-  // eso va detrás de una comprobación: si no existe, no pasa nada y el
-  // formulario sigue funcionando a mano.  Las herramientas son las mismas
-  // tres que declara /.well-known/mcp.json, con el mismo nombre.
-  if (fc && navigator.modelContext && navigator.modelContext.registerTool) {{
-    try {{
-      navigator.modelContext.registerTool({{
-        name: 'book_appointment',
-        description: fc.getAttribute('data-tool-description'),
-        inputSchema: {{
-          type: 'object',
-          properties: {{
-            nombre:   {{ type: 'string' }},
-            tel:      {{ type: 'string' }},
-            servicio: {{ type: 'string' }},
-            cuando:   {{ type: 'string' }}
-          }},
-          required: ['nombre', 'tel']
-        }},
-        execute: function (args) {{
-          // Rellena el formulario de verdad y lo envía: el agente ve lo
-          // mismo que vería una persona, y queda a la vista qué se mandó.
-          var a = args || {{}};
-          ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {{
-            var el = document.getElementById('cita-' + k);
-            if (el && a[k]) el.value = a[k];
-          }});
-          fc.requestSubmit ? fc.requestSubmit() : fc.submit();
-          return {{ content: [{{ type: 'text',
-                   text: 'Cita enviada por WhatsApp a Stilo Salón.' }}] }};
-        }}
-      }});
-    }} catch (err) {{ /* si la API cambia, la página no se cae por esto */ }}
-  }}
 }})();
 </script>
 </body>
@@ -1543,6 +1506,43 @@ ALT_CARD = {
         "tratamientos": "Smoothed hair after a treatment at Stilo Salón, Roma Norte"},
 }
 
+# ── Las herramientas que ofrece el sitio ──────────────────────────────────
+# Viven aquí y no dentro de mcp.json porque salen por tres puertas distintas
+# y tienen que decir lo mismo por las tres: /.well-known/mcp.json, el bloque
+# JSON que la portada lleva incrustado, y el registro en navigator.modelContext
+# del navegador.  Escritas tres veces se habrían separado a la primera
+# corrección de un precio o de una descripción.
+HERRAMIENTAS = [
+        {"name": "book_appointment",
+         "title": "Pedir cita",
+         "description": "Abre WhatsApp con la cita ya redactada. El salón "
+                        "confirma por ese mismo chat; el sitio no reserva "
+                        "horarios por su cuenta.",
+         "url": f"{SITE}/#contacto",
+         "inputSchema": {
+             "type": "object",
+             "properties": {
+                 "nombre":   {"type": "string", "description": "Nombre de la clienta."},
+                 "tel":      {"type": "string", "description": "WhatsApp a diez dígitos."},
+                 "servicio": {"type": "string", "description": "Qué servicio quiere."},
+                 "cuando":   {"type": "string", "description": "Día y hora que le queda, en texto libre."},
+             },
+             "required": ["nombre", "tel"],
+         }},
+        {"name": "get_prices",
+         "title": "Consultar precios",
+         "description": "Los 67 servicios con precio en pesos y duración. "
+                        "Los que dicen «desde» son precio de partida, no fijo.",
+         "url": f"{SITE}/llms.txt",
+         "inputSchema": {"type": "object", "properties": {}}},
+        {"name": "get_location_and_hours",
+         "title": "Ubicación y horario",
+         "description": "Dirección en Roma Norte, teléfonos y horario de la semana.",
+         "url": f"{SITE}/#contacto",
+         "inputSchema": {"type": "object", "properties": {}}},
+]
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FORMULARIO DE CITA
 # No hay servidor: el sitio es estático.  El formulario no manda nada a
@@ -1602,19 +1602,75 @@ def formulario(lang):
     <div class="cita-campos">
       <p class="campo"><label for="cita-nombre">{e(f['nombre'])}</label>
         <input id="cita-nombre" name="nombre" type="text" autocomplete="name"
-               autocapitalize="words" required></p>
+               autocapitalize="words" required data-mcp-param="nombre"></p>
       <p class="campo"><label for="cita-tel">{e(f['tel'])}</label>
         <input id="cita-tel" name="tel" type="tel" autocomplete="tel"
                inputmode="tel" required pattern="[0-9+()\\s-]{{8,20}}"
-               title="{e(f['tel_ayuda'])}"></p>
+               title="{e(f['tel_ayuda'])}" data-mcp-param="tel"></p>
       <p class="campo"><label for="cita-servicio">{e(f['svc'])}</label>
-        <select id="cita-servicio" name="servicio">{ops}</select></p>
+        <select id="cita-servicio" name="servicio" data-mcp-param="servicio">{ops}</select></p>
       <p class="campo"><label for="cita-cuando">{e(f['cuando'])}</label>
         <input id="cita-cuando" name="cuando" type="text" autocomplete="off"
-               placeholder="{e(f['cuando_eg'])}"></p>
+               placeholder="{e(f['cuando_eg'])}" data-mcp-param="cuando"></p>
     </div>
     <button class="btn btn-wa" type="submit">{e(f['enviar'])}</button>
   </form>
+  <script type="application/json" id="webmcp-tools">{json.dumps(HERRAMIENTAS, ensure_ascii=False)}</script>
+  <script id="webmcp-registro">
+  /* WebMCP. Las herramientas van escritas en el bloque JSON de arriba y no
+     sólo en /.well-known/mcp.json: así quien lee la página las ve sin tener
+     que ir a buscar otro archivo, y son las mismas tres, salidas de la
+     misma lista al compilar.
+     navigator.modelContext lo pone el navegador cuando trae agente; hoy casi
+     ninguno lo trae, por eso va detrás de la comprobación. Si no existe, no
+     pasa nada: el formulario se llena a mano como siempre. */
+  (function () {{
+    var d = document.getElementById('webmcp-tools');
+    if (!d) return;
+    var tools;
+    try {{ tools = JSON.parse(d.textContent); }} catch (e) {{ return; }}
+    var fc = document.getElementById('formCita');
+    // Rellena el formulario de verdad y lo envía: el agente hace lo mismo
+    // que haría una persona, y queda a la vista qué se mandó.
+    function pedirCita(args) {{
+      var a = args || {{}};
+      ['nombre', 'tel', 'servicio', 'cuando'].forEach(function (k) {{
+        var el = document.getElementById('cita-' + k);
+        if (el && a[k]) el.value = a[k];
+      }});
+      if (fc) fc.requestSubmit ? fc.requestSubmit() : fc.submit();
+      return {{ content: [{{ type: 'text',
+               text: 'Cita enviada por WhatsApp a Stilo Salón.' }}] }};
+    }}
+    var acciones = {{
+      book_appointment: pedirCita,
+      get_prices: function () {{
+        return {{ content: [{{ type: 'text', text: '{SITE}/llms.txt' }}] }};
+      }},
+      get_location_and_hours: function () {{
+        return {{ content: [{{ type: 'text',
+                 text: '{NAP["street"]}, {NAP["locality"]}, {NAP["postal"]}, {NAP["city"]}. ' +
+                       'Lunes a viernes 9:00-20:00, sabado 9:00-19:00, domingo cerrado. ' +
+                       'Tel {NAP["tel1_display"]}.' }}] }};
+      }}
+    }};
+    var mc = navigator.modelContext;
+    if (!mc) return;
+    try {{
+      if (typeof mc.provideContext === 'function') {{
+        mc.provideContext({{ tools: tools.map(function (t) {{
+          return {{ name: t.name, description: t.description,
+                   inputSchema: t.inputSchema, execute: acciones[t.name] }};
+        }}) }});
+      }} else if (typeof mc.registerTool === 'function') {{
+        tools.forEach(function (t) {{
+          mc.registerTool({{ name: t.name, description: t.description,
+                            inputSchema: t.inputSchema, execute: acciones[t.name] }});
+        }});
+      }}
+    }} catch (err) {{ /* si la API cambia, la página no se cae por esto */ }}
+  }})();
+  </script>
 """
 
 
@@ -3103,8 +3159,6 @@ cabecera `Link` con llms.txt y las dos fichas.
         "title": "Stilo Salón",
         "description": ("Precios, servicios y datos de contacto de Stilo Salón, "
                         "Roma Norte, CDMX."),
-        # Sin "tools": un sitio estático no ejecuta nada.  Lo que sí tiene son
-        # recursos legibles, y eso es lo que se declara.
         "resources": [
             {"uri": f"{SITE}/llms.txt", "name": "Resumen y lista de precios",
              "description": "Los 67 servicios con precio y duración, horario, dirección y garantías.",
@@ -3120,35 +3174,7 @@ cabecera `Link` con llms.txt y las dos fichas.
         # WhatsApp y no por un carrito.  Las tres son las únicas acciones
         # que existen de verdad en un sitio estático: no hay servidor que
         # reciba una reserva, así que no se promete una.
-        "tools": [
-            {"name": "book_appointment",
-             "title": "Pedir cita",
-             "description": "Abre WhatsApp con la cita ya redactada. El salón "
-                            "confirma por ese mismo chat; el sitio no reserva "
-                            "horarios por su cuenta.",
-             "url": f"{SITE}/#contacto",
-             "inputSchema": {
-                 "type": "object",
-                 "properties": {
-                     "nombre":   {"type": "string", "description": "Nombre de la clienta."},
-                     "tel":      {"type": "string", "description": "WhatsApp a diez dígitos."},
-                     "servicio": {"type": "string", "description": "Qué servicio quiere."},
-                     "cuando":   {"type": "string", "description": "Día y hora que le queda, en texto libre."},
-                 },
-                 "required": ["nombre", "tel"],
-             }},
-            {"name": "get_prices",
-             "title": "Consultar precios",
-             "description": "Los 67 servicios con precio en pesos y duración. "
-                            "Los que dicen «desde» son precio de partida, no fijo.",
-             "url": f"{SITE}/llms.txt",
-             "inputSchema": {"type": "object", "properties": {}}},
-            {"name": "get_location_and_hours",
-             "title": "Ubicación y horario",
-             "description": "Dirección en Roma Norte, teléfonos y horario de la semana.",
-             "url": f"{SITE}/#contacto",
-             "inputSchema": {"type": "object", "properties": {}}},
-        ],
+        "tools": HERRAMIENTAS,
     }, ensure_ascii=False, indent=2) + "\n"
 
     # Cada uno en dos rutas.  La de .well-known es la que piden las
