@@ -31,6 +31,7 @@
   .dot.ok { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
   .dot.warn { background: var(--warn); }
   .dot.bad { background: var(--bad); }
+  #controls { display: flex; flex-direction: column; gap: 14px; }
   .trips { display: flex; flex-direction: column; gap: 10px; }
   .trips button { display: flex; align-items: center; gap: 14px; width: 100%; background: var(--panel); color: var(--text); border: 2px solid var(--line); border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
   .trips button .ico { font-size: 30px; }
@@ -39,6 +40,24 @@
   .trips button:active { transform: scale(.98); }
   .trips button:disabled { opacity: .5; }
   .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  [hidden] { display: none !important; }
+
+  /* PIN lock */
+  .lock { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; }
+  .lock h2 { margin: 0; font-size: 18px; }
+  .lock p { margin: 0; color: var(--muted); font-size: 14px; }
+  .pin-dots { display: flex; gap: 12px; height: 18px; }
+  .pin-dots span { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--muted); }
+  .pin-dots span.on { background: var(--route); border-color: var(--route); }
+  .keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 10px; }
+  .keypad button { height: 60px; border-radius: 14px; border: 1px solid var(--line); background: #1b222c; color: var(--text); font-size: 24px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .keypad button:active { transform: scale(.96); }
+  .keypad .wide { font-size: 15px; }
+  .lock .ok-btn { width: 100%; max-width: 236px; background: var(--route); color: #1a1200; border: none; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .lock .ok-btn:disabled { opacity: .4; }
+  .lock-msg { min-height: 18px; font-size: 13px; color: var(--warn); }
+  .bar { display: flex; gap: 8px; justify-content: flex-end; }
+  .bar button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 18px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: inherit; }
 </style>
 </head>
 <body>
@@ -48,6 +67,17 @@
     <p class="sub">Pick today's trip. The tablet in the back switches within a few seconds.</p>
   </div>
 
+  <section class="lock" id="lock">
+    <h2 id="lock-title">🔒 Enter driver PIN</h2>
+    <p id="lock-hint">Connecting…</p>
+    <div class="pin-dots" id="pin-dots"></div>
+    <div class="keypad" id="keypad"></div>
+    <button class="ok-btn" id="pin-ok" disabled>Unlock</button>
+    <div class="lock-msg" id="lock-msg"></div>
+  </section>
+
+  <section id="controls" hidden>
+  <div class="bar"><button id="change-pin">Change PIN</button><button id="lock-now">🔒 Lock</button></div>
   <div class="tablet">
     <div class="k">Tablet</div>
     <div class="v"><span class="dot" id="dot"></span><span id="tablet-line">Connecting…</span></div>
@@ -55,6 +85,7 @@
   </div>
 
   <div class="trips" id="trips"></div>
+  </section>
 
   <p class="note">Van: <b id="van"></b>. You can also change the trip on the tablet itself: press and hold the clock for 1.5 seconds.</p>
 </main>
@@ -79,6 +110,93 @@
   const $ = (id) => document.getElementById(id);
   $('van').textContent = VAN_ID;
   let current = null, tablet = null;
+
+  // ---- PIN lock ----
+  // The PIN is stored as a SHA-256 hash in rearScreen/<van>/pinHash, so every phone shares it.
+  // It keeps passengers and strangers with the link out; it is not bank-grade security.
+  const MIN_PIN = 4, MAX_PIN = 6;
+  const OK_KEY = 'gv_driver_ok_' + VAN_ID;
+  let pinHash;              // undefined = still loading, null = no PIN yet
+  let entry = '', firstEntry = null, mode = 'unlock', fails = 0, lockedUntil = 0;
+  let savePinHash = null;   // set once Firebase is ready
+
+  async function hashPin(pin) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('govibemx:' + VAN_ID + ':' + pin));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function remembered() { try { return localStorage.getItem(OK_KEY); } catch (e) { return null; } }
+  function remember(h) { try { h ? localStorage.setItem(OK_KEY, h) : localStorage.removeItem(OK_KEY); } catch (e) {} }
+
+  $('keypad').innerHTML = ['1','2','3','4','5','6','7','8','9','⌫','0','Clear']
+    .map(k => `<button data-k="${k}" class="${k.length > 1 ? 'wide' : ''}">${k}</button>`).join('');
+
+  function showLock(m, msg) {
+    mode = m; entry = ''; if (m !== 'confirm' && m !== 'confirm-change') firstEntry = null;
+    $('controls').hidden = true; $('lock').hidden = false;
+    const t = {
+      unlock: ['🔒 Enter driver PIN', 'Enter the PIN to change what the rear screen shows.', 'Unlock'],
+      create: ['🔑 Create a driver PIN', 'First time here: choose a ' + MIN_PIN + '–' + MAX_PIN + ' digit PIN. All your phones will use it.', 'Next'],
+      confirm: ['🔑 Confirm your PIN', 'Enter the same PIN again.', 'Save PIN'],
+      change: ['🔑 New PIN', 'Choose a new ' + MIN_PIN + '–' + MAX_PIN + ' digit PIN. Other phones will need it next time.', 'Next'],
+      'confirm-change': ['🔑 Confirm new PIN', 'Enter the new PIN again.', 'Save PIN']
+    }[m];
+    $('lock-title').textContent = t[0]; $('lock-hint').textContent = t[1]; $('pin-ok').textContent = t[2];
+    $('lock-msg').textContent = msg || '';
+    drawDots();
+  }
+  function showControls() { $('lock').hidden = true; $('controls').hidden = false; }
+  function drawDots() {
+    const n = Math.max(MIN_PIN, entry.length);
+    $('pin-dots').innerHTML = Array.from({ length: n }, (_, i) => `<span class="${i < entry.length ? 'on' : ''}"></span>`).join('');
+    $('pin-ok').disabled = entry.length < MIN_PIN || pinHash === undefined;
+  }
+  // Decide what to show whenever the stored PIN loads or changes.
+  function checkAccess() {
+    if (pinHash === undefined) return;
+    if (pinHash === null) { if (mode !== 'confirm') showLock('create'); return; }
+    if (remembered() === pinHash) { if (mode !== 'change' && mode !== 'confirm-change') showControls(); return; }
+    if (!$('controls').hidden || mode === 'create' || mode === 'confirm') showLock('unlock', $('controls').hidden ? '' : 'The PIN was changed on another phone.');
+  }
+
+  $('keypad').addEventListener('click', (e) => {
+    const k = e.target.closest('button[data-k]'); if (!k) return;
+    const v = k.dataset.k;
+    if (v === '⌫') entry = entry.slice(0, -1);
+    else if (v === 'Clear') entry = '';
+    else if (entry.length < MAX_PIN) entry += v;
+    $('lock-msg').textContent = ''; drawDots();
+  });
+  document.addEventListener('keydown', (e) => {
+    if ($('lock').hidden) return;
+    if (/^[0-9]$/.test(e.key) && entry.length < MAX_PIN) entry += e.key;
+    else if (e.key === 'Backspace') entry = entry.slice(0, -1);
+    else if (e.key === 'Enter') return $('pin-ok').click();
+    else return;
+    drawDots();
+  });
+  $('pin-ok').addEventListener('click', async () => {
+    if (entry.length < MIN_PIN) return;
+    const h = await hashPin(entry);
+    if (mode === 'unlock') {
+      if (Date.now() < lockedUntil) { $('lock-msg').textContent = 'Too many tries. Wait ' + Math.ceil((lockedUntil - Date.now()) / 1000) + ' s.'; return; }
+      if (h === pinHash) { fails = 0; remember(h); showControls(); }
+      else {
+        fails++; entry = ''; drawDots();
+        if (fails >= 5) { lockedUntil = Date.now() + 30000; fails = 0; $('lock-msg').textContent = 'Too many tries. Wait 30 s.'; }
+        else $('lock-msg').textContent = 'Wrong PIN. Try again.';
+      }
+    } else if (mode === 'create' || mode === 'change') {
+      firstEntry = h; showLock(mode === 'create' ? 'confirm' : 'confirm-change');
+    } else {
+      if (h !== firstEntry) { showLock(mode === 'confirm' ? 'create' : 'change', 'The PINs didn\'t match. Start again.'); return; }
+      if (!savePinHash) { $('lock-msg').textContent = 'Not connected yet. Try again in a moment.'; return; }
+      try { await savePinHash(h); remember(h); pinHash = h; mode = 'unlock'; showControls(); }
+      catch (err) { $('lock-msg').textContent = 'Couldn\'t save the PIN: ' + err.message; }
+    }
+  });
+  $('lock-now').addEventListener('click', () => { remember(null); showLock('unlock'); });
+  $('change-pin').addEventListener('click', () => showLock('change'));
+  showLock('unlock');
 
   function renderTrips() {
     $('trips').innerHTML = OPTIONS.map(o =>
@@ -122,16 +240,23 @@
     onValue(ref(db, base + '/trip'), snap => { current = snap.val(); renderTrips(); renderTablet(); },
       err => { $('tablet-line').textContent = 'Can\'t reach the database'; $('tablet-meta').textContent = err.message; });
     onValue(ref(db, base + '/tablet'), snap => { tablet = snap.val(); renderTablet(); });
+    savePinHash = (h) => set(ref(db, base + '/pinHash'), h);
+    onValue(ref(db, base + '/pinHash'), snap => {
+      pinHash = snap.val() || null;
+      if (mode === 'unlock') $('lock-hint').textContent = 'Enter the PIN to change what the rear screen shows.';
+      drawDots(); checkAccess();
+    }, err => { $('lock-hint').textContent = 'Can\'t reach the database: ' + err.message; });
 
     $('trips').addEventListener('click', async (e) => {
       const b = e.target.closest('button[data-id]');
-      if (!b) return;
+      if (!b || $('controls').hidden) return;
       b.disabled = true;
       try { await set(ref(db, base + '/trip'), b.dataset.id); }
       catch (err) { $('tablet-meta').textContent = 'Couldn\'t switch: ' + err.message; }
       b.disabled = false;
     });
   } catch (e) {
+    $('lock-hint').textContent = 'No connection. Check the phone\'s internet and reload.';
     $('dot').className = 'dot bad';
     $('tablet-line').textContent = 'No connection';
     $('tablet-meta').textContent = 'Check the phone\'s internet and reload.';
