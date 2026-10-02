@@ -57,7 +57,13 @@
   .row { display: flex; gap: 6px; width: 100%; justify-content: center; }
 
   /* Journey hero (airline "flight info" card) */
-  .journey { display: flex; gap: 10px; width: 100%; background: linear-gradient(135deg, #0b1f33 0%, #050b14 100%); border: 1px solid #1d3b5a; border-radius: 14px; padding: 10px; cursor: pointer; flex-shrink: 0; }
+  .journey-row { display: flex; gap: 8px; width: 100%; flex-shrink: 0; }
+  .journey-guides { display: flex; flex-direction: column; gap: 8px; width: 22%; flex-shrink: 0; }
+  .journey-guides .btn { flex: 1; width: 100%; padding: 10px 6px; }
+  .journey-guides .btn-icon { font-size: 44px; }
+  .journey-guides .btn-title { font-size: 14px; }
+  .journey-guides .btn-sub { font-size: 11px; }
+  .journey { display: flex; gap: 10px; flex: 1; min-width: 0; background: linear-gradient(135deg, #0b1f33 0%, #050b14 100%); border: 1px solid #1d3b5a; border-radius: 14px; padding: 10px; cursor: pointer; flex-shrink: 0; }
   .journey:active { transform: scale(.99); }
   #mini-map { width: 46%; min-height: 170px; border-radius: 10px; overflow: hidden; background: #0a0f16; }
   .journey-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; min-width: 0; }
@@ -126,6 +132,11 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #666; display: inline-block; }
   .dot.ok { background: #2ecc71; box-shadow: 0 0 6px #2ecc71; }
   .dot.wait { background: #f1c40f; }
+  .panel-guides { display: flex; flex-direction: column; gap: 6px; }
+  .panel-guides button { display: flex; align-items: center; gap: 10px; border: none; border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; text-align: left; }
+  .panel-guides button span { font-size: 22px; }
+  .panel-guides button small { display: block; font-size: 11px; font-weight: 400; opacity: .9; }
+  .panel-guides .teo, .panel-guides .balloon { width: 100%; }
   .map-tools { display: flex; flex-wrap: wrap; gap: 6px; }
   .map-tools button { background: #1b222c; color: #cfd6df; border: 1px solid #333c48; border-radius: 8px; padding: 6px 8px; font-size: 11px; cursor: pointer; }
   .map-tools button.on { border-color: var(--accent); color: var(--accent); }
@@ -204,6 +215,8 @@
     .header-left { width: 100%; }
     .header-right { width: 100%; height: auto; }
     .weather-frame { display: none; }
+    .journey-row { flex-direction: column; }
+    .journey-guides { width: 100%; flex-direction: row; }
     .journey { flex-direction: column; }
     #mini-map { width: 100%; min-height: 160px; }
     #map-screen.active { flex-direction: column; }
@@ -267,6 +280,7 @@
 <!-- ======================= HOME ======================= -->
 <div id="home" class="screen active">
 
+  <div class="journey-row" id="journey-row">
   <div class="journey" id="journey-card" onclick="showScreen('map-screen')">
     <div id="mini-map"></div>
     <div class="journey-info">
@@ -282,6 +296,11 @@
       <button class="open-map" data-i18n="openMap">🗺️ Open live map</button>
     </div>
   </div>
+  <div class="journey-guides">
+    <div onclick="openGuide('intro')" class="btn teo" data-guide="teo"><span class="btn-icon">🛕</span><span class="btn-title" data-i18n="tileTeo">Teotihuacán</span><span class="btn-sub" data-i18n="tileTeoSub">Your pocket guide</span></div>
+    <div onclick="openGuide('balloon')" class="btn balloon" data-guide="balloon"><span class="btn-icon">🎈</span><span class="btn-title" data-i18n="tileBalloon">Balloon 101</span><span class="btn-sub" data-i18n="tileBalloonSub">Before you fly</span></div>
+  </div>
+  </div>
 
   <div class="row">
     <div onclick="openModal('spotifyModal')" class="btn btn-ent spotify"><span class="btn-icon">🎵</span><span class="btn-title">Spotify</span></div>
@@ -292,11 +311,10 @@
   </div>
 
   <div class="row">
-    <div onclick="openGuide('intro')" class="btn btn-ent teo" data-guide="teo"><span class="btn-icon">🛕</span><span class="btn-title" data-i18n="tileTeo">Teotihuacán</span><span class="btn-sub" data-i18n="tileTeoSub">Your pocket guide</span></div>
-    <div onclick="openGuide('balloon')" class="btn btn-ent balloon" data-guide="balloon"><span class="btn-icon">🎈</span><span class="btn-title" data-i18n="tileBalloon">Balloon 101</span><span class="btn-sub" data-i18n="tileBalloonSub">Before you fly</span></div>
     <div onclick="openModal('factsModal'); resetFacts();" class="btn btn-ent facts"><span class="btn-icon">💡</span><span class="btn-title" data-i18n="tileCdmx">CDMX Facts</span></div>
     <a href="https://news.google.com/topstories?hl=es-419&gl=MX" class="btn btn-ent news"><span class="btn-icon">📰</span><span class="btn-title">News</span></a>
     <a href="https://poki.com" class="btn btn-ent games"><span class="btn-icon">🎮</span><span class="btn-title">Games</span></a>
+    <a href="https://www.flightaware.com/live/airport/MMMX" class="btn btn-ent flights"><span class="btn-icon">✈️</span><span class="btn-title">Flights</span></a>
   </div>
 
   <div class="row">
@@ -327,6 +345,10 @@
       <div class="stat"><div class="k" data-i18n="sunrise">Sunrise</div><div class="v" id="st-sun">—</div><div class="s" data-i18n="atDest">at destination</div></div>
       <div class="stat wide"><div class="k" data-i18n="localTime">Local time · Mexico City</div><div class="v" id="st-clock">—</div></div>
     </div>
+    <div class="panel-guides">
+      <button class="teo" data-guide="teo" onclick="openGuide('intro', 'map')"><span>🛕</span><div><span data-i18n="tileTeo" style="font-size:14px">Teotihuacán</span><small data-i18n="tileTeoSub">Your pocket guide</small></div></button>
+      <button class="balloon" data-guide="balloon" onclick="openGuide('balloon', 'map')"><span>🎈</span><div><span data-i18n="tileBalloon" style="font-size:14px">Balloon 101</span><small data-i18n="tileBalloonSub">Before you fly</small></div></button>
+    </div>
     <div class="map-tools">
       <button id="tool-cycle" class="on" onclick="toggleCycle()" data-i18n="autoView">🔁 Auto view</button>
       <button onclick="setView('overview', true)" data-i18n="overview">🗺️ Overview</button>
@@ -339,7 +361,7 @@
 <!-- ======================= TEOTIHUACÁN GUIDE ======================= -->
 <div id="guide" class="screen">
   <div class="guide-top">
-    <button class="back-home" onclick="showScreen('home')" data-i18n="back">⬅ Home</button>
+    <button class="back-home" id="guide-back" onclick="guideBack()">⬅ Home</button>
     <h2 data-i18n="guideTitle">🛕 Teotihuacán · Pocket Guide</h2>
   </div>
   <div class="tabs" id="guide-tabs"></div>
@@ -439,16 +461,16 @@ var POIS = [
             es: 'Monasterio agustino del siglo XVI con una bella fachada labrada. Se dice que aquí nacieron las posadas navideñas, con todo y piñatas.' } },
   { id: 'teo', icon: '🛕', ll: [19.6925, -98.8438], r: 2500,
     name: { en: 'Welcome to Teotihuacán!', es: '¡Bienvenidos a Teotihuacán!' },
-    text: { en: '"The place where the gods were created." Look out the window for the Pyramid of the Sun — and at sunrise, the sky full of balloons. Tap 🛕 Teotihuacán on the home screen for your pocket guide.',
-            es: '"El lugar donde fueron creados los dioses". Busca por la ventana la Pirámide del Sol y, al amanecer, el cielo lleno de globos. Toca 🛕 Teotihuacán en el inicio para ver tu guía.' } },
+    text: { en: '"The place where the gods were created." Look out the window for the Pyramid of the Sun — and at sunrise, the sky full of balloons. Tap 🛕 Teotihuacán for your pocket guide.',
+            es: '"El lugar donde fueron creados los dioses". Busca por la ventana la Pirámide del Sol y, al amanecer, el cielo lleno de globos. Toca 🛕 Teotihuacán para ver tu guía.' } },
   { id: 'campestre', icon: '⛳', ll: [19.6916, -98.8057], r: 1200, trips: ['balloon'],
     name: { en: 'Club Campestre Teotihuacán', es: 'Club Campestre Teotihuacán' },
     text: { en: 'Almost there! From here it\'s only about 3 km west to the balloon port. If the sky is clear, look out for the first balloons being inflated.',
             es: '¡Ya casi llegamos! Desde aquí son solo unos 3 km al oeste hasta el globopuerto. Si el cielo está despejado, busca los primeros globos inflándose.' } },
   { id: 'bp', icon: '🎈', ll: BP_DEST, r: 800, trips: ['balloon'],
     name: { en: 'Arriving at Balloon\'s Paradise', es: 'Llegando a Balloon\'s Paradise' },
-    text: { en: 'Your balloon port! Check in with the team, grab a coffee and watch the balloons being inflated. Dress in layers — it\'s chilly before sunrise. Tap 🎈 Balloon 101 on the home screen for tips before you fly.',
-            es: '¡Tu globopuerto! Regístrate con el equipo, toma un café y mira cómo inflan los globos. Vístete en capas: hace frío antes del amanecer. Toca 🎈 Globo 101 en el inicio para ver consejos antes de volar.' } }
+    text: { en: 'Your balloon port! Check in with the team, grab a coffee and watch the balloons being inflated. Dress in layers — it\'s chilly before sunrise. Tap 🎈 Balloon 101 for tips before you fly.',
+            es: '¡Tu globopuerto! Regístrate con el equipo, toma un café y mira cómo inflan los globos. Vístete en capas: hace frío antes del amanecer. Toca 🎈 Globo 101 para ver consejos antes de volar.' } }
 ];
 
 /* =====================================================================
@@ -457,14 +479,14 @@ var POIS = [
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Facts',
-        back: '⬅ Home', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
+        back: '⬅ Home', backMap: '⬅ Map', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
         gpsWait: 'Waiting for GPS…', gpsOk: 'Live GPS', gpsDenied: 'GPS off — showing planned route', gpsDemo: 'Demo mode',
         overviewBadge: 'Overview', followBadge: 'Live position', arrived: 'Arrived!', min: 'min', you: 'You are here' },
   es: { yourJourney: 'Tu viaje', toGo: 'Faltan', timeLeft: 'Tiempo', arrival: 'Llegada', openMap: '🗺️ Ver mapa en vivo',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
-        back: '⬅ Inicio', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
+        back: '⬅ Inicio', backMap: '⬅ Mapa', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
         gpsWait: 'Buscando GPS…', gpsOk: 'GPS en vivo', gpsDenied: 'Sin GPS — ruta planeada', gpsDemo: 'Modo demo',
@@ -558,7 +580,7 @@ var S = {
   temp: null, elevation: null, sunrise: null,
   view: 'overview', cycle: true, cycleTimer: null, pauseUntil: 0,
   demo: null, shownPois: {}, satellite: false,
-  guideTab: 'intro', siteSel: 'sun'
+  guideTab: 'intro', guideFrom: 'home', siteSel: 'sun'
 };
 
 function store(k, v) { try { localStorage.setItem('gv_' + k, JSON.stringify(v)); } catch (e) {} }
@@ -815,7 +837,7 @@ function applyTrip(id, fromRemote) {
   reportStatus();
 }
 function updateVisibility() {
-  $('journey-card').hidden = !S.active;
+  $('journey-row').hidden = !S.active;
   var g = document.querySelectorAll('[data-guide]');
   for (var i = 0; i < g.length; i++) g[i].hidden = !hasGuide(g[i].getAttribute('data-guide'));
   if (!S.active) hideToast();
@@ -1053,7 +1075,12 @@ function render() {
 /* =====================================================================
    12. GUIDE RENDERING
    ===================================================================== */
-function openGuide(tab) { S.guideTab = tab; renderGuide(); showScreen('guide'); }
+// from = 'map' when opened from the live map, so "back" returns there.
+function openGuide(tab, from) {
+  S.guideTab = tab; S.guideFrom = from || 'home';
+  renderGuide(); showScreen('guide');
+}
+function guideBack() { showScreen(S.guideFrom === 'map' && S.active ? 'map-screen' : 'home'); }
 function setGuideTab(tab) { S.guideTab = tab; renderGuide(); $('guide-body').scrollTop = 0; }
 
 function cardsHtml(list) {
@@ -1088,6 +1115,7 @@ function siteSvg() {
 function pickSite(id) { S.siteSel = id; renderGuide(); }
 
 function renderGuide() {
+  $('guide-back').textContent = t(S.guideFrom === 'map' ? 'backMap' : 'back');
   $('guide-tabs').innerHTML = GUIDE_TABS.filter(function (tb) {
     return tb.id !== 'balloon' || hasGuide('balloon');
   }).map(function (tb) {
