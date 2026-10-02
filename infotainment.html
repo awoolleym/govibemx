@@ -24,6 +24,7 @@
     --trail: #00E5FF;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }
   html, body { height: 100%; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; user-select: none; }
   button { font-family: inherit; }
@@ -71,7 +72,7 @@
   /* BUTTONS */
   .btn { border: none; border-radius: 12px; padding: 10px 2px; color: #fff; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,.5); text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .1s; }
   .btn:active { transform: scale(.95); }
-  .btn-ent { width: 19%; padding: 10px 5px; }
+  .btn-ent { flex: 1 1 0; min-width: 0; max-width: 25%; padding: 10px 5px; }
   .btn-biz { width: 32%; padding: 12px 5px; }
   .spotify { background: linear-gradient(135deg,#1db954,#106b31); }
   .netflix { background: linear-gradient(135deg,#e50914,#8a060c); }
@@ -104,9 +105,16 @@
   #map { flex: 1; background: #0a0f16; }
   .map-panel { width: 300px; background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; padding: 12px; gap: 8px; overflow-y: auto; }
   .back-home { background: #222; color: #fff; border: 1px solid #444; border-radius: 20px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; align-self: flex-start; }
-  .trip-pick { display: flex; flex-wrap: wrap; gap: 6px; }
-  .trip-pick button { background: #1b222c; color: #cfd6df; border: 1px solid #333c48; border-radius: 16px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
-  .trip-pick button.on { background: var(--route); color: #1a1200; border-color: var(--route); font-weight: 800; }
+  /* Driver menu (long-press the clock) */
+  .driver-trips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 14px; }
+  .driver-trips button { background: #1b222c; color: #e6ebf1; border: 2px solid #333c48; border-radius: 12px; padding: 14px 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: left; }
+  .driver-trips button small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 3px; }
+  .driver-trips button.on { background: var(--route); color: #1a1200; border-color: var(--route); }
+  .driver-trips button.on small { color: #3a2a00; }
+  .driver-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .driver-row button { background: #1b222c; color: #cfd6df; border: 1px solid #333c48; border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; }
+  .driver-row button.on { border-color: var(--accent); color: var(--accent); }
+  .driver-note { font-size: 12px; color: var(--muted); margin: 12px 0 0; }
   .panel-title { font-size: 18px; font-weight: 800; line-height: 1.2; }
   .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
@@ -216,6 +224,17 @@
 <div id="wifiModal" class="modal"><div class="modal-content" style="background:#111;width:70%;"><h2 style="color:#2ecc71;margin-top:0;">📶 Wi-Fi Access</h2><p style="font-size:16px;">Connect to: <b>GoVibeMX WiFi</b></p><div style="background:#222;padding:15px;border-radius:10px;margin:20px 0;border:2px dashed #555;"><span style="font-size:32px;font-weight:bold;letter-spacing:3px;font-family:monospace;">87654321</span></div><p style="color:#aaa;font-size:14px;">Password / Contraseña</p></div><div class="close-btn" onclick="closeModal('wifiModal')">X</div></div>
 <div id="factsModal" class="modal"><div class="modal-content"><h2 style="color:#FF9800;margin-top:0;margin-bottom:10px;">🇲🇽 Neighborhood Explorer</h2><div id="factsMenu" class="facts-menu"><button class="fact-btn" onclick="showFact('fact-centro')">🏛️ Centro</button><button class="fact-btn" onclick="showFact('fact-roma')">🌿 Roma</button><button class="fact-btn" onclick="showFact('fact-condesa')">🐕 Condesa</button><button class="fact-btn" onclick="showFact('fact-polanco')">💎 Polanco</button><button class="fact-btn" onclick="showFact('fact-coyoacan')">🎨 Coyoacán</button><button class="fact-btn" onclick="showFact('fact-general')">📍 CDMX</button></div><div id="fact-centro" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Ancient City:</b> Built on Tenochtitlán (1325).</li><li><b>Zócalo:</b> One of the largest squares in the world.</li><li><b>Sinking:</b> Bellas Artes is sinking!</li><li><b>Templo Mayor:</b> Aztec ruins nearby.</li><li><b>Eat:</b> "El Cardenal" breakfast.</li></ul></div><div id="fact-roma" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Oscar:</b> "Roma" movie filmed here.</li><li><b>Style:</b> Art Nouveau architecture.</li><li><b>Food:</b> Top culinary district.</li><li><b>David:</b> Michelangelo replica in plaza.</li><li><b>Bar:</b> Álvaro Obregón nightlife.</li></ul></div><div id="fact-condesa" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Track:</b> Amsterdam Ave was a horse track.</li><li><b>Art Deco:</b> Famous buildings.</li><li><b>Dogs:</b> Parque México dog school.</li><li><b>Green:</b> City "lung".</li><li><b>Einstein:</b> Legend says he stayed here.</li></ul></div><div id="fact-polanco" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Beverly Hills:</b> Luxury shopping.</li><li><b>Soumaya:</b> Free art museum.</li><li><b>Jewish:</b> Delis &amp; bakeries.</li><li><b>Lincoln:</b> Statue in park.</li><li><b>Pujol:</b> World-famous restaurant.</li></ul></div><div id="fact-coyoacan" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Frida:</b> Blue House museum.</li><li><b>Trotsky:</b> Exiled here.</li><li><b>Cortés:</b> First capital.</li><li><b>Market:</b> Tostadas &amp; costumes.</li><li><b>Eat:</b> Churros in plaza.</li></ul></div><div id="fact-general" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Altitude:</b> 2,240m (7,350 ft).</li><li><b>People:</b> ~22 Million.</li><li><b>Museums:</b> 150+ (one of the most in the world).</li><li><b>Green:</b> Chapultepec Park.</li><li><b>Name:</b> CDMX (not DF).</li></ul></div></div><div class="close-btn" onclick="closeModal('factsModal')">X</div></div>
 
+<!-- Driver menu: long-press the clock for 1.5 s -->
+<div id="driverModal" class="modal"><div class="modal-content" style="background:#0d1117;max-width:620px;">
+  <h2 style="margin:0;color:#FFB300;">🚐 Driver · Today's trip</h2>
+  <div class="driver-trips" id="driver-trips"></div>
+  <div class="driver-row">
+    <button onclick="toggleDemo()" id="tool-demo">▶ Demo</button>
+    <button onclick="clearTrail()">🧹 Clear trail</button>
+  </div>
+  <p class="driver-note" id="remote-status">Phone remote: connecting…</p>
+</div><div class="close-btn" onclick="closeModal('driverModal')">X</div></div>
+
 <!-- POI toast -->
 <div id="poiToast" class="poi-toast" onclick="hideToast()">
   <span class="x">×</span>
@@ -248,7 +267,7 @@
 <!-- ======================= HOME ======================= -->
 <div id="home" class="screen active">
 
-  <div class="journey" onclick="showScreen('map-screen')">
+  <div class="journey" id="journey-card" onclick="showScreen('map-screen')">
     <div id="mini-map"></div>
     <div class="journey-info">
       <div>
@@ -273,8 +292,8 @@
   </div>
 
   <div class="row">
-    <div onclick="openGuide('intro')" class="btn btn-ent teo"><span class="btn-icon">🛕</span><span class="btn-title" data-i18n="tileTeo">Teotihuacán</span><span class="btn-sub" data-i18n="tileTeoSub">Your pocket guide</span></div>
-    <div onclick="openGuide('balloon')" class="btn btn-ent balloon"><span class="btn-icon">🎈</span><span class="btn-title" data-i18n="tileBalloon">Balloon 101</span><span class="btn-sub" data-i18n="tileBalloonSub">Before you fly</span></div>
+    <div onclick="openGuide('intro')" class="btn btn-ent teo" data-guide="teo"><span class="btn-icon">🛕</span><span class="btn-title" data-i18n="tileTeo">Teotihuacán</span><span class="btn-sub" data-i18n="tileTeoSub">Your pocket guide</span></div>
+    <div onclick="openGuide('balloon')" class="btn btn-ent balloon" data-guide="balloon"><span class="btn-icon">🎈</span><span class="btn-title" data-i18n="tileBalloon">Balloon 101</span><span class="btn-sub" data-i18n="tileBalloonSub">Before you fly</span></div>
     <div onclick="openModal('factsModal'); resetFacts();" class="btn btn-ent facts"><span class="btn-icon">💡</span><span class="btn-title" data-i18n="tileCdmx">CDMX Facts</span></div>
     <a href="https://news.google.com/topstories?hl=es-419&gl=MX" class="btn btn-ent news"><span class="btn-icon">📰</span><span class="btn-title">News</span></a>
     <a href="https://poki.com" class="btn btn-ent games"><span class="btn-icon">🎮</span><span class="btn-title">Games</span></a>
@@ -297,7 +316,6 @@
   </div>
   <div class="map-panel">
     <button class="back-home" onclick="showScreen('home')" data-i18n="back">⬅ Home</button>
-    <div class="trip-pick" id="trip-pick"></div>
     <div class="panel-title" id="panel-trip-title">Hot Air Balloon · Teotihuacán</div>
     <div class="gps-status"><span class="dot" id="gps-dot"></span><span id="gps-text">Waiting for GPS…</span></div>
     <div class="stat-grid">
@@ -314,8 +332,6 @@
       <button onclick="setView('overview', true)" data-i18n="overview">🗺️ Overview</button>
       <button onclick="setView('follow', true)" data-i18n="follow">🎯 Follow</button>
       <button id="tool-sat" onclick="toggleSatellite()" data-i18n="satellite">🛰️ Satellite</button>
-      <button class="driver" onclick="toggleDemo()" id="tool-demo">▶ Demo</button>
-      <button class="driver" onclick="clearTrail()" data-i18n="clearTrail">🧹 Clear trail</button>
     </div>
   </div>
 </div>
@@ -364,23 +380,29 @@ var TEO_DEST = [19.69432, -98.84219];
 // Approximate (middle of Av. de la Amistad) — replace with the exact pin from Google Maps if needed.
 var BP_DEST = [19.69499, -98.83412];
 
+// Phone remote: the tablet and driver.html share this id in Firebase (rearScreen/<VAN_ID>).
+var VAN_ID = 'van1';
+
+// `guides` = which pocket guides the passengers get on that trip.
+// The driver can also pick "City ride" (no trip): no map card, no trip guides.
+var CITY_RIDE = { icon: '🏙️', name: { en: 'City ride', es: 'Viaje en la ciudad' }, note: { en: 'No trip map', es: 'Sin mapa de viaje' } };
 var TRIPS = {
   balloon: {
-    icon: '🎈',
+    icon: '🎈', guides: ['teo', 'balloon'],
     name: { en: 'Hot Air Balloon · Teotihuacán', es: 'Globo Aerostático · Teotihuacán' },
     from: { en: 'Four Seasons', es: 'Four Seasons' },
     to:   { en: 'Balloon\'s Paradise', es: 'Balloon\'s Paradise' },
     dest: BP_DEST, route: ROUTE_BP, seconds: ROUTE_BP_SECONDS
   },
   pyramids: {
-    icon: '🛕',
+    icon: '🛕', guides: ['teo'],
     name: { en: 'Pyramids of Teotihuacán', es: 'Pirámides de Teotihuacán' },
     from: { en: 'Four Seasons', es: 'Four Seasons' },
     to:   { en: 'Teotihuacán', es: 'Teotihuacán' },
     dest: TEO_DEST, route: ROUTE_TEO, seconds: ROUTE_TEO_SECONDS
   },
   home: {
-    icon: '🏙️',
+    icon: '🏁', guides: ['teo'],
     name: { en: 'Back to Mexico City', es: 'Regreso a CDMX' },
     from: { en: 'Teotihuacán', es: 'Teotihuacán' },
     to:   { en: 'Four Seasons', es: 'Four Seasons' },
@@ -528,7 +550,7 @@ var GUIDE = {
    4. STATE & HELPERS
    ===================================================================== */
 var S = {
-  lang: 'en', tripId: 'balloon',
+  lang: 'en', tripId: 'balloon', active: true, booted: false, pendingTrip: null, remaining: 0,
   route: null, cum: null, total: 0, seconds: 0, fromGps: false,
   pos: null, speed: null, heading: 0, alt: null, gpsState: 'wait',
   trail: [], lastTrailSave: 0, lastReroute: 0, rerouting: false,
@@ -770,12 +792,64 @@ function selectTrip(id) {
   renderTripPicker(); fitMini(); setView('overview', false); render();
   fetchWeather();
 }
+function currentMode() { return S.active ? S.tripId : 'none'; }
+function hasGuide(g) { return S.active && TRIPS[S.tripId].guides.indexOf(g) >= 0; }
+
+// Switch what the passengers see. id = a TRIPS key, or 'none' for a city ride.
+// fromRemote = the change came from the phone (driver.html), so don't echo it back.
+function applyTrip(id, fromRemote) {
+  if (id !== 'none' && !TRIPS[id]) return;
+  if (!S.booted) { S.pendingTrip = id; return; }
+  var changed = id !== currentMode();
+  if (id === 'none') {
+    S.active = false; store('mode', 'none');
+  } else {
+    var newTrip = !S.active || id !== S.tripId;
+    S.active = true; store('mode', id);
+    if (newTrip) { clearTrail(); selectTrip(id); }
+  }
+  if (!S.active && !$('home').classList.contains('active')) showScreen('home');
+  if (S.guideTab === 'balloon' && !hasGuide('balloon')) S.guideTab = 'intro';
+  updateVisibility(); renderTripPicker(); renderGuide(); render();
+  if (changed && !fromRemote && window.pushRemoteTrip) window.pushRemoteTrip(id);
+  reportStatus();
+}
+function updateVisibility() {
+  $('journey-card').hidden = !S.active;
+  var g = document.querySelectorAll('[data-guide]');
+  for (var i = 0; i < g.length; i++) g[i].hidden = !hasGuide(g[i].getAttribute('data-guide'));
+  if (!S.active) hideToast();
+  if (S.active && miniMap) setTimeout(function () { miniMap.invalidateSize(); fitMini(); }, 50);
+}
 function renderTripPicker() {
-  var h = '';
+  var opts = [['none', CITY_RIDE.icon, tr(CITY_RIDE.name), tr(CITY_RIDE.note)]];
   Object.keys(TRIPS).forEach(function (id) {
-    h += '<button class="' + (id === S.tripId ? 'on' : '') + '" onclick="selectTrip(\'' + id + '\')">' + TRIPS[id].icon + ' ' + tr(TRIPS[id].name) + '</button>';
+    var guideNames = TRIPS[id].guides.map(function (g) { return g === 'teo' ? t('tileTeo') : t('tileBalloon'); }).join(' + ');
+    opts.push([id, TRIPS[id].icon, tr(TRIPS[id].name), '🗺️ + ' + guideNames]);
   });
-  $('trip-pick').innerHTML = h;
+  $('driver-trips').innerHTML = opts.map(function (o) {
+    return '<button class="' + (o[0] === currentMode() ? 'on' : '') + '" onclick="applyTrip(\'' + o[0] + '\')">' + o[1] + ' ' + o[2] + '<small>' + o[3] + '</small></button>';
+  }).join('');
+}
+
+// Tell the phone remote what the tablet is showing (trip, km left, GPS).
+function reportStatus() {
+  if (!window.pushTabletStatus) return;
+  window.pushTabletStatus({ trip: currentMode(), kmLeft: S.active ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+}
+function setRemoteStatus(state) {
+  var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };
+  $('remote-status').textContent = txt[state] || txt.off;
+}
+
+// Long-press the clock to open the driver menu (keeps passengers from changing trips).
+function setupDriverMenu() {
+  var el = $('digital-clock'), timer = null;
+  function start() { timer = setTimeout(function () { renderTripPicker(); openModal('driverModal'); }, 1500); }
+  function cancel() { clearTimeout(timer); }
+  el.addEventListener('pointerdown', start);
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, cancel); });
+  el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 }
 
 // Re-route from the van's real position using the free OSRM demo server.
@@ -879,6 +953,7 @@ function clearTrail() { S.trail = []; store('trail', []); drawRoute(); }
    ===================================================================== */
 var toastTimer = null;
 function checkPois() {
+  if (!S.active) return;
   POIS.forEach(function (p) {
     if (S.shownPois[p.id] || (p.trips && p.trips.indexOf(S.tripId) < 0)) return;
     if (haversine(S.pos, p.ll) <= p.r) { S.shownPois[p.id] = true; showToast(p); }
@@ -940,6 +1015,7 @@ function render() {
   }
   var arrived = S.pos && haversine(S.pos, tp.dest) < 400;
   if (arrived) remaining = 0;
+  S.remaining = remaining;
   var secs = S.total ? S.seconds * (remaining / S.total) : 0;
   // Progress is measured against the trip's planned length so it doesn't jump back after a re-route.
   var planned = cumulative(tp.route)[tp.route.length - 1];
@@ -1012,7 +1088,9 @@ function siteSvg() {
 function pickSite(id) { S.siteSel = id; renderGuide(); }
 
 function renderGuide() {
-  $('guide-tabs').innerHTML = GUIDE_TABS.map(function (tb) {
+  $('guide-tabs').innerHTML = GUIDE_TABS.filter(function (tb) {
+    return tb.id !== 'balloon' || hasGuide('balloon');
+  }).map(function (tb) {
     return '<button class="' + (tb.id === S.guideTab ? 'on' : '') + '" onclick="setGuideTab(\'' + tb.id + '\')">' + tr(tb.label) + '</button>';
   }).join('');
   var h = '', tab = S.guideTab;
@@ -1047,6 +1125,7 @@ document.addEventListener('DOMContentLoaded', function () {
   S.satellite = load('sat', false);
   var tripId = load('trip', 'balloon');
   S.tripId = TRIPS[tripId] ? tripId : 'balloon';
+  S.active = load('mode', S.tripId) !== 'none';
   S.trail = load('trail', []);
   var tp = TRIPS[S.tripId];
   setRoute(tp.route, tp.seconds, false);
@@ -1059,9 +1138,43 @@ document.addEventListener('DOMContentLoaded', function () {
   startGps();
   fetchWeather(); setInterval(fetchWeather, 10 * 60 * 1000);
   setInterval(render, 30000); // keep ETA ticking even when parked
+  setupDriverMenu();
+  setTimeout(function () { if (/connecting/.test($('remote-status').textContent)) setRemoteStatus('off'); }, 10000);
+  S.booted = true;
+  updateVisibility(); renderTripPicker(); renderGuide();
+  if (S.pendingTrip) applyTrip(S.pendingTrip, true);
+  setInterval(reportStatus, 30000);
 
   if (/[?&]demo=1/.test(location.search)) { showScreen('map-screen'); toggleDemo(); }
 });
+</script>
+
+<!-- Phone remote: listens for trip changes from driver.html via the GoVibeMX Firebase project.
+     If Firebase can't be reached, the driver menu on the tablet still works. -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getDatabase, ref, onValue, set, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+  try {
+    const app = initializeApp({
+      apiKey: 'AIzaSyAqFnjf1i-8Qm95Xzp98FFO0ABUxb7hzn4',
+      authDomain: 'govibebooking.firebaseapp.com',
+      databaseURL: 'https://govibebooking-default-rtdb.firebaseio.com',
+      projectId: 'govibebooking'
+    }, 'rear-screen');
+    try { await signInAnonymously(getAuth(app)); } catch (e) { /* rules may allow access without login */ }
+    const db = getDatabase(app);
+    const base = 'rearScreen/' + VAN_ID;
+    onValue(ref(db, base + '/trip'), (snap) => {
+      setRemoteStatus('ok');
+      if (snap.val()) applyTrip(snap.val(), true);
+    }, () => setRemoteStatus('error'));
+    window.pushRemoteTrip = (trip) => set(ref(db, base + '/trip'), trip).catch(() => {});
+    window.pushTabletStatus = (st) => set(ref(db, base + '/tablet'), Object.assign({}, st, { at: serverTimestamp() })).catch(() => {});
+    reportStatus();
+  } catch (e) {
+    setRemoteStatus('off');
+  }
 </script>
 </body>
 </html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoVibeMX Driver Remote</title>
+<style>
+  /* Phone remote for the rear screen (infotainment.html). Pick today's trip; the tablet switches. */
+  :root {
+    color-scheme: dark;
+    --bg: #070b10;
+    --panel: #121820;
+    --line: #2a313c;
+    --text: #f2f5f8;
+    --muted: #8f9aa8;
+    --route: #FFB300;
+    --ok: #2ecc71;
+    --warn: #f1c40f;
+    --bad: #e74c3c;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  main { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 20px; margin: 4px 0 0; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0; }
+  .tablet { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .tablet .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .tablet .v { font-size: 18px; font-weight: 700; }
+  .tablet .meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); margin-right: 6px; vertical-align: middle; }
+  .dot.ok { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .dot.warn { background: var(--warn); }
+  .dot.bad { background: var(--bad); }
+  .trips { display: flex; flex-direction: column; gap: 10px; }
+  .trips button { display: flex; align-items: center; gap: 14px; width: 100%; background: var(--panel); color: var(--text); border: 2px solid var(--line); border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .trips button .ico { font-size: 30px; }
+  .trips button small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+  .trips button.on { border-color: var(--route); background: #2a2108; }
+  .trips button:active { transform: scale(.98); }
+  .trips button:disabled { opacity: .5; }
+  .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <h1>🚐 GoVibeMX · Rear screen</h1>
+    <p class="sub">Pick today's trip. The tablet in the back switches within a few seconds.</p>
+  </div>
+
+  <div class="tablet">
+    <div class="k">Tablet</div>
+    <div class="v"><span class="dot" id="dot"></span><span id="tablet-line">Connecting…</span></div>
+    <div class="meta" id="tablet-meta"></div>
+  </div>
+
+  <div class="trips" id="trips"></div>
+
+  <p class="note">Van: <b id="van"></b>. You can also change the trip on the tablet itself: press and hold the clock for 1.5 seconds.</p>
+</main>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+  // Must match VAN_ID in infotainment.html. Add ?van=van2 to the link for a second vehicle.
+  const VAN_ID = new URLSearchParams(location.search).get('van') || 'van1';
+
+  // Keep in sync with TRIPS in infotainment.html.
+  const OPTIONS = [
+    { id: 'none',     icon: '🏙️', name: 'City ride',                     shows: 'No trip map · entertainment only' },
+    { id: 'balloon',  icon: '🎈', name: 'Hot Air Balloon · Teotihuacán', shows: 'Map to Balloon\'s Paradise + Teotihuacán guide + Balloon 101' },
+    { id: 'pyramids', icon: '🛕', name: 'Pyramids of Teotihuacán',       shows: 'Map to the pyramids + Teotihuacán guide' },
+    { id: 'home',     icon: '🏁', name: 'Back to Mexico City',           shows: 'Map to the Four Seasons + Teotihuacán guide' }
+  ];
+  const NAMES = Object.fromEntries(OPTIONS.map(o => [o.id, o.icon + ' ' + o.name]));
+
+  const $ = (id) => document.getElementById(id);
+  $('van').textContent = VAN_ID;
+  let current = null, tablet = null;
+
+  function renderTrips() {
+    $('trips').innerHTML = OPTIONS.map(o =>
+      `<button data-id="${o.id}" class="${o.id === current ? 'on' : ''}"><span class="ico">${o.icon}</span><span>${o.name}<small>${o.shows}</small></span></button>`
+    ).join('');
+  }
+
+  function renderTablet() {
+    const dot = $('dot');
+    if (!tablet || !tablet.at) {
+      dot.className = 'dot warn';
+      $('tablet-line').textContent = 'Not seen yet';
+      $('tablet-meta').textContent = 'Open the rear screen on the tablet to connect it.';
+      return;
+    }
+    const ago = Math.max(0, Math.round((Date.now() - tablet.at) / 1000));
+    const fresh = ago < 90;
+    dot.className = 'dot ' + (fresh ? 'ok' : 'bad');
+    $('tablet-line').textContent = (NAMES[tablet.trip] || tablet.trip) + (tablet.trip !== current && current ? ' · switching…' : '');
+    const bits = [];
+    bits.push(fresh ? 'Online · seen ' + ago + ' s ago' : 'Offline · last seen ' + Math.round(ago / 60) + ' min ago');
+    if (tablet.kmLeft != null) bits.push(tablet.kmLeft + ' km to go');
+    if (tablet.gps) bits.push('GPS: ' + ({ ok: 'live', wait: 'searching', denied: 'off', demo: 'demo' }[tablet.gps] || tablet.gps));
+    $('tablet-meta').textContent = bits.join(' · ');
+  }
+
+  renderTrips(); renderTablet();
+  setInterval(renderTablet, 5000);
+
+  try {
+    const app = initializeApp({
+      apiKey: 'AIzaSyAqFnjf1i-8Qm95Xzp98FFO0ABUxb7hzn4',
+      authDomain: 'govibebooking.firebaseapp.com',
+      databaseURL: 'https://govibebooking-default-rtdb.firebaseio.com',
+      projectId: 'govibebooking'
+    });
+    try { await signInAnonymously(getAuth(app)); } catch (e) { /* rules may allow access without login */ }
+    const db = getDatabase(app);
+    const base = 'rearScreen/' + VAN_ID;
+
+    onValue(ref(db, base + '/trip'), snap => { current = snap.val(); renderTrips(); renderTablet(); },
+      err => { $('tablet-line').textContent = 'Can\'t reach the database'; $('tablet-meta').textContent = err.message; });
+    onValue(ref(db, base + '/tablet'), snap => { tablet = snap.val(); renderTablet(); });
+
+    $('trips').addEventListener('click', async (e) => {
+      const b = e.target.closest('button[data-id]');
+      if (!b) return;
+      b.disabled = true;
+      try { await set(ref(db, base + '/trip'), b.dataset.id); }
+      catch (err) { $('tablet-meta').textContent = 'Couldn\'t switch: ' + err.message; }
+      b.disabled = false;
+    });
+  } catch (e) {
+    $('dot').className = 'dot bad';
+    $('tablet-line').textContent = 'No connection';
+    $('tablet-meta').textContent = 'Check the phone\'s internet and reload.';
+  }
+</script>
+</body>
+</html>
