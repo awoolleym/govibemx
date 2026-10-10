@@ -2,8 +2,8 @@
 title: "Extensiones de Pestañas y Cejas en Roma Norte | Stilo Salón"
 description: "Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258."
 url: https://stilo-salon.com/pestanas-y-cejas
-date: 2026-09-24
-last_updated: 2026-09-24
+date: 2026-10-10
+last_updated: 2026-10-10
 lang: es-MX
 ---
 Pestañas y cejas · Roma Norte

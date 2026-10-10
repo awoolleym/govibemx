@@ -16,6 +16,11 @@ import pathlib
 # La fecha de esta compilación: va en el <lastmod> del sitemap.
 HOY = date.today().isoformat()
 
+# Verificación de propiedad en Google Search Console.  Es un .html pero no
+# es una página: dentro lleva una sola línea con su propio nombre.  Si
+# Google emite otro token, se cambia esta línea y ya.
+GOOGLE_VERIF = "googlecd804256c478278c.html"
+
 OUT = pathlib.Path(__file__).parent
 SITE = "https://stilo-salon.com"
 
@@ -2617,7 +2622,8 @@ def espejos_markdown(log):
         rel = str(archivo.relative_to(OUT))
         # Sólo las páginas del sitio: fuera la copia del preview, la de
         # publicación y el banco de pruebas móvil, que no son páginas.
-        if (rel == "404.html" or archivo.name == "preview-movil.html"
+        if (rel in ("404.html", GOOGLE_VERIF)
+                or archivo.name == "preview-movil.html"
                 or any(x.startswith(("_preview", "_fotos", "_dist"))
                        for x in archivo.relative_to(OUT).parts)):
             continue
@@ -2908,6 +2914,22 @@ def main():
     h404 = re.sub(r'<meta name="robots"[^>]*>',
                   '<meta name="robots" content="noindex,follow">', h404, count=1)
     log.append(write("404.html", h404))
+
+    # ── Verificación de propiedad en Google Search Console ──────────────
+    # El archivo lo genera Google y su contenido es una sola línea con el
+    # mismo nombre del archivo dentro.  No lleva salto de línea al final ni
+    # nada más: se escribe tal cual vino, sin pasar por las plantillas, para
+    # que nadie le meta una coma de más.  Si Google emite otro token, se
+    # cambia esta constante y ya.
+    #
+    # Ojo con la extensión: las direcciones del sitio no llevan .html, así
+    # que Cloudflare redirige /loquesea.html a /loquesea.  Google pide el
+    # archivo CON la extensión, sigue la redirección y encuentra el
+    # contenido correcto en el destino, que responde 200.  Comprobado en el
+    # sitio en vivo después de subirlo.
+    (OUT / GOOGLE_VERIF).write_text(
+        f"google-site-verification: {GOOGLE_VERIF}", encoding="utf-8")
+    log.append(f"  {GOOGLE_VERIF}  (verificación de Google)")
 
     # sitemap / robots / Cloudflare
     urls = ["/", "/cabello.html", "/unas.html", "/pestanas-y-cejas.html", "/precios.html",

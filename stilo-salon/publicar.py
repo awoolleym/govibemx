@@ -41,7 +41,13 @@ CONFIG = ["_headers", "_redirects", "robots.txt", "sitemap.xml", "llms.txt",
           "favicon.ico", "apple-touch-icon.png", "site.webmanifest",
           ".well-known/agents.json", ".well-known/mcp.json",
           ".well-known/agents.md",
-          "agents.json", "mcp.json"]
+          "agents.json", "mcp.json",
+          # Verificación de propiedad de Google Search Console.  Es un .html
+          # pero no es una página: no lleva nada dentro salvo su propio
+          # nombre, no entra al sitemap y nadie lo enlaza.  Por eso va aquí
+          # y no en PAGINAS, y por eso se excluye de la comprobación de
+          # páginas huérfanas de abajo.
+          "googlecd804256c478278c.html"]
 # El espejo en Markdown de cada página: mismo nombre, otra extensión. Se
 # deriva de PAGINAS para que no se pueda agregar una página y olvidar el suyo.
 ESPEJOS = [p[:-5] + ".md" for p in PAGINAS if p != "404.html"]
@@ -60,7 +66,8 @@ def main():
     # vez de publicarla a ciegas o de dejarla fuera en silencio.
     en_disco = {str(p.relative_to(SRC)) for p in SRC.rglob("*.html")
                 if not any(x.startswith(("_preview", "_fotos", "_dist")) for x in p.parts)
-                and p.name != "preview-movil.html"}
+                and p.name not in ("preview-movil.html",
+                                   "googlecd804256c478278c.html")}
     huerfanas = sorted(en_disco - set(PAGINAS))
     if huerfanas:
         sys.exit("Hay páginas generadas que no están en PAGINAS de publicar.py:\n  "

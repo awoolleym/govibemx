@@ -2,8 +2,8 @@
 title: "Aviso de Privacidad | Stilo Salón"
 description: "Aviso de privacidad de Stilo Salón, Roma Norte, CDMX. Qué datos recabamos para tu cita, para qué los usamos y cómo ejercer tus derechos ARCO."
 url: https://stilo-salon.com/aviso-de-privacidad
-date: 2026-09-24
-last_updated: 2026-09-24
+date: 2026-10-10
+last_updated: 2026-10-10
 lang: es-MX
 ---
 # Aviso de Privacidad

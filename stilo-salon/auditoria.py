@@ -15,7 +15,8 @@ def paginas():
     return sorted(p for p in RAIZ.rglob("*.html")
                   if not any(x.startswith(("_preview", "_fotos", "_dist"))
                              for x in p.relative_to(RAIZ).parts)
-                  and p.name not in ("preview-movil.html",))
+                  and p.name not in ("preview-movil.html",
+                                     "googlecd804256c478278c.html"))
 
 def resuelve(u):
     u = u.lstrip("/")

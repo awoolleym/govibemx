@@ -2,8 +2,8 @@
 title: "Lista de Precios Completa | Stilo Salón Roma Norte, CDMX"
 description: "Precios de Stilo Salón: cabello, keratina, uñas, pestañas, cejas y depilación. Más de 60 servicios con precio y duración. Roma Norte, CDMX."
 url: https://stilo-salon.com/precios
-date: 2026-09-24
-last_updated: 2026-09-24
+date: 2026-10-10
+last_updated: 2026-10-10
 lang: es-MX
 ---
 Roma Norte · CDMX

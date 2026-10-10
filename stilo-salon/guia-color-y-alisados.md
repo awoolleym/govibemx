@@ -2,8 +2,8 @@
 title: "Balayage, Babylights y Alisados: la Guía | Stilo Salón"
 description: "Balayage o babylights, cada cuándo retocar raíz y qué alisado te conviene: keratina (Brazilian Blowout), nanoplastia o botox capilar. Roma Norte, CDMX."
 url: https://stilo-salon.com/guia-color-y-alisados
-date: 2026-09-24
-last_updated: 2026-09-24
+date: 2026-10-10
+last_updated: 2026-10-10
 lang: es-MX
 ---
 Guía completa · Roma Norte
