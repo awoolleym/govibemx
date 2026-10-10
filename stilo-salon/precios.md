@@ -72,13 +72,13 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
-| Acrílico sobre uña natural | $400 | — |
-| Retoque de Acrílico | $350 | — |
+| Acrílico sobre uña natural | desde $400 | — |
+| Retoque de Acrílico | desde $350 | — |
 | Uña Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $500 | — |
 | Retoque Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $400 | — |
 | Uña Tip con Gel · hasta el #2, hasta 2 tonos lisos | desde $450 | — |
 | Retoque de Uña Tip con Gel · hasta el #3, hasta 2 tonos lisos | desde $350 | — |
-| Acripie | $380 | — |
+| Acripie | desde $380 | — |
 | Retiro de Acrílico | $100 | — |
 
 ## Extensiones de Pestañas
@@ -105,7 +105,7 @@ Precios en pesos mexicanos (MXN).
 | Servicio | Precio | Duración |
 | --- | --- | --- |
 | Diseño de Ceja · perfilado, diseño y laminación | $450 | — |
-| Laminado de Ceja · perfilado y laminación | $450 | — |
+| Laminado de Ceja · perfilado y laminación | $500 | — |
 | Ceja con Cera | $220 | — |
 
 ## Depilación con Cera y Maquillaje

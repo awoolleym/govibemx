@@ -157,13 +157,13 @@ PRICES = {
 "unas": {
   "es": "Acrílico y Esculturales", "en": "Acrylic & Sculpted Nails",
   "items": [
-    ("Acrílico sobre uña natural", "Acrylic over Natural Nail", "400", "", "", ""),
-    ("Retoque de Acrílico", "Acrylic Fill", "350", "", "", ""),
+    ("Acrílico sobre uña natural", "Acrylic over Natural Nail", "~400", "", "", ""),
+    ("Retoque de Acrílico", "Acrylic Fill", "~350", "", "", ""),
     ("Uña Escultural con Gel", "Sculpted Gel Nail", "~500", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
     ("Retoque Escultural con Gel", "Sculpted Gel Fill", "~400", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
     ("Uña Tip con Gel", "Gel Tip Nail", "~450", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
     ("Retoque de Uña Tip con Gel", "Gel Tip Fill", "~350", "", "hasta el #3, hasta 2 tonos lisos", "up to length #3, up to 2 solid shades"),
-    ("Acripie", "Acrylic — Toes", "380", "", "", ""),
+    ("Acripie", "Acrylic — Toes", "~380", "", "", ""),
     ("Retiro de Acrílico", "Acrylic Removal", "100", "", "", "")]},
 "pestanas": {
   "es": "Extensiones de Pestañas", "en": "Eyelash Extensions",
@@ -186,7 +186,7 @@ PRICES = {
   "es": "Cejas", "en": "Brows",
   "items": [
     ("Diseño de Ceja", "Brow Design", "450", "", "perfilado, diseño y laminación", "shaping, design and lamination"),
-    ("Laminado de Ceja", "Brow Lamination", "450", "", "perfilado y laminación", "shaping and lamination"),
+    ("Laminado de Ceja", "Brow Lamination", "500", "", "perfilado y laminación", "shaping and lamination"),
     ("Ceja con Cera", "Brow Wax", "220", "", "", "")]},
 "depilacion": {
   "es": "Depilación con Cera y Maquillaje", "en": "Waxing & Makeup",
@@ -1120,6 +1120,12 @@ def salon_ld(lang):
     return '<script type="application/ld+json">%s</script>' % json.dumps(d, ensure_ascii=False)
 
 
+# Cuántos servicios hay. Estaba escrito "67" a mano en ocho sitios —el
+# llms.txt, la ficha de agentes, AGENTS.md, el sitemap en prosa, la
+# descripción de la herramienta get_prices…— y al quitar un servicio de la
+# lista los ocho pasaron a mentir a la vez, sin que nada avisara. Se cuenta.
+N_SERVICIOS = sum(len(g["items"]) for g in PRICES.values())
+
 FEATURED = [
   ("cabello", 1), ("cabello", 2), ("cabello", 8),
   ("tratamientos", 0), ("pestanas", 0), ("mani-pedi", 2)]
@@ -1610,7 +1616,7 @@ HERRAMIENTAS = [
          }},
         {"name": "get_prices",
          "title": "Consultar precios",
-         "description": "Los 67 servicios con precio en pesos y duración. "
+         "description": f"Los {N_SERVICIOS} servicios con precio en pesos y duración. "
                         "Los que dicen «desde» son precio de partida, no fijo.",
          "url": f"{SITE}/llms.txt",
          "inputSchema": {"type": "object", "properties": {}}},
@@ -1931,7 +1937,7 @@ SERVICE_PAGES = [
       "Si vas a hacer manos y pies el mismo día, el <strong>paquete de mani spa + pedi spa con gel</strong> ($750) es la opción conveniente: los dos servicios completos con gel en ambos.",
       "En <strong>gel y esmalte</strong> cobramos por separado cuando solo quieres el color: <strong>gel en manos</strong> ($180), <strong>gel en pies</strong> ($220) o <strong>esmalte tradicional</strong> ($150). Todos incluyen hasta dos tonos lisos; los tonos adicionales o los diseños tienen un costo extra pequeño que te decimos antes.",
       "Las <strong>vitaminas</strong> ($150) son tratamientos para la uña natural, no color. El <strong>calcio</strong> fortalece, el <strong>rubber</strong> cubre imperfecciones y da cuerpo a uñas delgadas o débiles, y la <strong>vitamina</strong> protege mientras la uña se recupera. Si traes las uñas maltratadas después de mucho acrílico, empieza por aquí.",
-      "En <strong>acrílico y esculturales</strong> manejamos acrílico sobre uña natural ($400), uña escultural con gel (desde $500) y uña tip con gel (desde $450). Los retoques son más económicos que el juego completo y te recomendamos hacerlos cada tres o cuatro semanas: esperar más tiempo daña la uña natural. El <strong>retiro</strong> ($100) lo hacemos siempre con técnica, nunca arrancando.",
+      "En <strong>acrílico y esculturales</strong> manejamos acrílico sobre uña natural (desde $400), uña escultural con gel (desde $500) y uña tip con gel (desde $450). Los retoques son más económicos que el juego completo y te recomendamos hacerlos cada tres o cuatro semanas: esperar más tiempo daña la uña natural. El <strong>retiro</strong> ($100) lo hacemos siempre con técnica, nunca arrancando.",
       "Una nota honesta: no todas las manos necesitan acrílico. Si tu uña natural está en buen estado, un gel bien puesto se ve igual de bien y cuida más. Te lo vamos a decir.",
       "Las <strong>uñas en gel tienen 5 días de garantía</strong> — el resto de nuestros servicios, 72 horas. Si se te despostilla algo dentro de ese plazo, regresas y lo corregimos sin costo."]),
    en=dict(eyebrow="Nails · Roma Norte",
@@ -1945,20 +1951,20 @@ SERVICE_PAGES = [
       "If you are doing hands and feet the same day, the <strong>spa mani + spa pedi package with gel</strong> ($750) is the convenient option: both full services with gel on each.",
       "In <strong>gel and polish</strong> we charge separately when you only want color: <strong>gel on hands</strong> ($180), <strong>gel on feet</strong> ($220) or <strong>regular polish</strong> ($150). All include up to two solid shades; additional shades or designs carry a small extra cost that we tell you beforehand.",
       "<strong>Nail vitamins</strong> ($150) are treatments for the natural nail, not color. <strong>Calcium</strong> strengthens, <strong>rubber base</strong> covers imperfections and adds body to thin or weak nails, and <strong>nail vitamin</strong> protects while the nail recovers. If your nails are worn down after a long stretch of acrylic, start here.",
-      "In <strong>acrylic and sculpted nails</strong> we offer acrylic over the natural nail ($400), sculpted gel nails (from $500) and gel tips (from $450). Fills cost less than a full set, and we recommend them every three or four weeks — waiting longer damages the natural nail. <strong>Removal</strong> ($100) is always done properly, never by prying.",
+      "In <strong>acrylic and sculpted nails</strong> we offer acrylic over the natural nail (from $400), sculpted gel nails (from $500) and gel tips (from $450). Fills cost less than a full set, and we recommend them every three or four weeks — waiting longer damages the natural nail. <strong>Removal</strong> ($100) is always done properly, never by prying.",
       "One honest note: not every hand needs acrylic. If your natural nail is in good shape, a well-applied gel looks just as good and treats it better. We will tell you so.",
       "<strong>Gel nails carry a 5-day guarantee</strong> — every other service, 72 hours. If anything chips within that window, come back and we will fix it at no cost."])),
  dict(key="lashes", es_slug="/pestanas-y-cejas.html", en_slug="/en/lashes-and-brows.html",
    keys=["pestanas", "cejas", "depilacion"],
    es=dict(eyebrow="Pestañas y cejas · Roma Norte",
      title="Extensiones de Pestañas y Cejas en Roma Norte | Stilo Salón",
-     desc="Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258.",
+     desc="Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $500. Roma Norte, CDMX. Citas: 55 2299 3258.",
      h1="Extensiones de pestañas y diseño de cejas en Roma Norte",
      intro="¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está toda la información detallada de esta maravillosa forma de lucir unos ojos y unas cejas de impacto.",
      paras=[]),
    en=dict(eyebrow="Lashes & brows · Roma Norte",
      title="Eyelash Extensions & Brows in Roma Norte | Stilo Salón",
-     desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City.",
+     desc="Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $500. Roma Norte, Mexico City.",
      h1="Eyelash extensions and brow design in Roma Norte",
      intro="Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.",
      paras=[]))]
@@ -2083,12 +2089,14 @@ def lash_guide(lang):
     out.append("<ul>" + "".join(f"<li>{e(c)}</li>" for c in CUIDADOS_LIFT[lang]) + "</ul>")
     out.append(f'<h2>{"Cejas: diseño y laminado" if es else "Brows: design and lamination"}</h2>')
     out.append('<p>' + ("El <strong>diseño de ceja</strong> ($450) combina trazado, depilación y planchado, mapeado a tu rostro. "
-        "El <strong>laminado de ceja</strong> ($450) sigue el mismo proceso, pero el planchado va <strong>hacia arriba</strong>, "
-        "que es lo que da el efecto de ceja más poblada y peinada."
+        "El <strong>laminado de ceja</strong> ($500) sigue el mismo proceso, pero el planchado va <strong>hacia arriba</strong>, "
+        "que es lo que da el efecto de ceja más poblada y peinada. Si sólo quieres perfilar y quitar lo que sobra, la "
+        "<strong>ceja con cera</strong> ($220) hace eso y nada más."
         if es else
         "<strong>Brow design</strong> ($450) combines mapping, waxing and pressing, shaped to your face. "
-        "<strong>Brow lamination</strong> ($450) follows the same process, but the hair is pressed <strong>upward</strong>, "
-        "which is what creates the fuller, brushed-up look.") + '</p>')
+        "<strong>Brow lamination</strong> ($500) follows the same process, but the hair is pressed <strong>upward</strong>, "
+        "which is what creates the fuller, brushed-up look. If you only want it shaped and tidied, a "
+        "<strong>brow wax</strong> ($220) does that and nothing else.") + '</p>')
     out.append('<p class="muted">' + ("También hacemos depilación con cera de rostro y axilas, y maquillaje ($950) para eventos. "
         "La lista completa está abajo."
         if es else "We also offer facial and underarm waxing, and makeup application ($950) for events. "
@@ -2981,7 +2989,7 @@ def main():
              "",
              "> Salón de belleza en Roma Norte, Ciudad de México. Cabello, uñas, "
              "extensiones de pestañas y diseño de cejas. La lista de precios "
-             "completa está publicada: 67 servicios con precio y duración.",
+             "completa está publicada: " f"{N_SERVICIOS} servicios con precio y duración.",
              "",
              f"- Dirección: {NAP['street']}, {NAP['locality']}, {NAP['postal']}, {NAP['city']}, México.",
              f"- Citas: {NAP['tel1_display']} · {NAP['tel2_display']} · WhatsApp {NAP['tel1_display']}.",
@@ -3012,7 +3020,7 @@ def main():
             o.append("")
         o += ["## Páginas",
               "",
-              f"- [Precios]({SITE}/precios): los 67 servicios con precio y duración.",
+              f"- [Precios]({SITE}/precios): los {N_SERVICIOS} servicios con precio y duración.",
               f"- [Cabello]({SITE}/cabello): corte, color, balayage, babylights y alisados.",
               f"- [Uñas]({SITE}/unas): acrílico, gel, escultural, manicure y pedicure.",
               f"- [Pestañas y cejas]({SITE}/pestanas-y-cejas): extensiones en cinco técnicas, lifting y diseño de ceja.",
@@ -3092,7 +3100,7 @@ La fuente de los precios es una sola y se publica entera.
 
 ## Datos legibles por máquina
 
-- `{SITE}/llms.txt` — resumen, datos del negocio y los 67 servicios con precio.
+- `{SITE}/llms.txt` — resumen, datos del negocio y los {N_SERVICIOS} servicios con precio.
 - `{SITE}/llms-full.txt` — el texto completo de las 20 páginas.
 - `{SITE}/sitemap.md` — el mapa del sitio con enlaces y descripciones.
 - `{SITE}/sitemap.xml` — el mismo mapa en XML.
@@ -3102,7 +3110,7 @@ La fuente de los precios es una sola y se publica entera.
 
 ## Qué se puede hacer
 
-- `get_prices` — leer los 67 servicios con precio y duración.
+- `get_prices` — leer los {N_SERVICIOS} servicios con precio y duración.
 - `get_location_and_hours` — dirección, teléfonos y horario.
 - `book_appointment` — dejar pedida una cita. No reserva un hueco: redacta
   el mensaje y lo manda por WhatsApp al salón, que confirma por ese chat.
@@ -3143,7 +3151,7 @@ Nada que configurar, pero conviene saber cuatro cosas:
 
 Todo se lee con un GET, sin llave ni registro:
 
-    curl https://stilo-salon.com/llms.txt          # resumen y los 67 precios
+    curl https://stilo-salon.com/llms.txt          # resumen y los {N_SERVICIOS} precios
     curl https://stilo-salon.com/llms-full.txt     # el texto de las 20 páginas
     curl https://stilo-salon.com/precios.md        # una página suelta, en Markdown
     curl https://stilo-salon.com/.well-known/mcp.json
@@ -3190,7 +3198,7 @@ cabecera `Link` con llms.txt y las dos fichas.
         "name": "Stilo Salón",
         "description": ("Salón de belleza en Roma Norte, Ciudad de México. "
                         "Cabello, uñas, extensiones de pestañas y diseño de cejas, "
-                        "con la lista completa de 67 precios publicada."),
+                        f"con la lista completa de {N_SERVICIOS} precios publicada."),
         "url": f"{SITE}/",
         "contact": NAP["email"],
         "telephone": NAP["tel1"],
@@ -3216,7 +3224,7 @@ cabecera `Link` con llms.txt y las dos fichas.
                         "Roma Norte, CDMX."),
         "resources": [
             {"uri": f"{SITE}/llms.txt", "name": "Resumen y lista de precios",
-             "description": "Los 67 servicios con precio y duración, horario, dirección y garantías.",
+             "description": f"Los {N_SERVICIOS} servicios con precio y duración, horario, dirección y garantías.",
              "mimeType": "text/plain"},
             {"uri": f"{SITE}/precios", "name": "Página de precios",
              "description": "La lista completa, en HTML.", "mimeType": "text/html"},

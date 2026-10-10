@@ -72,13 +72,13 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
-| Acrylic over Natural Nail | $400 | — |
-| Acrylic Fill | $350 | — |
+| Acrylic over Natural Nail | from $400 | — |
+| Acrylic Fill | from $350 | — |
 | Sculpted Gel Nail · up to length #2, up to 2 solid shades | from $500 | — |
 | Sculpted Gel Fill · up to length #2, up to 2 solid shades | from $400 | — |
 | Gel Tip Nail · up to length #2, up to 2 solid shades | from $450 | — |
 | Gel Tip Fill · up to length #3, up to 2 solid shades | from $350 | — |
-| Acrylic — Toes | $380 | — |
+| Acrylic — Toes | from $380 | — |
 | Acrylic Removal | $100 | — |
 
 ## Eyelash Extensions
@@ -105,7 +105,7 @@ Prices in Mexican pesos (MXN).
 | Service | Price | Duration |
 | --- | --- | --- |
 | Brow Design · shaping, design and lamination | $450 | — |
-| Brow Lamination · shaping and lamination | $450 | — |
+| Brow Lamination · shaping and lamination | $500 | — |
 | Brow Wax | $220 | — |
 
 ## Waxing & Makeup

@@ -60,13 +60,13 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 
 ## Acrílico y Esculturales
 
-- Acrílico sobre uña natural: $400
-- Retoque de Acrílico: $350
+- Acrílico sobre uña natural: desde $400
+- Retoque de Acrílico: desde $350
 - Uña Escultural con Gel: desde $500 · hasta el #2, hasta 2 tonos lisos
 - Retoque Escultural con Gel: desde $400 · hasta el #2, hasta 2 tonos lisos
 - Uña Tip con Gel: desde $450 · hasta el #2, hasta 2 tonos lisos
 - Retoque de Uña Tip con Gel: desde $350 · hasta el #3, hasta 2 tonos lisos
-- Acripie: $380
+- Acripie: desde $380
 - Retiro de Acrílico: $100
 
 ## Extensiones de Pestañas
@@ -89,7 +89,7 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 ## Cejas
 
 - Diseño de Ceja: $450 · perfilado, diseño y laminación
-- Laminado de Ceja: $450 · perfilado y laminación
+- Laminado de Ceja: $500 · perfilado y laminación
 - Ceja con Cera: $220
 
 ## Depilación con Cera y Maquillaje
@@ -350,7 +350,7 @@ A lash lift raises your natural lash from the root for a natural effect. No synt
 
 ## Brows: design and lamination
 
-Brow design ($450) combines mapping, waxing and pressing, shaped to your face. Brow lamination ($450) follows the same process, but the hair is pressed upward, which is what creates the fuller, brushed-up look.
+Brow design ($450) combines mapping, waxing and pressing, shaped to your face. Brow lamination ($500) follows the same process, but the hair is pressed upward, which is what creates the fuller, brushed-up look. If you only want it shaped and tidied, a brow wax ($220) does that and nothing else.
 
 We also offer facial and underarm waxing, and makeup application ($950) for events. The full list is below.
 
@@ -558,7 +558,7 @@ When suits you?
 
 URL: https://stilo-salon.com/en/lashes-and-brows
 
-_Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $450. Roma Norte, Mexico City._
+_Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $500. Roma Norte, Mexico City._
 
 Lashes & brows · Roma Norte
 
@@ -604,7 +604,7 @@ Prices in Mexican pesos (MXN).
 | Service | Price | Duration |
 | --- | --- | --- |
 | Brow Design · shaping, design and lamination | $450 | — |
-| Brow Lamination · shaping and lamination | $450 | — |
+| Brow Lamination · shaping and lamination | $500 | — |
 | Brow Wax | $220 | — |
 
 ### Waxing & Makeup
@@ -722,13 +722,13 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
-| Acrylic over Natural Nail | $400 | — |
-| Acrylic Fill | $350 | — |
+| Acrylic over Natural Nail | from $400 | — |
+| Acrylic Fill | from $350 | — |
 | Sculpted Gel Nail · up to length #2, up to 2 solid shades | from $500 | — |
 | Sculpted Gel Fill · up to length #2, up to 2 solid shades | from $400 | — |
 | Gel Tip Nail · up to length #2, up to 2 solid shades | from $450 | — |
 | Gel Tip Fill · up to length #3, up to 2 solid shades | from $350 | — |
-| Acrylic — Toes | $380 | — |
+| Acrylic — Toes | from $380 | — |
 | Acrylic Removal | $100 | — |
 
 
@@ -1081,13 +1081,13 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
-| Acrylic over Natural Nail | $400 | — |
-| Acrylic Fill | $350 | — |
+| Acrylic over Natural Nail | from $400 | — |
+| Acrylic Fill | from $350 | — |
 | Sculpted Gel Nail · up to length #2, up to 2 solid shades | from $500 | — |
 | Sculpted Gel Fill · up to length #2, up to 2 solid shades | from $400 | — |
 | Gel Tip Nail · up to length #2, up to 2 solid shades | from $450 | — |
 | Gel Tip Fill · up to length #3, up to 2 solid shades | from $350 | — |
-| Acrylic — Toes | $380 | — |
+| Acrylic — Toes | from $380 | — |
 | Acrylic Removal | $100 | — |
 
 ## Eyelash Extensions
@@ -1114,7 +1114,7 @@ Prices in Mexican pesos (MXN).
 | Service | Price | Duration |
 | --- | --- | --- |
 | Brow Design · shaping, design and lamination | $450 | — |
-| Brow Lamination · shaping and lamination | $450 | — |
+| Brow Lamination · shaping and lamination | $500 | — |
 | Brow Wax | $220 | — |
 
 ## Waxing & Makeup
@@ -1297,7 +1297,7 @@ El lifting eleva tu pestaña natural desde la raíz para dar un efecto natural. 
 
 ## Cejas: diseño y laminado
 
-El diseño de ceja ($450) combina trazado, depilación y planchado, mapeado a tu rostro. El laminado de ceja ($450) sigue el mismo proceso, pero el planchado va hacia arriba, que es lo que da el efecto de ceja más poblada y peinada.
+El diseño de ceja ($450) combina trazado, depilación y planchado, mapeado a tu rostro. El laminado de ceja ($500) sigue el mismo proceso, pero el planchado va hacia arriba, que es lo que da el efecto de ceja más poblada y peinada. Si sólo quieres perfilar y quitar lo que sobra, la ceja con cera ($220) hace eso y nada más.
 
 También hacemos depilación con cera de rostro y axilas, y maquillaje ($950) para eventos. La lista completa está abajo.
 
@@ -1491,7 +1491,7 @@ Tu WhatsApp
 
 URL: https://stilo-salon.com/pestanas-y-cejas
 
-_Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $450. Roma Norte, CDMX. Citas: 55 2299 3258._
+_Extensiones de pestañas desde $750: 1x1, flat, YY, híbridas y volumen ruso. Lifting $450, laminado de ceja $500. Roma Norte, CDMX. Citas: 55 2299 3258._
 
 Pestañas y cejas · Roma Norte
 
@@ -1537,7 +1537,7 @@ Precios en pesos mexicanos (MXN).
 | Servicio | Precio | Duración |
 | --- | --- | --- |
 | Diseño de Ceja · perfilado, diseño y laminación | $450 | — |
-| Laminado de Ceja · perfilado y laminación | $450 | — |
+| Laminado de Ceja · perfilado y laminación | $500 | — |
 | Ceja con Cera | $220 | — |
 
 ### Depilación con Cera y Maquillaje
@@ -1903,13 +1903,13 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
-| Acrílico sobre uña natural | $400 | — |
-| Retoque de Acrílico | $350 | — |
+| Acrílico sobre uña natural | desde $400 | — |
+| Retoque de Acrílico | desde $350 | — |
 | Uña Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $500 | — |
 | Retoque Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $400 | — |
 | Uña Tip con Gel · hasta el #2, hasta 2 tonos lisos | desde $450 | — |
 | Retoque de Uña Tip con Gel · hasta el #3, hasta 2 tonos lisos | desde $350 | — |
-| Acripie | $380 | — |
+| Acripie | desde $380 | — |
 | Retiro de Acrílico | $100 | — |
 
 ## Extensiones de Pestañas
@@ -1936,7 +1936,7 @@ Precios en pesos mexicanos (MXN).
 | Servicio | Precio | Duración |
 | --- | --- | --- |
 | Diseño de Ceja · perfilado, diseño y laminación | $450 | — |
-| Laminado de Ceja · perfilado y laminación | $450 | — |
+| Laminado de Ceja · perfilado y laminación | $500 | — |
 | Ceja con Cera | $220 | — |
 
 ## Depilación con Cera y Maquillaje
@@ -2009,11 +2009,11 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
-| Acrílico sobre uña natural | $400 | — |
-| Retoque de Acrílico | $350 | — |
+| Acrílico sobre uña natural | desde $400 | — |
+| Retoque de Acrílico | desde $350 | — |
 | Uña Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $500 | — |
 | Retoque Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $400 | — |
 | Uña Tip con Gel · hasta el #2, hasta 2 tonos lisos | desde $450 | — |
 | Retoque de Uña Tip con Gel · hasta el #3, hasta 2 tonos lisos | desde $350 | — |
-| Acripie | $380 | — |
+| Acripie | desde $380 | — |
 | Retiro de Acrílico | $100 | — |

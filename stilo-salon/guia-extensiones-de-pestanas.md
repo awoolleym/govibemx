@@ -78,7 +78,7 @@ El lifting eleva tu pestaña natural desde la raíz para dar un efecto natural. 
 
 ## Cejas: diseño y laminado
 
-El diseño de ceja ($450) combina trazado, depilación y planchado, mapeado a tu rostro. El laminado de ceja ($450) sigue el mismo proceso, pero el planchado va hacia arriba, que es lo que da el efecto de ceja más poblada y peinada.
+El diseño de ceja ($450) combina trazado, depilación y planchado, mapeado a tu rostro. El laminado de ceja ($500) sigue el mismo proceso, pero el planchado va hacia arriba, que es lo que da el efecto de ceja más poblada y peinada. Si sólo quieres perfilar y quitar lo que sobra, la ceja con cera ($220) hace eso y nada más.
 
 También hacemos depilación con cera de rostro y axilas, y maquillaje ($950) para eventos. La lista completa está abajo.
 

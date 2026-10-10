@@ -78,7 +78,7 @@ A lash lift raises your natural lash from the root for a natural effect. No synt
 
 ## Brows: design and lamination
 
-Brow design ($450) combines mapping, waxing and pressing, shaped to your face. Brow lamination ($450) follows the same process, but the hair is pressed upward, which is what creates the fuller, brushed-up look.
+Brow design ($450) combines mapping, waxing and pressing, shaped to your face. Brow lamination ($500) follows the same process, but the hair is pressed upward, which is what creates the fuller, brushed-up look. If you only want it shaped and tidied, a brow wax ($220) does that and nothing else.
 
 We also offer facial and underarm waxing, and makeup application ($950) for events. The full list is below.
 
