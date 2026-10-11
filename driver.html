@@ -68,6 +68,20 @@
   .lock .ok-btn:disabled { opacity: .4; }
   .lock-msg { min-height: 18px; font-size: 13px; color: var(--warn); }
   .bar { display: flex; gap: 8px; justify-content: flex-end; }
+  .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 800; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .guest { width: 100%; background: #0b1016; color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 16px; font-family: inherit; }
+  .screen-top { display: flex; gap: 10px; }
+  .home-btn { flex: 1; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 12px; font-size: 17px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .langs { display: flex; border: 2px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .langs button { background: transparent; color: var(--muted); border: none; padding: 0 18px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .langs button.on { background: #00C9FF; color: #002b36; }
+  .sections { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sections button { display: flex; align-items: center; gap: 8px; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 11px 10px; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .sections button .e { font-size: 20px; }
+  .sections button.on { border-color: #00C9FF; }
+  .sections button:active, .home-btn:active { transform: scale(.97); }
+  .sent { font-size: 12px; color: var(--ok); min-height: 16px; }
   .bar button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 18px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: inherit; }
 </style>
 </head>
@@ -75,7 +89,7 @@
 <main>
   <div>
     <h1>🚐 GoVibeMX · Rear screen</h1>
-    <p class="sub">Pick today's trip. The tablet in the back switches within a few seconds.</p>
+    <p class="sub">Control the tablet in the back: trip, language and what it shows.</p>
   </div>
 
   <section class="lock" id="lock">
@@ -95,8 +109,24 @@
     <div class="meta" id="tablet-meta"></div>
   </div>
 
+  <div class="card">
+    <div class="k">New passenger</div>
+    <input class="guest" id="guest" type="text" maxlength="30" placeholder="Passenger name (optional), e.g. Sarah & Tom" autocomplete="off">
+    <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and show the big welcome</small></button>
+  </div>
+
+  <div class="card">
+    <div class="k">On the tablet</div>
+    <div class="screen-top">
+      <button class="home-btn" data-cmd="home">⬅ Home</button>
+      <div class="langs"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+    </div>
+    <div class="sections" id="sections"></div>
+    <div class="sent" id="sent"></div>
+  </div>
+
+  <div class="k" style="margin-top:4px">Trip</div>
   <div class="trips" id="trips"></div>
-  <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and greet the next passenger</small></button>
   </section>
 
   <p class="note">Van: <b id="van"></b>. You can also change the trip on the tablet itself: press and hold the clock for 1.5 seconds.</p>
@@ -120,6 +150,25 @@
     { id: 'home',     icon: '🏁', name: 'Back to Mexico City',           shows: 'Map to the Four Seasons + Teotihuacán guide' }
   ];
   const NAMES = Object.fromEntries(OPTIONS.map(o => [o.id, o.icon + ' ' + o.name]));
+
+  // Sections the tablet can open (value → tablet screen it shows).
+  const SECTIONS = [
+    { v: 'map', e: '🗺️', n: 'Live map', screen: 'map-screen' },
+    { v: 'welcome', e: '👋', n: 'Welcome screen' },
+    { v: 'teo', e: '🛕', n: 'Teotihuacán guide', screen: 'guide' },
+    { v: 'balloon', e: '🎈', n: 'Balloon 101', screen: 'guide' },
+    { v: 'explorer:hoods', e: '🇲🇽', n: 'CDMX Explorer', screen: 'explorer-screen' },
+    { v: 'explorer:museums', e: '🏛️', n: 'Museums', screen: 'explorer-screen' },
+    { v: 'explorer:quiz', e: '🎯', n: 'CDMX Quiz', screen: 'explorer-screen' },
+    { v: 'explorer:spanish', e: '🗣️', n: 'Spanish 101', screen: 'explorer-screen' },
+    { v: 'eat', e: '🍽️', n: 'Eat & Drink', screen: 'eat-screen' },
+    { v: 'kids:spot', e: '🦎', n: 'Kids: Spot it!', screen: 'kids-screen' },
+    { v: 'transit', e: '🚇', n: 'Getting Around', screen: 'transit-screen' },
+    { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
+    { v: 'services', e: '🚐', n: 'Services' },
+    { v: 'review', e: '⭐', n: 'Ask for a review' }
+  ];
+  const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'GoVibeMX website' };
 
   const $ = (id) => document.getElementById(id);
   $('van').textContent = VAN_ID;
@@ -234,9 +283,13 @@
     bits.push(fresh ? 'Online · seen ' + ago + ' s ago' : 'Offline · last seen ' + Math.round(ago / 60) + ' min ago');
     if (tablet.kmLeft != null) bits.push(tablet.kmLeft + ' km to go');
     if (tablet.gps) bits.push('GPS: ' + ({ ok: 'live', wait: 'searching', denied: 'off', demo: 'demo' }[tablet.gps] || tablet.gps));
+    if (tablet.screen) bits.push('Showing: ' + (SCREEN_NAMES[tablet.screen] || tablet.screen));
+    if (tablet.lang) bits.push(tablet.lang.toUpperCase());
+    document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
     $('tablet-meta').textContent = bits.join(' · ');
   }
 
+  $('sections').innerHTML = SECTIONS.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('');
   renderTrips(); renderTablet();
   setInterval(renderTablet, 5000);
 
@@ -264,9 +317,24 @@
     $('new-ride').addEventListener('click', async () => {
       if ($('controls').hidden) return;
       const b = $('new-ride'); b.disabled = true;
-      try { await set(ref(db, base + '/newRide'), Date.now()); b.firstChild.textContent = '✅ Sent: new ride '; }
+      try { await set(ref(db, base + '/newRide'), { at: Date.now(), name: $('guest').value.trim() }); b.firstChild.textContent = '✅ Sent: new ride '; $('guest').value = ''; }
       catch (err) { $('tablet-meta').textContent = 'Couldn\'t send: ' + err.message; }
       setTimeout(() => { b.firstChild.textContent = '🆕 New ride'; b.disabled = false; }, 2500);
+    });
+
+    // Screen commands: go home, change language, open a section.
+    const sendCmd = async (a, v, label) => {
+      if ($('controls').hidden) return;
+      try { await set(ref(db, base + '/cmd'), { a, v: v || '', at: Date.now() }); $('sent').textContent = '✅ Sent: ' + label; }
+      catch (err) { $('sent').textContent = 'Couldn\'t send: ' + err.message; }
+      setTimeout(() => { $('sent').textContent = ''; }, 2500);
+    };
+    document.querySelector('.home-btn').addEventListener('click', () => sendCmd('home', '', 'Home'));
+    document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => sendCmd('lang', b.dataset.lang, b.dataset.lang === 'es' ? 'Español' : 'English')));
+    $('sections').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-open]'); if (!b) return;
+      const sec = SECTIONS.find(x => x.v === b.dataset.open);
+      sendCmd(sec.v === 'welcome' ? 'welcome' : 'open', sec.v, sec.n);
     });
 
     $('trips').addEventListener('click', async (e) => {

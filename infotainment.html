@@ -119,6 +119,38 @@
   .btn-biz .btn-sub { font-size: 10px; }
 
   /* FOOTER */
+  /* Welcome screen */
+  .welcome { position: fixed; inset: 0; z-index: 2500; display: flex; flex-direction: column; cursor: pointer;
+    background: radial-gradient(ellipse at 20% 10%, #5a1446 0%, transparent 55%), radial-gradient(ellipse at 85% 90%, #08443c 0%, transparent 55%), #07050c;
+    animation: wIn .6s ease; }
+  .welcome[hidden] { display: none; }
+  @keyframes wIn { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
+  .welcome-papel { height: 70px; margin: 0; }
+  .welcome-papel svg { height: 70px; }
+  .welcome-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 10px 24px 30px; text-align: center; }
+  .welcome-logo { height: 90px; width: auto; filter: drop-shadow(0 6px 18px rgba(0,0,0,.6)); }
+  .welcome-hi { font-family: 'Bungee', 'Segoe UI', Roboto, sans-serif; font-size: 64px; line-height: 1.05;
+    background: linear-gradient(90deg, #FF4081, #FFAB40, #FFEB3B, #69F0AE, #40C4FF); -webkit-background-clip: text; background-clip: text; color: transparent; text-wrap: balance; }
+  .welcome-es { font-size: 28px; font-weight: 800; color: #F8BBD0; }
+  .welcome-trip { font-size: 22px; font-weight: 800; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); border-radius: 30px; padding: 10px 22px; }
+  .welcome-trip[hidden] { display: none; }
+  .welcome-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 980px; }
+  .wchip { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); border-radius: 16px; padding: 10px 16px; font-size: 18px; color: #f3eef7; }
+  .wchip[hidden] { display: none; }
+  .wchip .i { font-size: 24px; }
+  .welcome-go { margin-top: 6px; background: linear-gradient(90deg, #FF4081, #FF9100); color: #fff; border: none; border-radius: 34px; padding: 16px 44px; font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 26px rgba(255,64,129,.45); }
+  @media (max-width: 820px) { .welcome-hi { font-size: 42px; } .welcome-es { font-size: 22px; } }
+  /* Review prompt */
+  .review-panel { background: radial-gradient(ellipse at 50% 0%, #4a3a0a 0%, #121212 60%); width: 90%; max-width: 680px; border: 1px solid #FFD740; }
+  .review-stars { font-size: 40px; letter-spacing: 4px; }
+  .review-panel h2 { margin: 6px 0 4px; font-size: 28px; color: #FFE082; }
+  .review-panel .lead { color: #f1e6c8; font-size: 16px; margin: 0 0 14px; }
+  .review-row { display: flex; gap: 16px; align-items: center; text-align: left; flex-wrap: wrap; justify-content: center; }
+  .review-how { display: flex; flex-direction: column; gap: 8px; max-width: 320px; }
+  .review-how b { font-size: 18px; color: #fff; }
+  .review-how span { font-size: 14px; color: #e0d6bb; }
+  .review-read { color: #FFD740; font-weight: 700; text-decoration: none; border-bottom: 1px dotted #FFD740; align-self: flex-start; }
+  .dock-review { background: linear-gradient(90deg, #FFD740, #FF9100); color: #2b1300; border: none; border-radius: 18px; padding: 8px 14px; font-size: 13px; font-weight: 800; cursor: pointer; text-align: left; line-height: 1.2; }
   /* Web viewer */
   #web-screen { flex-direction: column; background: #05070b; }
   .web-bar { display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: #0d1117; border-bottom: 1px solid #1f2633; flex-shrink: 0; }
@@ -559,6 +591,39 @@
   <p class="driver-note" id="remote-status">Phone remote: connecting…</p>
 </div><div class="close-btn" onclick="closeModal('driverModal')">X</div></div>
 
+<!-- Welcome screen for each new passenger (New ride) -->
+<div id="welcome" class="welcome" hidden onclick="hideWelcome()">
+  <div class="papel welcome-papel" id="welcome-papel" aria-hidden="true"></div>
+  <div class="welcome-body">
+    <img class="welcome-logo" src="https://img1.wsimg.com/isteam/ip/a2f36b16-54d7-45cc-96f6-48f6a722fb83/GoVibeAlta.png/:/rs=w:1344,h:600,cg:true,m/cr=w:1344,h:600/qt=q:95" alt="GoVibeMX">
+    <div class="welcome-hi" id="welcome-hi">Welcome aboard!</div>
+    <div class="welcome-es" id="welcome-es">¡Bienvenidos a bordo!</div>
+    <div class="welcome-trip" id="welcome-trip"></div>
+    <div class="welcome-chips">
+      <div class="wchip"><span class="i">🕐</span><b id="welcome-time"></b></div>
+      <div class="wchip" id="welcome-wx-chip" hidden><span class="i" id="welcome-wx-i"></span><b id="welcome-wx"></b></div>
+      <div class="wchip"><span class="i">📶</span><span>GoVibeMX WiFi · <b>87654321</b></span></div>
+      <div class="wchip"><span class="i">💧</span><span data-i18n="wWater">Water is on us</span></div>
+    </div>
+    <button class="welcome-go" data-i18n="wGo">Let's go! · ¡Vámonos!</button>
+  </div>
+</div>
+
+<!-- Review prompt (guided tours) -->
+<div id="reviewModal" class="modal"><div class="modal-content review-panel">
+  <div class="review-stars">⭐⭐⭐⭐⭐</div>
+  <h2 data-i18n="rvTitle">Loved your experience?</h2>
+  <p class="lead" data-i18n="rvLead">GoVibeMX is a small local business. A few words from you mean the world to us.</p>
+  <div class="review-row">
+    <img class="svc-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fwa.me%2F525549017902%3Ftext%3DHi%2520Alan%2521%2520Here%2527s%2520my%2520review%2520of%2520today%2527s%2520GoVibeMX%2520experience%2520%25E2%25AD%2590%25E2%25AD%2590%25E2%25AD%2590%25E2%25AD%2590%25E2%25AD%2590%253A%2520" alt="Review QR code">
+    <div class="review-how">
+      <b data-i18n="rvScan">Scan with your phone camera</b>
+      <span data-i18n="rvScanSub">It opens WhatsApp with a message ready: just add a few words and send.</span>
+      <a class="review-read" id="review-read" href="https://govibemx.com/reviews/" data-i18n="rvRead">📖 Read what other travelers say</a>
+    </div>
+  </div>
+</div><div class="close-btn" onclick="closeModal('reviewModal')">X</div></div>
+
 <!-- POI toast -->
 <div id="poiToast" class="poi-toast" onclick="hideToast()">
   <span class="x">×</span>
@@ -773,7 +838,7 @@
 </div>
 
 <nav class="dock">
-  <div class="dock-side"><span id="rate-link">Rate / Calificar ⭐⭐⭐⭐⭐</span><span>Tip / Propina 💲</span></div>
+  <div class="dock-side" id="dock-left"><span id="rate-link">Rate / Calificar ⭐⭐⭐⭐⭐</span><span id="tip-line">Tip / Propina 💲</span></div>
   <div class="dock-nav" id="dock-nav">
     <button data-go="home" onclick="showScreen('home')"><span class="i">🏠</span><span data-i18n="navHome">Home</span></button>
     <button data-go="map-screen" id="nav-map" onclick="showScreen('map-screen')"><span class="i">🗺️</span><span data-i18n="navMap">Map</span></button>
@@ -1016,28 +1081,28 @@ var TRIPS = {
     dest: FOUR_SEASONS, route: ROUTE_TOUR, seconds: ROUTE_TOUR_SECONDS
   },
   city: {
-    icon: '🗺️', guides: ['cdmx'], freeRoam: true, // no fixed route: live position, neighborhoods and sights
+    icon: '🗺️', guides: ['cdmx'], freeRoam: true, guided: true, // no fixed route: live position, neighborhoods and sights
     name: { en: 'CDMX City Tour', es: 'Tour por la CDMX' },
     from: { en: 'Four Seasons', es: 'Four Seasons' },
     to:   { en: 'City tour', es: 'Tour' },
     dest: FOUR_SEASONS, route: ROUTE_TOUR, seconds: ROUTE_TOUR_SECONDS
   },
   balloon: {
-    icon: '🎈', guides: ['teo', 'balloon'],
+    icon: '🎈', guides: ['teo', 'balloon'], guided: true,
     name: { en: 'Hot Air Balloon · Teotihuacán', es: 'Globo Aerostático · Teotihuacán' },
     from: { en: 'Four Seasons', es: 'Four Seasons' },
     to:   { en: 'Balloon\'s Paradise', es: 'Balloon\'s Paradise' },
     dest: BP_DEST, route: ROUTE_BP, seconds: ROUTE_BP_SECONDS
   },
   pyramids: {
-    icon: '🛕', guides: ['teo'],
+    icon: '🛕', guides: ['teo'], guided: true,
     name: { en: 'Pyramids of Teotihuacán', es: 'Pirámides de Teotihuacán' },
     from: { en: 'Four Seasons', es: 'Four Seasons' },
     to:   { en: 'Teotihuacán', es: 'Teotihuacán' },
     dest: TEO_DEST, route: ROUTE_TEO, seconds: ROUTE_TEO_SECONDS
   },
   home: {
-    icon: '🏁', guides: ['teo'],
+    icon: '🏁', guides: ['teo'], guided: true,
     name: { en: 'Back to Mexico City', es: 'Regreso a CDMX' },
     from: { en: 'Teotihuacán', es: 'Teotihuacán' },
     to:   { en: 'Four Seasons', es: 'Four Seasons' },
@@ -1209,7 +1274,7 @@ var POIS = [
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Explorer',
-        amWater: 'Water', webLoading: 'Loading…', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
+        amWater: 'Water', webLoading: 'Loading…', wWater: 'Water is on us', wGo: 'Let\'s go! · ¡Vámonos!', wHi: 'Welcome aboard!', wHiName: 'Welcome aboard, {n}!', rvBtn: '⭐ Loved the tour? Leave us a review', rvTitle: 'Loved your experience?', rvLead: 'GoVibeMX is a small local business. A few words from you mean the world to us.', rvScan: 'Scan with your phone camera', rvScanSub: 'It opens WhatsApp with a message ready: just add a few words and send.', rvRead: '📖 Read what other travelers say', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
         back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Live departures board', airportBoardSub: 'Check your flight before you arrive', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
@@ -1219,7 +1284,7 @@ var I18N = {
         overviewBadge: 'Overview', followBadge: 'Live position', arrived: 'Arrived!', min: 'min', you: 'You are here' },
   es: { yourJourney: 'Tu viaje', toGo: 'Faltan', timeLeft: 'Tiempo', arrival: 'Llegada', openMap: '🗺️ Ver mapa en vivo',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
-        amWater: 'Agua', webLoading: 'Cargando…', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
+        amWater: 'Agua', webLoading: 'Cargando…', wWater: 'El agua va por nuestra cuenta', wGo: '¡Vámonos! · Let\'s go!', wHi: '¡Bienvenidos a bordo!', wHiName: '¡Bienvenidos a bordo, {n}!', rvBtn: '⭐ ¿Te gustó el tour? Déjanos una reseña', rvTitle: '¿Te gustó la experiencia?', rvLead: 'GoVibeMX es un pequeño negocio local. Unas palabras tuyas significan muchísimo para nosotros.', rvScan: 'Escanea con la cámara de tu celular', rvScanSub: 'Se abre WhatsApp con un mensaje listo: agrega unas palabras y envíalo.', rvRead: '📖 Lee lo que dicen otros viajeros', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
         back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Salidas en vivo', airportBoardSub: 'Revisa tu vuelo antes de llegar', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
@@ -1393,6 +1458,7 @@ function launchApp(pkg) {
 function showScreen(id) {
   var s = document.getElementsByClassName('screen');
   for (var i = 0; i < s.length; i++) s[i].classList.toggle('active', s[i].id === id);
+  if (S.booted) setTimeout(reportStatus, 0);
   var nb = document.querySelectorAll('#dock-nav button');
   for (var j = 0; j < nb.length; j++) nb[j].classList.toggle('on', nb[j].getAttribute('data-go') === id);
   if (id === 'map-screen') {
@@ -1772,8 +1838,58 @@ setInterval(function () {
   else $('home').scrollTop = 0;
 }, 15000);
 
+// ---- Welcome screen ----
+var welcomeTimer = null;
+function showWelcome(name) {
+  S.guest = name || '';
+  if (!$('welcome-papel').firstChild) $('welcome-papel').innerHTML = papelSvg(20, true);
+  var n = (S.guest || '').trim();
+  $('welcome-hi').textContent = n ? t('wHiName').replace('{n}', n) : t('wHi');
+  // The second line greets in the other language
+  var other = S.lang === 'es' ? 'en' : 'es';
+  $('welcome-es').textContent = n ? I18N[other].wHiName.replace('{n}', n) : I18N[other].wHi;
+  var tp = TRIPS[S.tripId];
+  $('welcome-trip').hidden = !S.active;
+  if (S.active) $('welcome-trip').textContent = tp.icon + ' ' + tr(tp.name);
+  $('welcome-time').textContent = fmtClock(new Date());
+  $('welcome-wx-chip').hidden = S.temp == null;
+  if (S.temp != null) { $('welcome-wx-i').textContent = wxIcon(S.wcode, S.isDay); $('welcome-wx').textContent = Math.round(S.temp) + '°C · ' + Math.round(S.temp * 9 / 5 + 32) + '°F'; }
+  $('welcome').hidden = false;
+  confetti(120);
+  clearTimeout(welcomeTimer);
+  welcomeTimer = setTimeout(hideWelcome, 30000);
+}
+function hideWelcome() { clearTimeout(welcomeTimer); $('welcome').hidden = true; }
+
+// ---- Commands from the phone remote: go home, change language, open a section ----
+function runCommand(c) {
+  if (!c || !c.a) return;
+  lastTouch = Date.now();
+  hideWelcome();
+  var ms = document.querySelectorAll('.modal');
+  for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
+  if ($('web-screen').classList.contains('active')) $('web-frame').src = 'about:blank';
+  if (c.a === 'home') { showScreen('home'); $('home').scrollTop = 0; }
+  else if (c.a === 'lang' && (c.v === 'en' || c.v === 'es')) setLang(c.v);
+  else if (c.a === 'welcome') showWelcome(S.guest);
+  else if (c.a === 'open') {
+    var v = String(c.v || ''), parts = v.split(':');
+    if (v === 'map') { if (S.active) showScreen('map-screen'); }
+    else if (v === 'teo') openGuide('intro');
+    else if (v === 'balloon') openGuide('balloon');
+    else if (parts[0] === 'explorer') openExplorer('home', parts[1] || 'hoods');
+    else if (v === 'eat') openEat('home');
+    else if (parts[0] === 'kids') { S.kidsTab = parts[1] || 'spot'; openKids(); }
+    else if (v === 'transit') openTransit('home');
+    else if (v === 'spotify') openModal('spotifyModal');
+    else if (v === 'services') openServices();
+    else if (v === 'review') openModal('reviewModal');
+  }
+  reportStatus();
+}
+
 // ---- New ride: reset the screen for the next passenger (driver menu or phone) ----
-function newRide() {
+function newRide(name) {
   clearTrail();
   S.shownPois = {}; S.zoneSeen = {}; S.zone = null; S.quiz = null; S.xTab = 'hoods'; S.eatFilter = 'all'; S.spot = {}; S.kidsTab = 'spot';
   toastQueue = []; toastBusy = false; hideToast();
@@ -1782,7 +1898,7 @@ function newRide() {
   try { speechSynthesis.cancel(); } catch (e) {}
   showScreen('home'); $('home').scrollTop = 0;
   updateVisibility(); highlightZone(); render();
-  showToast({ icon: '👋', name: { en: t('welcome'), es: t('welcome') }, text: { en: t('welcomeText'), es: t('welcomeText') } }, t('welcomeKick'));
+  showWelcome(name);
   if (S.pos && isFree()) setTimeout(updateZone, 16000);
 }
 
@@ -1830,7 +1946,7 @@ function setLang(l) {
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
   renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); refreshPoiPopups(); render();
-  if (S.booted) updateVisibility();
+  if (S.booted) { updateVisibility(); reportStatus(); }
 }
 
 /* =====================================================================
@@ -2122,8 +2238,11 @@ function updateVisibility() {
   var g = document.querySelectorAll('[data-guide]');
   for (var i = 0; i < g.length; i++) g[i].hidden = !hasGuide(g[i].getAttribute('data-guide'));
   $('row-facts').hidden = hasGuide('cdmx'); // already shown beside the journey card
-  var ride = S.active && !!TRIPS[S.tripId].appRide;
-  $('rate-link').textContent = ride ? t('rateRide') : 'Rate / Calificar ⭐⭐⭐⭐⭐';
+  // Bottom-left note: Uber rides ask for an in-app rating; guided tours ask for a review; otherwise rate / tip.
+  var ride = S.active && !!TRIPS[S.tripId].appRide, guided = S.active && !!TRIPS[S.tripId].guided;
+  if (guided) $('dock-left').innerHTML = '<button class="dock-review" onclick="openModal(\'reviewModal\')">' + t('rvBtn') + '</button>';
+  else $('dock-left').innerHTML = '<span id="rate-link">' + (ride ? t('rateRide') : 'Rate / Calificar ⭐⭐⭐⭐⭐') + '</span>' + (ride ? '' : '<span>Tip / Propina 💲</span>');
+  $('review-read').href = S.lang === 'es' ? 'https://govibemx.com/es/resenas/' : 'https://govibemx.com/reviews/';
   if (!S.active) hideToast();
   if (S.active && miniMap) setTimeout(function () { miniMap.invalidateSize(); fitMini(); }, 50);
 }
@@ -2141,7 +2260,8 @@ function renderTripPicker() {
 // Tell the phone remote what the tablet is showing (trip, km left, GPS).
 function reportStatus() {
   if (!window.pushTabletStatus) return;
-  window.pushTabletStatus({ trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+  var scr = document.querySelector('.screen.active');
+  window.pushTabletStatus({ lang: S.lang, screen: scr ? scr.id : 'home', trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
 }
 function setRemoteStatus(state) {
   var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };
@@ -2575,8 +2695,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let lastRide;
     onValue(ref(db, base + '/newRide'), (snap) => {
       const v = snap.val();
-      if (lastRide !== undefined && v && v !== lastRide) newRide();
-      lastRide = v;
+      const key = v && typeof v === 'object' ? v.at : v;
+      if (lastRide !== undefined && key && key !== lastRide) newRide(v && typeof v === 'object' ? v.name : '');
+      lastRide = key;
+    });
+    let lastCmd;
+    onValue(ref(db, base + '/cmd'), (snap) => {
+      const c = snap.val(), key = c && c.at;
+      if (lastCmd !== undefined && key && key !== lastCmd) runCommand(c);
+      lastCmd = key;
     });
     window.pushRemoteTrip = (trip) => set(ref(db, base + '/trip'), trip).catch(() => {});
     window.pushTabletStatus = (st) => set(ref(db, base + '/tablet'), Object.assign({}, st, { at: serverTimestamp() })).catch(() => {});
