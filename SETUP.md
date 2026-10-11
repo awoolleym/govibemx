@@ -152,7 +152,7 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - El nombre y contraseña del Wi-Fi están en `infotainment.html` (busca `var WIFI`).
 - **Despedida 👋:** se abre desde el celular (**Goodbye**) o desde el menú del conductor. Muestra:
   - "¡Gracias, {nombre}!" y "¿Llevas todo?".
-  - El QR de reseña de Google; en Live Map/Uber muestra en su lugar "califica en la app".
+  - El QR de reseña de Google, en todos los viajes. En Live Map/Uber también sale "califica en la app".
   - El QR de govibemx.com para reservar otra vez.
   - Se cierra al tocarla o con New ride.
 - **Streaming:** Netflix, Prime Video, Disney+, Max, YouTube y YouTube Kids (abren como apps).
