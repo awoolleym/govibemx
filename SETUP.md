@@ -162,6 +162,15 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
 - Tras 3 minutos sin tocar, la pantalla vuelve sola al mapa o al inicio. Si hay un video, espera a que termine.
 - Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.
 
+### Medidas y fechas
+- Todo sale en los dos sistemas:
+  - Distancias en km y millas.
+  - Alturas en metros y pies.
+  - Temperatura en °C y °F.
+  - Velocidad en km/h y mph.
+- Los mapas tienen escala en km y millas.
+- Las fechas históricas usan **CE / BCE** en inglés y **e.c. / a.e.c.** (era común) en español. Ejemplos: *1325 CE*, *~100 a.e.c.*
+
 ### 2.4 Tamaño de pantalla
 La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la altura: la pantalla de inicio cabe completa sin desplazarse en 1340×800, 1072×640, 1005×600 y 893×533, y también funciona en vertical. Si quieres todo más grande o más chico, cambia **Initial Scale** (p. ej. 90 o 110).
 
@@ -174,6 +183,8 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
 3. En el menú del navegador elige **"Agregar a pantalla de inicio"**: queda un ícono **GoVibe Remote** como si fuera app.
 4. Úsalo así:
    - Toca el viaje: **Live Map** (Uber), **City Tour**, **Globo**, **Pirámides**, **Regreso** o **City ride** (sin mapa).
+   - **✈️ Aeropuerto**: elige uno de los tres botones chiquitos: **AICM T1**, **AICM T2** o **AIFA**. Sale el mapa a esa terminal con la hora de llegada y tips de vuelo. Si recoges en otro hotel, el mapa recalcula la ruta desde donde estés.
+   - Abajo siempre tienes **🏠 Home**, **EN/ES** y **👋 Goodbye**, al alcance del pulgar.
    - **🆕 New ride**: limpia la pantalla y saluda al siguiente pasajero.
    - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
    - **👋 Goodbye**: pantalla de despedida al final del viaje.
@@ -181,6 +192,17 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
    - Arriba ves si la tablet está **en línea**, los km que faltan y el GPS.
 
 Sin internet en el celular puedes cambiar el viaje desde la misma tablet: mantén presionado el reloj 1.5 s.
+
+### Samsung Galaxy S26 Ultra y Z Flip5
+- **Instalar como app:** abre la página en Chrome o Samsung Internet → menú → **Agregar a pantalla de inicio** / **Instalar app**. Abre sin barra de direcciones.
+- **📱 Keep screen on** (abajo de todo): la pantalla del celular no se apaga mientras el remoto está abierto. Útil con el celular en el soporte.
+- Cada botón vibra un poquito al tocarlo, para que sepas que se envió sin mirar.
+- **Z Flip5 abierto:** se ve igual que en el S26 Ultra.
+- **Z Flip5 cerrado (pantalla Flex Window):** el remoto muestra solo lo esencial, con botones grandes. Para abrirlo ahí:
+  - Ajustes → Funciones avanzadas → **Labs** → *Apps permitidas en la pantalla externa*.
+  - O instala **Good Lock** → **MultiStar** → *Launcher Widget* y agrega el remoto.
+  - Samsung cambia estos menús seguido; si no los ves, busca "pantalla externa" en Ajustes.
+
 
 ---
 

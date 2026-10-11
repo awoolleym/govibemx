@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <title>GoVibeMX Driver Remote</title>
 <!-- Install as an app: phone browser menu → "Add to Home screen" -->
 <link rel="manifest" href="remote.webmanifest">
@@ -88,14 +89,67 @@
   .presets button { background: #1b222c; color: #cfd8e3; border: 1px solid var(--line); border-radius: 16px; padding: 6px 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .sent { font-size: 12px; color: var(--ok); min-height: 16px; }
   .bar button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 18px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: inherit; }
+  /* ---- Phone layout: Samsung Galaxy S26 Ultra / Z Flip5 (main screen ~412 px wide) ---- */
+  body { padding: calc(10px + env(safe-area-inset-top, 0px)) 12px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  main { gap: 12px; }
+  #controls { gap: 12px; }
+  .head h1 { font-size: 19px; }
+  #status { position: sticky; top: calc(6px + env(safe-area-inset-top, 0px)); z-index: 5; padding: 10px 12px; gap: 3px; box-shadow: 0 6px 18px rgba(0,0,0,.55); background: rgba(18,24,32,.96); backdrop-filter: blur(8px); }
+  #status .v { font-size: 16px; }
+  #status .meta { font-size: 12px; }
+  .card { padding: 12px; gap: 8px; }
+  .trips { gap: 8px; }
+  .trips button { padding: 12px; font-size: 16px; gap: 12px; min-height: 56px; }
+  .trips button .ico { font-size: 26px; }
+  .trips button small { font-size: 12px; }
+  .trip-group { display: flex; flex-direction: column; gap: 8px; background: var(--panel); border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+  .trip-group.on { border-color: var(--route); background: #2a2108; }
+  .trip-group .gt { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; }
+  .trip-group .gt .ico { font-size: 26px; }
+  .trip-group .gt small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+  .trips { display: grid; grid-template-columns: 1fr 1fr; }
+  .trips > button { flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px; }
+  .trips > button .ico { font-size: 24px; line-height: 1; }
+  .trips > button small { font-size: 11px; line-height: 1.3; }
+  .trip-group { grid-column: 1 / -1; }
+  .trip-group .opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .trips .trip-group .opts button { min-height: 40px; padding: 8px 4px; justify-content: center; font-size: 14px; font-weight: 800; border-radius: 20px; text-align: center; border-width: 2px; background: #1b222c; }
+  .trips .trip-group .opts button.on { background: var(--route); color: #1a1200; border-color: var(--route); }
+  .new-ride { padding: 14px; font-size: 17px; min-height: 56px; }
+  .sections { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .sections button { padding: 10px 8px; font-size: 13px; min-height: 48px; }
+  .quick { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 6px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(180deg, rgba(7,11,16,0), rgba(7,11,16,.96) 30%); }
+  .quick .sent { text-align: center; min-height: 16px; margin-bottom: 4px; }
+  .quick-row { max-width: 520px; margin: 0 auto; display: flex; gap: 8px; }
+  .quick-row > button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 56px; border-radius: 16px; font-size: 16px; font-weight: 800; border: 2px solid var(--line); background: #1b222c; color: #fff; cursor: pointer; font-family: inherit; }
+  .quick-row > button span { font-size: 22px; }
+  .quick-row .bye-btn { background: #2a1a05; border-color: #FFB300; }
+  .quick-row .langs { border-radius: 16px; }
+  .quick-row .langs button { padding: 0 14px; min-height: 52px; }
+  .bar { flex-wrap: wrap; justify-content: center; }
+  .bar button.on { color: var(--ok); border-color: var(--ok); }
+  button:active { filter: brightness(1.25); }
+  /* Wider phones and unfolded / landscape: three columns of sections */
+  @media (min-width: 400px) { .sections { grid-template-columns: repeat(3, 1fr); } .sections button { flex-direction: column; text-align: center; gap: 2px; font-size: 12px; } }
+  /* Z Flip5 Flex Window (cover screen, ~360 × 374): only the essentials, big targets */
+  @media (max-height: 520px) and (max-width: 520px) {
+    body { padding: 6px 8px 84px; }
+    .head, .more, .card:has(#guest) .k, .trips button small, .trip-group .gt small, .new-ride small { display: none; }
+    #status { position: static; padding: 6px 10px; } #status .meta { display: none; }
+    .card { padding: 8px; gap: 6px; } .card .k { font-size: 10px; }
+    .trips button { min-height: 44px; padding: 8px 10px; font-size: 14px; } .trips button .ico { font-size: 20px; }
+    .sections { grid-template-columns: repeat(3, 1fr); } .sections button { font-size: 11px; min-height: 44px; padding: 6px 4px; }
+    .new-ride { min-height: 46px; padding: 10px; font-size: 15px; }
+    .quick-row > button { min-height: 50px; font-size: 14px; } .quick-row .langs button { min-height: 46px; padding: 0 10px; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <div>
-    <h1>🚐 GoVibeMX · Rear screen</h1>
-    <p class="sub">Control the tablet in the back: trip, language and what it shows.</p>
-  </div>
+  <header class="head">
+    <h1>🚐 GoVibeMX Remote</h1>
+    <p class="sub">Trip, language and what the rear screen shows.</p>
+  </header>
 
   <section class="lock" id="lock">
     <h2 id="lock-title">🔒 Enter driver PIN</h2>
@@ -107,35 +161,44 @@
   </section>
 
   <section id="controls" hidden>
-  <div class="bar"><button id="change-pin">Change PIN</button><button id="lock-now">🔒 Lock</button></div>
-  <div class="tablet">
-    <div class="k">Tablet</div>
+  <div class="tablet" id="status">
     <div class="v"><span class="dot" id="dot"></span><span id="tablet-line">Connecting…</span></div>
     <div class="meta" id="tablet-meta"></div>
   </div>
 
   <div class="card">
     <div class="k">New passenger</div>
-    <input class="guest" id="guest" type="text" maxlength="30" placeholder="Passenger name (optional), e.g. Sarah & Tom" autocomplete="off">
+    <input class="guest" id="guest" type="text" maxlength="30" placeholder="Passenger name (optional), e.g. Sarah & Tom" autocomplete="off" enterkeyhint="go">
     <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and show the big welcome</small></button>
-    <button class="new-ride bye-btn" id="bye-btn">👋 Goodbye<small>End of the ride: thank-you screen, check your belongings, review QR</small></button>
   </div>
 
   <div class="card">
-    <div class="k">On the tablet</div>
-    <div class="screen-top">
-      <button class="home-btn" data-cmd="home">⬅ Home</button>
-      <div class="langs"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
-    </div>
-    <div class="sections" id="sections"></div>
-    <div class="k" style="margin-top:4px">Show a page or video</div>
-    <div class="url-row"><input class="guest" id="web-url" type="url" inputmode="url" placeholder="https://… or a YouTube link" autocomplete="off"><button id="web-go">Show</button></div>
-    <div class="presets" id="presets"></div>
-    <div class="sent" id="sent"></div>
+    <div class="k">Trip</div>
+    <div class="trips" id="trips"></div>
   </div>
 
-  <div class="k" style="margin-top:4px">Trip</div>
-  <div class="trips" id="trips"></div>
+  <div class="card">
+    <div class="k">Open on the tablet</div>
+    <div class="sections" id="sections"></div>
+  </div>
+
+  <div class="card more">
+    <div class="k">Show a page or video</div>
+    <div class="url-row"><input class="guest" id="web-url" type="url" inputmode="url" enterkeyhint="go" placeholder="https://… or a YouTube link" autocomplete="off"><button id="web-go">Show</button></div>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <div class="bar more"><button id="wake">📱 Keep screen on</button><button id="change-pin">Change PIN</button><button id="lock-now">🔒 Lock</button></div>
+
+  <!-- Always within thumb reach -->
+  <nav class="quick">
+    <div class="sent" id="sent"></div>
+    <div class="quick-row">
+      <button class="home-btn" data-cmd="home"><span>🏠</span>Home</button>
+      <div class="langs"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+      <button class="bye-btn" id="bye-btn"><span>👋</span>Goodbye</button>
+    </div>
+  </nav>
   </section>
 
   <p class="note">Van: <b id="van"></b>. You can also change the trip on the tablet itself: press and hold the clock for 1.5 seconds.</p>
@@ -156,8 +219,12 @@
     { id: 'city',     icon: '🗺️', name: 'CDMX City Tour',                shows: 'Live map with neighborhoods, alcaldías and sights + CDMX Facts' },
     { id: 'balloon',  icon: '🎈', name: 'Hot Air Balloon · Teotihuacán', shows: 'Map to Balloon\'s Paradise + Teotihuacán guide + Balloon 101' },
     { id: 'pyramids', icon: '🛕', name: 'Pyramids of Teotihuacán',       shows: 'Map to the pyramids + Teotihuacán guide' },
-    { id: 'home',     icon: '🏁', name: 'Back to Mexico City',           shows: 'Map to the Four Seasons + Teotihuacán guide' }
+    { id: 'home',     icon: '🏁', name: 'Back to Mexico City',           shows: 'Map to the Four Seasons + Teotihuacán guide' },
+    { id: 'airport1', icon: '✈️', name: 'Airport · AICM T1', short: 'AICM T1', group: 'airport' },
+    { id: 'airport2', icon: '✈️', name: 'Airport · AICM T2', short: 'AICM T2', group: 'airport' },
+    { id: 'aifa',     icon: '✈️', name: 'Airport · AIFA',    short: 'AIFA',    group: 'airport' }
   ];
+  const GROUPS = { airport: { icon: '✈️', name: 'Airport', shows: 'Map to the terminal + flight tips' } };
   const NAMES = Object.fromEntries(OPTIONS.map(o => [o.id, o.icon + ' ' + o.name]));
 
   // Sections the tablet can open (value → tablet screen it shows).
@@ -276,10 +343,34 @@
   showLock('unlock');
 
   function renderTrips() {
-    $('trips').innerHTML = OPTIONS.map(o =>
-      `<button data-id="${o.id}" class="${o.id === current ? 'on' : ''}"><span class="ico">${o.icon}</span><span>${o.name}<small>${o.shows}</small></span></button>`
-    ).join('');
+    const done = {};
+    $('trips').innerHTML = OPTIONS.map(o => {
+      if (!o.group) return `<button data-id="${o.id}" class="${o.id === current ? 'on' : ''}"><span class="ico">${o.icon}</span><span>${o.name}<small>${o.shows}</small></span></button>`;
+      if (done[o.group]) return '';
+      done[o.group] = true;
+      const g = GROUPS[o.group], opts = OPTIONS.filter(x => x.group === o.group);
+      const on = opts.some(x => x.id === current);
+      return `<div class="trip-group ${on ? 'on' : ''}"><div class="gt"><span class="ico">${g.icon}</span><span>${g.name}<small>${g.shows}</small></span></div>` +
+        `<div class="opts">${opts.map(x => `<button data-id="${x.id}" class="${x.id === current ? 'on' : ''}">${x.short}</button>`).join('')}</div></div>`;
+    }).join('');
   }
+  // A short buzz so you feel the tap without looking (Android phones)
+  document.addEventListener('click', (e) => { if (e.target.closest('button') && navigator.vibrate) navigator.vibrate(12); });
+  // Keep the phone's screen on while the remote is open (for a phone on a dash mount)
+  let wakeLock = null, wantWake = false;
+  const grabWake = async () => {
+    try { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } catch (e) { wakeLock = null; }
+  };
+  $('wake').addEventListener('click', async () => {
+    if (!('wakeLock' in navigator)) { $('wake').textContent = '📱 Not supported here'; return; }
+    wantWake = !wantWake;
+    if (wantWake) await grabWake(); else if (wakeLock) { await wakeLock.release(); wakeLock = null; }
+    $('wake').classList.toggle('on', wantWake);
+    $('wake').textContent = wantWake ? '📱 Screen stays on' : '📱 Keep screen on';
+  });
+  // Android drops the lock when the app goes to the background; take it back on return
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && wantWake && !wakeLock) grabWake(); });
+  $('guest').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('new-ride').click(); });
 
   function renderTablet() {
     const dot = $('dot');

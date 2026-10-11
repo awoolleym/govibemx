@@ -231,6 +231,7 @@
   .x-fotm { margin-top: 10px; display: flex; gap: 12px; align-items: center; background: linear-gradient(90deg, rgba(255,64,129,.16), rgba(64,196,255,.10)); border: 1px solid rgba(255,64,129,.35); border-radius: 14px; padding: 10px 14px; cursor: pointer; }
   .x-fotm .e { font-size: 34px; flex-shrink: 0; }
   .x-fotm .k { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #FF80AB; font-weight: 800; }
+  .num-tile .v small { font-size: .5em; opacity: .85; font-weight: 700; margin-left: 2px; }
   .x-fotm .t { font-size: 15px; font-weight: 800; color: #fff; }
   .x-fotm .p { font-size: 13px; color: #e8dcef; line-height: 1.35; }
   .x-fotm.fade { animation: fadeUp .6s ease; }
@@ -440,6 +441,7 @@
   .leaflet-container a.leaflet-popup-close-button { color: #aaa; }
   .leaflet-control-attribution { font-size: 9px !important; background: rgba(0,0,0,.5) !important; color: #888 !important; }
   .leaflet-control-attribution a { color: #aaa !important; }
+  .leaflet-control-scale-line { background: rgba(13,17,23,.75); color: #e6ebf1; border-color: #9aa4b2; }
 
   /* GUIDE SCREEN */
   #guide { flex-direction: column; background: radial-gradient(circle at top, #2a1a0e 0%, #000 70%); }
@@ -602,7 +604,8 @@
   .host-small { font-size: clamp(15px, 2.8vh, 22px); color: #F8BBD0; font-weight: 700; margin-top: 4px; }
   .w2-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-width: 1100px; }
   .w2-card { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); border-radius: 18px; padding: clamp(10px, 2.2vh, 18px) 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .w2-card .i { font-size: clamp(30px, 6vh, 46px); }
+  .w2-card .i { font-size: clamp(30px, 6vh, 46px); line-height: 1; }
+  .w2-card .i svg { width: 1.35em; height: 1.35em; display: block; margin: -.12em 0; }
   .w2-card b { font-size: clamp(16px, 3vh, 22px); color: #fff; }
   .w2-card span { font-size: clamp(13px, 2.3vh, 16px); color: #e6dcef; line-height: 1.3; }
   .w2-card small { font-size: clamp(11px, 1.9vh, 13px); color: #b9a8c9; }
@@ -928,7 +931,7 @@
       <div class="stat route-only"><div class="k" data-i18n="sunrise">Sunrise</div><div class="v" id="st-sun">—</div><div class="s" data-i18n="atDest">at destination</div></div>
       <div class="stat wide"><div class="k" data-i18n="localTime">Local time · Mexico City</div><div class="v" id="st-clock">—</div></div>
     </div>
-    <div class="airport-box" id="airport-box" hidden><span>✈️</span><div><b data-i18n="airportBoard">Almost at the airport</b><small data-i18n="airportBoardSub">Have your ID and boarding pass handy</small></div></div>
+    <div class="airport-box" id="airport-box" hidden><span>✈️</span><div><b id="airport-t">Almost at the airport</b><small id="airport-s">Have your ID and boarding pass handy</small></div></div>
     <div class="city-only">
       <div class="gps-status" style="margin-bottom:4px" data-i18n="nearby">Nearby</div>
       <div class="nearby" id="nearby"></div>
@@ -1107,11 +1110,20 @@ var CDMX_COLONIAS = [{"id":"centro","label":[19.43319,-99.13755],"rings":[[[19.4
 var ROUTE_TOUR = [[19.42306,-99.17391],[19.42352,-99.17413],[19.42458,-99.17189],[19.42466,-99.17138],[19.425,-99.17099],[19.42629,-99.16828],[19.42616,-99.16766],[19.42628,-99.16723],[19.42662,-99.16741],[19.42689,-99.16721],[19.4272,-99.16725],[19.42742,-99.16754],[19.42739,-99.16788],[19.42714,-99.16811],[19.42681,-99.16809],[19.42657,-99.16781],[19.4266,-99.16746],[19.42682,-99.16724],[19.42715,-99.16722],[19.42865,-99.16402],[19.42852,-99.16384],[19.42854,-99.16355],[19.42872,-99.16338],[19.42895,-99.16337],[19.42945,-99.16237],[19.43078,-99.15953],[19.43096,-99.15888],[19.43142,-99.15819],[19.43278,-99.15528],[19.43296,-99.15457],[19.4333,-99.15415],[19.4354,-99.14954],[19.43513,-99.14626],[19.43424,-99.14085],[19.43693,-99.14046],[19.43656,-99.13788],[19.43167,-99.13863],[19.43095,-99.13358],[19.43202,-99.13343],[19.43191,-99.13244],[19.43171,-99.13233],[19.43078,-99.13235],[19.42457,-99.13322],[19.41788,-99.13436],[19.41839,-99.13828],[19.41974,-99.15421],[19.41944,-99.15431],[19.41811,-99.16116],[19.41956,-99.16152],[19.41985,-99.16019],[19.41838,-99.15981],[19.4174,-99.16488],[19.41055,-99.16709],[19.41107,-99.16887],[19.41204,-99.16831],[19.41325,-99.16794],[19.42136,-99.17427],[19.42354,-99.1758],[19.42546,-99.17685],[19.42483,-99.17853],[19.42405,-99.17913],[19.42392,-99.17937],[19.42663,-99.19715],[19.42709,-99.19738],[19.42988,-99.19693],[19.43025,-99.19935],[19.43185,-99.19912],[19.43144,-99.19427],[19.43141,-99.19107],[19.43159,-99.19103],[19.43167,-99.19116],[19.43157,-99.19137],[19.43153,-99.19351],[19.43361,-99.19333],[19.43287,-99.18175],[19.43127,-99.18105],[19.43219,-99.17717],[19.42977,-99.17434],[19.42937,-99.17351],[19.429,-99.17337],[19.42852,-99.17339],[19.42549,-99.17181],[19.42503,-99.17192],[19.42476,-99.17143],[19.42341,-99.17073],[19.42213,-99.17346],[19.42306,-99.17391]];
 var ROUTE_TOUR_SECONDS = 2513;
 
+// Airport runs from the Four Seasons (OSRM driving routes, light traffic). If the pickup is
+// somewhere else, the live map re-routes from the van's position.
+var ROUTE_AIRPORT_T1 = [[19.42306,-99.17391],[19.42352,-99.17413],[19.42458,-99.17189],[19.42461,-99.17148],[19.42629,-99.16828],[19.42616,-99.16766],[19.42628,-99.16723],[19.42662,-99.16741],[19.42715,-99.16722],[19.42774,-99.16806],[19.43376,-99.17104],[19.43806,-99.16848],[19.44362,-99.16566],[19.44986,-99.16422],[19.45421,-99.16393],[19.45902,-99.16295],[19.45957,-99.16258],[19.46094,-99.16095],[19.46325,-99.15954],[19.46374,-99.1589],[19.46402,-99.15804],[19.46289,-99.15059],[19.46376,-99.14654],[19.46455,-99.14414],[19.46439,-99.14357],[19.46366,-99.143],[19.46359,-99.1425],[19.46382,-99.14212],[19.46492,-99.14129],[19.46511,-99.14078],[19.46488,-99.13362],[19.46142,-99.1275],[19.45796,-99.11726],[19.45368,-99.11187],[19.45032,-99.10275],[19.44986,-99.10135],[19.44977,-99.10021],[19.45163,-99.09484],[19.45158,-99.09342],[19.45114,-99.09265],[19.44659,-99.08783],[19.44187,-99.08556],[19.44076,-99.08551],[19.43889,-99.08615],[19.43603,-99.08675],[19.43464,-99.08808],[19.43427,-99.08804],[19.43392,-99.08627],[19.43574,-99.08293]];
+var ROUTE_AIRPORT_T1_SECONDS = 1036;
+var ROUTE_AIRPORT_T2 = [[19.42306,-99.17391],[19.42352,-99.17413],[19.42458,-99.17189],[19.42466,-99.17138],[19.42252,-99.17027],[19.41691,-99.16904],[19.41661,-99.16881],[19.41674,-99.16736],[19.41558,-99.16547],[19.40221,-99.16222],[19.4038,-99.15702],[19.40397,-99.15577],[19.40389,-99.14645],[19.40303,-99.13087],[19.40407,-99.12671],[19.40541,-99.11927],[19.40558,-99.11454],[19.40879,-99.09899],[19.40871,-99.09767],[19.409,-99.09627],[19.40814,-99.0906],[19.40834,-99.0903],[19.4144,-99.08686],[19.42087,-99.08286],[19.42114,-99.08243],[19.4211,-99.08199],[19.41913,-99.07899],[19.41881,-99.07883],[19.41874,-99.07851],[19.41893,-99.07823],[19.41924,-99.07819],[19.42104,-99.07701],[19.42143,-99.07715],[19.4215,-99.07749]];
+var ROUTE_AIRPORT_T2_SECONDS = 1045;
+var ROUTE_AIRPORT_AIFA = [[19.42306,-99.17391],[19.42352,-99.17413],[19.42458,-99.17189],[19.42461,-99.17148],[19.42629,-99.16828],[19.42616,-99.16766],[19.42628,-99.16723],[19.42662,-99.16741],[19.42715,-99.16722],[19.42774,-99.16806],[19.43376,-99.17104],[19.43806,-99.16848],[19.44362,-99.16566],[19.44986,-99.16422],[19.45421,-99.16393],[19.45902,-99.16295],[19.45957,-99.16258],[19.46094,-99.16095],[19.46325,-99.15954],[19.46388,-99.1586],[19.46404,-99.15765],[19.46323,-99.15347],[19.4629,-99.15038],[19.46376,-99.14654],[19.46455,-99.14414],[19.46445,-99.14365],[19.46369,-99.14289],[19.4638,-99.14226],[19.46506,-99.14167],[19.4668,-99.14043],[19.49028,-99.12106],[19.49132,-99.12048],[19.49368,-99.11965],[19.50007,-99.11819],[19.50146,-99.11748],[19.50207,-99.11681],[19.5034,-99.1145],[19.50629,-99.10864],[19.50977,-99.10613],[19.51101,-99.10372],[19.51169,-99.10291],[19.51628,-99.10003],[19.51971,-99.09726],[19.52037,-99.09595],[19.52057,-99.09331],[19.5225,-99.0898],[19.52594,-99.08576],[19.53184,-99.07958],[19.53489,-99.07663],[19.53878,-99.07428],[19.54036,-99.07357],[19.54672,-99.07155],[19.54784,-99.07091],[19.55469,-99.0613],[19.56149,-99.05494],[19.56571,-99.05303],[19.56701,-99.05271],[19.56954,-99.05252],[19.57244,-99.05116],[19.57359,-99.05027],[19.57489,-99.04802],[19.57576,-99.04715],[19.58378,-99.04301],[19.58607,-99.04232],[19.60019,-99.03909],[19.60221,-99.03834],[19.61674,-99.0306],[19.61866,-99.02923],[19.62062,-99.02847],[19.65853,-99.0083],[19.66089,-99.00646],[19.68155,-98.98404],[19.68361,-98.98243],[19.69711,-98.97359],[19.6982,-98.97181],[19.69892,-98.97107],[19.69998,-98.97075],[19.70125,-98.97115],[19.70317,-98.97337],[19.70536,-98.97552],[19.70636,-98.97643],[19.70716,-98.97678],[19.70795,-98.97657],[19.71715,-98.97215],[19.72616,-98.9706],[19.73777,-98.97204],[19.74365,-98.97194],[19.75039,-98.97264],[19.75219,-98.97205],[19.7528,-98.97204],[19.75348,-98.97235],[19.75389,-98.97282],[19.75481,-98.97491],[19.75542,-98.9752],[19.75818,-98.9758],[19.76299,-98.99256],[19.74899,-99.00976],[19.74871,-99.00968]];
+var ROUTE_AIRPORT_AIFA_SECONDS = 3123;
+
 // Neighborhoods the City Tour announces ("Now entering…"). Outlines come from OpenStreetMap;
 // Coyoacán Centro has no outline there, so it uses an approximate oval (`approx`, in metres).
 // Polanco and Lomas de Chapultepec are their numbered sections (1ª–5ª, 1ª–8ª) merged.
 var ZONE_INFO = {
-  "centro": {"icon": "🏛️", "name": {"en": "Centro Histórico", "es": "Centro Histórico"}, "text": {"en": "Built on top of Tenochtitlán, the Aztec capital founded in 1325. The historic center is a UNESCO World Heritage Site packed with palaces, churches and museums.", "es": "Construido sobre Tenochtitlán, la capital mexica fundada en 1325. El Centro Histórico es Patrimonio de la Humanidad y está lleno de palacios, iglesias y museos."}},
+  "centro": {"icon": "🏛️", "name": {"en": "Centro Histórico", "es": "Centro Histórico"}, "text": {"en": "Built on top of Tenochtitlán, the Aztec capital founded in 1325 CE. The historic center is a UNESCO World Heritage Site packed with palaces, churches and museums.", "es": "Construido sobre Tenochtitlán, la capital mexica fundada en 1325 e.c. El Centro Histórico es Patrimonio de la Humanidad y está lleno de palacios, iglesias y museos."}},
   "roma-norte": {"icon": "🌿", "name": {"en": "Roma Norte", "es": "Roma Norte"}, "text": {"en": "Art Nouveau mansions, tree-lined streets and some of the city's best restaurants and cafés. Alfonso Cuarón's Oscar-winning film \"Roma\" is set here.", "es": "Casonas Art Nouveau, calles arboladas y algunos de los mejores restaurantes y cafés de la ciudad. Aquí se ambienta \"Roma\", la película ganadora del Óscar de Alfonso Cuarón."}},
   "roma-sur": {"icon": "🥑", "name": {"en": "Roma Sur", "es": "Roma Sur"}, "text": {"en": "The quieter side of Roma, home to the Mercado de Medellín, known for ingredients from all over Latin America.", "es": "El lado más tranquilo de la Roma, donde está el Mercado de Medellín, famoso por productos de toda Latinoamérica."}},
   "condesa": {"icon": "🐕", "name": {"en": "Condesa", "es": "Condesa"}, "text": {"en": "Built around an old horse-racing track: Avenida Ámsterdam is an oval that follows it. Famous for Art Deco buildings, Parque México and dogs everywhere.", "es": "Se construyó alrededor de un antiguo hipódromo: la Avenida Ámsterdam es un óvalo que sigue la pista. Famosa por su Art Déco, el Parque México y los perros en todas partes."}},
@@ -1185,7 +1197,7 @@ var SERVICES = [
 
 // CDMX Explorer content (Did you know?, By the numbers, Quiz, Spanish 101).
 var CDMX_FACTS = [  {"icon":"🌊","t":{"en":"Built on a lake","es":"Construida sobre un lago"},"p":{"en":"The Aztec capital, Tenochtitlán, was an island city on Lake Texcoco, linked to shore by causeways. The Spanish drained the lake over the following centuries.","es":"La capital mexica, Tenochtitlán, era una ciudad-isla en el lago de Texcoco, unida a tierra por calzadas. Los españoles desecaron el lago durante los siglos siguientes."}},
-  {"icon":"📉","t":{"en":"A sinking city","es":"Una ciudad que se hunde"},"p":{"en":"Because water is pumped from the old lakebed, some parts of the city sink by up to about 50 cm a year. Look for leaning churches and tilted sidewalks.","es":"Por el agua que se extrae del antiguo lago, algunas zonas se hunden hasta unos 50 cm al año. Fíjate en iglesias inclinadas y banquetas chuecas."}},
+  {"icon":"📉","t":{"en":"A sinking city","es":"Una ciudad que se hunde"},"p":{"en":"Because water is pumped from the old lakebed, some parts of the city sink by up to about 50 cm (20 in) a year. Look for leaning churches and tilted sidewalks.","es":"Por el agua que se extrae del antiguo lago, algunas zonas se hunden hasta unos 50 cm (20 in) al año. Fíjate en iglesias inclinadas y banquetas chuecas."}},
   {"icon":"🚇","t":{"en":"A Metro you can read without words","es":"Un Metro que se lee sin palabras"},"p":{"en":"Every Metro station has its own little icon, designed in 1969 by Lance Wyman so anyone could find their stop, even without reading.","es":"Cada estación del Metro tiene su propio icono, diseñado en 1969 por Lance Wyman para que cualquiera encontrara su parada, incluso sin saber leer."}},
   {"icon":"🌳","t":{"en":"Bigger than Central Park","es":"Más grande que Central Park"},"p":{"en":"Bosque de Chapultepec is about twice the size of New York's Central Park, with a castle, a zoo, lakes and several major museums.","es":"El Bosque de Chapultepec mide como el doble que Central Park en Nueva York, con castillo, zoológico, lagos y varios grandes museos."}},
   {"icon":"🌮","t":{"en":"Tacos al pastor's secret","es":"El secreto del pastor"},"p":{"en":"Tacos al pastor were inspired by the shawarma brought by Lebanese immigrants. The vertical spit, the trompo, gives it away.","es":"Los tacos al pastor se inspiraron en el shawarma que trajeron los inmigrantes libaneses. El trompo vertical lo delata."}},
@@ -1196,14 +1208,14 @@ var CDMX_FACTS = [  {"icon":"🌊","t":{"en":"Built on a lake","es":"Construida 
   {"icon":"🏟️","t":{"en":"A sports capital","es":"Capital deportiva"},"p":{"en":"Mexico City hosted the 1968 Olympics, World Cup finals in 1970 and 1986, and the opening match of the 2026 World Cup at Estadio Azteca.","es":"La Ciudad de México fue sede de los Juegos Olímpicos de 1968, de las finales de los Mundiales de 1970 y 1986, y del partido inaugural del Mundial 2026 en el Estadio Azteca."}},
   {"icon":"🔤","t":{"en":"From DF to CDMX","es":"De DF a CDMX"},"p":{"en":"Until 2016 the capital was officially the \"Distrito Federal\" (DF). Now it is Ciudad de México, or CDMX, with 16 alcaldías instead of delegaciones.","es":"Hasta 2016 la capital era oficialmente el \"Distrito Federal\". Hoy es la Ciudad de México, o CDMX, con 16 alcaldías en lugar de delegaciones."}},
   {"icon":"🎭","t":{"en":"Museums everywhere","es":"Museos por todas partes"},"p":{"en":"With more than 150 museums, Mexico City has one of the largest collections of museums of any city in the world.","es":"Con más de 150 museos, la Ciudad de México tiene una de las mayores cantidades de museos de cualquier ciudad del mundo."}}];
-var CDMX_NUMBERS = [{"v":"1325","l":{"en":"Tenochtitlán is founded","es":"Se funda Tenochtitlán"}},{"v":"2,240 m","l":{"en":"Altitude (7,350 ft)","es":"Altitud (7,350 pies)"}},{"v":"≈ 22 M","l":{"en":"People in the metro area","es":"Habitantes en la zona metropolitana"}},{"v":"9.2 M","l":{"en":"People in the city itself (2020 census)","es":"Habitantes en la ciudad (censo 2020)"}},{"v":"16","l":{"en":"Alcaldías (boroughs)","es":"Alcaldías"}},{"v":"150+","l":{"en":"Museums","es":"Museos"}},{"v":"12 · 195","l":{"en":"Metro lines · stations","es":"Líneas · estaciones del Metro"}},{"v":"≈ 28 km","l":{"en":"Avenida Insurgentes, the city's longest avenue","es":"Avenida Insurgentes, la más larga de la ciudad"}},{"v":"≈ 1,485 km²","l":{"en":"Area of the city","es":"Superficie de la ciudad"}},{"v":"1968","l":{"en":"Summer Olympics","es":"Juegos Olímpicos"}}];
+var CDMX_NUMBERS = [{"v":"1325","u":{"en":"CE","es":"e.c."},"l":{"en":"Tenochtitlán is founded","es":"Se funda Tenochtitlán"}},{"v":"2,240 m","u":{"en":"7,350 ft","es":"7,350 pies"},"l":{"en":"Altitude","es":"Altitud"}},{"v":"≈ 22 M","l":{"en":"People in the metro area","es":"Habitantes en la zona metropolitana"}},{"v":"9.2 M","l":{"en":"People in the city itself (2020 census)","es":"Habitantes en la ciudad (censo 2020)"}},{"v":"16","l":{"en":"Alcaldías (boroughs)","es":"Alcaldías"}},{"v":"150+","l":{"en":"Museums","es":"Museos"}},{"v":"12 · 195","l":{"en":"Metro lines · stations","es":"Líneas · estaciones del Metro"}},{"v":"≈ 28 km","u":{"en":"17 mi","es":"17 mi"},"l":{"en":"Avenida Insurgentes, the city's longest avenue","es":"Avenida Insurgentes, la más larga de la ciudad"}},{"v":"≈ 1,485 km²","u":{"en":"573 sq mi","es":"573 mi²"},"l":{"en":"Area of the city","es":"Superficie de la ciudad"}},{"v":"1968","l":{"en":"Summer Olympics","es":"Juegos Olímpicos"}}];
 // Quiz: `a` is the index of the right answer; options are shuffled each game.
 var QUIZ = [
   {"q":{"en":"What was Mexico City built on?","es":"¿Sobre qué se construyó la Ciudad de México?"},"o":{"en":["An island in a lake","A volcano crater","A desert"],"es":["Una isla en un lago","El cráter de un volcán","Un desierto"]},"a":0,"x":{"en":"Tenochtitlán was an island city on Lake Texcoco.","es":"Tenochtitlán era una ciudad-isla en el lago de Texcoco."}},
   {"q":{"en":"Which neighborhood's Avenida Ámsterdam follows an old horse-racing track?","es":"¿En qué colonia la Avenida Ámsterdam sigue un antiguo hipódromo?"},"o":{"en":["Condesa","Polanco","Coyoacán"],"es":["Condesa","Polanco","Coyoacán"]},"a":0,"x":{"en":"The oval of Avenida Ámsterdam traces the old racetrack.","es":"El óvalo de Ámsterdam sigue la pista del antiguo hipódromo."}},
   {"q":{"en":"What does \"Coyoacán\" mean?","es":"¿Qué significa \"Coyoacán\"?"},"o":{"en":["Place of coyotes","Place of flowers","Place of water"],"es":["Lugar de coyotes","Lugar de flores","Lugar del agua"]},"a":0,"x":{"en":"Hence the coyote fountain in its main square.","es":"Por eso la fuente de los coyotes en su plaza."}},
   {"q":{"en":"What inspired tacos al pastor?","es":"¿Qué inspiró los tacos al pastor?"},"o":{"en":["Lebanese shawarma","Spanish paella","Chinese barbecue"],"es":["El shawarma libanés","La paella española","La barbacoa china"]},"a":0,"x":{"en":"Lebanese immigrants brought the vertical spit.","es":"Los inmigrantes libaneses trajeron el trompo."}},
-  {"q":{"en":"How high above sea level is Mexico City?","es":"¿A qué altura sobre el nivel del mar está la ciudad?"},"o":{"en":["About 2,240 m","About 900 m","About 4,000 m"],"es":["Unos 2,240 m","Unos 900 m","Unos 4,000 m"]},"a":0,"x":{"en":"That's 7,350 ft: drink water and take it easy on stairs!","es":"Son 7,350 pies: ¡toma agua y sube escaleras con calma!"}},
+  {"q":{"en":"How high above sea level is Mexico City?","es":"¿A qué altura sobre el nivel del mar está la ciudad?"},"o":{"en":["About 2,240 m (7,350 ft)","About 900 m (2,950 ft)","About 4,000 m (13,100 ft)"],"es":["Unos 2,240 m (7,350 pies)","Unos 900 m (2,950 pies)","Unos 4,000 m (13,100 pies)"]},"a":0,"x":{"en":"That's 7,350 ft: drink water and take it easy on stairs!","es":"Son 7,350 pies: ¡toma agua y sube escaleras con calma!"}},
   {"q":{"en":"Which film inspired the city's Day of the Dead parade?","es":"¿Qué película inspiró el desfile de Día de Muertos?"},"o":{"en":["Spectre (James Bond)","Coco","Frida"],"es":["Spectre (James Bond)","Coco","Frida"]},"a":0,"x":{"en":"The parade in the film didn't exist, so the city created it in 2016.","es":"El desfile de la película no existía, así que la ciudad lo creó en 2016."}},
   {"q":{"en":"Where do wild axolotls live?","es":"¿Dónde viven los ajolotes en libertad?"},"o":{"en":["The canals of Xochimilco","Chapultepec's lake","The Gulf of Mexico"],"es":["Los canales de Xochimilco","El lago de Chapultepec","El Golfo de México"]},"a":0,"x":{"en":"They are found nowhere else in the wild.","es":"No existen en libertad en ningún otro lugar."}},
   {"q":{"en":"How many alcaldías (boroughs) does the city have?","es":"¿Cuántas alcaldías tiene la ciudad?"},"o":{"en":["16","9","32"],"es":["16","9","32"]},"a":0,"x":{"en":"Cuauhtémoc, Coyoacán and Miguel Hidalgo are three of them.","es":"Cuauhtémoc, Coyoacán y Miguel Hidalgo son tres de ellas."}},
@@ -1328,6 +1340,28 @@ var TRIPS = {
     from: { en: 'Teotihuacán', es: 'Teotihuacán' },
     to:   { en: 'Four Seasons', es: 'Four Seasons' },
     dest: FOUR_SEASONS, route: ROUTE_HOME, seconds: ROUTE_HOME_SECONDS
+  },
+  // Airport transfers: one trip per terminal, so the map and arrival time are right
+  airport1: {
+    icon: '✈️', guides: ['cdmx'], guided: true, airport: true,
+    name: { en: 'Airport · AICM Terminal 1', es: 'Aeropuerto · AICM Terminal 1' },
+    from: { en: 'Mexico City', es: 'CDMX' },
+    to:   { en: 'AICM T1', es: 'AICM T1' },
+    dest: ROUTE_AIRPORT_T1[ROUTE_AIRPORT_T1.length - 1], route: ROUTE_AIRPORT_T1, seconds: ROUTE_AIRPORT_T1_SECONDS
+  },
+  airport2: {
+    icon: '✈️', guides: ['cdmx'], guided: true, airport: true,
+    name: { en: 'Airport · AICM Terminal 2', es: 'Aeropuerto · AICM Terminal 2' },
+    from: { en: 'Mexico City', es: 'CDMX' },
+    to:   { en: 'AICM T2', es: 'AICM T2' },
+    dest: ROUTE_AIRPORT_T2[ROUTE_AIRPORT_T2.length - 1], route: ROUTE_AIRPORT_T2, seconds: ROUTE_AIRPORT_T2_SECONDS
+  },
+  aifa: {
+    icon: '✈️', guides: ['cdmx'], guided: true, airport: true,
+    name: { en: 'Airport · AIFA (Felipe Ángeles)', es: 'Aeropuerto · AIFA (Felipe Ángeles)' },
+    from: { en: 'Mexico City', es: 'CDMX' },
+    to:   { en: 'AIFA', es: 'AIFA' },
+    dest: ROUTE_AIRPORT_AIFA[ROUTE_AIRPORT_AIFA.length - 1], route: ROUTE_AIRPORT_AIFA, seconds: ROUTE_AIRPORT_AIFA_SECONDS
   }
 };
 
@@ -1336,15 +1370,15 @@ var TRIPS = {
 var POIS = [
   // ---- CDMX City Tour (trips: ['city']) ----
   // Airports: cards with terminal tips when the van gets close.
-  {"id":"airport-t1","icon":"✈️","ll":[19.43527,-99.0827],"r":900,"trips":["city"],"name":{"en":"Airport · Terminal 1 (AICM)","es":"Aeropuerto · Terminal 1 (AICM)"},"text":{"en":"Check your boarding pass or airline app for your terminal: T1 and T2 are separate buildings. The Aerotrén shuttle links them for passengers with a boarding pass. Allow at least 2 hours for domestic and 3 for international flights.","es":"Revisa en tu pase de abordar o en la app de tu aerolínea cuál es tu terminal: la T1 y la T2 son edificios separados. El Aerotrén las conecta para pasajeros con pase de abordar. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
-  {"id":"airport-t2","icon":"✈️","ll":[19.42264,-99.07777],"r":900,"trips":["city"],"name":{"en":"Airport · Terminal 2 (AICM)","es":"Aeropuerto · Terminal 2 (AICM)"},"text":{"en":"Check your boarding pass or airline app for your terminal: T1 and T2 are separate buildings. The Aerotrén shuttle links them for passengers with a boarding pass. Allow at least 2 hours for domestic and 3 for international flights.","es":"Revisa en tu pase de abordar o en la app de tu aerolínea cuál es tu terminal: la T1 y la T2 son edificios separados. El Aerotrén las conecta para pasajeros con pase de abordar. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
-  {"id":"airport-aifa","icon":"✈️","ll":[19.74376,-99.01057],"r":3000,"trips":["city"],"name":{"en":"Felipe Ángeles Airport (AIFA)","es":"Aeropuerto Felipe Ángeles (AIFA)"},"text":{"en":"Opened in 2022, about 45 km north of the city center. Allow at least 2 hours for domestic and 3 for international flights.","es":"Inaugurado en 2022, a unos 45 km al norte del centro. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
+  {"id":"airport-t1","icon":"✈️","ll":[19.43527,-99.0827],"r":900,"trips":["city","airport1"],"name":{"en":"Airport · Terminal 1 (AICM)","es":"Aeropuerto · Terminal 1 (AICM)"},"text":{"en":"Check your boarding pass or airline app for your terminal: T1 and T2 are separate buildings. The Aerotrén shuttle links them for passengers with a boarding pass. Allow at least 2 hours for domestic and 3 for international flights.","es":"Revisa en tu pase de abordar o en la app de tu aerolínea cuál es tu terminal: la T1 y la T2 son edificios separados. El Aerotrén las conecta para pasajeros con pase de abordar. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
+  {"id":"airport-t2","icon":"✈️","ll":[19.42264,-99.07777],"r":900,"trips":["city","airport2"],"name":{"en":"Airport · Terminal 2 (AICM)","es":"Aeropuerto · Terminal 2 (AICM)"},"text":{"en":"Check your boarding pass or airline app for your terminal: T1 and T2 are separate buildings. The Aerotrén shuttle links them for passengers with a boarding pass. Allow at least 2 hours for domestic and 3 for international flights.","es":"Revisa en tu pase de abordar o en la app de tu aerolínea cuál es tu terminal: la T1 y la T2 son edificios separados. El Aerotrén las conecta para pasajeros con pase de abordar. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
+  {"id":"airport-aifa","icon":"✈️","ll":[19.74376,-99.01057],"r":3000,"trips":["city","aifa"],"name":{"en":"Felipe Ángeles Airport (AIFA)","es":"Aeropuerto Felipe Ángeles (AIFA)"},"text":{"en":"Opened in 2022, about 45 km (28 mi) north of the city center. Allow at least 2 hours for domestic and 3 for international flights.","es":"Inaugurado en 2022, a unos 45 km (28 mi) al norte del centro. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
   { id: "zocalo", icon: "🇲🇽", ll: [19.43265, -99.1332], r: 200, trips: ['city'],
     name: {"en": "Zócalo", "es": "Zócalo"},
     text: {"en": "The main square, one of the largest in the world, built over the heart of the Aztec capital. Soldiers raise and lower the giant flag every day.", "es": "La plaza principal, una de las más grandes del mundo, construida sobre el corazón de la capital mexica. Cada día los soldados izan y arrían la bandera monumental."} },
   { id: "catedral", icon: "⛪", ll: [19.43438, -99.13307], r: 150, trips: ['city'],
     name: {"en": "Metropolitan Cathedral", "es": "Catedral Metropolitana"},
-    text: {"en": "One of the largest cathedrals in the Americas, built over about 250 years (1573–1813), partly with stones from Aztec temples. It sinks unevenly into the old lakebed.", "es": "Una de las catedrales más grandes de América, construida durante unos 250 años (1573–1813), en parte con piedras de templos mexicas. Se hunde de forma desigual en el antiguo lago."} },
+    text: {"en": "One of the largest cathedrals in the Americas, built over about 250 years (1573–1813 CE), partly with stones from Aztec temples. It sinks unevenly into the old lakebed.", "es": "Una de las catedrales más grandes de América, construida durante unos 250 años (1573–1813 e.c.), en parte con piedras de templos mexicas. Se hunde de forma desigual en el antiguo lago."} },
   { id: "templo-mayor", icon: "🗿", ll: [19.43432, -99.13177], r: 150, trips: ['city'],
     name: {"en": "Templo Mayor", "es": "Templo Mayor"},
     text: {"en": "The great temple of Tenochtitlán, dedicated to Huitzilopochtli and Tláloc. It was rediscovered in 1978 when electricians dug up the giant Coyolxauhqui stone.", "es": "El gran templo de Tenochtitlán, dedicado a Huitzilopochtli y Tláloc. Se redescubrió en 1978, cuando trabajadores de la luz encontraron la enorme piedra de Coyolxauhqui."} },
@@ -1362,7 +1396,7 @@ var POIS = [
     text: {"en": "An 18th-century palace covered in blue-and-white tiles from Puebla. Today it is a Sanborns restaurant.", "es": "Palacio del siglo XVIII cubierto de azulejos poblanos. Hoy es un restaurante Sanborns."} },
   { id: "alameda", icon: "🌳", ll: [19.43572, -99.14399], r: 250, trips: ['city'],
     name: {"en": "Alameda Central", "es": "Alameda Central"},
-    text: {"en": "Created in 1592, it is often called the oldest public park in the Americas.", "es": "Creada en 1592, suele considerarse el parque público más antiguo de América."} },
+    text: {"en": "Created in 1592 CE, it is often called the oldest public park in the Americas.", "es": "Creada en 1592 e.c., suele considerarse el parque público más antiguo de América."} },
   { id: "correos", icon: "📮", ll: [19.43566, -99.14028], r: 120, trips: ['city'],
     name: {"en": "Postal Palace", "es": "Palacio Postal"},
     text: {"en": "An ornate post office opened in 1907, with a gilded Italian-style interior. It still works as a post office.", "es": "Un ornamentado edificio de correos inaugurado en 1907, con interiores dorados de estilo italiano. Sigue funcionando como oficina postal."} },
@@ -1383,7 +1417,7 @@ var POIS = [
     text: {"en": "A 1942 fountain of the Roman goddess. After complaints, the statue was given bronze \"underwear\" for decades, until it was removed in the 1960s.", "es": "Fuente de 1942 de la diosa romana. Tras quejas, a la estatua le pusieron un \"calzón\" de bronce durante décadas, hasta que se lo quitaron en los años 60."} },
   { id: "torre-reforma", icon: "🏙️", ll: [19.42475, -99.17442], r: 200, trips: ['city'],
     name: {"en": "Torre Reforma", "es": "Torre Reforma"},
-    text: {"en": "At 246 m, one of the tallest skyscrapers in Mexico, designed to flex during earthquakes. The old house at its foot was preserved inside the project.", "es": "Con 246 m, uno de los rascacielos más altos de México, diseñado para flexionarse en los sismos. La casona a su pie se conservó dentro del proyecto."} },
+    text: {"en": "At 246 m (807 ft), one of the tallest skyscrapers in Mexico, designed to flex during earthquakes. The old house at its foot was preserved inside the project.", "es": "Con 246 m (807 pies), uno de los rascacielos más altos de México, diseñado para flexionarse en los sismos. La casona a su pie se conservó dentro del proyecto."} },
   { id: "castillo", icon: "🏰", ll: [19.42046, -99.18209], r: 350, trips: ['city'],
     name: {"en": "Chapultepec Castle", "es": "Castillo de Chapultepec"},
     text: {"en": "The only castle in North America that housed sovereigns: Emperor Maximilian and Carlota lived here in the 1860s. Today it is the National History Museum.", "es": "El único castillo de Norteamérica que habitaron soberanos: Maximiliano y Carlota vivieron aquí en la década de 1860. Hoy es el Museo Nacional de Historia."} },
@@ -1481,8 +1515,8 @@ var POIS = [
             es: '"El lugar donde fueron creados los dioses". Busca por la ventana la Pirámide del Sol y, al amanecer, el cielo lleno de globos. Toca 🛕 Teotihuacán para ver tu guía.' } },
   { id: 'campestre', icon: '⛳', ll: [19.6916, -98.8057], r: 1200, trips: ['balloon'],
     name: { en: 'Club Campestre Teotihuacán', es: 'Club Campestre Teotihuacán' },
-    text: { en: 'Almost there! From here it\'s only about 3 km west to the balloon port. If the sky is clear, look out for the first balloons being inflated.',
-            es: '¡Ya casi llegamos! Desde aquí son solo unos 3 km al oeste hasta el globopuerto. Si el cielo está despejado, busca los primeros globos inflándose.' } },
+    text: { en: 'Almost there! From here it\'s only about 3 km (2 mi) west to the balloon port. If the sky is clear, look out for the first balloons being inflated.',
+            es: '¡Ya casi llegamos! Desde aquí son solo unos 3 km (2 mi) al oeste hasta el globopuerto. Si el cielo está despejado, busca los primeros globos inflándose.' } },
   { id: 'bp', icon: '🎈', ll: BP_DEST, r: 800, trips: ['balloon'],
     name: { en: 'Arriving at Balloon\'s Paradise', es: 'Llegando a Balloon\'s Paradise' },
     text: { en: 'Your balloon port! Check in with the team, grab a coffee and watch the balloons being inflated. Dress in layers — it\'s chilly before sunrise. Tap 🎈 Balloon 101 for tips before you fly.',
@@ -1498,7 +1532,7 @@ var I18N = {
         amWater: 'Water', webLoading: 'Loading…', wWater: 'Water is on us', wGo: 'Let\'s go! · ¡Vámonos!', wHi: 'Welcome aboard!', wHiName: 'Welcome aboard, {n}!', rvBtn: '⭐ Loved the tour? Leave us a review', rvTitle: 'Loved your experience?', rvLead: 'GoVibeMX is a small local business. A few words from you mean the world to us.', rvScan: 'Scan to review us on Google', rvScanSub: 'It opens our Google page: tap the stars and add a few words.', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
-        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Almost at the airport', airportBoardSub: 'Have your ID and boarding pass handy. Don\'t forget anything in the van!', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
+        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportTrip: 'On the way to your flight', airportTripSub: 'Check your terminal on your boarding pass. Arrive 2 h (domestic) or 3 h (international) before your flight.', airportBoard: 'Almost at the airport', airportBoardSub: 'Have your ID and boarding pass handy. Don\'t forget anything in the van!', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
         gpsWait: 'Waiting for GPS…', gpsOk: 'Live GPS', gpsDenied: 'GPS off — showing planned route', gpsDemo: 'Demo mode',
@@ -1508,7 +1542,7 @@ var I18N = {
         amWater: 'Agua', webLoading: 'Cargando…', wWater: 'El agua va por nuestra cuenta', wGo: '¡Vámonos! · Let\'s go!', wHi: '¡Bienvenidos a bordo!', wHiName: '¡Bienvenidos a bordo, {n}!', rvBtn: '⭐ ¿Te gustó el tour? Déjanos una reseña', rvTitle: '¿Te gustó la experiencia?', rvLead: 'GoVibeMX es un pequeño negocio local. Unas palabras tuyas significan muchísimo para nosotros.', rvScan: 'Escanea para dejarnos una reseña en Google', rvScanSub: 'Se abre nuestra página de Google: toca las estrellas y escribe unas palabras.', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
-        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Ya casi llegamos al aeropuerto', airportBoardSub: 'Ten a la mano tu identificación y pase de abordar. ¡No olvides nada en la camioneta!', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
+        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportTrip: 'Rumbo a tu vuelo', airportTripSub: 'Revisa tu terminal en el pase de abordar. Llega 2 h (nacional) o 3 h (internacional) antes de tu vuelo.', airportBoard: 'Ya casi llegamos al aeropuerto', airportBoardSub: 'Ten a la mano tu identificación y pase de abordar. ¡No olvides nada en la camioneta!', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
         gpsWait: 'Buscando GPS…', gpsOk: 'GPS en vivo', gpsDenied: 'Sin GPS — ruta planeada', gpsDemo: 'Modo demo',
@@ -1529,8 +1563,8 @@ var GUIDE_TABS = [
 
 var GUIDE = {
   intro: {
-    lead: { en: 'About 50 km northeast of Mexico City lies Teotihuacán — once one of the largest cities on Earth. Around 500 CE it was home to perhaps 100,000 people or more, with avenues, apartment compounds, temples and murals. Then it was abandoned, and by the time the Aztecs found it, centuries later, its builders had been forgotten. The Aztecs named it Teotihuacán: "the place where the gods were created."',
-            es: 'A unos 50 km al noreste de la Ciudad de México está Teotihuacán, que fue una de las ciudades más grandes del mundo. Hacia el año 500 d.C. vivían aquí quizá 100,000 personas o más, entre avenidas, conjuntos habitacionales, templos y murales. Luego fue abandonada, y cuando los mexicas la encontraron siglos después, sus constructores ya habían sido olvidados. Ellos la llamaron Teotihuacán: "el lugar donde fueron creados los dioses".' },
+    lead: { en: 'About 50 km (31 mi) northeast of Mexico City lies Teotihuacán — once one of the largest cities on Earth. Around 500 CE it was home to perhaps 100,000 people or more, with avenues, apartment compounds, temples and murals. Then it was abandoned, and by the time the Aztecs found it, centuries later, its builders had been forgotten. The Aztecs named it Teotihuacán: "the place where the gods were created."',
+            es: 'A unos 50 km (31 mi) al noreste de la Ciudad de México está Teotihuacán, que fue una de las ciudades más grandes del mundo. Hacia el año 500 e.c. vivían aquí quizá 100,000 personas o más, entre avenidas, conjuntos habitacionales, templos y murales. Luego fue abandonada, y cuando los mexicas la encontraron siglos después, sus constructores ya habían sido olvidados. Ellos la llamaron Teotihuacán: "el lugar donde fueron creados los dioses".' },
     cards: [
       { icon: '❓', t: { en: 'A mystery city', es: 'Una ciudad misteriosa' }, p: { en: 'Nobody knows what its builders called themselves, what language they spoke, or what the city\'s original name was.', es: 'Nadie sabe cómo se llamaban sus constructores, qué idioma hablaban ni cuál era el nombre original de la ciudad.' } },
       { icon: '🌞', t: { en: 'Birth of the Fifth Sun', es: 'El nacimiento del Quinto Sol' }, p: { en: 'Aztec legend says the gods gathered here to create the sun. The humble god Nanahuatzin leapt into a sacred fire and rose as the Sun; Tecciztécatl followed and became the Moon.', es: 'Según la leyenda mexica, los dioses se reunieron aquí para crear el sol. El humilde Nanahuatzin se lanzó a la hoguera y se convirtió en el Sol; Tecciztécatl lo siguió y se volvió la Luna.' } },
@@ -1539,13 +1573,13 @@ var GUIDE = {
     ]
   },
   sights: [
-    { id: 'sun', icon: '🌞', t: { en: 'Pyramid of the Sun', es: 'Pirámide del Sol' }, n: '≈ 65 m',
-      p: { en: 'The giant of the site and one of the largest pyramids in the world, built around 200 CE. Its base is about 225 m per side — nearly as wide as the Great Pyramid of Giza. In 1971 archaeologists found a man-made cave running underneath it.',
-           es: 'La gigante del sitio y una de las pirámides más grandes del mundo, construida hacia el 200 d.C. Su base mide unos 225 m por lado, casi tanto como la Gran Pirámide de Guiza. En 1971 se descubrió una cueva artificial debajo de ella.' } },
-    { id: 'moon', icon: '🌙', t: { en: 'Pyramid of the Moon', es: 'Pirámide de la Luna' }, n: '≈ 43 m',
+    { id: 'sun', icon: '🌞', t: { en: 'Pyramid of the Sun', es: 'Pirámide del Sol' }, n: '≈ 65 m · 213 ft',
+      p: { en: 'The giant of the site and one of the largest pyramids in the world, built around 200 CE. Its base is about 225 m (740 ft) per side — nearly as wide as the Great Pyramid of Giza. In 1971 archaeologists found a man-made cave running underneath it.',
+           es: 'La gigante del sitio y una de las pirámides más grandes del mundo, construida hacia el 200 e.c. Su base mide unos 225 m (740 pies) por lado, casi tanto como la Gran Pirámide de Guiza. En 1971 se descubrió una cueva artificial debajo de ella.' } },
+    { id: 'moon', icon: '🌙', t: { en: 'Pyramid of the Moon', es: 'Pirámide de la Luna' }, n: '≈ 43 m · 141 ft',
       p: { en: 'Closes the north end of the Avenue of the Dead. It is smaller than the Sun, but because it sits on higher ground its top is almost level. It was rebuilt in at least seven stages, each one covering the last. The view down the avenue from its plaza is the classic Teotihuacán photo.',
            es: 'Cierra el extremo norte de la Calzada de los Muertos. Es más pequeña que la del Sol, pero al estar en terreno más alto su cima queda casi a la misma altura. Se reconstruyó en al menos siete etapas, una encima de otra. La vista de la calzada desde su plaza es la foto clásica.' } },
-    { id: 'avenue', icon: '🛤️', t: { en: 'Avenue of the Dead', es: 'Calzada de los Muertos' }, n: '≈ 40 m wide',
+    { id: 'avenue', icon: '🛤️', t: { en: 'Avenue of the Dead', es: 'Calzada de los Muertos' }, n: '≈ 40 m · 130 ft wide',
       p: { en: 'The city\'s grand central axis. The Aztecs named it "Miccaotli" (Avenue of the Dead) because they thought the platforms lining it were tombs — they were actually temples and palaces.',
            es: 'El gran eje central de la ciudad. Los mexicas la llamaron "Miccaotli" porque creyeron que las plataformas a sus lados eran tumbas; en realidad eran templos y palacios.' } },
     { id: 'citadel', icon: '🐍', t: { en: 'Citadel & Feathered Serpent', es: 'Ciudadela y Serpiente Emplumada' }, n: '≈ 200 CE',
@@ -1559,20 +1593,20 @@ var GUIDE = {
            es: 'Un conjunto habitacional al este de la Pirámide del Sol con el famoso mural "Tlalocan": pequeñas figuras que juegan, nadan y cantan alrededor del dios de la lluvia.' } }
   ],
   timeline: [
-    { w: { en: '~100 BCE', es: '~100 a.C.' }, d: { en: 'Small villages grow into a city in the Teotihuacán valley.', es: 'Pequeñas aldeas del valle se convierten en ciudad.' } },
-    { w: { en: '~200 CE', es: '~200 d.C.' }, d: { en: 'Pyramid of the Sun and Temple of the Feathered Serpent are built.', es: 'Se construyen la Pirámide del Sol y el Templo de la Serpiente Emplumada.' } },
-    { w: { en: '~450 CE', es: '~450 d.C.' }, d: { en: 'Peak of power. Trade in obsidian and influence reaching the Maya cities of Guatemala.', es: 'Apogeo. Comercio de obsidiana e influencia hasta las ciudades mayas de Guatemala.' } },
-    { w: { en: '~550 CE', es: '~550 d.C.' }, d: { en: 'Fire destroys the city centre; the population gradually leaves.', es: 'Un incendio destruye el centro; la población se va poco a poco.' } },
+    { w: { en: '~100 BCE', es: '~100 a.e.c.' }, d: { en: 'Small villages grow into a city in the Teotihuacán valley.', es: 'Pequeñas aldeas del valle se convierten en ciudad.' } },
+    { w: { en: '~200 CE', es: '~200 e.c.' }, d: { en: 'Pyramid of the Sun and Temple of the Feathered Serpent are built.', es: 'Se construyen la Pirámide del Sol y el Templo de la Serpiente Emplumada.' } },
+    { w: { en: '~450 CE', es: '~450 e.c.' }, d: { en: 'Peak of power. Trade in obsidian and influence reaching the Maya cities of Guatemala.', es: 'Apogeo. Comercio de obsidiana e influencia hasta las ciudades mayas de Guatemala.' } },
+    { w: { en: '~550 CE', es: '~550 e.c.' }, d: { en: 'Fire destroys the city centre; the population gradually leaves.', es: 'Un incendio destruye el centro; la población se va poco a poco.' } },
     { w: { en: '1300s', es: 'Siglo XIV' }, d: { en: 'The Aztecs discover the ruins, name the city and make pilgrimages here.', es: 'Los mexicas descubren las ruinas, le dan nombre y peregrinan aquí.' } },
     { w: { en: '1905–1910', es: '1905–1910' }, d: { en: 'Leopoldo Batres restores the Pyramid of the Sun for the centennial of independence.', es: 'Leopoldo Batres restaura la Pirámide del Sol para el centenario de la Independencia.' } },
     { w: { en: '1987', es: '1987' }, d: { en: 'Declared a UNESCO World Heritage Site.', es: 'Declarada Patrimonio de la Humanidad por la UNESCO.' } },
     { w: { en: 'Today', es: 'Hoy' }, d: { en: 'Excavations continue — only a fraction of the ancient city has been uncovered.', es: 'Las excavaciones continúan: solo se ha descubierto una parte de la ciudad.' } }
   ],
   tips: [
-    { icon: '☀️', t: { en: 'Sun & altitude', es: 'Sol y altura' }, p: { en: 'You\'re at about 2,300 m (7,500 ft) with almost no shade. Hat, sunscreen and water are a must — take it slow on stairs.', es: 'Estás a unos 2,300 m y casi no hay sombra. Sombrero, bloqueador y agua son indispensables; sube escaleras con calma.' } },
+    { icon: '☀️', t: { en: 'Sun & altitude', es: 'Sol y altura' }, p: { en: 'You\'re at about 2,300 m (7,500 ft) with almost no shade. Hat, sunscreen and water are a must — take it slow on stairs.', es: 'Estás a unos 2,300 m (7,500 pies) y casi no hay sombra. Sombrero, bloqueador y agua son indispensables; sube escaleras con calma.' } },
     { icon: '🕘', t: { en: 'Timing', es: 'Horario' }, p: { en: 'The site usually opens around 9:00 and closes around 17:00. Arriving early means cooler air and fewer people.', es: 'Normalmente abre cerca de las 9:00 y cierra cerca de las 17:00. Llegar temprano = menos calor y menos gente.' } },
     { icon: '🧗', t: { en: 'Climbing', es: 'Subir a las pirámides' }, p: { en: 'Climbing the pyramids has been restricted in recent years to protect them. Rules change, so check at the entrance.', es: 'En años recientes se ha restringido subir a las pirámides para protegerlas. Las reglas cambian: pregunta en la entrada.' } },
-    { icon: '🚶', t: { en: 'Distances', es: 'Distancias' }, p: { en: 'Citadel → Pyramid of the Moon is roughly 2 km on foot. Comfortable shoes!', es: 'De la Ciudadela a la Pirámide de la Luna hay unos 2 km a pie. ¡Zapatos cómodos!' } },
+    { icon: '🚶', t: { en: 'Distances', es: 'Distancias' }, p: { en: 'Citadel → Pyramid of the Moon is roughly 2 km (1.2 mi) on foot. Comfortable shoes!', es: 'De la Ciudadela a la Pirámide de la Luna hay unos 2 km (1.2 mi) a pie. ¡Zapatos cómodos!' } },
     { icon: '💵', t: { en: 'Cash', es: 'Efectivo' }, p: { en: 'Bring some pesos for vendors, snacks and souvenirs like obsidian carvings and jaguar-shaped clay whistles.', es: 'Lleva pesos para vendedores, botanas y recuerdos como figuras de obsidiana y silbatos de barro con forma de jaguar.' } },
     { icon: '🌵', t: { en: 'Taste the region', es: 'Prueba la región' }, p: { en: 'This valley is maguey country: try pulque, prickly pear (tuna) and xoconostle, or a meal in a nearby cave restaurant.', es: 'Este valle es tierra de maguey: prueba el pulque, la tuna y el xoconostle, o come en algún restaurante en cueva cercano.' } }
   ],
@@ -1740,7 +1774,7 @@ function renderExplorer() {
   var live = $('x-live');
   var where = S.zone ? tr(ZONE_INFO[S.zone.id].name) + (S.alc ? ' · ' + S.alc : '') : (S.alc || '');
   live.hidden = !where;
-  if (where) live.innerHTML = '<span class="pulse"></span>' + where + (S.temp != null ? ' · ' + Math.round(S.temp) + '°C' : '');
+  if (where) live.innerHTML = '<span class="pulse"></span>' + where + (S.temp != null ? ' · ' + Math.round(S.temp) + '°C / ' + Math.round(S.temp * 9 / 5 + 32) + '°F' : '');
   renderFotm();
   var tabs = [['hoods', 'xHoods'], ['museums', 'xMuseums'], ['facts', 'xFacts'], ['numbers', 'xNumbers'], ['quiz', 'xQuiz'], ['spanish', 'xSpanish']];
   $('explorer-tabs').innerHTML = tabs.map(function (x) {
@@ -1782,7 +1816,7 @@ function renderExplorer() {
   } else if (S.xTab === 'numbers') {
     h = '<div class="num-grid">' + CDMX_NUMBERS.map(function (n, i) {
       var m = /^(\D*)([\d,.]+)(.*)$/.exec(n.v);
-      var v = m ? m[1] + '<span class="count" data-n="' + m[2] + '">' + m[2] + '</span>' + m[3] : n.v;
+      var v = (m ? m[1] + '<span class="count" data-n="' + m[2] + '">' + m[2] + '</span>' + m[3] : n.v) + (n.u ? ' <small>' + tr(n.u) + '</small>' : '');
       return '<div class="num-tile" style="--fc:' + X_COLORS[i % X_COLORS.length] + '"><div class="v">' + v + '</div><div class="l">' + tr(n.l) + '</div></div>';
     }).join('') + '</div>';
   } else if (S.xTab === 'quiz') {
@@ -1972,6 +2006,7 @@ function initTransitMap() {
   if (!window.L) return;
   if (tMap) { tMap.remove(); tMap = null; tLines = {}; }
   tMap = L_.map('transit-map', { zoomControl: true, attributionControl: true });
+  L_.control.scale({ metric: true, imperial: true, position: 'bottomleft' }).addTo(tMap); // km + mi legend
   L_.tileLayer(TILE_DARK, { attribution: ATTR_DARK, maxNativeZoom: 16, maxZoom: 19 }).addTo(tMap);
   L_.tileLayer(TILE_LABELS, { maxNativeZoom: 16, maxZoom: 19 }).addTo(tMap);
   var rnd = L_.canvas({ padding: 0.3 }), all = [];
@@ -2202,6 +2237,14 @@ function launchApp(i) {
 }
 
 // ---- Welcome page 2 and the host chip ----
+// Seatbelt pictogram (like the dashboard warning light): seated person with the shoulder and lap belt
+var SEATBELT_SVG = '<svg viewBox="0 0 48 48" aria-hidden="true">' +
+  '<rect x="7" y="11" width="7" height="31" rx="3.5" fill="#8d97a5"/><rect x="7" y="36" width="27" height="6" rx="3" fill="#8d97a5"/>' +
+  '<circle cx="22" cy="8.5" r="5.5" fill="#fff"/>' +
+  '<path d="M15 18c0-2 2-3.5 4-3.5h6c2.5 0 4 1.6 4 4V29h8.5a3 3 0 0 1 3 3v9a3 3 0 0 1-6 0v-6H19a4 4 0 0 1-4-4z" fill="#fff"/>' +
+  '<path d="M27.5 16.5 16 31.5" stroke="#FF5252" stroke-width="4.2" stroke-linecap="round"/>' +
+  '<path d="M14 33.5h17" stroke="#FF5252" stroke-width="4.2" stroke-linecap="round"/>' +
+  '<rect x="13" y="29.5" width="6.5" height="8" rx="1.6" fill="#FFD740" stroke="#7a5a00" stroke-width="1.2"/></svg>';
 function renderHost() {
   if ($('host-name')) $('host-name').textContent = HOST;
   if ($('host-av')) $('host-av').textContent = HOST.charAt(0).toUpperCase();
@@ -2212,7 +2255,7 @@ function renderHost() {
   $('host-big').textContent = t('hostHi').replace('{n}', HOST);
   $('host-small').textContent = o.hostHi.replace('{n}', HOST);
   var cards = [
-    { c: 'belt', i: '🔒', b: t('w2Belt'), s: t('w2BeltSub'), o: o.w2Belt },
+    { c: 'belt', i: SEATBELT_SVG, b: t('w2Belt'), s: t('w2BeltSub'), o: o.w2Belt },
     { i: '📶', b: 'Wi-Fi', s: WIFI.name, pw: WIFI.pass, o: o.w2Pass },
     { i: '💧', b: t('w2Water'), s: t('w2WaterSub'), o: o.w2Water },
     { i: '❄️', b: t('w2Ac'), s: t('w2AcSub'), o: o.w2Ac }
@@ -2268,7 +2311,7 @@ Object.assign(I18N.en, {
   stNote: 'Opens the app. Press ◯ Home on the tablet to come back to GoVibeMX.', stNoFully: 'Apps open only on the tablet (Fully Kiosk).',
   hostLbl: 'Your host', hostHi: 'Hi! I\'m {n}, your host & driver', w2Belt: 'Buckle up', w2BeltSub: 'Seatbelts on, every seat, every ride. Thank you!',
   w2Pass: 'Password', w2Water: 'Water is on us', w2WaterSub: 'The bottles in the middle rack are yours. More up front.',
-  w2Ac: 'A/C at 22°C', w2AcSub: 'Too warm or too cold? Just let me know.', w2Go: 'Enjoy the ride! 🎉',
+  w2Ac: 'A/C at 22°C (72°F)', w2AcSub: 'Too warm or too cold? Just let me know.', w2Go: 'Enjoy the ride! 🎉',
   byeHi: 'Thank you for riding with us!', byeHiName: 'Thank you, {n}!', byeHost: '— {n} & the GoVibeMX team 💛',
   byeCheck: 'Got everything?', byeCheckSub: 'Phone, bags, sunglasses, jacket… check your seat!',
   byeRv: 'Loved it? Review us', byeRvSub: 'Scan with your camera', byeRate: 'Rate your ride', byeRateSub: 'A 5-star rating in the app means a lot!',
@@ -2279,7 +2322,7 @@ Object.assign(I18N.es, {
   stNote: 'Se abre la app. Presiona ◯ Inicio en la tablet para volver a GoVibeMX.', stNoFully: 'Las apps solo abren en la tablet (Fully Kiosk).',
   hostLbl: 'Tu anfitrión', hostHi: '¡Hola! Soy {n}, tu anfitrión y conductor', w2Belt: 'Abróchate el cinturón', w2BeltSub: 'Todos con cinturón, en cada asiento y cada viaje. ¡Gracias!',
   w2Pass: 'Contraseña', w2Water: 'El agua va por nuestra cuenta', w2WaterSub: 'Las botellas del estante central son tuyas. Hay más adelante.',
-  w2Ac: 'Aire a 22°C', w2AcSub: '¿Mucho calor o frío? Solo dime.', w2Go: '¡Disfruta el viaje! 🎉',
+  w2Ac: 'Aire a 22°C (72°F)', w2AcSub: '¿Mucho calor o frío? Solo dime.', w2Go: '¡Disfruta el viaje! 🎉',
   byeHi: '¡Gracias por viajar con nosotros!', byeHiName: '¡Gracias, {n}!', byeHost: '— {n} y el equipo GoVibeMX 💛',
   byeCheck: '¿Llevas todo?', byeCheckSub: 'Celular, bolsas, lentes, chamarra… ¡revisa tu asiento!',
   byeRv: '¿Te gustó? Déjanos una reseña', byeRvSub: 'Escanea con tu cámara', byeRate: 'Califica tu viaje', byeRateSub: '¡5 estrellas en la app significan mucho!',
@@ -2508,7 +2551,8 @@ function highlightZone() {
 }
 function isFree() { return !!TRIPS[S.tripId].freeRoam; }
 // City sights show on every live-map trip (City Tour and Ride).
-function poiVisible(p) { return p.trips ? (p.trips.indexOf(S.tripId) >= 0 || (isFree() && p.trips.indexOf('city') >= 0)) : !isFree(); }
+// POIs without a trips list belong to the Teotihuacán road (balloon, pyramids, back home)
+function poiVisible(p) { return p.trips ? (p.trips.indexOf(S.tripId) >= 0 || (isFree() && p.trips.indexOf('city') >= 0)) : !isFree() && !TRIPS[S.tripId].airport; }
 function refreshPoiMarkers() {
   if (!bigMap) return;
   poiMarkers.forEach(function (m) { if (poiVisible(m._poi)) m.addTo(bigMap); else m.remove(); });
@@ -2607,6 +2651,7 @@ function initMiniMap() {
 function initBigMap() {
   if (!window.L || bigMap) return;
   bigMap = L_.map('map', { zoomControl: true, attributionControl: true });
+  L_.control.scale({ metric: true, imperial: true, position: 'topleft' }).addTo(bigMap); // km + mi legend
   bigMap.fitBounds(L_.latLngBounds(S.route), { padding: [40, 40] });
   makeLayers(bigMap, big, true);
   bigMap.on('dragstart', function () { S.pauseUntil = Date.now() + 60000; });
@@ -2906,7 +2951,12 @@ function nearbyPois(n) {
   return POIS.filter(poiVisible).map(function (p) { return { p: p, d: haversine(S.pos, p.ll) }; })
     .sort(function (a, b) { return a.d - b.d; }).slice(0, n);
 }
-function fmtDist(m) { return m < 1000 ? Math.round(m / 10) * 10 + ' m' : (m / 1000).toFixed(m < 10000 ? 1 : 0) + ' km'; }
+// Metric first, imperial after: 350 m · 1,150 ft / 2.4 km · 1.5 mi
+function fmtDist(m) {
+  if (m < 1000) return Math.round(m / 10) * 10 + ' m · ' + (Math.round(m * 3.28084 / 10) * 10).toLocaleString('en-US') + ' ft';
+  var mi = m / 1609.344;
+  return (m / 1000).toFixed(m < 10000 ? 1 : 0) + ' km · ' + mi.toFixed(mi < 10 ? 1 : 0) + ' mi';
+}
 function focusPoi(id) {
   var m = poiMarkers.filter(function (x) { return x._poi.id === id; })[0];
   if (!m || !bigMap) return;
@@ -2966,6 +3016,11 @@ function fmtSunrise(hhmm) {
 /* =====================================================================
    11. RENDER STATS
    ===================================================================== */
+// Airport tips in the map panel: travel tips on the way, a reminder when we're close
+function setAirportBox(close) {
+  $('airport-t').textContent = t(close ? 'airportBoard' : 'airportTrip');
+  $('airport-s').textContent = t(close ? 'airportBoardSub' : 'airportTripSub');
+}
 function renderCity() {
   var zone = S.zone ? tr(ZONE_INFO[S.zone.id].name) : (S.alc ? t('outsideZones') : (S.pos ? t('outsideCity') : '—'));
   var alc = S.alc || '—';
@@ -2976,6 +3031,7 @@ function renderCity() {
   var ap = null;
   if (S.pos) AIRPORT_LINKS.forEach(function (a) { var d = haversine(S.pos, a.ll); if (d < 4000 && (!ap || d < ap.d)) ap = { a: a, d: d }; });
   $('airport-box').hidden = !ap;
+  setAirportBox(true);
   if (S.pos) {
     var nm = nearest(METRO_STATIONS, S.pos), ne = nearest(ECOBICI_DOCKS, S.pos), nb = nearest(METROBUS_STATIONS, S.pos);
     $('transit-near').innerHTML = '<div><span>🚇 ' + nm.s[2] + lineBadges(nm.s[3]) + '</span><span>' + fmtDist(nm.d) + '</span></div>' +
@@ -2991,6 +3047,7 @@ function render() {
   $('home-trip-title').textContent = tr(tp.name);
   $('panel-trip-title').textContent = tr(tp.name);
   if (tp.freeRoam) { S.remaining = 0; renderCity(); }
+  else { $('airport-box').hidden = !tp.airport; if (tp.airport) setAirportBox(S.remaining < 3000); }
   $('prog-from').textContent = S.fromGps ? t('you') : tr(tp.from);
   $('prog-to').textContent = tr(tp.to);
 
@@ -3015,7 +3072,7 @@ function render() {
 
   $('st-dist').textContent = distTxt; $('st-dist2').textContent = arrived ? '' : mi.toFixed(1) + ' mi';
   $('st-time').textContent = timeTxt; $('st-time2').textContent = arrived ? '' : t('arrival') + ' ' + etaTxt;
-  $('home-dist').textContent = distTxt; $('home-time').textContent = timeTxt; $('home-eta').textContent = etaTxt;
+  $('home-dist').innerHTML = distTxt + (arrived ? '' : ' <small>' + mi.toFixed(mi < 10 ? 1 : 0) + ' mi</small>'); $('home-time').textContent = timeTxt; $('home-eta').textContent = etaTxt;
 
   if (S.speed != null && S.pos) {
     var kmh = S.speed * 3.6;
@@ -3072,7 +3129,7 @@ function siteSvg() {
     '<text x="245" y="300" fill="#c9a77f" font-size="10" text-anchor="middle">' + (S.lang === 'es' ? 'Pirámide del Sol' : 'Pyramid of the Sun') + '</text>' +
     '<text x="170" y="24" fill="#c9a77f" font-size="10" text-anchor="middle">' + (S.lang === 'es' ? 'Pirámide de la Luna' : 'Pyramid of the Moon') + '</text>' +
     '<text x="250" y="417" fill="#c9a77f" font-size="10" text-anchor="middle">' + (S.lang === 'es' ? 'Ciudadela' : 'Citadel') + '</text>' +
-    '<text x="60" y="300" fill="#9a8673" font-size="10" text-anchor="middle">' + (S.lang === 'es' ? '≈ 2 km a pie' : '≈ 2 km walk') + '</text>' +
+    '<text x="60" y="300" fill="#9a8673" font-size="10" text-anchor="middle">' + (S.lang === 'es' ? '≈ 2 km (1.2 mi) a pie' : '≈ 2 km (1.2 mi) walk') + '</text>' +
     '<text x="60" y="314" fill="#9a8673" font-size="10" text-anchor="middle">' + (S.lang === 'es' ? 'Ciudadela → Luna' : 'Citadel → Moon') + '</text>' +
     '</svg>';
 }
