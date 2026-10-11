@@ -6,12 +6,15 @@
 # después se piden seis archivos al dominio real.  Si alguno no está, el
 # script sale con error en vez de dar por bueno el despliegue.
 #
+# Para ver los cambios ANTES de publicarlos:  ./vista-previa.sh
+#
 #   CLOUDFLARE_ACCOUNT_ID=... CLOUDFLARE_API_TOKEN=... ./desplegar.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 
 python3 build.py > /dev/null
 python3 publicar.py
+python3 preview.py        # que la copia local no se quede vieja
 npx wrangler deploy
 
 echo
