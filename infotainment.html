@@ -225,10 +225,17 @@
   .svc-title { margin: 0; color: #FFD54F; }
   .svc-lead { margin: 4px 0 14px; color: #c9d1d9; font-size: 15px; }
   .svc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  a.svc-card { color: inherit; text-decoration: none; cursor: pointer; transition: border-color .15s, transform .1s; }
+  a.svc-card:active { transform: scale(.98); }
+  a.svc-card:hover, a.svc-card:focus-visible { border-color: #FFB300; outline: none; }
   .svc-card { background: #161b22; border: 1px solid #2a313c; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
   .svc-card .tag { align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #FFB300; }
   .svc-card h3 { margin: 0; font-size: 17px; display: flex; gap: 8px; align-items: center; }
   .svc-card p { margin: 0; font-size: 13px; line-height: 1.45; color: #c9d1d9; flex: 1; }
+  .svc-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .svc-go { background: #FFB300; color: #1a1200; font-weight: 800; font-size: 13px; border-radius: 16px; padding: 6px 12px; white-space: nowrap; }
+  .svc-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+  .svc-links a { color: #FFD54F; font-weight: 700; font-size: 14px; text-decoration: none; border-bottom: 1px dotted #FFD54F; }
   .svc-card .price { font-size: 20px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
   .svc-card .price small { font-size: 12px; font-weight: 400; color: #9aa4b2; }
   .svc-contact { display: flex; gap: 16px; align-items: center; margin-top: 14px; padding: 14px; background: #0f2a1a; border: 1px solid #25D366; border-radius: 14px; flex-wrap: wrap; }
@@ -280,13 +287,16 @@
   <h2 class="svc-title" data-i18n="svcTitle">🚐 GoVibeMX Services</h2>
   <p class="svc-lead" data-i18n="svcLead">The same private vehicle and host as today's ride, whenever you need to get around the city.</p>
   <div class="svc-cards" id="svc-cards"></div>
+  <div class="svc-links">
+    <a href="https://govibemx.com/services/" data-i18n="svcAll">See all services on govibemx.com →</a>
+    <a href="https://govibemx.com/experiences" data-i18n="svcExp">Full-day experiences →</a>
+  </div>
   <div class="svc-contact">
     <img class="svc-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/525549017902?text=Hola!%20Me%20interesa%20un%20viaje%20privado" alt="WhatsApp QR code">
     <div class="svc-wa">
       <div class="svc-wa-row"><svg class="wa-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4C13 4 4 12.6 4 23.3c0 3.8 1.1 7.3 3.1 10.3L4.6 43l9.7-2.5c2.9 1.5 6.2 2.3 9.7 2.3 11 0 20-8.6 20-19.3S35 4 24 4z" fill="#25D366"/><path d="M33.6 28.9c-.5-.3-3-1.5-3.5-1.6-.5-.2-.8-.3-1.1.2-.3.5-1.3 1.6-1.6 1.9-.3.3-.6.4-1.1.1-.5-.3-2.1-.8-4-2.5-1.5-1.3-2.5-2.9-2.8-3.4-.3-.5 0-.8.2-1 .2-.2.5-.6.8-.9.3-.3.3-.5.5-.9.2-.3.1-.7 0-.9-.1-.3-1.1-2.7-1.5-3.7-.4-1-.8-.8-1.1-.8h-.9c-.3 0-.8.1-1.3.6-.4.5-1.7 1.6-1.7 4s1.7 4.6 2 4.9c.2.3 3.4 5.2 8.2 7.3 1.1.5 2 .8 2.7 1 1.1.4 2.2.3 3 .2.9-.1 2.8-1.1 3.2-2.2.4-1.1.4-2 .3-2.2-.1-.2-.4-.3-.9-.6z" fill="#fff"/></svg><span>WhatsApp</span></div>
       <div class="svc-phone">+52 55 4901 7902</div>
       <div class="svc-hint" data-i18n="svcScan">Scan the code with your phone camera to chat with us, or just ask your driver.</div>
-      <div class="svc-more" data-i18n="svcMore">Full-day experiences: govibemx.com</div>
     </div>
   </div>
 </div><div class="close-btn" onclick="closeModal('servicesModal')">X</div></div>
@@ -554,17 +564,20 @@ var SERVICES = [
     name: { en: 'VIP Airport Transfers (AICM & AIFA)', es: 'Traslados VIP al aeropuerto (AICM y AIFA)' },
     text: { en: 'Private meet-and-greet at either Mexico City airport, both directions. Flight tracking, luggage help, bottled water and an English-speaking driver, door to door. $1,400 MXN flat from AICM, $2,400 from AIFA, for one guest or six.',
             es: 'Recepción privada en cualquiera de los aeropuertos de la CDMX, ida o vuelta. Monitoreo de vuelo, ayuda con equipaje, agua y conductor que habla inglés, de puerta a puerta. $1,400 MXN fijo desde el AICM, $2,400 desde el AIFA, de 1 a 6 personas.' },
-    price: { en: 'From $1,400 <small>MXN</small>', es: 'Desde $1,400 <small>MXN</small>' } },
+    price: { en: 'From $1,400 <small>MXN</small>', es: 'Desde $1,400 <small>MXN</small>' },
+    url: 'https://govibemx.com/services/airport-transfer-mexico-city/' },
   { icon: '🏙️', tag: { en: 'Half day', es: 'Medio día' },
     name: { en: 'Express Neighborhood Tour', es: 'Tour exprés por las colonias' },
     text: { en: 'A private, drive-and-explore tour of the best neighborhoods (Roma, Condesa, Coyoacán, the historic center) at your pace, hosted from the car. Flat price for the whole group, up to 6.',
             es: 'Un tour privado para recorrer en auto las mejores colonias (Roma, Condesa, Coyoacán, el Centro Histórico) a tu ritmo, con anfitrión a bordo. Precio fijo para todo el grupo, hasta 6.' },
-    price: { en: '$3,200 <small>MXN</small>', es: '$3,200 <small>MXN</small>' } },
+    price: { en: '$3,200 <small>MXN</small>', es: '$3,200 <small>MXN</small>' },
+    url: 'https://govibemx.com/services/mexico-city-private-tour/' },
   { icon: '🕐', tag: { en: 'Your itinerary', es: 'Tu itinerario' },
     name: { en: 'Private Driver by the Hour', es: 'Chofer privado por hora' },
     text: { en: 'Your own bilingual driver-host. Build your own itinerary (meetings, shopping, dining, sightseeing) and we handle the rest.',
             es: 'Tu propio chofer-anfitrión bilingüe. Arma tu itinerario (juntas, compras, restaurantes, paseos) y nosotros nos encargamos del resto.' },
-    price: { en: '$800 <small>MXN</small>', es: '$800 <small>MXN</small>' } }
+    price: { en: '$800 <small>MXN</small>', es: '$800 <small>MXN</small>' },
+    url: 'https://govibemx.com/services/private-driver-mexico-city/' }
 ];
 
 // Phone remote: the tablet and driver.html share this id in Firebase (rearScreen/<VAN_ID>).
@@ -764,7 +777,7 @@ var POIS = [
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Facts',
-        svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcMore: 'Full-day experiences: govibemx.com',
+        svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
         back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhood explorer', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
@@ -772,7 +785,7 @@ var I18N = {
         overviewBadge: 'Overview', followBadge: 'Live position', arrived: 'Arrived!', min: 'min', you: 'You are here' },
   es: { yourJourney: 'Tu viaje', toGo: 'Faltan', timeLeft: 'Tiempo', arrival: 'Llegada', openMap: '🗺️ Ver mapa en vivo',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
-        svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcMore: 'Experiencias de día completo: govibemx.com',
+        svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
         back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Explora las colonias', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
@@ -930,8 +943,8 @@ function openModal(id) { $(id).style.display = 'flex'; }
 function openServices() { renderServices(); openModal('servicesModal'); }
 function renderServices() {
   $('svc-cards').innerHTML = SERVICES.map(function (v) {
-    return '<div class="svc-card"><span class="tag">' + tr(v.tag) + '</span><h3><span>' + v.icon + '</span>' + tr(v.name) + '</h3>' +
-      '<p>' + tr(v.text) + '</p><div class="price">' + tr(v.price) + '</div></div>';
+    return '<a class="svc-card" href="' + v.url + '"><span class="tag">' + tr(v.tag) + '</span><h3><span>' + v.icon + '</span>' + tr(v.name) + '</h3>' +
+      '<p>' + tr(v.text) + '</p><div class="svc-foot"><span class="price">' + tr(v.price) + '</span><span class="svc-go">' + t('svcView') + '</span></div></a>';
   }).join('');
 }
 function closeModal(id) { $(id).style.display = 'none'; }
