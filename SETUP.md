@@ -18,7 +18,7 @@ Como el repositorio es público, estas direcciones sirven las páginas directo d
 - **Tablet:** `https://raw.githack.com/awoolleym/govibemx/ccr-b19bbd16-2su3kq/infotainment.html`
 - **Celular (remoto):** `https://raw.githack.com/awoolleym/govibemx/ccr-b19bbd16-2su3kq/driver.html`
 
-Son solo para pruebas: pueden tardar unos minutos en mostrar cambios nuevos. Para el uso diario, usa Cloudflare (abajo).
+Son solo para pruebas: pueden tardar unos minutos en mostrar cambios nuevos. Para el uso diario, usa GitHub Pages (abajo).
 
 ---
 
@@ -69,7 +69,7 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 
 ## 3. El control remoto en tu celular
 
-1. En el celular abre `https://TU-DOMINIO/remoto`.
+1. En el celular abre la dirección del remoto: `https://awoolleym.github.io/govibemx/driver.html` (GitHub Pages) o `https://TU-DOMINIO/remoto` (Cloudflare).
 2. La primera vez te pide **crear un PIN** (4–6 dígitos, dos veces). Todos tus celulares usan el mismo PIN.
 3. En el menú del navegador elige **"Agregar a pantalla de inicio"**: queda un ícono **GoVibe Remote** como si fuera app.
 4. Úsalo así:
