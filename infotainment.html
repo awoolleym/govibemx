@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://games.cdn.famobi.com">
+<link rel="preconnect" href="https://img.cdn.famobi.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&display=swap">
 <style>
   /* =========================================================
@@ -643,6 +645,32 @@
   .stream-note { color: #aab4c0; font-size: 14px; margin: 14px 0 0; }
   .disney { background: linear-gradient(135deg,#113ccf,#0a1f6b); }
   .max { background: linear-gradient(135deg,#002be7,#7a1fd6); }
+  /* Arcade games */
+  #games-screen .tabs button { background: #140c33; color: #d9ccff; border-color: #2e2366; }
+  #games-screen .tabs button.on { background: linear-gradient(90deg,#7C4DFF,#E040FB); color: #fff; border-color: transparent; }
+  .arcade { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 8px 14px 12px; }
+  .arcade[hidden], .games-wrap[hidden] { display: none; }
+  .arc-cats { display: flex; gap: 6px; flex-wrap: wrap; }
+  .arc-cats button { background: rgba(255,255,255,.05); color: #d1c4e9; border: 1px solid #2e2366; border-radius: 16px; padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .arc-cats button.on { background: #7C4DFF; color: #fff; border-color: #7C4DFF; }
+  .arc-grid { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-content: start; grid-auto-rows: max-content; }
+  .arc-card { background: #120a2a; border: 1px solid #2e2366; border-radius: 14px; padding: 0 0 8px; overflow: hidden; cursor: pointer; color: #fff; font-family: inherit; display: flex; flex-direction: column; gap: 6px; text-align: center; }
+  .arc-card:active { transform: scale(.97); }
+  .arc-img { display: block; width: 100%; height: 0; padding-top: 62.5%; flex-shrink: 0; background: #1a1040 center/cover no-repeat; }
+  .arc-card b { font-size: 14px; padding: 0 6px; }
+
+  /* Brightness */
+  #dimmer { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 9000; transition: opacity .4s; }
+  #screen-off { position: fixed; inset: 0; background: #000; z-index: 9500; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 30px; color: #2a2a2a; font-size: 16px; font-weight: 700; cursor: pointer; }
+  #screen-off[hidden] { display: none; }
+  .bright-panel { background: #0d1117; max-width: 560px; }
+  .bright-panel h2 { margin: 0 0 12px; color: #FFE082; }
+  .bright-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .bright-row button, .bright-off { background: #1b222c; color: #fff; border: 2px solid #333c48; border-radius: 14px; padding: 14px 6px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bright-row button .i { font-size: 28px; }
+  .bright-row button.on { border-color: #FFD740; background: #2a2108; }
+  .bright-off { width: 100%; margin-top: 12px; flex-direction: row; justify-content: center; gap: 10px; background: #000; }
+
   /* =========================================================
      ADAPTIVE SIZING · everything scales with the screen height,
      so the home screen fits the Lenovo Tab M9 (and other tablets)
@@ -802,6 +830,15 @@
   </div>
 </div>
 
+<!-- Brightness: passengers can dim or turn off the screen (tap to turn it back on) -->
+<div id="brightModal" class="modal"><div class="modal-content bright-panel">
+  <h2>🔆 <span data-i18n="brTitle">Screen brightness</span></h2>
+  <div class="bright-row" id="bright-row"></div>
+  <button class="bright-off" onclick="closeModal('brightModal'); screenOff()">⏻ <span data-i18n="brOff">Turn off the screen</span></button>
+</div><div class="close-btn" onclick="closeModal('brightModal')">X</div></div>
+<div id="dimmer" aria-hidden="true"></div>
+<div id="screen-off" hidden onclick="screenOn()"><span data-i18n="brWake">Tap to turn on · Toca para encender</span></div>
+
 <!-- Streaming apps (they open as apps on the tablet; Home brings you back) -->
 <div id="streamModal" class="modal"><div class="modal-content stream-panel">
   <h2>🍿 <span data-i18n="stTitle">Streaming</span></h2>
@@ -841,6 +878,7 @@
     <button class="chip-btn" onclick="openModal('waterModal')">💧 <span data-i18n="amWater">Water</span></button>
     <button class="chip-btn" onclick="openModal('acModal')">❄️ <span data-i18n="amAC">A/C</span></button>
     <button class="chip-btn" onclick="openModal('wifiModal')">📶 <span>Wi-Fi</span></button>
+    <button class="chip-btn" onclick="openBright()" aria-label="Brightness">🔆</button>
   </div>
   <div class="topbar-right">
     <button class="host-chip" onclick="showHostInfo()"><span class="av" id="host-av">A</span><span><small id="host-lbl">Your host</small><b id="host-name">Alan</b></span></button>
@@ -886,7 +924,7 @@
       <div onclick="openStreaming()" class="btn stream"><span class="btn-icon">🍿</span><span class="btn-title" data-i18n="tStream">Streaming</span><span class="btn-sub" data-i18n="tStreamSub">Netflix · Prime · Disney+ · YouTube</span></div>
       <div onclick="openTV('mx')" class="btn tv"><span class="btn-icon">📺</span><span class="btn-title">GoVibe TV</span><span class="btn-sub" data-i18n="tTvSub">Mexico in videos</span></div>
       <div onclick="openTV('kids')" class="btn kidstv"><span class="btn-icon">🧸</span><span class="btn-title" data-i18n="tKidsTv">Kids TV</span><span class="btn-sub" data-i18n="tKidsTvSub">Cartoons &amp; songs</span></div>
-      <div onclick="openGames()" class="btn games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span><span class="btn-sub" data-i18n="tGamesSub">Memory · Quiz · Spot it!</span></div>
+      <div onclick="openGames()" class="btn games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span><span class="btn-sub" data-i18n="tGamesSub">Arcade · Memory · Quiz</span></div>
     </div>
   </section>
 
@@ -1005,7 +1043,12 @@
     <button class="back-home" onclick="showScreen('home')" data-i18n="back">⬅ Home</button>
     <h2>🎮 <span data-i18n="tGames">Games</span></h2>
   </div>
-  <div class="games-wrap">
+  <div class="tabs" id="games-tabs"></div>
+  <div class="arcade" id="arcade" hidden>
+    <div class="arc-cats" id="arc-cats"></div>
+    <div class="arc-grid" id="arc-grid"></div>
+  </div>
+  <div class="games-wrap" id="instant">
     <div class="game-pick" id="game-pick"></div>
     <div class="mem">
       <div class="mem-head"><b data-i18n="memTitle">Memorama</b><span id="mem-stats"></span><button class="mem-new" onclick="newMemory()" data-i18n="memNew">🔄 New game</button></div>
@@ -2170,7 +2213,12 @@ var MEM_ITEMS = [
   ['🌻', 'Sunflower', 'Girasol'], ['🐢', 'Turtle', 'Tortuga'], ['☀️', 'Sun', 'Sol'], ['🌙', 'Moon', 'Luna']
 ];
 var MEM = null;
-function openGames() { if (!MEM) newMemory(); else renderGames(); showScreen('games-screen'); }
+// Arcade: free HTML5 games from Famobi (made to be embedded), played inside the screen.
+// The links point at a game version; if one stops loading, take the new link from play.famobi.com/<id>.
+var ARCADE = [{"id":"moto-x3m","n":"Moto X3M","c":"act","u":"https://games.cdn.famobi.com/html5games/m/moto-x3m/v100/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=442157bb-0a48-4e9b-9fa6-e1503f16e8e3&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/MotoX3mTeaser.jpg"},{"id":"penalty-shooters-2","n":"Penalty Shooters 2","c":"act","u":"https://games.cdn.famobi.com/html5games/p/penalty-shooters-2/v350/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=8e8bdb8b-f420-48ed-ad68-dd5721a807c8&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/PenaltyShooters2Teaser.jpg"},{"id":"archery-world-tour","n":"Archery World Tour","c":"act","u":"https://games.cdn.famobi.com/html5games/a/archery-world-tour/v610/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=ebcb987a-3fd0-4b4a-bae6-f456fff9cac3&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/ArcheryWorldTourTeaser.jpg"},{"id":"cannon-balls-3d","n":"Cannon Balls 3D","c":"act","u":"https://games.cdn.famobi.com/html5games/c/cannon-balls-3d/v320/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=3ffa11c2-61da-4974-892b-473582253371&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/CannonBalls3dTeaser.jpg"},{"id":"tower-crash-3d","n":"Tower Crash 3D","c":"act","u":"https://games.cdn.famobi.com/html5games/t/tower-crash-3d/v290/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=68a7c06e-ec27-4fa4-99a5-a5e9702ac4ef&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/TowerCrash3dTeaser.jpg"},{"id":"color-tunnel","n":"Color Tunnel","c":"act","u":"https://games.cdn.famobi.com/html5games/c/color-tunnel/v010/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=7bfb6b66-a75c-4021-af3f-ab7a6255186f&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/ColorTunnelTeaser.jpg"},{"id":"om-nom-run","n":"Om Nom Run","c":"kids","u":"https://games.cdn.famobi.com/html5games/o/om-nom-run/v1240/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=abe80572-560a-444d-baf7-2fa4a7b2c02f&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/OmNomRunTeaser.jpg"},{"id":"perfect-piano","n":"Perfect Piano","c":"kids","u":"https://games.cdn.famobi.com/html5games/p/perfect-piano/50931273/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=24f835e0-d21a-47e1-a721-9f68beed83f3&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/PerfectPiano_Teaser.jpg"},{"id":"zoo-boom","n":"Zoo Boom","c":"kids","u":"https://games.cdn.famobi.com/html5games/z/zoo-boom/v3400/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=5e772ebe-9e0a-4cd3-adcf-bba662f35535&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/ZooBoomTeaser.jpg"},{"id":"smarty-bubbles","n":"Smarty Bubbles","c":"puz","u":"https://games.cdn.famobi.com/html5games/s/smarty-bubbles/v220/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=d8f24956-dc91-4902-9096-a46cb1353b6f&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/SmartyBubbles20160620Teaser.jpg"},{"id":"bubble-woods","n":"Bubble Woods","c":"puz","u":"https://games.cdn.famobi.com/html5games/b/bubble-woods/v580/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=53159388-d515-45e5-b65a-56d21c595405&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/BubbleWoodsTeaser.jpg"},{"id":"bubble-tower-3d","n":"Bubble Tower 3D","c":"puz","u":"https://games.cdn.famobi.com/html5games/b/bubble-tower-3d/v170/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=1385d98a-b5f2-4339-bce7-b99a8dd2e8b0&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=394","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/BubbleTower3dTeaser.jpg"},{"id":"fruita-crush","n":"Fruita Crush","c":"puz","u":"https://games.cdn.famobi.com/html5games/f/fruita-crush/v060/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=b97fe0cb-66f4-4005-b37a-eb245b648053&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/FruitaCrushTeaser.jpg"},{"id":"2048","n":"2048","c":"puz","u":"https://games.cdn.famobi.com/html5games/0/2048/v180/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=9945efe5-4904-43f0-9f75-f9c4c0a77422&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/2048Teaser.jpg"},{"id":"sudoku-classic","n":"Sudoku","c":"puz","u":"https://games.cdn.famobi.com/html5games/s/sudoku-classic/v240/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=562b648b-7d87-4752-a310-dfdcc656cdba&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/SudokuClassicTeaser.jpg"},{"id":"mahjong-relax","n":"Mahjong Relax","c":"puz","u":"https://games.cdn.famobi.com/html5games/m/mahjong-relax/v7/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=2363495f-0e53-4ee3-a90f-bb03fa687ff1&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/MahjongTeaser.jpg"},{"id":"word-search-classic","n":"Word Search","c":"puz","u":"https://games.cdn.famobi.com/html5games/w/word-search-classic/v330/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=b47a1c8a-8f40-4d93-825f-e96652354ded&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/WordSearchClassicTeaser.jpg"},{"id":"onet-connect-classic","n":"Onet Connect","c":"puz","u":"https://games.cdn.famobi.com/html5games/o/onet-connect-classic/c1efac39/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=d6173a60-1b41-4b34-b4c3-aa4c5fc9ce35&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/OnetConnectClassicTeaser.jpg"},{"id":"solitaire-classic","n":"Solitaire","c":"cards","u":"https://games.cdn.famobi.com/html5games/s/solitaire-classic/v460/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=bf3054b9-540f-474d-9288-7e262df73e4a&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=396","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/SolitaireClassicTeaser.jpg"},{"id":"8-ball-billiards-classic","n":"8 Ball Billiards","c":"cards","u":"https://games.cdn.famobi.com/html5games/0/8-ball-billiards-classic/f6589445/?fg_domain=play.famobi.com&fg_aid=A1000-1&fg_uid=82038e98-d4e1-46dd-8de9-1460d1395eab&fg_pid=4638e320-4444-4514-81c4-d80a8c662371&fg_beat=397","img":"https://img.cdn.famobi.com/portal/html5games/images/tmp/8BallBilliardsClassicTeaser.jpg"}];
+var ARC_CATS = [['all', { en: 'All', es: 'Todos' }], ['act', { en: '🏎️ Action', es: '🏎️ Acción' }], ['puz', { en: '🧩 Puzzle', es: '🧩 Rompecabezas' }], ['kids', { en: '🧸 Kids', es: '🧸 Niños' }], ['cards', { en: '🎱 Cards & pool', es: '🎱 Cartas y billar' }]];
+function openGames(tab) { if (tab) S.gTab = tab; if (!MEM) newMemory(); else renderGames(); showScreen('games-screen'); }
+function playArcade(i) { var g = ARCADE[i]; openWeb(g.u, '🕹️ ' + g.n); }
 function newMemory() {
   var pool = MEM_ITEMS.slice().sort(function () { return Math.random() - .5; }).slice(0, 6);
   var cards = pool.concat(pool).map(function (x, i) { return { k: x[0], en: x[1], es: x[2], up: false, done: false, i: i }; })
@@ -2180,6 +2228,18 @@ function newMemory() {
 }
 function renderGames() {
   if (!$('game-pick')) return;
+  var gt = S.gTab || 'arcade', cat = S.arcCat || 'all';
+  $('games-tabs').innerHTML = [['arcade', t('gArcade')], ['instant', t('gInstant')]].map(function (x) {
+    return '<button class="' + (x[0] === gt ? 'on' : '') + '" onclick="S.gTab=\'' + x[0] + '\'; renderGames()">' + x[1] + '</button>';
+  }).join('');
+  $('arcade').hidden = gt !== 'arcade'; $('instant').hidden = gt === 'arcade';
+  $('arc-cats').innerHTML = ARC_CATS.map(function (c) {
+    return '<button class="' + (c[0] === cat ? 'on' : '') + '" onclick="S.arcCat=\'' + c[0] + '\'; renderGames()">' + tr(c[1]) + '</button>';
+  }).join('');
+  $('arc-grid').innerHTML = ARCADE.map(function (g, i) {
+    if (cat !== 'all' && g.c !== cat) return '';
+    return '<button class="arc-card" onclick="playArcade(' + i + ')"><span class="arc-img" style="background-image:url(' + g.img + ')"></span><b>' + g.n + '</b></button>';
+  }).join('');
   $('game-pick').innerHTML =
     '<button class="on"><span class="e">🃏</span><span><b>' + t('memTitle') + '</b><small>' + t('memSub') + '</small></span></button>' +
     '<button onclick="openExplorer(\'home\', \'quiz\')"><span class="e">🎯</span><span><b>' + t('gQuiz') + '</b><small>' + t('gQuizSub') + '</small></span></button>' +
@@ -2211,23 +2271,56 @@ function flipMem(i) {
   renderGames();
 }
 Object.assign(I18N.en, {
-  secWatch: 'Watch, listen & play', tSpotSub: 'Add your songs', tTvSub: 'Mexico in videos', tKidsTv: 'Kids TV', tKidsTvSub: 'Cartoons & songs', tGamesSub: 'Memory · Quiz · Spot it!',
+  secWatch: 'Watch, listen & play', tSpotSub: 'Add your songs', tTvSub: 'Mexico in videos', tKidsTv: 'Kids TV', tKidsTvSub: 'Cartoons & songs', tGamesSub: 'Arcade · Memory · Quiz',
   tvMx: '🇲🇽 Mexico', tvKids: '🧸 Kids', tvPick: 'Pick a video', tvPickSub: 'Tap any video on the right to play it here.',
   memTitle: 'Memorama', memSub: 'Match the pairs, learn Spanish', memNew: '🔄 New game', memMoves: 'Moves: {m} · Pairs: {p}/6',
   memHelp: 'Find the matching pairs. Each pair teaches you a word in Spanish!', memWin: '🏆 You did it in {m} moves! ¡Muy bien!',
-  gQuiz: 'CDMX Quiz', gQuizSub: 'Are you a true chilango?', gSpotSub: 'Look out the window'
+  gArcade: '🕹️ Arcade', gInstant: '⚡ Instant', gQuiz: 'CDMX Quiz', gQuizSub: 'Are you a true chilango?', gSpotSub: 'Look out the window'
 });
 Object.assign(I18N.es, {
-  secWatch: 'Ver, escuchar y jugar', tSpotSub: 'Agrega tus canciones', tTvSub: 'México en video', tKidsTv: 'TV Niños', tKidsTvSub: 'Caricaturas y canciones', tGamesSub: 'Memorama · Trivia · ¡Encuéntralo!',
+  secWatch: 'Ver, escuchar y jugar', tSpotSub: 'Agrega tus canciones', tTvSub: 'México en video', tKidsTv: 'TV Niños', tKidsTvSub: 'Caricaturas y canciones', tGamesSub: 'Arcade · Memorama · Trivia',
   tvMx: '🇲🇽 México', tvKids: '🧸 Niños', tvPick: 'Elige un video', tvPickSub: 'Toca cualquier video de la derecha para verlo aquí.',
   memTitle: 'Memorama', memSub: 'Encuentra los pares y aprende inglés', memNew: '🔄 Nuevo juego', memMoves: 'Movimientos: {m} · Pares: {p}/6',
   memHelp: 'Encuentra los pares. ¡Cada par te enseña una palabra en inglés!', memWin: '🏆 ¡Lo lograste en {m} movimientos! Very good!',
-  gQuiz: 'Trivia CDMX', gQuizSub: '¿Eres un auténtico chilango?', gSpotSub: 'Mira por la ventana'
+  gArcade: '🕹️ Arcade', gInstant: '⚡ Rápidos', gQuiz: 'Trivia CDMX', gQuizSub: '¿Eres un auténtico chilango?', gSpotSub: 'Mira por la ventana'
 });
 
 // ---- Host (driver) name: one place to change it, or add ?host=Name to the tablet's address ----
 var HOST = (function () { try { return new URLSearchParams(location.search).get('host') || 'Alan'; } catch (e) { return 'Alan'; } })();
 var WIFI = { name: 'GoVibeMX WiFi', pass: '87654321' };
+
+// ---- Brightness: real backlight through Fully Kiosk when available, a dark layer otherwise ----
+var BRIGHT_LEVELS = [[1, '☀️', '100%'], [0.7, '🌤️', '70%'], [0.4, '🌙', '40%'], [0.15, '🌑', '15%']];
+function fullyBright() { return typeof fully !== 'undefined' && typeof fully.setScreenBrightness === 'function'; }
+function applyBright(v) {
+  if (fullyBright()) { try { fully.setScreenBrightness(Math.round(v * 255)); $('dimmer').style.opacity = 0; return; } catch (e) {} }
+  $('dimmer').style.opacity = ((1 - v) * 0.9).toFixed(2);
+}
+function setBrightness(v) {
+  v = Math.max(0.15, Math.min(1, +v || 1));
+  S.bright = v; store('bright', v);
+  if ($('screen-off').hidden) applyBright(v);
+  renderBright(); if (S.booted) reportStatus();
+}
+function renderBright() {
+  if (!$('bright-row')) return;
+  $('bright-row').innerHTML = BRIGHT_LEVELS.map(function (b) {
+    return '<button class="' + (Math.abs(b[0] - (S.bright || 1)) < 0.01 ? 'on' : '') + '" onclick="setBrightness(' + b[0] + ')"><span class="i">' + b[1] + '</span>' + b[2] + '</button>';
+  }).join('');
+}
+function openBright() { renderBright(); openModal('brightModal'); }
+// "Off" = black screen with the backlight at its lowest; a tap (or the remote) turns it back on
+function screenOff() {
+  stopTV();
+  $('screen-off').hidden = false; $('dimmer').style.opacity = 0;
+  if (fullyBright()) { try { fully.setScreenBrightness(0); } catch (e) {} }
+  if (S.booted) reportStatus();
+}
+function screenOn() {
+  $('screen-off').hidden = true; applyBright(S.bright || 1);
+  lastTouch = Date.now();
+  if (S.booted) reportStatus();
+}
 
 // ---- Streaming apps: launched through Fully Kiosk (they must be in Fully's App Whitelist) ----
 var STREAM_APPS = [
@@ -2323,6 +2416,7 @@ function showBye() {
 function hideBye() { $('bye').hidden = true; if (S.booted) reportStatus(); }
 
 Object.assign(I18N.en, {
+  brTitle: 'Screen brightness', brOff: 'Turn off the screen', brWake: 'Tap to turn on · Toca para encender',
   stTitle: 'Streaming', stLead: 'Long ride? Pick an app.', tStream: 'Streaming', tStreamSub: 'Netflix · Prime · Disney+ · YouTube',
   stNote: 'Opens the app. Press ◯ Home on the tablet to come back to GoVibeMX.', stNoFully: 'Apps open only on the tablet (Fully Kiosk).',
   hostLbl: 'Your host', hostHi: 'Hi! I\'m {n}, your host & driver', w2Belt: 'Buckle up', w2BeltSub: 'Seatbelts on, every seat, every ride. Thank you!',
@@ -2334,6 +2428,7 @@ Object.assign(I18N.en, {
   byeBook: 'Book your next trip', byeGo: 'Bye! · ¡Hasta pronto! 👋'
 });
 Object.assign(I18N.es, {
+  brTitle: 'Brillo de la pantalla', brOff: 'Apagar la pantalla', brWake: 'Toca para encender · Tap to turn on',
   stTitle: 'Streaming', stLead: '¿Viaje largo? Elige una app.', tStream: 'Streaming', tStreamSub: 'Netflix · Prime · Disney+ · YouTube',
   stNote: 'Se abre la app. Presiona ◯ Inicio en la tablet para volver a GoVibeMX.', stNoFully: 'Las apps solo abren en la tablet (Fully Kiosk).',
   hostLbl: 'Tu anfitrión', hostHi: '¡Hola! Soy {n}, tu anfitrión y conductor', w2Belt: 'Abróchate el cinturón', w2BeltSub: 'Todos con cinturón, en cada asiento y cada viaje. ¡Gracias!',
@@ -2391,6 +2486,10 @@ function hideWelcome() { clearTimeout(welcomeTimer); var was = !$('welcome').hid
 // ---- Commands from the phone remote: go home, change language, open a section ----
 function runCommand(c) {
   if (!c || !c.a) return;
+  if (c.a === 'bright') { screenOn(); setBrightness(c.v); return; }
+  if (c.a === 'off') { screenOff(); return; }
+  if (c.a === 'on') { screenOn(); return; }
+  if (!$('screen-off').hidden) screenOn();
   lastTouch = Date.now();
   hideWelcome(); if (c.a !== 'bye') hideBye();
   var ms = document.querySelectorAll('.modal');
@@ -2415,6 +2514,7 @@ function runCommand(c) {
     else if (v === 'review') openModal('reviewModal');
     else if (parts[0] === 'tv') openTV(parts[1] || 'mx');
     else if (v === 'games') openGames();
+    else if (v === 'arcade') openGames('arcade');
     else if (v === 'streaming') openStreaming();
     else if (v === 'host') showHostInfo();
   }
@@ -2438,7 +2538,7 @@ function newRide(name) {
   showScreen('home'); $('home').scrollTop = 0;
   updateVisibility(); highlightZone(); render();
   // The welcome screen is shown by hand (remote → Welcome screen); here we only keep the name for it
-  S.guest = name || ''; hideWelcome(); hideBye();
+  S.guest = name || ''; hideWelcome(); hideBye(); screenOn();
   if (S.pos && isFree()) setTimeout(updateZone, 1000);
 }
 
@@ -2485,7 +2585,7 @@ function setLang(l) {
   $('lang-es').classList.toggle('on', l === 'es');
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
-  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); renderHost(); renderStreaming(); refreshPoiPopups(); render();
+  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); renderHost(); renderStreaming(); renderBright(); refreshPoiPopups(); render();
   if (S.booted) { updateVisibility(); reportStatus(); }
 }
 
@@ -2838,6 +2938,8 @@ function applyTrip(id, fromRemote) {
   }
   if (!S.active && !$('home').classList.contains('active')) showScreen('home');
   if (S.guideTab === 'balloon' && !hasGuide('balloon')) S.guideTab = 'intro';
+  // A trip without the Teotihuacán guide (airports, back to the city) closes it if it was open
+  if ($('guide').classList.contains('active') && !hasGuide('teo') && !hasGuide('balloon')) showScreen(S.active ? 'map-screen' : 'home');
   updateVisibility(); renderTripPicker(); renderGuide(); render();
   if (changed && !fromRemote && window.pushRemoteTrip) window.pushRemoteTrip(id);
   reportStatus();
@@ -2872,7 +2974,7 @@ function reportStatus() {
   if (!window.pushTabletStatus) return;
   var scr = document.querySelector('.screen.active');
   var shown = !$('bye').hidden ? 'bye' : !$('welcome').hidden ? 'welcome' : scr ? scr.id : 'home';
-  window.pushTabletStatus({ lang: S.lang, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+  window.pushTabletStatus({ lang: S.lang, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
 }
 function setRemoteStatus(state) {
   var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };
@@ -3280,6 +3382,7 @@ document.addEventListener('DOMContentLoaded', function () {
   S.trail = load('trail', []);
   buildZones();
   loadTripRoute(true);
+  S.bright = load('bright', 1); applyBright(S.bright);
 
   updateClock(); setInterval(updateClock, 1000);
   initMiniMap();
