@@ -170,7 +170,9 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - Para que el brillo cambie la luz real de la pantalla:
     - En Fully, **Enable JavaScript Interface** debe estar activado.
     - En Android: **Ajustes → Apps → Fully Kiosk → Modificar ajustes del sistema → Permitir**.
-    - Sin ese permiso, la pantalla se oscurece con una capa negra (funciona, pero ahorra menos batería).
+    - Apaga el **Brillo adaptable / automático** de Android (Ajustes → Pantalla); si no, Android lo vuelve a subir solo.
+    - En Fully → **Device Management**, deja vacío el ajuste **Screen Brightness**; si tiene un valor, Fully impone ese brillo.
+    - Sin esos permisos el botón igual funciona: la pantalla detecta que la luz no cambió y la oscurece con una capa negra (ahorra menos batería).
 - **GoVibeMX (excursiones, servicios):** tu sitio abre dentro, con botón ⬅ Inicio.
 - Tras 3 minutos sin tocar, la pantalla vuelve sola al mapa o al inicio. Si hay un video, espera a que termine.
 - Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.

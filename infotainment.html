@@ -2282,9 +2282,25 @@ var WIFI = { name: 'GoVibeMX WiFi', pass: '87654321' };
 // ---- Brightness: real backlight through Fully Kiosk when available, a dark layer otherwise ----
 var BRIGHT_LEVELS = [[1, '☀️', '100%'], [0.7, '🌤️', '70%'], [0.4, '🌙', '40%'], [0.15, '🌑', '15%']];
 function fullyBright() { return typeof fully !== 'undefined' && typeof fully.setScreenBrightness === 'function'; }
+// If Android doesn't let Fully change the backlight (no "Modify system settings" permission,
+// JavaScript Interface off, adaptive brightness), fall back to the dark layer so it always works.
 function applyBright(v) {
-  if (fullyBright()) { try { fully.setScreenBrightness(Math.round(v * 255)); $('dimmer').style.opacity = 0; return; } catch (e) {} }
-  $('dimmer').style.opacity = ((1 - v) * 0.9).toFixed(2);
+  var css = ((1 - v) * 0.9).toFixed(2);
+  if (fullyBright()) {
+    try {
+      var want = Math.round(v * 255);
+      fully.setScreenBrightness(want);
+      $('dimmer').style.opacity = 0;
+      setTimeout(function () {
+        var got = null;
+        try { if (typeof fully.getScreenBrightness === 'function') got = +fully.getScreenBrightness(); } catch (e) {}
+        // Couldn't read it back, or it didn't change: dim with the layer too
+        if (got == null || isNaN(got) || Math.abs(got - want) > 12) $('dimmer').style.opacity = css;
+      }, 400);
+      return;
+    } catch (e) {}
+  }
+  $('dimmer').style.opacity = css;
 }
 function setBrightness(v) {
   v = Math.max(0.15, Math.min(1, +v || 1));
