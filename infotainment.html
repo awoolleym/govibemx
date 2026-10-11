@@ -626,6 +626,8 @@
   .bye-card .i { font-size: clamp(30px, 7vh, 54px); }
   .bye-card b { font-size: 16px; color: #fff; }
   .bye-card small { font-size: 12px; color: #cdbfd9; }
+  #bye-rate { justify-content: center; }
+  #bye-rate .i { font-size: clamp(18px, 3.6vh, 26px); white-space: nowrap; }
   .bye-card.check { border-color: #FFD740; background: rgba(255,215,64,.12); justify-content: center; }
   @media (max-height: 640px) { .bye .welcome-papel, .bye .welcome-papel svg, #welcome .welcome-papel, #welcome .welcome-papel svg { height: 44px; } .welcome-logo { height: 60px; } .welcome-hi { font-size: 46px; } .welcome-es { font-size: 22px; } .welcome-body { gap: 10px; padding-bottom: 16px; } .welcome-go { padding: 12px 34px; font-size: 19px; } }
   /* Streaming */
@@ -2249,7 +2251,8 @@ function showBye() {
   $('bye-host').textContent = t('byeHost').replace('{n}', HOST);
   $('bye-check').textContent = t('byeCheck'); $('bye-check2').textContent = t('byeCheckSub');
   var app = TRIPS[S.tripId] && TRIPS[S.tripId].appRide;
-  $('bye-review').hidden = !!app; $('bye-rate').hidden = !app;
+  // The Google review QR is always there; rideshare trips also get the in-app rating note
+  $('bye-review').hidden = false; $('bye-rate').hidden = !app;
   $('bye-rv').textContent = t('byeRv'); $('bye-rv2').textContent = t('byeRvSub');
   $('bye-rate-t').textContent = t('byeRate'); $('bye-rate-s').textContent = t('byeRateSub');
   $('bye-book').textContent = t('byeBook');
