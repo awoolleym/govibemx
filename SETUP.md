@@ -30,7 +30,7 @@ El sitio se publica desde la rama **`gh-pages`** (GitHub Pages, gratis, con HTTP
 - **Celular (remoto):** `https://awoolleym.github.io/govibemx/driver.html`
 - El widget de reservaciones (`index.html`) sigue en `https://awoolleym.github.io/govibemx/`.
 
-**Pendiente (solo tú puedes hacerlo):** en Firebase → Authentication → Settings → **Authorized domains**, agrega `awoolleym.github.io`.
+**Firebase:** el remoto ya funciona con GitHub Pages; no hace falta agregar el dominio en *Authorized domains* (eso solo aplica a inicios de sesión con Google). Ver la sección 5 para proteger la base de datos.
 
 **Cómo llegan los cambios:** se suben a `main` y luego se pasan a `gh-pages`; GitHub publica en 1–2 minutos.
 Si prefieres un solo paso, en GitHub → Settings → Pages cambia la rama de publicación a `main`.
@@ -183,7 +183,13 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
 3. En el menú del navegador elige **"Agregar a pantalla de inicio"**: queda un ícono **GoVibe Remote** como si fuera app.
 4. Úsalo así:
    - Toca el viaje: **Live Map** (Uber), **City Tour**, **Globo**, **Pirámides**, **Regreso** o **City ride** (sin mapa).
-   - **✈️ Aeropuerto**: elige uno de los tres botones chiquitos: **AICM T1**, **AICM T2** o **AIFA**. Sale el mapa a esa terminal con la hora de llegada y tips de vuelo. Si recoges en otro hotel, el mapa recalcula la ruta desde donde estés.
+   - **✈️ Aeropuerto**: elige uno de los tres botones chiquitos: **AICM T1**, **AICM T2** o **AIFA**.
+     - La ruta se calcula **desde donde está la camioneta en el momento en que activas el viaje**. Sale la hora de llegada y tips de vuelo.
+     - Si la tablet todavía no tiene GPS, muestra "Esperando GPS" y traza la ruta en cuanto lo tiene.
+   - **🏁 Regreso a CDMX**: no va a una dirección exacta.
+     - Traza la ruta desde donde estés hasta la entrada a la Ciudad de México.
+     - Al entrar a la ciudad sale "¡Bienvenidos de vuelta!" y el mapa cambia a colonias y lugares cercanos, como en el City Tour.
+     - Sirve igual desde Teotihuacán, desde el aeropuerto o desde cualquier lado.
    - Abajo siempre tienes **🏠 Home**, **EN/ES** y **👋 Goodbye**, al alcance del pulgar.
    - **🆕 New ride**: limpia la pantalla y saluda al siguiente pasajero.
    - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
@@ -212,3 +218,46 @@ Sin internet en el celular puedes cambiar el viaje desde la misma tablet: manté
 - [ ] El celular abre `/remoto`, creas el PIN y al tocar un viaje la tablet cambia.
 - [ ] **New ride** desde el celular limpia la pantalla.
 - [ ] El botón 🔊 de Español básico suena (si no: Ajustes de Android → texto a voz de Google con español de México).
+
+---
+
+## 5. Proteger la base de datos (Firebase)
+
+Hoy la base de datos `govibebooking` se puede leer **sin iniciar sesión**:
+- Lo del remoto (`rearScreen`: viaje, comandos y el PIN cifrado).
+- También `inquiries` y `config` del widget de reservaciones.
+
+La pantalla y el remoto ya inician sesión de forma anónima, así que puedes cerrar `rearScreen` sin romper nada:
+
+1. Entra a **console.firebase.google.com** → proyecto **govibebooking** → **Realtime Database** → pestaña **Rules**.
+2. **Antes de cambiar nada, copia las reglas actuales** y guárdalas.
+3. Dentro de `"rules"`, agrega este bloque:
+
+```json
+"rearScreen": {
+  "$van": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}
+```
+
+4. Ojo: si arriba de todo hay `".read": true` o `".write": true`, esas reglas abren **toda** la base y el bloque de arriba no sirve. En ese caso cámbialas por reglas por sección. Por ejemplo, esto deja el widget de reservaciones **igual que hoy** y protege el remoto:
+
+```json
+{
+  "rules": {
+    "bookings":  { ".read": true, ".write": true },
+    "inquiries": { ".read": true, ".write": true },
+    "config":    { ".read": true, ".write": true },
+    "rearScreen": {
+      "$van": { ".read": "auth != null", ".write": "auth != null" }
+    }
+  }
+}
+```
+
+5. **Publish**. Después prueba en el celular: tocar un viaje debe cambiar la tablet.
+
+`bookings` e `inquiries` guardan datos de tus clientes. Conviene protegerlos también, pero depende de cómo inicia sesión el widget de reservaciones. Revísalo antes de cerrarlos para no romper las reservaciones.
+
