@@ -592,6 +592,51 @@
   .mem-learn b { color: #FFD740; }
   @media (max-width: 820px) { .games-wrap { flex-direction: column; } .game-pick { width: auto; flex-direction: row; } .game-pick button { flex: 1; } .game-pick small { display: none; } .mem-board { grid-template-columns: repeat(4, 1fr); } }
 
+  /* Welcome page 2: host + essentials */
+  .welcome-body[hidden] { display: none; }
+  .w2 { gap: clamp(10px, 2.4vh, 20px); }
+  .host-hello { display: flex; align-items: center; gap: 18px; text-align: left; }
+  .host-avatar { width: clamp(64px, 13vh, 104px); height: clamp(64px, 13vh, 104px); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-family: 'Bungee', 'Segoe UI', sans-serif; font-size: clamp(30px, 6.5vh, 52px); color: #fff; background: linear-gradient(135deg, #FF4081, #FF9100); box-shadow: 0 0 0 4px rgba(255,255,255,.15), 0 10px 30px rgba(255,64,129,.4); }
+  .host-big { font-family: 'Bungee', 'Segoe UI', sans-serif; font-size: clamp(26px, 6vh, 46px); line-height: 1.1; color: #fff; }
+  .host-small { font-size: clamp(15px, 2.8vh, 22px); color: #F8BBD0; font-weight: 700; margin-top: 4px; }
+  .w2-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-width: 1100px; }
+  .w2-card { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); border-radius: 18px; padding: clamp(10px, 2.2vh, 18px) 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .w2-card .i { font-size: clamp(30px, 6vh, 46px); }
+  .w2-card b { font-size: clamp(16px, 3vh, 22px); color: #fff; }
+  .w2-card span { font-size: clamp(13px, 2.3vh, 16px); color: #e6dcef; line-height: 1.3; }
+  .w2-card small { font-size: clamp(11px, 1.9vh, 13px); color: #b9a8c9; }
+  .w2-card.belt { border-color: #FFD740; background: rgba(255,215,64,.12); }
+  .w2-card.belt b { color: #FFE082; }
+  .w2-card .pw { font-family: monospace; font-size: clamp(18px, 3.4vh, 26px); font-weight: 800; letter-spacing: 2px; color: #69F0AE; }
+  @media (max-width: 820px) { .w2-grid { grid-template-columns: repeat(2, 1fr); } }
+  /* Host chip (always on top) */
+  .host-chip { display: flex; align-items: center; gap: 7px; background: rgba(255,64,129,.12); border: 1px solid rgba(255,64,129,.4); color: #fff; border-radius: 18px; padding: 5px 12px 5px 5px; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .host-chip .av { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #FF4081, #FF9100); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
+  .host-chip small { color: #F8BBD0; font-size: 11px; display: block; line-height: 1; }
+  .host-chip b { display: block; line-height: 1.1; }
+  @media (max-width: 1000px) { .host-chip small { display: none; } }
+  /* Goodbye */
+  .bye { background: radial-gradient(ellipse at 80% 10%, #4a2a05 0%, transparent 55%), radial-gradient(ellipse at 10% 90%, #3a0a3a 0%, transparent 55%), #07050c; }
+  .bye-host { font-size: clamp(16px, 3vh, 22px); color: #FFE082; font-weight: 700; }
+  .bye-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .bye-card { width: clamp(170px, 20vw, 220px); background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); border-radius: 18px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .bye-card[hidden] { display: none; }
+  .bye-card .svc-qr { width: clamp(96px, 20vh, 150px); height: clamp(96px, 20vh, 150px); }
+  .bye-card .i { font-size: clamp(30px, 7vh, 54px); }
+  .bye-card b { font-size: 16px; color: #fff; }
+  .bye-card small { font-size: 12px; color: #cdbfd9; }
+  .bye-card.check { border-color: #FFD740; background: rgba(255,215,64,.12); justify-content: center; }
+  @media (max-height: 640px) { .bye .welcome-papel, .bye .welcome-papel svg, #welcome .welcome-papel, #welcome .welcome-papel svg { height: 44px; } .welcome-logo { height: 60px; } .welcome-hi { font-size: 46px; } .welcome-es { font-size: 22px; } .welcome-body { gap: 10px; padding-bottom: 16px; } .welcome-go { padding: 12px 34px; font-size: 19px; } }
+  /* Streaming */
+  .stream { background: linear-gradient(135deg,#e50914,#1a1a2e); }
+  .stream-panel { background: #0d1117; max-width: 760px; }
+  .stream-panel h2 { margin: 0 0 4px; color: #fff; }
+  .stream-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+  .stream-grid .btn { min-height: clamp(84px, 16vh, 120px); border-radius: 16px; }
+  .stream-note { color: #aab4c0; font-size: 14px; margin: 14px 0 0; }
+  .disney { background: linear-gradient(135deg,#113ccf,#0a1f6b); }
+  .max { background: linear-gradient(135deg,#002be7,#7a1fd6); }
   /* =========================================================
      ADAPTIVE SIZING · everything scales with the screen height,
      so the home screen fits the Lenovo Tab M9 (and other tablets)
@@ -700,16 +745,17 @@
   <div class="driver-trips" id="driver-trips"></div>
   <div class="driver-row">
     <button onclick="newRide(); closeModal('driverModal');">🆕 New ride</button>
+    <button onclick="closeModal('driverModal'); showBye();">👋 Goodbye</button>
     <button onclick="toggleDemo()" id="tool-demo">▶ Demo</button>
     <button onclick="clearTrail()">🧹 Clear trail</button>
   </div>
   <p class="driver-note" id="remote-status">Phone remote: connecting…</p>
 </div><div class="close-btn" onclick="closeModal('driverModal')">X</div></div>
 
-<!-- Welcome screen for each new passenger (New ride) -->
-<div id="welcome" class="welcome" hidden onclick="hideWelcome()">
+<!-- Welcome screen for each new passenger (New ride): 1) big hello, 2) your host + the essentials -->
+<div id="welcome" class="welcome" hidden onclick="welcomeNext()">
   <div class="papel welcome-papel" id="welcome-papel" aria-hidden="true"></div>
-  <div class="welcome-body">
+  <div class="welcome-body" id="w-page1">
     <img class="welcome-logo" src="https://img1.wsimg.com/isteam/ip/a2f36b16-54d7-45cc-96f6-48f6a722fb83/GoVibeAlta.png/:/rs=w:1344,h:600,cg:true,m/cr=w:1344,h:600/qt=q:95" alt="GoVibeMX">
     <div class="welcome-hi" id="welcome-hi">Welcome aboard!</div>
     <div class="welcome-es" id="welcome-es">¡Bienvenidos a bordo!</div>
@@ -717,12 +763,46 @@
     <div class="welcome-chips">
       <div class="wchip"><span class="i">🕐</span><b id="welcome-time"></b></div>
       <div class="wchip" id="welcome-wx-chip" hidden><span class="i" id="welcome-wx-i"></span><b id="welcome-wx"></b></div>
-      <div class="wchip"><span class="i">📶</span><span>GoVibeMX WiFi · <b>87654321</b></span></div>
-      <div class="wchip"><span class="i">💧</span><span data-i18n="wWater">Water is on us</span></div>
     </div>
     <button class="welcome-go" data-i18n="wGo">Let's go! · ¡Vámonos!</button>
   </div>
+  <div class="welcome-body w2" id="w-page2" hidden>
+    <div class="host-hello">
+      <div class="host-avatar" id="host-avatar">A</div>
+      <div>
+        <div class="host-big" id="host-big"></div>
+        <div class="host-small" id="host-small"></div>
+      </div>
+    </div>
+    <div class="w2-grid" id="w2-grid"></div>
+    <button class="welcome-go" id="w2-go"></button>
+  </div>
 </div>
+
+<!-- Goodbye screen (end of the ride) -->
+<div id="bye" class="welcome bye" hidden onclick="hideBye()">
+  <div class="papel welcome-papel" id="bye-papel" aria-hidden="true"></div>
+  <div class="welcome-body">
+    <div class="welcome-hi" id="bye-hi"></div>
+    <div class="welcome-es" id="bye-es"></div>
+    <div class="bye-host" id="bye-host"></div>
+    <div class="bye-row">
+      <div class="bye-card check"><span class="i">🎒</span><b id="bye-check"></b><small id="bye-check2"></small></div>
+      <div class="bye-card" id="bye-review"><img class="svc-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=https%3A%2F%2Fg.page%2Fr%2FCfuqsa2gJi74EBM%2Freview%3Futm_source%3Dgbp%26utm_medium%3Dreviews%26utm_campaign%3Dqr" alt="Google review QR code"><b id="bye-rv"></b><small id="bye-rv2"></small></div>
+      <div class="bye-card" id="bye-rate"><span class="i">⭐⭐⭐⭐⭐</span><b id="bye-rate-t"></b><small id="bye-rate-s"></small></div>
+      <div class="bye-card"><img class="svc-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=https%3A%2F%2Fgovibemx.com%2F" alt="govibemx.com QR code"><b id="bye-book"></b><small>govibemx.com</small></div>
+    </div>
+    <button class="welcome-go" id="bye-go"></button>
+  </div>
+</div>
+
+<!-- Streaming apps (they open as apps on the tablet; Home brings you back) -->
+<div id="streamModal" class="modal"><div class="modal-content stream-panel">
+  <h2>🍿 <span data-i18n="stTitle">Streaming</span></h2>
+  <p class="lead" data-i18n="stLead">Long ride? Pick an app.</p>
+  <div class="stream-grid" id="stream-grid"></div>
+  <p class="stream-note" id="stream-note"></p>
+</div><div class="close-btn" onclick="closeModal('streamModal')">X</div></div>
 
 <!-- Review prompt (guided tours) -->
 <div id="reviewModal" class="modal"><div class="modal-content review-panel">
@@ -757,6 +837,7 @@
     <button class="chip-btn" onclick="openModal('wifiModal')">📶 <span>Wi-Fi</span></button>
   </div>
   <div class="topbar-right">
+    <button class="host-chip" onclick="showHostInfo()"><span class="av" id="host-av">A</span><span><small id="host-lbl">Your host</small><b id="host-name">Alan</b></span></button>
     <div class="wx" id="wx" hidden><span class="ic" id="wx-icon">⛅</span><span id="wx-temp">—</span></div>
     <div class="lang-toggle"><button id="lang-en" onclick="setLang('en')">EN</button><button id="lang-es" onclick="setLang('es')">ES</button></div>
     <div id="digital-clock">12:00 PM</div>
@@ -794,8 +875,9 @@
 
   <section class="home-sec">
     <div class="sec-label"><span class="dot" style="--c:#1db954"></span><span data-i18n="secWatch">Watch, listen &amp; play</span></div>
-    <div class="tile-grid g4">
+    <div class="tile-grid g5">
       <div onclick="openModal('spotifyModal')" class="btn spotify"><span class="btn-icon">🎵</span><span class="btn-title">GoVibeMX Jam</span><span class="btn-sub" data-i18n="tSpotSub">Add your songs</span></div>
+      <div onclick="openStreaming()" class="btn stream"><span class="btn-icon">🍿</span><span class="btn-title" data-i18n="tStream">Streaming</span><span class="btn-sub" data-i18n="tStreamSub">Netflix · Prime · Disney+ · YouTube</span></div>
       <div onclick="openTV('mx')" class="btn tv"><span class="btn-icon">📺</span><span class="btn-title">GoVibe TV</span><span class="btn-sub" data-i18n="tTvSub">Mexico in videos</span></div>
       <div onclick="openTV('kids')" class="btn kidstv"><span class="btn-icon">🧸</span><span class="btn-title" data-i18n="tKidsTv">Kids TV</span><span class="btn-sub" data-i18n="tKidsTvSub">Cartoons &amp; songs</span></div>
       <div onclick="openGames()" class="btn games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span><span class="btn-sub" data-i18n="tGamesSub">Memory · Quiz · Spot it!</span></div>
@@ -2090,6 +2172,117 @@ Object.assign(I18N.es, {
   gQuiz: 'Trivia CDMX', gQuizSub: '¿Eres un auténtico chilango?', gSpotSub: 'Mira por la ventana'
 });
 
+// ---- Host (driver) name: one place to change it, or add ?host=Name to the tablet's address ----
+var HOST = (function () { try { return new URLSearchParams(location.search).get('host') || 'Alan'; } catch (e) { return 'Alan'; } })();
+var WIFI = { name: 'GoVibeMX WiFi', pass: '87654321' };
+
+// ---- Streaming apps: launched through Fully Kiosk (they must be in Fully's App Whitelist) ----
+var STREAM_APPS = [
+  { pkg: 'com.netflix.mediaclient', n: 'Netflix', i: '🎬', c: 'netflix' },
+  { pkg: 'com.amazon.avod.thirdpartyclient', n: 'Prime Video', i: '🍿', c: 'prime' },
+  { pkg: 'com.disney.disneyplus', n: 'Disney+', i: '🏰', c: 'disney' },
+  { pkg: 'com.wbd.stream', n: 'Max', i: '🎞️', c: 'max' },
+  { pkg: 'com.google.android.youtube', n: 'YouTube', i: '📺', c: 'youtube' },
+  { pkg: 'com.google.android.apps.youtube.kids', n: 'YouTube Kids', i: '🧸', c: 'ytkids' }
+];
+function openStreaming() { renderStreaming(); openModal('streamModal'); }
+function renderStreaming() {
+  if (!$('stream-grid')) return;
+  $('stream-grid').innerHTML = STREAM_APPS.map(function (a, i) {
+    return '<div class="btn ' + a.c + '" onclick="launchApp(' + i + ')"><span class="btn-icon">' + a.i + '</span><span class="btn-title">' + a.n + '</span></div>';
+  }).join('');
+  $('stream-note').textContent = t('stNote');
+}
+function launchApp(i) {
+  var a = STREAM_APPS[i];
+  if (typeof fully !== 'undefined' && fully.startApplication) { closeModal('streamModal'); fully.startApplication(a.pkg); }
+  else $('stream-note').textContent = t('stNoFully');
+}
+
+// ---- Welcome page 2 and the host chip ----
+function renderHost() {
+  if ($('host-name')) $('host-name').textContent = HOST;
+  if ($('host-av')) $('host-av').textContent = HOST.charAt(0).toUpperCase();
+  if ($('host-lbl')) $('host-lbl').textContent = t('hostLbl');
+  if (!$('w2-grid')) return;
+  var other = S.lang === 'es' ? 'en' : 'es', o = I18N[other];
+  $('host-avatar').textContent = HOST.charAt(0).toUpperCase();
+  $('host-big').textContent = t('hostHi').replace('{n}', HOST);
+  $('host-small').textContent = o.hostHi.replace('{n}', HOST);
+  var cards = [
+    { c: 'belt', i: '🔒', b: t('w2Belt'), s: t('w2BeltSub'), o: o.w2Belt },
+    { i: '📶', b: 'Wi-Fi', s: WIFI.name, pw: WIFI.pass, o: o.w2Pass },
+    { i: '💧', b: t('w2Water'), s: t('w2WaterSub'), o: o.w2Water },
+    { i: '❄️', b: t('w2Ac'), s: t('w2AcSub'), o: o.w2Ac }
+  ];
+  $('w2-grid').innerHTML = cards.map(function (c) {
+    return '<div class="w2-card' + (c.c ? ' ' + c.c : '') + '"><span class="i">' + c.i + '</span><b>' + c.b + '</b>' +
+      (c.pw ? '<span>' + c.s + '</span><span class="pw">' + c.pw + '</span>' : '<span>' + c.s + '</span>') + '<small>' + c.o + '</small></div>';
+  }).join('');
+  $('w2-go').textContent = t('w2Go');
+}
+function welcomeNext() {
+  if (!$('w-page2').hidden) return hideWelcome();
+  $('w-page1').hidden = true; $('w-page2').hidden = false;
+  renderHost();
+  clearTimeout(welcomeTimer);
+  welcomeTimer = setTimeout(hideWelcome, 40000);
+}
+function showHostInfo() {
+  // Tapping the host chip shows the essentials again (no confetti)
+  $('w-page1').hidden = true; $('w-page2').hidden = false; renderHost();
+  if (!$('welcome-papel').firstChild) $('welcome-papel').innerHTML = papelSvg(20, true);
+  $('welcome').hidden = false;
+  clearTimeout(welcomeTimer); welcomeTimer = setTimeout(hideWelcome, 40000);
+}
+
+// ---- Goodbye screen ----
+function showBye() {
+  hideWelcome();
+  var ms = document.querySelectorAll('.modal');
+  for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
+  stopTV();
+  if (!$('bye-papel').firstChild) $('bye-papel').innerHTML = papelSvg(20, true);
+  var n = (S.guest || '').trim(), other = S.lang === 'es' ? 'en' : 'es';
+  $('bye-hi').textContent = n ? t('byeHiName').replace('{n}', n) : t('byeHi');
+  $('bye-es').textContent = n ? I18N[other].byeHiName.replace('{n}', n) : I18N[other].byeHi;
+  $('bye-host').textContent = t('byeHost').replace('{n}', HOST);
+  $('bye-check').textContent = t('byeCheck'); $('bye-check2').textContent = t('byeCheckSub');
+  var app = TRIPS[S.tripId] && TRIPS[S.tripId].appRide;
+  $('bye-review').hidden = !!app; $('bye-rate').hidden = !app;
+  $('bye-rv').textContent = t('byeRv'); $('bye-rv2').textContent = t('byeRvSub');
+  $('bye-rate-t').textContent = t('byeRate'); $('bye-rate-s').textContent = t('byeRateSub');
+  $('bye-book').textContent = t('byeBook');
+  $('bye-go').textContent = t('byeGo');
+  $('bye').hidden = false;
+  confetti(80);
+  reportStatus();
+}
+function hideBye() { $('bye').hidden = true; if (S.booted) reportStatus(); }
+
+Object.assign(I18N.en, {
+  stTitle: 'Streaming', stLead: 'Long ride? Pick an app.', tStream: 'Streaming', tStreamSub: 'Netflix · Prime · Disney+ · YouTube',
+  stNote: 'Opens the app. Press ◯ Home on the tablet to come back to GoVibeMX.', stNoFully: 'Apps open only on the tablet (Fully Kiosk).',
+  hostLbl: 'Your host', hostHi: 'Hi! I\'m {n}, your host & driver', w2Belt: 'Buckle up', w2BeltSub: 'Seatbelts on, every seat, every ride. Thank you!',
+  w2Pass: 'Password', w2Water: 'Water is on us', w2WaterSub: 'The bottles in the middle rack are yours. More up front.',
+  w2Ac: 'A/C at 22°C', w2AcSub: 'Too warm or too cold? Just let me know.', w2Go: 'Enjoy the ride! 🎉',
+  byeHi: 'Thank you for riding with us!', byeHiName: 'Thank you, {n}!', byeHost: '— {n} & the GoVibeMX team 💛',
+  byeCheck: 'Got everything?', byeCheckSub: 'Phone, bags, sunglasses, jacket… check your seat!',
+  byeRv: 'Loved it? Review us', byeRvSub: 'Scan with your camera', byeRate: 'Rate your ride', byeRateSub: 'A 5-star rating in the app means a lot!',
+  byeBook: 'Book your next trip', byeGo: 'Bye! · ¡Hasta pronto! 👋'
+});
+Object.assign(I18N.es, {
+  stTitle: 'Streaming', stLead: '¿Viaje largo? Elige una app.', tStream: 'Streaming', tStreamSub: 'Netflix · Prime · Disney+ · YouTube',
+  stNote: 'Se abre la app. Presiona ◯ Inicio en la tablet para volver a GoVibeMX.', stNoFully: 'Las apps solo abren en la tablet (Fully Kiosk).',
+  hostLbl: 'Tu anfitrión', hostHi: '¡Hola! Soy {n}, tu anfitrión y conductor', w2Belt: 'Abróchate el cinturón', w2BeltSub: 'Todos con cinturón, en cada asiento y cada viaje. ¡Gracias!',
+  w2Pass: 'Contraseña', w2Water: 'El agua va por nuestra cuenta', w2WaterSub: 'Las botellas del estante central son tuyas. Hay más adelante.',
+  w2Ac: 'Aire a 22°C', w2AcSub: '¿Mucho calor o frío? Solo dime.', w2Go: '¡Disfruta el viaje! 🎉',
+  byeHi: '¡Gracias por viajar con nosotros!', byeHiName: '¡Gracias, {n}!', byeHost: '— {n} y el equipo GoVibeMX 💛',
+  byeCheck: '¿Llevas todo?', byeCheckSub: 'Celular, bolsas, lentes, chamarra… ¡revisa tu asiento!',
+  byeRv: '¿Te gustó? Déjanos una reseña', byeRvSub: 'Escanea con tu cámara', byeRate: 'Califica tu viaje', byeRateSub: '¡5 estrellas en la app significan mucho!',
+  byeBook: 'Reserva tu próximo viaje', byeGo: 'Bye! · ¡Hasta pronto! 👋'
+});
+
 // ---- Idle mode: after 3 minutes without a touch, go back to the live map (or home), like a plane's screen ----
 var lastTouch = Date.now();
 document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
@@ -2124,18 +2317,20 @@ function showWelcome(name) {
   $('welcome-time').textContent = fmtClock(new Date());
   $('welcome-wx-chip').hidden = S.temp == null;
   if (S.temp != null) { $('welcome-wx-i').textContent = wxIcon(S.wcode, S.isDay); $('welcome-wx').textContent = Math.round(S.temp) + '°C · ' + Math.round(S.temp * 9 / 5 + 32) + '°F'; }
+  $('w-page1').hidden = false; $('w-page2').hidden = true;
+  hideBye();
   $('welcome').hidden = false;
   confetti(120);
   clearTimeout(welcomeTimer);
-  welcomeTimer = setTimeout(hideWelcome, 30000);
+  welcomeTimer = setTimeout(welcomeNext, 15000); // then the host + essentials page
 }
-function hideWelcome() { clearTimeout(welcomeTimer); $('welcome').hidden = true; }
+function hideWelcome() { clearTimeout(welcomeTimer); var was = !$('welcome').hidden; $('welcome').hidden = true; if (was && S.booted) reportStatus(); }
 
 // ---- Commands from the phone remote: go home, change language, open a section ----
 function runCommand(c) {
   if (!c || !c.a) return;
   lastTouch = Date.now();
-  hideWelcome();
+  hideWelcome(); if (c.a !== 'bye') hideBye();
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
   if ($('web-screen').classList.contains('active')) $('web-frame').src = 'about:blank';
@@ -2143,6 +2338,7 @@ function runCommand(c) {
   if (c.a === 'home') { showScreen('home'); $('home').scrollTop = 0; }
   else if (c.a === 'lang' && (c.v === 'en' || c.v === 'es')) setLang(c.v);
   else if (c.a === 'welcome') showWelcome(S.guest);
+  else if (c.a === 'bye') { showBye(); return; }
   else if (c.a === 'open') {
     var v = String(c.v || ''), parts = v.split(':');
     if (v === 'map') { if (S.active) showScreen('map-screen'); }
@@ -2157,6 +2353,8 @@ function runCommand(c) {
     else if (v === 'review') openModal('reviewModal');
     else if (parts[0] === 'tv') openTV(parts[1] || 'mx');
     else if (v === 'games') openGames();
+    else if (v === 'streaming') openStreaming();
+    else if (v === 'host') showHostInfo();
   }
   else if (c.a === 'web') {
     // The driver points the screen at any page (YouTube links play on GoVibe TV)
@@ -2224,7 +2422,7 @@ function setLang(l) {
   $('lang-es').classList.toggle('on', l === 'es');
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
-  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); refreshPoiPopups(); render();
+  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); renderHost(); renderStreaming(); refreshPoiPopups(); render();
   if (S.booted) { updateVisibility(); reportStatus(); }
 }
 
@@ -2539,7 +2737,8 @@ function renderTripPicker() {
 function reportStatus() {
   if (!window.pushTabletStatus) return;
   var scr = document.querySelector('.screen.active');
-  window.pushTabletStatus({ lang: S.lang, screen: scr ? scr.id : 'home', trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+  var shown = !$('bye').hidden ? 'bye' : !$('welcome').hidden ? 'welcome' : scr ? scr.id : 'home';
+  window.pushTabletStatus({ lang: S.lang, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
 }
 function setRemoteStatus(state) {
   var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };

@@ -59,7 +59,7 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 
 ## 2. La tablet (Lenovo Tab M9 + Fully Kiosk)
 
-La pantalla ya no abre ninguna app ni sitio externo: TV, juegos, guías y páginas de GoVibeMX corren **dentro** de la pantalla. Fully Kiosk se encarga de que nadie pueda salir de ahí.
+TV, juegos, guías y páginas de GoVibeMX corren **dentro** de la pantalla. Las únicas apps que se pueden abrir son las de **Streaming** (Netflix, Prime Video, Disney+, Max, YouTube y YouTube Kids), para viajes largos. Fully Kiosk bloquea todo lo demás.
 
 > Los bloqueos de **Kiosk Mode**, **URL Whitelist** y **Remote Admin** son de **Fully Kiosk PLUS** (licencia de pago, una vez por tablet). Sin PLUS funciona todo, pero un pasajero podría salir con los botones de Android.
 
@@ -82,7 +82,7 @@ Los nombres pueden variar un poco según la versión.
 | | Autoplay Videos | ✅ |
 | | Enable Fullscreen Videos | ✅ |
 | | **Enable Popups** | ❌ (nada abre ventanas nuevas) |
-| | Enable JavaScript Interface | ❌ (ya no hace falta) |
+| | **Enable JavaScript Interface** | ✅ (lo usa el botón Streaming para abrir las apps) |
 | Web Zoom and Scaling | Enable Zoom | ❌ |
 | | Initial Scale | 0 / automático (la pantalla se adapta sola) |
 | Web Browsing Settings | Enable Pull to Refresh | ❌ |
@@ -101,6 +101,7 @@ Los nombres pueden variar un poco según la versión.
 | | Kiosk Exit Gesture | Swipe from left edge (o 7 toques rápidos) |
 | | Disable Status Bar | ✅ |
 | | Disable Other Apps | ✅ |
+| | **App Whitelist** | las apps de streaming (lista abajo) |
 | | Disable Volume Buttons | como prefieras (el volumen de TV lo manejas tú) |
 | | Disable Power Button | ✅ (pide permiso de administrador del dispositivo) |
 | | Lock Safe Mode | ✅ |
@@ -127,9 +128,34 @@ Los nombres pueden variar un poco según la versión.
 *wsimg.com*
 ```
 
+**App Whitelist** (las únicas apps que se pueden abrir desde la pantalla; instálalas e inicia sesión antes):
+
+```
+com.netflix.mediaclient
+com.amazon.avod.thirdpartyclient
+com.disney.disneyplus
+com.wbd.stream
+com.google.android.youtube
+com.google.android.apps.youtube.kids
+```
+
+Si no usas alguna app, no la instales: el botón simplemente no abre nada.
+
+**Cómo regresan de Netflix y otras apps:** con Fully como app de inicio (abajo), el botón ◯ Inicio de Android siempre vuelve a GoVibeMX. La pantalla de Streaming se lo dice al pasajero. Con **Remote Administration / Fully Cloud** también puedes usar *Bring to Foreground* desde tu celular para traer la pantalla de vuelta. Prueba en tu tablet que la barra de navegación aparezca dentro de las apps; si no aparece, revisa en Kiosk Mode las opciones que ocultan la barra de navegación.
+
 Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predeterminadas → App de inicio → Fully Kiosk**. Así el botón de Inicio siempre regresa a la pantalla.
 
 ### 2.3 Qué ven los pasajeros
+- **Bienvenida (New ride):** primero el saludo grande con el nombre del pasajero. A los 15 s (o al tocar) sale la segunda página: **"¡Hola! Soy Alan, tu anfitrión y conductor"**, abróchate el cinturón, Wi-Fi con contraseña, agua y A/C.
+- **"Tu anfitrión · Alan"** siempre está arriba en la pantalla; al tocarlo vuelve a salir la info de Wi-Fi, agua y cinturón.
+  - Para cambiar el nombre (otro conductor u otra camioneta), agrega `?host=Nombre` al final del Start URL. Ejemplo: `…/infotainment.html?host=Luis`.
+  - El nombre y contraseña del Wi-Fi están en `infotainment.html` (busca `var WIFI`).
+- **Despedida 👋:** se abre desde el celular (**Goodbye**) o desde el menú del conductor. Muestra:
+  - "¡Gracias, {nombre}!" y "¿Llevas todo?".
+  - El QR de reseña de Google; en Live Map/Uber muestra en su lugar "califica en la app".
+  - El QR de govibemx.com para reservar otra vez.
+  - Se cierra al tocarla o con New ride.
+- **Streaming:** Netflix, Prime Video, Disney+, Max, YouTube y YouTube Kids (abren como apps).
 - **GoVibe TV / TV Niños:** videos elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
 - **Juegos:** Memorama (aprende palabras en español/inglés), Trivia CDMX y ¡Encuéntralo!.
 - **GoVibeMX (excursiones, servicios):** tu sitio abre dentro, con botón ⬅ Inicio.
@@ -150,6 +176,7 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
    - Toca el viaje: **Live Map** (Uber), **City Tour**, **Globo**, **Pirámides**, **Regreso** o **City ride** (sin mapa).
    - **🆕 New ride**: limpia la pantalla y saluda al siguiente pasajero.
    - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
+   - **👋 Goodbye**: pantalla de despedida al final del viaje.
    - **Show a page or video**: pega cualquier dirección y la tablet la abre dentro de la pantalla. Un enlace de YouTube se reproduce en GoVibe TV. Algunos sitios (Google, Netflix, etc.) no se dejan mostrar dentro de otra página.
    - Arriba ves si la tablet está **en línea**, los km que faltan y el GPS.
 

@@ -50,6 +50,7 @@
   .new-ride { width: 100%; background: #0f2a1a; color: #fff; border: 2px solid var(--ok); border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
   .new-ride small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
   .new-ride:active { transform: scale(.98); }
+  .bye-btn { background: #2a1a05; border-color: #FFB300; }
   .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
   [hidden] { display: none !important; }
 
@@ -117,6 +118,7 @@
     <div class="k">New passenger</div>
     <input class="guest" id="guest" type="text" maxlength="30" placeholder="Passenger name (optional), e.g. Sarah & Tom" autocomplete="off">
     <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and show the big welcome</small></button>
+    <button class="new-ride bye-btn" id="bye-btn">👋 Goodbye<small>End of the ride: thank-you screen, check your belongings, review QR</small></button>
   </div>
 
   <div class="card">
@@ -174,11 +176,13 @@
     { v: 'tv:mx', e: '📺', n: 'GoVibe TV', screen: 'tv-screen' },
     { v: 'tv:kids', e: '🧸', n: 'Kids TV', screen: 'tv-screen' },
     { v: 'games', e: '🎮', n: 'Games', screen: 'games-screen' },
+    { v: 'streaming', e: '🍿', n: 'Streaming apps' },
+    { v: 'host', e: '🧑‍✈️', n: 'Host + Wi-Fi info', screen: 'welcome' },
     { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
     { v: 'services', e: '🚐', n: 'Services' },
     { v: 'review', e: '⭐', n: 'Ask for a review' }
   ];
-  const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'Web page', 'tv-screen': 'GoVibe TV', 'games-screen': 'Games' };
+  const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'Web page', 'tv-screen': 'GoVibe TV', 'games-screen': 'Games', 'welcome': 'Welcome screen', 'bye': 'Goodbye screen' };
 
   const $ = (id) => document.getElementById(id);
   $('van').textContent = VAN_ID;
@@ -359,6 +363,7 @@
     $('web-go').addEventListener('click', () => { if ($('web-url').value.trim()) { sendWeb($('web-url').value); $('web-url').value = ''; } });
     $('web-url').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('web-go').click(); });
     $('presets').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) sendWeb(PRESETS[+b.dataset.i].u, PRESETS[+b.dataset.i].n); });
+    $('bye-btn').addEventListener('click', () => sendCmd('bye', '', 'Goodbye screen'));
     $('sections').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);
