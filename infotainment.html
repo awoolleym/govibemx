@@ -6,6 +6,8 @@
 <title>GoVibeMX Rear Screen</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&display=swap">
 <style>
   /* =========================================================
      GoVibeMX — Rear seat infotainment (airline style)
@@ -146,45 +148,106 @@
   .zoom-far .zone-label { display: none; }
   .zoom-near .alc-label { display: none; }
   /* CDMX Explorer */
-  #explorer-screen { flex-direction: column; background: radial-gradient(circle at top, #06302b 0%, #000 70%); }
-  #explorer-screen .guide-top { border-bottom-color: #13524a; }
-  #explorer-screen .guide-top h2 { color: #80CBC4; }
-  #explorer-screen .tabs button { background: #0b2420; color: #c9ece7; border-color: #13524a; }
-  #explorer-screen .tabs button.on { background: #26A69A; color: #00201c; border-color: #26A69A; }
-  .x-card { background: rgba(255,255,255,.04); border: 1px solid #13524a; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
-  .x-card.here { border-color: #FFB300; box-shadow: 0 0 0 1px #FFB300 inset; }
-  .x-card h3 { margin: 0; font-size: 18px; color: #fff; display: flex; gap: 10px; align-items: center; }
-  .x-card h3 .big { font-size: 30px; }
-  .x-card p { margin: 0; font-size: 14px; line-height: 1.5; color: #d7ece9; }
-  .x-sub { font-size: 12px; color: #80CBC4; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
-  .x-here { align-self: flex-start; background: #FFB300; color: #1a1200; border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 800; }
+  /* ===== CDMX Explorer ===== */
+  #explorer-screen { flex-direction: column; background: radial-gradient(ellipse at 20% 0%, #3a0d2e 0%, transparent 55%), radial-gradient(ellipse at 90% 10%, #06302b 0%, transparent 50%), #050507; }
+  .x-hero { position: relative; flex-shrink: 0; padding: 0 14px 10px; overflow: hidden; }
+  .papel { height: 52px; margin: 0 -14px; display: block; }
+  .papel svg { display: block; width: 100%; height: 52px; }
+  .papel .flag { transform-box: fill-box; transform-origin: 50% 0; animation: sway 3.6s ease-in-out infinite; }
+  @keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+  .x-head { display: flex; align-items: center; gap: 14px; margin-top: 2px; flex-wrap: wrap; }
+  .x-titles { flex: 1; min-width: 0; }
+  .x-kicker { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #F48FB1; font-weight: 800; }
+  .x-title { margin: 0; font-family: 'Bungee', 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 34px; line-height: 1.05;
+    background: linear-gradient(90deg, #FF4081, #FFAB40, #FFEB3B, #69F0AE, #40C4FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .x-live { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18); border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; }
+  .x-live .pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #69F0AE; margin-right: 6px; box-shadow: 0 0 0 0 rgba(105,240,174,.7); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(105,240,174,.7); } 70% { box-shadow: 0 0 0 10px rgba(105,240,174,0); } 100% { box-shadow: 0 0 0 0 rgba(105,240,174,0); } }
+  .x-fotm { margin-top: 10px; display: flex; gap: 12px; align-items: center; background: linear-gradient(90deg, rgba(255,64,129,.16), rgba(64,196,255,.10)); border: 1px solid rgba(255,64,129,.35); border-radius: 14px; padding: 10px 14px; cursor: pointer; }
+  .x-fotm .e { font-size: 34px; flex-shrink: 0; }
+  .x-fotm .k { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #FF80AB; font-weight: 800; }
+  .x-fotm .t { font-size: 15px; font-weight: 800; color: #fff; }
+  .x-fotm .p { font-size: 13px; color: #e8dcef; line-height: 1.35; }
+  .x-fotm.fade { animation: fadeUp .6s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .x-tabs { padding-top: 6px !important; }
+  #explorer-screen .tabs button { background: rgba(255,255,255,.05); color: #f3e9f7; border: 1px solid rgba(255,255,255,.15); padding: 10px 16px; font-size: 14px; }
+  #explorer-screen .tabs button.on { background: linear-gradient(90deg, #FF4081, #FF9100); color: #fff; border-color: transparent; box-shadow: 0 4px 14px rgba(255,64,129,.35); }
+  .x-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+  .x-card p { margin: 0; font-size: 14px; line-height: 1.5; color: #e9e3ee; }
+  .x-sub { font-size: 11px; color: var(--zc, #80CBC4); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { background: #0b2420; border: 1px solid #1d5d55; color: #c9ece7; border-radius: 14px; padding: 3px 10px; font-size: 12px; }
+  .chip { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); color: #f0eaf3; border-radius: 14px; padding: 3px 10px; font-size: 12px; }
   .chip.eat-chip { border-color: #6a2f73; background: #1f1022; color: #F3B4FF; }
-  .x-card button, .q-next { align-self: flex-start; background: #0f3a35; color: #80CBC4; border: 1px solid #26A69A; border-radius: 16px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
-  .fact-card h3 .big { font-size: 40px; }
-  .num-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .num-tile { background: linear-gradient(160deg, #0f3a35, #071a17); border: 1px solid #13524a; border-radius: 14px; padding: 16px; }
-  .num-tile .v { font-size: 30px; white-space: nowrap; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .num-tile .l { font-size: 13px; color: #a7d8d1; margin-top: 4px; }
-  .quiz { max-width: 720px; display: flex; flex-direction: column; gap: 12px; }
-  .q-progress { font-size: 13px; color: #80CBC4; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .x-card button, .q-next { align-self: flex-start; background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 18px; padding: 7px 16px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  /* neighborhood cards */
+  .hood { padding: 0; gap: 0; }
+  .hood-top { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px; min-height: 104px;
+    background: rgba(255,255,255,.07);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--zc) 38%, transparent), color-mix(in srgb, var(--zc) 6%, transparent)); }
+  .hood-top .em { font-size: 40px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.5)); }
+  .hood-top h3 { margin: 0; font-size: 20px; color: #fff; line-height: 1.15; text-shadow: 0 2px 8px rgba(0,0,0,.5); }
+  .hood-top .alc { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.75); font-weight: 700; }
+  .hood-top > :not(.x-shape):not(.x-here) { position: relative; z-index: 1; }
+  .x-shape { position: absolute; z-index: 0; right: 8px; top: 8px; width: 120px; height: 88px; filter: drop-shadow(0 0 8px var(--zc)); opacity: .95; }
+  .hood-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .hood-count { font-size: 12px; color: rgba(255,255,255,.65); }
+  .x-here { position: absolute; z-index: 2; left: 14px; top: -1px; background: #FFD740; color: #1a1200; border-radius: 0 0 10px 10px; padding: 2px 10px; font-size: 11px; font-weight: 800; }
+  .hood.here { border: 2px solid #FFD740; box-shadow: 0 0 24px rgba(255,215,64,.25); }
+  .hood.here .hood-top { padding-top: 24px; }
+  /* flip facts */
+  .flip { perspective: 1000px; cursor: pointer; min-height: 170px; }
+  .flip-inner { display: grid; height: 100%; transition: transform .6s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
+  .flip.flipped .flip-inner { transform: rotateY(180deg); }
+  .face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .face.front { background: var(--fc); background: linear-gradient(150deg, var(--fc), color-mix(in srgb, var(--fc) 30%, #000)); justify-content: center; align-items: flex-start; }
+  .face.front .e { font-size: 52px; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+  .face.front .t { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
+  .face.front .hint { font-size: 12px; color: rgba(255,255,255,.8); font-weight: 700; }
+  .face.back { transform: rotateY(180deg); background: #15121a; border: 1px solid var(--fc); }
+  .face.back .t { font-size: 15px; font-weight: 800; color: #fff; }
+  .face.back p { margin: 0; font-size: 14px; line-height: 1.5; color: #ece6f1; }
+  /* numbers */
+  .num-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+  .num-tile { border-radius: 18px; padding: 18px; background: var(--fc); background: linear-gradient(150deg, var(--fc), color-mix(in srgb, var(--fc) 25%, #000)); box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+  .num-tile .v { font-family: 'Bungee', 'Segoe UI', sans-serif; font-size: 30px; white-space: nowrap; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.1; text-shadow: 0 3px 10px rgba(0,0,0,.35); }
+  .num-tile .l { font-size: 13px; color: rgba(255,255,255,.9); margin-top: 6px; font-weight: 600; }
+  /* quiz */
+  .quiz { max-width: 760px; display: flex; flex-direction: column; gap: 14px; }
+  .q-start { text-align: center; align-items: center; padding: 26px 10px; }
+  .q-start .e { font-size: 72px; }
+  .q-big { font-family: 'Bungee', 'Segoe UI', sans-serif; font-size: 30px; color: #fff; line-height: 1.15; }
+  .q-go { background: linear-gradient(90deg, #FF4081, #FF9100); color: #fff; border: none; border-radius: 28px; padding: 14px 34px; font-size: 20px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(255,64,129,.4); }
+  .q-bar { display: flex; align-items: center; gap: 12px; }
+  .q-progress { font-size: 12px; color: #FF80AB; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+  .q-streak { margin-left: auto; font-weight: 800; color: #FFAB40; font-size: 14px; }
   .q-dots { display: flex; gap: 6px; }
-  .q-dots span { width: 26px; height: 6px; border-radius: 3px; background: #1d5d55; }
-  .q-dots span.ok { background: #2ecc71; } .q-dots span.bad { background: #e74c3c; } .q-dots span.cur { background: #80CBC4; }
-  .q-text { font-size: 24px; font-weight: 800; color: #fff; line-height: 1.25; }
-  .q-opts { display: flex; flex-direction: column; gap: 8px; }
-  .q-opts button { text-align: left; background: #0b2420; color: #fff; border: 2px solid #1d5d55; border-radius: 12px; padding: 14px 16px; font-size: 17px; font-weight: 700; cursor: pointer; }
-  .q-opts button.right { border-color: #2ecc71; background: #0d3320; }
-  .q-opts button.wrong { border-color: #e74c3c; background: #3a1010; }
+  .q-dots span { width: 34px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.15); }
+  .q-dots span.ok { background: #69F0AE; } .q-dots span.bad { background: #FF5252; } .q-dots span.cur { background: #FF80AB; }
+  .q-text { font-size: 26px; font-weight: 800; color: #fff; line-height: 1.25; }
+  .q-opts { display: flex; flex-direction: column; gap: 10px; }
+  .q-opts button { display: flex; align-items: center; gap: 14px; text-align: left; background: rgba(255,255,255,.05); color: #fff; border: 2px solid rgba(255,255,255,.14); border-radius: 14px; padding: 14px 16px; font-size: 18px; font-weight: 700; cursor: pointer; transition: transform .1s, border-color .2s, background .2s; }
+  .q-opts button:active { transform: scale(.98); }
+  .q-opts .ltr { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.12); font-size: 15px; }
+  .q-opts button.right { border-color: #69F0AE; background: rgba(105,240,174,.14); }
+  .q-opts button.right .ltr { background: #69F0AE; color: #00301a; }
+  .q-opts button.wrong { border-color: #FF5252; background: rgba(255,82,82,.14); animation: shake .4s; }
+  .q-opts button.wrong .ltr { background: #FF5252; }
   .q-opts button:disabled { cursor: default; }
-  .q-explain { font-size: 15px; color: #d7ece9; }
-  .q-score { font-size: 56px; font-weight: 800; color: #FFD54F; }
-  .x-card.phrase { flex-direction: row; align-items: center; gap: 12px; }
-  .phrase .es { font-size: 19px; font-weight: 800; color: #fff; }
-  .phrase .say { font-size: 13px; color: #80CBC4; font-style: italic; }
-  .phrase .en { font-size: 14px; color: #d7ece9; }
-  .phrase .speak { margin-left: auto; flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: #26A69A; color: #00201c; border: none; font-size: 20px; cursor: pointer; }
+  @keyframes shake { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .q-explain { font-size: 16px; color: #ece6f1; background: rgba(255,255,255,.05); border-radius: 12px; padding: 12px 14px; }
+  .q-score { font-family: 'Bungee', 'Segoe UI', sans-serif; font-size: 80px; line-height: 1; background: linear-gradient(90deg, #FFEB3B, #FF9100); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  /* spanish */
+  .x-card.phrase { flex-direction: row; align-items: center; gap: 12px; border-left: 4px solid var(--fc); }
+  .phrase .es { font-size: 20px; font-weight: 800; color: #fff; }
+  .phrase .say { font-size: 13px; color: var(--fc); font-style: italic; font-weight: 600; }
+  .phrase .en { font-size: 14px; color: #e9e3ee; }
+  .phrase .speak { margin-left: auto; flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--fc); color: #000; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 3000; }
+  @media (prefers-reduced-motion: reduce) {
+    .papel .flag, .x-live .pulse, .x-fotm.fade, .q-opts button.wrong { animation: none !important; }
+    .flip-inner { transition: none; }
+  }
   .airport-box { display: flex; align-items: center; gap: 10px; background: #0b2440; border: 1px solid #0277BD; border-radius: 10px; padding: 10px 12px; color: #fff; text-decoration: none; }
   .airport-box > span { font-size: 24px; }
   .airport-box b { display: block; font-size: 14px; }
@@ -480,11 +543,16 @@
 
 <!-- ======================= CDMX EXPLORER ======================= -->
 <div id="explorer-screen" class="screen">
-  <div class="guide-top">
-    <button class="back-home" id="explorer-back" onclick="explorerBack()">⬅ Home</button>
-    <h2 data-i18n="explorerTitle">🇲🇽 CDMX Explorer</h2>
+  <div class="x-hero">
+    <div class="papel" id="papel" aria-hidden="true"></div>
+    <div class="x-head">
+      <button class="back-home" id="explorer-back" onclick="explorerBack()">⬅ Home</button>
+      <div class="x-titles"><div class="x-kicker">Ciudad de México</div><h2 class="x-title" data-i18n="explorerTitle">CDMX Explorer</h2></div>
+      <div class="x-live" id="x-live" hidden></div>
+    </div>
+    <div class="x-fotm" id="x-fotm" onclick="setXTab('facts')"></div>
   </div>
-  <div class="tabs" id="explorer-tabs"></div>
+  <div class="tabs x-tabs" id="explorer-tabs"></div>
   <div class="guide-body" id="explorer-body"></div>
 </div>
 
@@ -892,7 +960,7 @@ var I18N = {
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Explorer',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
-        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Quiz · Spanish', explorerTitle: '🇲🇽 CDMX Explorer', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Live departures board', airportBoardSub: 'Check your flight before you arrive', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
+        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Quiz · Spanish', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Live departures board', airportBoardSub: 'Check your flight before you arrive', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
         gpsWait: 'Waiting for GPS…', gpsOk: 'Live GPS', gpsDenied: 'GPS off — showing planned route', gpsDemo: 'Demo mode',
@@ -901,7 +969,7 @@ var I18N = {
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
-        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Trivia · Español', explorerTitle: '🇲🇽 Explora la CDMX', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Salidas en vivo', airportBoardSub: 'Revisa tu vuelo antes de llegar', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
+        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Trivia · Español', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Salidas en vivo', airportBoardSub: 'Revisa tu vuelo antes de llegar', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
         gpsWait: 'Buscando GPS…', gpsOk: 'GPS en vivo', gpsDenied: 'Sin GPS — ruta planeada', gpsDemo: 'Modo demo',
@@ -1080,53 +1148,122 @@ function showScreen(id) {
 }
 
 /* ---- CDMX Explorer ---- */
+var X_COLORS = ['#FF4081', '#FF9100', '#FFD740', '#00E676', '#00B0FF', '#D500F9', '#FF6E40', '#1DE9B6'];
+var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function openExplorer(from, tab) {
   S.xFrom = from || 'home'; if (tab) S.xTab = tab;
-  renderExplorer(); showScreen('explorer-screen'); $('explorer-body').scrollTop = 0;
+  drawPapel(); renderExplorer(); showScreen('explorer-screen'); $('explorer-body').scrollTop = 0;
 }
 function explorerBack() { showScreen(S.xFrom === 'map' && S.active ? 'map-screen' : 'home'); }
 function setXTab(tab) { S.xTab = tab; renderExplorer(); $('explorer-body').scrollTop = 0; }
 function zoneOf(ll) { for (var i = 0; i < ZONES.length; i++) if (inRings(ll, ZONES[i].rings)) return ZONES[i]; return null; }
+
+// Papel picado bunting: a row of cut-paper flags with little cut-out shapes.
+function drawPapel() {
+  var el = $('papel'); if (el.firstChild) return;
+  var n = 24, w = 70, svg = '<svg viewBox="0 0 ' + (n * w) + ' 52" preserveAspectRatio="xMidYMin slice"><path d="M0 4 Q ' + (n * w / 2) + ' 14 ' + (n * w) + ' 4" stroke="#bbb" stroke-width="1.5" fill="none"/>';
+  for (var i = 0; i < n; i++) {
+    var x = i * w + 6, c = X_COLORS[i % X_COLORS.length], y = 6 + 5 * Math.sin(Math.PI * i / (n - 1));
+    var zig = '', fw = 58, fh = 40;
+    for (var k = 0; k <= 6; k++) zig += ' L ' + (x + fw - k * fw / 6) + ' ' + (y + fh + (k % 2 ? -5 : 0));
+    svg += '<g class="flag" style="animation-delay:' + (-(i % 6) * 0.5) + 's"><path d="M' + x + ' ' + y + ' L ' + (x + fw) + ' ' + y + zig + ' Z" fill="' + c + '" opacity=".92"/>' +
+      '<circle cx="' + (x + 15) + '" cy="' + (y + 14) + '" r="4" fill="#050507"/><circle cx="' + (x + 43) + '" cy="' + (y + 14) + '" r="4" fill="#050507"/>' +
+      '<path d="M' + (x + 29) + ' ' + (y + 9) + ' l6 8 l-6 8 l-6 -8 Z" fill="#050507"/><circle cx="' + (x + 29) + '" cy="' + (y + 31) + '" r="3" fill="#050507"/></g>';
+  }
+  el.innerHTML = svg + '</svg>';
+}
+// A neighborhood's real outline as a small glowing SVG.
+function zoneSvg(z, color) {
+  var pts = [].concat.apply([], z.rings), minLa = 90, maxLa = -90, minLo = 180, maxLo = -180;
+  pts.forEach(function (p) { minLa = Math.min(minLa, p[0]); maxLa = Math.max(maxLa, p[0]); minLo = Math.min(minLo, p[1]); maxLo = Math.max(maxLo, p[1]); });
+  var kx = Math.cos(toRad((minLa + maxLa) / 2)), W = 120, H = 88, pad = 6;
+  var dx = (maxLo - minLo) * kx || 1e-6, dy = (maxLa - minLa) || 1e-6, sc = Math.min((W - 2 * pad) / dx, (H - 2 * pad) / dy);
+  var ox = (W - dx * sc) / 2, oy = (H - dy * sc) / 2;
+  function xy(p) { return (ox + (p[1] - minLo) * kx * sc).toFixed(1) + ' ' + (oy + (maxLa - p[0]) * sc).toFixed(1); }
+  var d = z.rings.map(function (r) { return 'M' + r.map(xy).join(' L ') + ' Z'; }).join(' ');
+  var dot = '';
+  if (S.pos && inRings(S.pos, z.rings)) { var c = xy(S.pos).split(' '); dot = '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="5" fill="#FFD740" stroke="#000" stroke-width="1.5"/>'; }
+  return '<svg class="x-shape" viewBox="0 0 120 88"><path d="' + d + '" fill="' + color + '" fill-opacity=".28" stroke="' + color + '" stroke-width="2.5" stroke-linejoin="round"' + (z.approx ? ' stroke-dasharray="5 4"' : '') + '/>' + dot + '</svg>';
+}
+function renderFotm() {
+  var f = CDMX_FACTS[(S.fotm || 0) % CDMX_FACTS.length], el = $('x-fotm');
+  el.innerHTML = '<span class="e">' + f.icon + '</span><div><div class="k">' + t('xFotm') + '</div><div class="t">' + tr(f.t) + '</div><div class="p">' + tr(f.p) + '</div></div>';
+  el.classList.remove('fade'); void el.offsetWidth; el.classList.add('fade');
+}
+setInterval(function () {
+  if (!$('explorer-screen').classList.contains('active')) return;
+  S.fotm = (S.fotm || 0) + 1; renderFotm();
+}, 9000);
 function renderExplorer() {
-  $('explorer-back').textContent = t(S.xFrom === 'map' ? 'backMap' : 'back');
+  $('explorer-back').textContent = t(S.xFrom === 'map' && S.active ? 'backMap' : 'back');
+  var live = $('x-live');
+  var where = S.zone ? tr(ZONE_INFO[S.zone.id].name) + (S.alc ? ' · ' + S.alc : '') : (S.alc || '');
+  live.hidden = !where;
+  if (where) live.innerHTML = '<span class="pulse"></span>' + where + (S.temp != null ? ' · ' + Math.round(S.temp) + '°C' : '');
+  renderFotm();
   var tabs = [['hoods', 'xHoods'], ['facts', 'xFacts'], ['numbers', 'xNumbers'], ['quiz', 'xQuiz'], ['spanish', 'xSpanish']];
   $('explorer-tabs').innerHTML = tabs.map(function (x) {
     return '<button class="' + (x[0] === S.xTab ? 'on' : '') + '" onclick="setXTab(\'' + x[0] + '\')">' + t(x[1]) + '</button>';
   }).join('');
-  var h = '', live = S.active && isFree();
+  var h = '', canMap = S.active && isFree();
   if (S.xTab === 'hoods') {
     // Every featured neighborhood with the sights and places to eat inside it; yours first.
     var zs = ZONES.slice().sort(function (a, b) { return (S.zone && b.id === S.zone.id) - (S.zone && a.id === S.zone.id); });
     h = '<div class="cards">' + zs.map(function (z) {
-      var zi = ZONE_INFO[z.id], here = S.zone && S.zone.id === z.id;
+      var zi = ZONE_INFO[z.id], here = S.zone && S.zone.id === z.id, col = X_COLORS[ZONES.indexOf(z) % X_COLORS.length];
       var sights = POIS.filter(function (p) { return p.trips && p.trips.indexOf('city') >= 0 && p.id.indexOf('airport') < 0 && inRings(p.ll, z.rings); });
       var eats = EAT.filter(function (e) { return inRings(e.ll, z.rings); });
       var alc = locate(z.label).alc;
-      return '<div class="x-card' + (here ? ' here' : '') + '">' + (here ? '<span class="x-here">' + t('xHere') + '</span>' : '') +
-        '<h3><span class="big">' + zi.icon + '</span>' + tr(zi.name) + '</h3>' + (alc ? '<div class="x-sub">' + alc + '</div>' : '') +
-        '<p>' + tr(zi.text) + '</p>' +
+      return '<div class="x-card hood' + (here ? ' here' : '') + '" style="--zc:' + col + '">' +
+        '<div class="hood-top">' + (here ? '<span class="x-here">' + t('xHere') + '</span>' : '') + zoneSvg(z, col) +
+        '<span class="em">' + zi.icon + '</span><div style="max-width:60%"><h3>' + tr(zi.name) + '</h3>' + (alc ? '<div class="alc">' + alc + '</div>' : '') + '</div></div>' +
+        '<div class="hood-body"><p>' + tr(zi.text) + '</p>' +
+        (sights.length + eats.length ? '<div class="hood-count">' + t('xCount').replace('{s}', sights.length).replace('{e}', eats.length) + '</div>' : '') +
         (sights.length ? '<div class="x-sub">' + t('xSights') + '</div><div class="chips">' + sights.map(function (p) { return '<span class="chip">' + p.icon + ' ' + tr(p.name) + '</span>'; }).join('') + '</div>' : '') +
         (eats.length ? '<div class="x-sub">' + t('xEat') + '</div><div class="chips">' + eats.map(function (e) { return '<span class="chip eat-chip">' + e.icon + ' ' + e.name + '</span>'; }).join('') + '</div>' : '') +
-        (live ? '<button onclick="showZoneOnMap(\'' + z.id + '\')">' + t('xShowMap') + '</button>' : '') + '</div>';
+        (canMap ? '<button onclick="showZoneOnMap(\'' + z.id + '\')">' + t('xShowMap') + '</button>' : '') + '</div></div>';
     }).join('') + '</div>';
   } else if (S.xTab === 'facts') {
-    h = '<div class="cards">' + CDMX_FACTS.map(function (f) {
-      return '<div class="x-card fact-card"><h3><span class="big">' + f.icon + '</span>' + tr(f.t) + '</h3><p>' + tr(f.p) + '</p></div>';
+    h = '<div class="cards">' + CDMX_FACTS.map(function (f, i) {
+      return '<div class="flip" style="--fc:' + X_COLORS[i % X_COLORS.length] + '" onclick="this.classList.toggle(\'flipped\')"><div class="flip-inner">' +
+        '<div class="face front"><span class="e">' + f.icon + '</span><div class="t">' + tr(f.t) + '</div><div class="hint">👆 ' + t('xFlip') + '</div></div>' +
+        '<div class="face back"><div class="t">' + f.icon + ' ' + tr(f.t) + '</div><p>' + tr(f.p) + '</p></div></div></div>';
     }).join('') + '</div>';
   } else if (S.xTab === 'numbers') {
-    h = '<div class="num-grid">' + CDMX_NUMBERS.map(function (n) {
-      return '<div class="num-tile"><div class="v">' + n.v + '</div><div class="l">' + tr(n.l) + '</div></div>';
+    h = '<div class="num-grid">' + CDMX_NUMBERS.map(function (n, i) {
+      var m = /^(\D*)([\d,.]+)(.*)$/.exec(n.v);
+      var v = m ? m[1] + '<span class="count" data-n="' + m[2] + '">' + m[2] + '</span>' + m[3] : n.v;
+      return '<div class="num-tile" style="--fc:' + X_COLORS[i % X_COLORS.length] + '"><div class="v">' + v + '</div><div class="l">' + tr(n.l) + '</div></div>';
     }).join('') + '</div>';
   } else if (S.xTab === 'quiz') {
     h = quizHtml();
   } else if (S.xTab === 'spanish') {
     var canSpeak = 'speechSynthesis' in window;
-    h = '<p class="lead" style="font-size:15px">' + t('phraseIntro') + '</p><div class="cards">' + PHRASES.map(function (x, i) {
-      return '<div class="x-card phrase"><div><div class="es">' + x.es + '</div><div class="say">' + x.say + '</div><div class="en">' + x.en + '</div></div>' +
+    h = '<p class="lead" style="font-size:15px;margin-top:0">' + t('phraseIntro') + '</p><div class="cards">' + PHRASES.map(function (x, i) {
+      return '<div class="x-card phrase" style="--fc:' + X_COLORS[i % X_COLORS.length] + '"><div><div class="es">' + x.es + '</div><div class="say">' + x.say + '</div><div class="en">' + x.en + '</div></div>' +
         (canSpeak ? '<button class="speak" onclick="speak(' + i + ')" aria-label="Play">🔊</button>' : '') + '</div>';
     }).join('') + '</div>';
   }
   $('explorer-body').innerHTML = h;
+  if (S.xTab === 'numbers') countUp();
+}
+// Numbers count up from zero, keeping commas and decimals.
+function countUp() {
+  var els = document.querySelectorAll('#explorer-body .count');
+  if (REDUCED) return;
+  var t0 = performance.now(), dur = 1300;
+  function fmt(target, raw, k) {
+    var dec = (raw.split('.')[1] || '').length, v = target * k;
+    var str = v.toFixed(dec);
+    if (raw.indexOf(',') >= 0) str = Number(str).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    return str;
+  }
+  function step(now) {
+    var k = Math.min(1, (now - t0) / dur); k = 1 - Math.pow(1 - k, 3);
+    for (var i = 0; i < els.length; i++) { var raw = els[i].getAttribute('data-n'); els[i].textContent = fmt(parseFloat(raw.replace(/,/g, '')), raw, k); }
+    if (k < 1 && S.xTab === 'numbers') requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 function showZoneOnMap(id) {
   var z = ZONES.filter(function (x) { return x.id === id; })[0];
@@ -1141,16 +1278,32 @@ function speak(i) {
     speechSynthesis.speak(u);
   } catch (e) {}
 }
-// ---- Quiz: 5 random questions, options shuffled ----
+// Confetti burst (skipped with reduced motion).
+function confetti(count) {
+  if (REDUCED) return;
+  var cv = document.createElement('canvas'); cv.id = 'confetti';
+  cv.width = window.innerWidth; cv.height = window.innerHeight; document.body.appendChild(cv);
+  var ctx = cv.getContext('2d'), parts = [];
+  for (var i = 0; i < count; i++) parts.push({ x: cv.width / 2 + (Math.random() - .5) * 200, y: cv.height * .45, vx: (Math.random() - .5) * 14, vy: -Math.random() * 14 - 4,
+    s: 6 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: X_COLORS[i % X_COLORS.length] });
+  var t0 = performance.now();
+  (function frame(now) {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts.forEach(function (p) { p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += p.vr; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); });
+    if (now - t0 < 2600) requestAnimationFrame(frame); else cv.remove();
+  })(t0);
+}
+// ---- Quiz: start screen, 5 random questions, shuffled options, streaks ----
 function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
 function newQuiz() {
   var qs = shuffle(QUIZ.map(function (q, i) { return i; })).slice(0, 5).map(function (qi) {
     return { qi: qi, order: shuffle([0, 1, 2]), picked: null };
   });
-  S.quiz = { qs: qs, i: 0 };
+  S.quiz = { qs: qs, i: 0, streak: 0 };
 }
+function startQuiz() { newQuiz(); renderExplorer(); }
 function quizHtml() {
-  if (!S.quiz) newQuiz();
+  if (!S.quiz) return '<div class="quiz x-card q-start"><span class="e">🤔🇲🇽</span><div class="q-big">' + t('qStartTitle') + '</div><p>' + t('qStartSub') + '</p><button class="q-go" onclick="startQuiz()">' + t('qStart') + '</button></div>';
   var Q = S.quiz, n = Q.qs.length;
   var score = Q.qs.filter(function (x) { return x.picked !== null && x.picked === QUIZ[x.qi].a; }).length;
   var dots = '<div class="q-dots">' + Q.qs.map(function (x, k) {
@@ -1158,20 +1311,33 @@ function quizHtml() {
   }).join('') + '</div>';
   if (Q.i >= n) {
     var msg = score >= 5 ? t('qGreat') : score >= 3 ? t('qGood') : t('qTry');
-    return '<div class="quiz">' + dots + '<div class="q-score">' + score + ' / ' + n + '</div><div class="q-text">' + t('qScore').replace('{s}', score).replace('{n}', n) + '</div><div class="q-explain">' + msg + '</div>' +
-      '<button class="q-next" onclick="S.quiz=null; renderExplorer();">' + t('qAgain') + '</button></div>';
+    return '<div class="quiz x-card q-start">' + dots + '<div class="q-score">' + score + '/' + n + '</div><div class="q-big" style="font-size:22px">' + msg + '</div><p>' + t('qScore').replace('{s}', score).replace('{n}', n) + '</p>' +
+      '<button class="q-go" onclick="startQuiz()">' + t('qAgain') + '</button></div>';
   }
   var cur = Q.qs[Q.i], q = QUIZ[cur.qi], opts = tr(q.o), done = cur.picked !== null;
-  var h = '<div class="quiz"><div class="q-progress">' + t('qOf').replace('{i}', Q.i + 1).replace('{n}', n) + '</div>' + dots +
-    '<div class="q-text">' + tr(q.q) + '</div><div class="q-opts">' + cur.order.map(function (oi) {
+  var h = '<div class="quiz"><div class="q-bar"><span class="q-progress">' + t('qOf').replace('{i}', Q.i + 1).replace('{n}', n) + '</span>' + dots +
+    (Q.streak >= 2 ? '<span class="q-streak">🔥 ' + Q.streak + ' ' + t('qStreak') + '</span>' : '') + '</div>' +
+    '<div class="q-text">' + tr(q.q) + '</div><div class="q-opts">' + cur.order.map(function (oi, k) {
       var cls = done ? (oi === q.a ? 'right' : (oi === cur.picked ? 'wrong' : '')) : '';
-      return '<button class="' + cls + '"' + (done ? ' disabled' : '') + ' onclick="pickAnswer(' + oi + ')">' + opts[oi] + '</button>';
+      return '<button class="' + cls + '"' + (done ? ' disabled' : '') + ' onclick="pickAnswer(' + oi + ')"><span class="ltr">' + 'ABC'[k] + '</span>' + opts[oi] + '</button>';
     }).join('') + '</div>';
   if (done) h += '<div class="q-explain"><b>' + (cur.picked === q.a ? t('qRight') : t('qWrong')) + '</b> ' + tr(q.x) + '</div>' +
-    '<button class="q-next" onclick="S.quiz.i++; renderExplorer();">' + (Q.i + 1 >= n ? t('qSeeScore') : t('qNext')) + '</button>';
+    '<button class="q-go" style="align-self:flex-start;font-size:16px;padding:10px 24px" onclick="nextQuestion()">' + (Q.i + 1 >= n ? t('qSeeScore') : t('qNext')) + '</button>';
   return h + '</div>';
 }
-function pickAnswer(oi) { var cur = S.quiz.qs[S.quiz.i]; if (cur.picked === null) { cur.picked = oi; renderExplorer(); } }
+function pickAnswer(oi) {
+  var cur = S.quiz.qs[S.quiz.i]; if (cur.picked !== null) return;
+  cur.picked = oi;
+  if (oi === QUIZ[cur.qi].a) { S.quiz.streak++; confetti(40); } else S.quiz.streak = 0;
+  renderExplorer();
+}
+function nextQuestion() {
+  S.quiz.i++; renderExplorer();
+  if (S.quiz.i >= S.quiz.qs.length) {
+    var sc = S.quiz.qs.filter(function (x) { return x.picked === QUIZ[x.qi].a; }).length;
+    if (sc >= 3) confetti(sc >= 5 ? 160 : 90);
+  }
+}
 
 // ---- New ride: reset the screen for the next passenger (driver menu or phone) ----
 function newRide() {
