@@ -126,6 +126,7 @@ Los nombres pueden variar un poco según la versión.
 *open-meteo.com*
 *qrserver.com*
 *wsimg.com*
+*famobi.com*
 ```
 
 **App Whitelist** (las únicas apps que se pueden abrir desde la pantalla; instálalas e inicia sesión antes):
@@ -156,8 +157,20 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - El QR de govibemx.com para reservar otra vez.
   - Se cierra al tocarla o con New ride.
 - **Streaming:** Netflix, Prime Video, Disney+, Max, YouTube y YouTube Kids (abren como apps).
-- **GoVibe TV / TV Niños:** videos elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
-- **Juegos:** Memorama (aprende palabras en español/inglés), Trivia CDMX y ¡Encuéntralo!.
+- **GoVibe TV:** videos de México elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
+- **Juegos:**
+  - **🕹️ Arcade:** 20 juegos tipo Poki (Moto X3M, Penalty Shooters, billar, burbujas, 2048, sudoku…) de **Famobi**. Están hechos para mostrarse dentro de otra página, y se juegan dentro de la pantalla.
+    - Poki no se deja mostrar dentro de otra página, por eso no está.
+    - La primera vez cada juego tarda unos segundos en cargar; después se guarda en la tablet y abre más rápido.
+    - Si un juego deja de cargar algún día, Famobi lo actualizó: dímelo y cambio el enlace.
+  - **⚡ Rápidos:** Memorama, Trivia CDMX y ¡Encuéntralo!. Abren al instante, incluso sin internet.
+- **🔆 Brillo:** botón arriba en la pantalla.
+  - Opciones: 100%, 70%, 40%, 15% o **Apagar la pantalla**. Apagada queda en negro y se enciende con un toque.
+  - Desde el remoto: tarjeta **Screen** (brillo, ⏻ Off, 💡 On).
+  - Para que el brillo cambie la luz real de la pantalla:
+    - En Fully, **Enable JavaScript Interface** debe estar activado.
+    - En Android: **Ajustes → Apps → Fully Kiosk → Modificar ajustes del sistema → Permitir**.
+    - Sin ese permiso, la pantalla se oscurece con una capa negra (funciona, pero ahorra menos batería).
 - **GoVibeMX (excursiones, servicios):** tu sitio abre dentro, con botón ⬅ Inicio.
 - Tras 3 minutos sin tocar, la pantalla vuelve sola al mapa o al inicio. Si hay un video, espera a que termine.
 - Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.

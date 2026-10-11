@@ -118,6 +118,12 @@
   .new-ride { padding: 14px; font-size: 17px; min-height: 56px; }
   .sections { grid-template-columns: repeat(2, 1fr); gap: 6px; }
   .sections button { padding: 10px 8px; font-size: 13px; min-height: 48px; }
+  .bright { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .bright button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; padding: 6px 2px; border-radius: 12px; border: 2px solid var(--line); background: #1b222c; color: #fff; font-size: 20px; cursor: pointer; font-family: inherit; }
+  .bright button small { font-size: 11px; font-weight: 700; color: var(--muted); }
+  .bright button.cur { border-color: #FFD740; background: #2a2108; }
+  .bright button.off { background: #000; }
+  .bright button.off.cur { border-color: var(--bad); }
   .quick { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 6px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(180deg, rgba(7,11,16,0), rgba(7,11,16,.96) 30%); }
   .quick .sent { text-align: center; min-height: 16px; margin-bottom: 4px; }
   .quick-row { max-width: 520px; margin: 0 auto; display: flex; gap: 8px; }
@@ -175,6 +181,18 @@
   <div class="card">
     <div class="k">Trip</div>
     <div class="trips" id="trips"></div>
+  </div>
+
+  <div class="card">
+    <div class="k">Screen</div>
+    <div class="bright" id="bright">
+      <button data-b="1">☀️<small>100%</small></button>
+      <button data-b="0.7">🌤️<small>70%</small></button>
+      <button data-b="0.4">🌙<small>40%</small></button>
+      <button data-b="0.15">🌑<small>15%</small></button>
+      <button data-p="off" class="off">⏻<small>Off</small></button>
+      <button data-p="on" class="on-btn">💡<small>On</small></button>
+    </div>
   </div>
 
   <div class="card">
@@ -242,7 +260,7 @@
     { v: 'kids:spot', e: '🦎', n: 'Kids: Spot it!', screen: 'kids-screen' },
     { v: 'transit', e: '🚇', n: 'Getting Around', screen: 'transit-screen' },
     { v: 'tv:mx', e: '📺', n: 'GoVibe TV', screen: 'tv-screen' },
-    { v: 'tv:kids', e: '🧸', n: 'Kids TV', screen: 'tv-screen' },
+    { v: 'arcade', e: '🕹️', n: 'Arcade games', screen: 'games-screen' },
     { v: 'games', e: '🎮', n: 'Games', screen: 'games-screen' },
     { v: 'streaming', e: '🍿', n: 'Streaming apps' },
     { v: 'host', e: '🧑‍✈️', n: 'Host + Wi-Fi info', screen: 'welcome' },
@@ -391,6 +409,9 @@
     if (tablet.gps) bits.push('GPS: ' + ({ ok: 'live', wait: 'searching', denied: 'off', demo: 'demo' }[tablet.gps] || tablet.gps));
     if (tablet.screen) bits.push('Showing: ' + (SCREEN_NAMES[tablet.screen] || tablet.screen));
     if (tablet.lang) bits.push(tablet.lang.toUpperCase());
+    if (tablet.off) bits.push('Screen OFF');
+    else if (tablet.bright != null && tablet.bright < 1) bits.push('Brightness ' + Math.round(tablet.bright * 100) + '%');
+    document.querySelectorAll('#bright button').forEach(b => b.classList.toggle('cur', b.dataset.p === 'off' ? !!tablet.off : (!tablet.off && b.dataset.b != null && Math.abs(+b.dataset.b - (tablet.bright || 1)) < 0.01)));
     document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
     $('tablet-meta').textContent = bits.join(' · ');
   }
@@ -456,6 +477,12 @@
     $('web-url').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('web-go').click(); });
     $('presets').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) sendWeb(PRESETS[+b.dataset.i].u, PRESETS[+b.dataset.i].n); });
     $('bye-btn').addEventListener('click', () => sendCmd('bye', '', 'Goodbye screen'));
+    $('bright').addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.p === 'off') sendCmd('off', '', 'Screen off');
+      else if (b.dataset.p === 'on') sendCmd('on', '', 'Screen on');
+      else sendCmd('bright', +b.dataset.b, 'Brightness ' + Math.round(b.dataset.b * 100) + '%');
+    });
     $('sections').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);
