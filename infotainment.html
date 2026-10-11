@@ -220,6 +220,25 @@
   .modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,.95); flex-direction: column; align-items: center; justify-content: center; }
   .modal-content { background: #222; color: #fff; padding: 25px; border-radius: 15px; text-align: center; width: 85%; border: 1px solid #444; max-height: 85vh; overflow-y: auto; }
   .close-btn { color: #fff; font-size: 30px; font-weight: bold; margin-top: 15px; cursor: pointer; border: 2px solid #fff; border-radius: 50%; width: 50px; height: 50px; line-height: 45px; text-align: center; }
+  /* Services panel (Hire a driver) */
+  .services-panel { background: #0d1117; width: 92%; max-width: 980px; text-align: left; border: 1px solid #FFB300; }
+  .svc-title { margin: 0; color: #FFD54F; }
+  .svc-lead { margin: 4px 0 14px; color: #c9d1d9; font-size: 15px; }
+  .svc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .svc-card { background: #161b22; border: 1px solid #2a313c; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .svc-card .tag { align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #FFB300; }
+  .svc-card h3 { margin: 0; font-size: 17px; display: flex; gap: 8px; align-items: center; }
+  .svc-card p { margin: 0; font-size: 13px; line-height: 1.45; color: #c9d1d9; flex: 1; }
+  .svc-card .price { font-size: 20px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
+  .svc-card .price small { font-size: 12px; font-weight: 400; color: #9aa4b2; }
+  .svc-contact { display: flex; gap: 16px; align-items: center; margin-top: 14px; padding: 14px; background: #0f2a1a; border: 1px solid #25D366; border-radius: 14px; flex-wrap: wrap; }
+  .svc-qr { width: 150px; height: 150px; background: #fff; padding: 6px; border-radius: 10px; }
+  .svc-wa { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 220px; }
+  .svc-wa-row { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #25D366; }
+  .wa-icon { width: 40px; height: 40px; flex-shrink: 0; }
+  .svc-phone { font-size: 34px; font-weight: 800; letter-spacing: 1px; color: #fff; font-variant-numeric: tabular-nums; user-select: text; }
+  .svc-hint { font-size: 14px; color: #b8e6c8; }
+  .svc-more { font-size: 12px; color: #9aa4b2; }
   .facts-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
   .fact-btn { background: #333; border: 1px solid #555; padding: 12px; color: #fff; border-radius: 10px; font-size: 13px; cursor: pointer; text-align: left; }
   .fact-display { display: none; text-align: left; }
@@ -257,7 +276,20 @@
 <body>
 
 <!-- ============ AMENITY MODALS (from the original page) ============ -->
-<div id="qrModal" class="modal"><div class="modal-content" style="background:#fff;color:#000;width:auto;"><h2 style="margin-top:0;">WhatsApp Chat</h2><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/525549017902?text=Hola!%20Me%20interesa%20un%20viaje%20privado" alt="WhatsApp QR"><p style="color:#555;margin-bottom:5px;">GoVibeMX Concierge</p><div style="background:#eee;padding:10px;border-radius:10px;margin-top:10px;"><span style="font-size:24px;font-weight:bold;color:#000;">+52 55 4901 7902</span></div></div><div class="close-btn" onclick="closeModal('qrModal')">X</div></div>
+<div id="servicesModal" class="modal"><div class="modal-content services-panel">
+  <h2 class="svc-title" data-i18n="svcTitle">🚐 GoVibeMX Services</h2>
+  <p class="svc-lead" data-i18n="svcLead">The same private vehicle and host as today's ride, whenever you need to get around the city.</p>
+  <div class="svc-cards" id="svc-cards"></div>
+  <div class="svc-contact">
+    <img class="svc-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/525549017902?text=Hola!%20Me%20interesa%20un%20viaje%20privado" alt="WhatsApp QR code">
+    <div class="svc-wa">
+      <div class="svc-wa-row"><svg class="wa-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4C13 4 4 12.6 4 23.3c0 3.8 1.1 7.3 3.1 10.3L4.6 43l9.7-2.5c2.9 1.5 6.2 2.3 9.7 2.3 11 0 20-8.6 20-19.3S35 4 24 4z" fill="#25D366"/><path d="M33.6 28.9c-.5-.3-3-1.5-3.5-1.6-.5-.2-.8-.3-1.1.2-.3.5-1.3 1.6-1.6 1.9-.3.3-.6.4-1.1.1-.5-.3-2.1-.8-4-2.5-1.5-1.3-2.5-2.9-2.8-3.4-.3-.5 0-.8.2-1 .2-.2.5-.6.8-.9.3-.3.3-.5.5-.9.2-.3.1-.7 0-.9-.1-.3-1.1-2.7-1.5-3.7-.4-1-.8-.8-1.1-.8h-.9c-.3 0-.8.1-1.3.6-.4.5-1.7 1.6-1.7 4s1.7 4.6 2 4.9c.2.3 3.4 5.2 8.2 7.3 1.1.5 2 .8 2.7 1 1.1.4 2.2.3 3 .2.9-.1 2.8-1.1 3.2-2.2.4-1.1.4-2 .3-2.2-.1-.2-.4-.3-.9-.6z" fill="#fff"/></svg><span>WhatsApp</span></div>
+      <div class="svc-phone">+52 55 4901 7902</div>
+      <div class="svc-hint" data-i18n="svcScan">Scan the code with your phone camera to chat with us, or just ask your driver.</div>
+      <div class="svc-more" data-i18n="svcMore">Full-day experiences: govibemx.com</div>
+    </div>
+  </div>
+</div><div class="close-btn" onclick="closeModal('servicesModal')">X</div></div>
 <div id="spotifyModal" class="modal"><div class="modal-content" style="background:#191414;width:70%;border:2px solid #1db954;"><h2 style="color:#1db954;margin-top:0;">🎵 Join the Jam!</h2><p style="font-size:20px;">Join <b>"palito-bobi"</b> Jam!</p><p style="color:#ccc;font-size:16px;margin:20px 0;">The connection link changes often.<br><br><b>Please ask the driver for the current QR Code!</b></p></div><div class="close-btn" onclick="closeModal('spotifyModal')">X</div></div>
 <div id="waterModal" class="modal"><div class="modal-content" style="background:#111;width:70%;"><h2 style="color:#00C9FF;margin-top:0;">💧 Refreshment / Agua</h2><p style="font-size:18px;line-height:1.5;">The 2 water bottles in the middle rack are <b>up for grabs!</b><br><br>I have more up front—just ask if you need them.</p><hr style="border-color:#333;margin:20px 0;"><p style="font-size:18px;line-height:1.5;color:#ccc;">¡Las 2 aguas en el estante central son para usted!<br><br>Tengo más adelante, solo dígame si necesita.</p></div><div class="close-btn" onclick="closeModal('waterModal')">X</div></div>
 <div id="acModal" class="modal"><div class="modal-content" style="background:#111;width:70%;"><h2 style="color:#00C9FF;margin-top:0;">❄️ Climate / Aire</h2><p style="font-size:18px;line-height:1.4;">Hello! The A/C is set to <b>22°C (72°F)</b> for comfort.<br><br>Feel free to ask me to change it!</p><hr style="border-color:#333;margin:15px 0;"><p style="font-size:18px;line-height:1.4;color:#ccc;">¡Hola! El A/C está a <b>22°C (72°F)</b>.<br><br>¡Dígame si prefiere otra temperatura!</p></div><div class="close-btn" onclick="closeModal('acModal')">X</div></div>
@@ -352,7 +384,7 @@
   <div class="row">
     <a href="https://govibemx.com/experiences" class="btn btn-biz daytrips"><span class="btn-icon">🌴</span><span class="btn-title">DAY TRIPS</span><span class="btn-sub">Curated Tours</span></a>
     <a href="https://govibemx.com/experiences" class="btn btn-biz livetrips"><span class="btn-icon">📅</span><span class="btn-title">UPCOMING</span><span class="btn-sub">Live Availability</span></a>
-    <div onclick="openModal('qrModal')" class="btn btn-biz private"><span class="btn-icon">🚗</span><span class="btn-title">HIRE DRIVER</span><span class="btn-sub">WhatsApp</span></div>
+    <div onclick="openServices()" class="btn btn-biz private"><span class="btn-icon">🚐</span><span class="btn-title" data-i18n="svcTile">SERVICES</span><span class="btn-sub" data-i18n="svcTileSub">Transfers · Tours · Driver by the hour</span></div>
   </div>
 </div>
 
@@ -514,6 +546,25 @@ var EAT = [
   {"id":"opera","kind":"classic","icon":"🎩","name":"Bar La Ópera","area":"Centro Histórico","price":"$$","ll":[19.43488,-99.13955],"badge":{"en":"Historic cantina","es":"Cantina histórica"},"text":{"en":"A 19th-century cantina with carved wooden booths. Legend says the hole in the ceiling is from Pancho Villa's pistol.","es":"Una cantina del siglo XIX con gabinetes de madera tallada. Cuenta la leyenda que el agujero del techo es de la pistola de Pancho Villa."},"tip":{"en":"Walk-in.","es":"Sin reservación."}},
   {"id":"tenampa","kind":"classic","icon":"🎺","name":"Salón Tenampa","area":"Plaza Garibaldi","price":"$$","ll":[19.44103,-99.13896],"badge":{"en":"Mariachi cantina since 1925","es":"Cantina de mariachi desde 1925"},"text":{"en":"The classic mariachi cantina on Plaza Garibaldi, with murals of Mexican music legends.","es":"La cantina de mariachi clásica de Plaza Garibaldi, con murales de leyendas de la música mexicana."},"tip":{"en":"Walk-in; best at night.","es":"Sin reservación; mejor de noche."}},
   {"id":"duelistas","kind":"classic","icon":"🥛","name":"Pulquería Las Duelistas","area":"Centro Histórico","price":"$","ll":[19.43012,-99.14275],"badge":{"en":"Classic pulquería","es":"Pulquería clásica"},"text":{"en":"Psychedelic murals and pulque, the ancient fermented agave drink. Try a curado, blended with fruit.","es":"Murales psicodélicos y pulque, la antigua bebida de agave fermentado. Prueba un curado de fruta."},"tip":{"en":"Walk-in.","es":"Sin reservación."}}
+];
+
+// Services shown under "Services" (from govibemx.com/services). Prices in MXN as listed there.
+var SERVICES = [
+  { icon: '✈️', tag: { en: 'VIP transfer', es: 'Traslado VIP' },
+    name: { en: 'VIP Airport Transfers (AICM & AIFA)', es: 'Traslados VIP al aeropuerto (AICM y AIFA)' },
+    text: { en: 'Private meet-and-greet at either Mexico City airport, both directions. Flight tracking, luggage help, bottled water and an English-speaking driver, door to door. $1,400 MXN flat from AICM, $2,400 from AIFA, for one guest or six.',
+            es: 'Recepción privada en cualquiera de los aeropuertos de la CDMX, ida o vuelta. Monitoreo de vuelo, ayuda con equipaje, agua y conductor que habla inglés, de puerta a puerta. $1,400 MXN fijo desde el AICM, $2,400 desde el AIFA, de 1 a 6 personas.' },
+    price: { en: 'From $1,400 <small>MXN</small>', es: 'Desde $1,400 <small>MXN</small>' } },
+  { icon: '🏙️', tag: { en: 'Half day', es: 'Medio día' },
+    name: { en: 'Express Neighborhood Tour', es: 'Tour exprés por las colonias' },
+    text: { en: 'A private, drive-and-explore tour of the best neighborhoods (Roma, Condesa, Coyoacán, the historic center) at your pace, hosted from the car. Flat price for the whole group, up to 6.',
+            es: 'Un tour privado para recorrer en auto las mejores colonias (Roma, Condesa, Coyoacán, el Centro Histórico) a tu ritmo, con anfitrión a bordo. Precio fijo para todo el grupo, hasta 6.' },
+    price: { en: '$3,200 <small>MXN</small>', es: '$3,200 <small>MXN</small>' } },
+  { icon: '🕐', tag: { en: 'Your itinerary', es: 'Tu itinerario' },
+    name: { en: 'Private Driver by the Hour', es: 'Chofer privado por hora' },
+    text: { en: 'Your own bilingual driver-host. Build your own itinerary (meetings, shopping, dining, sightseeing) and we handle the rest.',
+            es: 'Tu propio chofer-anfitrión bilingüe. Arma tu itinerario (juntas, compras, restaurantes, paseos) y nosotros nos encargamos del resto.' },
+    price: { en: '$800 <small>MXN</small>', es: '$800 <small>MXN</small>' } }
 ];
 
 // Phone remote: the tablet and driver.html share this id in Firebase (rearScreen/<VAN_ID>).
@@ -713,6 +764,7 @@ var POIS = [
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Facts',
+        svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcMore: 'Full-day experiences: govibemx.com',
         back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhood explorer', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
@@ -720,6 +772,7 @@ var I18N = {
         overviewBadge: 'Overview', followBadge: 'Live position', arrived: 'Arrived!', min: 'min', you: 'You are here' },
   es: { yourJourney: 'Tu viaje', toGo: 'Faltan', timeLeft: 'Tiempo', arrival: 'Llegada', openMap: '🗺️ Ver mapa en vivo',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
+        svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcMore: 'Experiencias de día completo: govibemx.com',
         back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Explora las colonias', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
@@ -874,6 +927,13 @@ function updateClock() {
   $('st-clock').textContent = s;
 }
 function openModal(id) { $(id).style.display = 'flex'; }
+function openServices() { renderServices(); openModal('servicesModal'); }
+function renderServices() {
+  $('svc-cards').innerHTML = SERVICES.map(function (v) {
+    return '<div class="svc-card"><span class="tag">' + tr(v.tag) + '</span><h3><span>' + v.icon + '</span>' + tr(v.name) + '</h3>' +
+      '<p>' + tr(v.text) + '</p><div class="price">' + tr(v.price) + '</div></div>';
+  }).join('');
+}
 function closeModal(id) { $(id).style.display = 'none'; }
 function showFact(id) {
   $('factsMenu').style.display = 'none';
@@ -945,7 +1005,7 @@ function setLang(l) {
   $('lang-es').classList.toggle('on', l === 'es');
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
-  renderTripPicker(); renderGuide(); renderEat(); refreshPoiPopups(); render();
+  renderTripPicker(); renderGuide(); renderEat(); renderServices(); refreshPoiPopups(); render();
 }
 
 /* =====================================================================
