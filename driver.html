@@ -81,6 +81,10 @@
   .sections button .e { font-size: 20px; }
   .sections button.on { border-color: #00C9FF; }
   .sections button:active, .home-btn:active { transform: scale(.97); }
+  .url-row { display: flex; gap: 8px; }
+  .url-row button { background: #00C9FF; color: #002b36; border: none; border-radius: 10px; padding: 0 16px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .presets button { background: #1b222c; color: #cfd8e3; border: 1px solid var(--line); border-radius: 16px; padding: 6px 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .sent { font-size: 12px; color: var(--ok); min-height: 16px; }
   .bar button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 18px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: inherit; }
 </style>
@@ -122,6 +126,9 @@
       <div class="langs"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
     </div>
     <div class="sections" id="sections"></div>
+    <div class="k" style="margin-top:4px">Show a page or video</div>
+    <div class="url-row"><input class="guest" id="web-url" type="url" inputmode="url" placeholder="https://… or a YouTube link" autocomplete="off"><button id="web-go">Show</button></div>
+    <div class="presets" id="presets"></div>
     <div class="sent" id="sent"></div>
   </div>
 
@@ -164,11 +171,14 @@
     { v: 'eat', e: '🍽️', n: 'Eat & Drink', screen: 'eat-screen' },
     { v: 'kids:spot', e: '🦎', n: 'Kids: Spot it!', screen: 'kids-screen' },
     { v: 'transit', e: '🚇', n: 'Getting Around', screen: 'transit-screen' },
+    { v: 'tv:mx', e: '📺', n: 'GoVibe TV', screen: 'tv-screen' },
+    { v: 'tv:kids', e: '🧸', n: 'Kids TV', screen: 'tv-screen' },
+    { v: 'games', e: '🎮', n: 'Games', screen: 'games-screen' },
     { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
     { v: 'services', e: '🚐', n: 'Services' },
     { v: 'review', e: '⭐', n: 'Ask for a review' }
   ];
-  const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'GoVibeMX website' };
+  const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'Web page', 'tv-screen': 'GoVibe TV', 'games-screen': 'Games' };
 
   const $ = (id) => document.getElementById(id);
   $('van').textContent = VAN_ID;
@@ -331,6 +341,24 @@
     };
     document.querySelector('.home-btn').addEventListener('click', () => sendCmd('home', '', 'Home'));
     document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => sendCmd('lang', b.dataset.lang, b.dataset.lang === 'es' ? 'Español' : 'English')));
+    // Point the screen at any page (it opens inside the tablet's viewer; YouTube links play on GoVibe TV)
+    const PRESETS = [
+      { n: '🏠 govibemx.com', u: 'https://govibemx.com/' },
+      { n: '🚐 Services', u: 'https://govibemx.com/services/' },
+      { n: '🌴 Experiences', u: 'https://govibemx.com/experiences' }
+    ];
+    $('presets').innerHTML = PRESETS.map((p, i) => `<button data-i="${i}">${p.n}</button>`).join('');
+    const sendWeb = async (u, label) => {
+      if ($('controls').hidden) return;
+      u = u.trim(); if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+      u = u.replace(/^http:/i, 'https:');
+      try { await set(ref(db, base + '/cmd'), { a: 'web', v: u, at: Date.now() }); $('sent').textContent = '✅ Sent: ' + (label || u); }
+      catch (err) { $('sent').textContent = 'Couldn\'t send: ' + err.message; }
+      setTimeout(() => { $('sent').textContent = ''; }, 2500);
+    };
+    $('web-go').addEventListener('click', () => { if ($('web-url').value.trim()) { sendWeb($('web-url').value); $('web-url').value = ''; } });
+    $('web-url').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('web-go').click(); });
+    $('presets').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) sendWeb(PRESETS[+b.dataset.i].u, PRESETS[+b.dataset.i].n); });
     $('sections').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);

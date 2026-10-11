@@ -57,14 +57,87 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 
 ---
 
-## 2. La tablet (Fully Kiosk)
+## 2. La tablet (Lenovo Tab M9 + Fully Kiosk)
 
-1. **Start URL:** `https://awoolleym.github.io/govibemx/infotainment.html`
-2. **Web Content Settings → Enable Geolocation Access:** activado (y permiso de ubicación para Fully en Android).
-3. **Para que siempre regresen a la pantalla:** las páginas de GoVibeMX abren *dentro* de la pantalla (con botón ⬅ Inicio). YouTube, Noticias, Juegos, Vuelos, Netflix y Prime (marcados con ↗) abren aparte porque no permiten mostrarse dentro de otra página. En Fully:
-   - **Web Auto Reload → Auto Reload on Idle:** p. ej. 300 segundos, para que vuelva sola a la pantalla de inicio.
-   - **Toolbars & Appearance:** activa la barra de navegación o el botón de inicio de Fully, para regresar con un toque.
-4. Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.
+La pantalla ya no abre ninguna app ni sitio externo: TV, juegos, guías y páginas de GoVibeMX corren **dentro** de la pantalla. Fully Kiosk se encarga de que nadie pueda salir de ahí.
+
+> Los bloqueos de **Kiosk Mode**, **URL Whitelist** y **Remote Admin** son de **Fully Kiosk PLUS** (licencia de pago, una vez por tablet). Sin PLUS funciona todo, pero un pasajero podría salir con los botones de Android.
+
+### 2.1 Preparar la tablet (Ajustes de Android)
+1. **Batería → Modo de protección** (Lenovo): actívalo. Carga hasta ~80% y cuida la batería porque la tablet vive conectada.
+2. **Pantalla → Tiempo de espera:** el máximo. **Rotación automática:** apagada, en horizontal.
+3. **No molestar:** activado, para que no salgan notificaciones encima de la pantalla.
+4. **Ubicación:** activada, en alta precisión.
+5. **Texto a voz:** *Google* con español (México), para el 🔊 de Español básico.
+6. Quita la cuenta de Google personal o desactiva la Play Store, y quita apps que no uses.
+7. **Opciones de desarrollador → Permanecer activo** (pantalla encendida mientras carga). Opcional.
+
+### 2.2 Ajustes de Fully Kiosk
+Los nombres pueden variar un poco según la versión.
+
+| Sección | Ajuste | Valor |
+|---|---|---|
+| Web Content Settings | **Start URL** | `https://awoolleym.github.io/govibemx/infotainment.html` |
+| | Enable Geolocation Access | ✅ (y permiso de ubicación para Fully) |
+| | Autoplay Videos | ✅ |
+| | Enable Fullscreen Videos | ✅ |
+| | **Enable Popups** | ❌ (nada abre ventanas nuevas) |
+| | Enable JavaScript Interface | ❌ (ya no hace falta) |
+| Web Zoom and Scaling | Enable Zoom | ❌ |
+| | Initial Scale | 0 / automático (la pantalla se adapta sola) |
+| Web Browsing Settings | Enable Pull to Refresh | ❌ |
+| | Enable Back Button | ❌ |
+| | Open URLs in other apps / Intent URLs | ❌ |
+| Web Auto Reload | **Auto Reload on Idle** | 600 s (vuelve a la pantalla de inicio si algo se atora) |
+| | Reload on Internet Reconnect | ✅ |
+| Toolbars & Appearance | Show Status Bar / Navigation Bar / Action Bar / Address Bar | ❌ todas |
+| | Fullscreen / Immersive mode | ✅ |
+| Device Management | **Keep Screen On** | ✅ |
+| | Screen Orientation | Landscape |
+| | **Launch on Boot** | ✅ |
+| | Unlock Screen | ✅ |
+| Kiosk Mode (PLUS) | **Enable Kiosk Mode** | ✅ |
+| | **Kiosk Mode PIN** | un PIN tuyo (distinto al del remoto) |
+| | Kiosk Exit Gesture | Swipe from left edge (o 7 toques rápidos) |
+| | Disable Status Bar | ✅ |
+| | Disable Other Apps | ✅ |
+| | Disable Volume Buttons | como prefieras (el volumen de TV lo manejas tú) |
+| | Disable Power Button | ✅ (pide permiso de administrador del dispositivo) |
+| | Lock Safe Mode | ✅ |
+| Web Filter (PLUS) | **URL Whitelist** | la lista de abajo |
+| Remote Administration (PLUS) | Enable Remote Administration | ✅ con contraseña; o usa **Fully Cloud** para manejar varias tablets |
+
+**URL Whitelist** (una por línea; si algo deja de cargar, agrega su dominio):
+
+```
+*awoolleym.github.io*
+*govibemx.com*
+*youtube-nocookie.com*
+*youtube.com*
+*ytimg.com*
+*googlevideo.com*
+*gstatic.com*
+*googleapis.com*
+*firebaseio.com*
+*cloudflare.com*
+*arcgisonline.com*
+*project-osrm.org*
+*open-meteo.com*
+*qrserver.com*
+*wsimg.com*
+```
+
+Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predeterminadas → App de inicio → Fully Kiosk**. Así el botón de Inicio siempre regresa a la pantalla.
+
+### 2.3 Qué ven los pasajeros
+- **GoVibe TV / TV Niños:** videos elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
+- **Juegos:** Memorama (aprende palabras en español/inglés), Trivia CDMX y ¡Encuéntralo!.
+- **GoVibeMX (excursiones, servicios):** tu sitio abre dentro, con botón ⬅ Inicio.
+- Tras 3 minutos sin tocar, la pantalla vuelve sola al mapa o al inicio. Si hay un video, espera a que termine.
+- Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.
+
+### 2.4 Tamaño de pantalla
+La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la altura: la pantalla de inicio cabe completa sin desplazarse en 1340×800, 1072×640, 1005×600 y 893×533, y también funciona en vertical. Si quieres todo más grande o más chico, cambia **Initial Scale** (p. ej. 90 o 110).
 
 ---
 
@@ -76,6 +149,8 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 4. Úsalo así:
    - Toca el viaje: **Live Map** (Uber), **City Tour**, **Globo**, **Pirámides**, **Regreso** o **City ride** (sin mapa).
    - **🆕 New ride**: limpia la pantalla y saluda al siguiente pasajero.
+   - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
+   - **Show a page or video**: pega cualquier dirección y la tablet la abre dentro de la pantalla. Un enlace de YouTube se reproduce en GoVibe TV. Algunos sitios (Google, Netflix, etc.) no se dejan mostrar dentro de otra página.
    - Arriba ves si la tablet está **en línea**, los km que faltan y el GPS.
 
 Sin internet en el celular puedes cambiar el viaje desde la misma tablet: mantén presionado el reloj 1.5 s.
