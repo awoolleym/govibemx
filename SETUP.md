@@ -18,21 +18,22 @@ Como el repositorio es público, estas direcciones sirven las páginas directo d
 - **Tablet:** `https://raw.githack.com/awoolleym/govibemx/ccr-b19bbd16-2su3kq/infotainment.html`
 - **Celular (remoto):** `https://raw.githack.com/awoolleym/govibemx/ccr-b19bbd16-2su3kq/driver.html`
 
-Son solo para pruebas: pueden tardar unos minutos en mostrar cambios nuevos. Para el uso diario, usa GitHub Pages (abajo).
+Son solo para pruebas. Para el uso diario usa las direcciones de GitHub Pages (abajo).
 
 ---
 
-## 1. Dejarlo en GitHub (recomendado): GitHub Pages, gratis
+## 1. En línea con GitHub Pages ✅ (ya está activo)
 
-1. En GitHub abre el repositorio **awoolleym/govibemx** → **Settings** → **Pages**.
-2. **Source:** *Deploy from a branch*. **Branch:** `ccr-b19bbd16-2su3kq` (o `main` cuando unas los cambios), carpeta **/ (root)** → **Save**.
-3. En 1–2 minutos quedan listas (con HTTPS):
-   - **Tablet:** `https://awoolleym.github.io/govibemx/infotainment.html`
-   - **Celular:** `https://awoolleym.github.io/govibemx/driver.html`
-4. En Firebase → Authentication → Settings → **Authorized domains**, agrega `awoolleym.github.io`.
+El sitio se publica desde la rama **`gh-pages`** (GitHub Pages, gratis, con HTTPS):
 
-Cada cambio que se suba a esa rama se publica solo en uno o dos minutos.
-(`index.html`, el widget de reservaciones, queda en `https://awoolleym.github.io/govibemx/`.)
+- **Tablet (Fully Kiosk):** `https://awoolleym.github.io/govibemx/infotainment.html`
+- **Celular (remoto):** `https://awoolleym.github.io/govibemx/driver.html`
+- El widget de reservaciones (`index.html`) sigue en `https://awoolleym.github.io/govibemx/`.
+
+**Pendiente (solo tú puedes hacerlo):** en Firebase → Authentication → Settings → **Authorized domains**, agrega `awoolleym.github.io`.
+
+**Cómo llegan los cambios:** se suben a `main` y luego se pasan a `gh-pages`; GitHub publica en 1–2 minutos.
+Si prefieres un solo paso, en GitHub → Settings → Pages cambia la rama de publicación a `main`.
 
 ---
 
@@ -58,7 +59,7 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 
 ## 2. La tablet (Fully Kiosk)
 
-1. **Start URL:** la dirección de la tablet (GitHub Pages arriba, o `https://TU-DOMINIO/pantalla` en Cloudflare)
+1. **Start URL:** `https://awoolleym.github.io/govibemx/infotainment.html`
 2. **Web Content Settings → Enable Geolocation Access:** activado (y permiso de ubicación para Fully en Android).
 3. **Para que siempre regresen a la pantalla:** las páginas de GoVibeMX abren *dentro* de la pantalla (con botón ⬅ Inicio). YouTube, Noticias, Juegos, Vuelos, Netflix y Prime (marcados con ↗) abren aparte porque no permiten mostrarse dentro de otra página. En Fully:
    - **Web Auto Reload → Auto Reload on Idle:** p. ej. 300 segundos, para que vuelva sola a la pantalla de inicio.
@@ -69,7 +70,7 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 
 ## 3. El control remoto en tu celular
 
-1. En el celular abre la dirección del remoto: `https://awoolleym.github.io/govibemx/driver.html` (GitHub Pages) o `https://TU-DOMINIO/remoto` (Cloudflare).
+1. En el celular abre `https://awoolleym.github.io/govibemx/driver.html`.
 2. La primera vez te pide **crear un PIN** (4–6 dígitos, dos veces). Todos tus celulares usan el mismo PIN.
 3. En el menú del navegador elige **"Agregar a pantalla de inicio"**: queda un ícono **GoVibe Remote** como si fuera app.
 4. Úsalo así:
