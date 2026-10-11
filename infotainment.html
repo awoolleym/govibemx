@@ -391,7 +391,7 @@
     <a href="https://www.flightaware.com/live/airport/MMMX" class="btn btn-ent flights"><span class="btn-icon">✈️</span><span class="btn-title">Flights</span></a>
   </div>
 
-  <div class="row">
+  <div class="row" id="business-row">
     <a href="https://govibemx.com/experiences" class="btn btn-biz daytrips"><span class="btn-icon">🌴</span><span class="btn-title">DAY TRIPS</span><span class="btn-sub">Curated Tours</span></a>
     <a href="https://govibemx.com/experiences" class="btn btn-biz livetrips"><span class="btn-icon">📅</span><span class="btn-title">UPCOMING</span><span class="btn-sub">Live Availability</span></a>
     <div onclick="openServices()" class="btn btn-biz private"><span class="btn-icon">🚐</span><span class="btn-title" data-i18n="svcTile">SERVICES</span><span class="btn-sub" data-i18n="svcTileSub">Transfers · Tours · Driver by the hour</span></div>
@@ -464,7 +464,7 @@
 </div>
 
 <div class="footer">
-  <a href="#">Rate / Calificar ⭐⭐⭐⭐⭐</a>
+  <a href="#" id="rate-link">Rate / Calificar ⭐⭐⭐⭐⭐</a>
   <a href="#">Tip / Propina 💲</a>
   <div onclick="launchApp('com.fullykiosk.singleapp')" class="secret-settings"></div>
 </div>
@@ -587,6 +587,15 @@ var VAN_ID = 'van1';
 // The driver can also pick "City ride" (no trip): no map card, no trip guides.
 var CITY_RIDE = { icon: '🚗', name: { en: 'City ride', es: 'Viaje en la ciudad' }, note: { en: 'No trip map', es: 'Sin mapa de viaje' } };
 var TRIPS = {
+  // Uber/app rides: same live map as the City Tour, but no GoVibeMX business tiles
+  // (Uber's guidelines don't allow soliciting riders for off-app trips).
+  ride: {
+    icon: '🚕', guides: ['cdmx'], freeRoam: true, hideBusiness: true,
+    name: { en: 'Live Map', es: 'Mapa en vivo' },
+    from: { en: 'Ride', es: 'Viaje' },
+    to:   { en: 'Ride', es: 'Viaje' },
+    dest: FOUR_SEASONS, route: ROUTE_TOUR, seconds: ROUTE_TOUR_SECONDS
+  },
   city: {
     icon: '🗺️', guides: ['cdmx'], freeRoam: true, // no fixed route: live position, neighborhoods and sights
     name: { en: 'CDMX City Tour', es: 'Tour por la CDMX' },
@@ -777,6 +786,7 @@ var POIS = [
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Facts',
+        rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
         back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhood explorer', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
@@ -785,6 +795,7 @@ var I18N = {
         overviewBadge: 'Overview', followBadge: 'Live position', arrived: 'Arrived!', min: 'min', you: 'You are here' },
   es: { yourJourney: 'Tu viaje', toGo: 'Faltan', timeLeft: 'Tiempo', arrival: 'Llegada', openMap: '🗺️ Ver mapa en vivo',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
+        rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
         back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Explora las colonias', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
@@ -1019,6 +1030,7 @@ function setLang(l) {
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
   renderTripPicker(); renderGuide(); renderEat(); renderServices(); refreshPoiPopups(); render();
+  if (S.booted) updateVisibility();
 }
 
 /* =====================================================================
@@ -1099,7 +1111,8 @@ function highlightZone() {
   });
 }
 function isFree() { return !!TRIPS[S.tripId].freeRoam; }
-function poiVisible(p) { return p.trips ? p.trips.indexOf(S.tripId) >= 0 : !isFree(); }
+// City sights show on every live-map trip (City Tour and Ride).
+function poiVisible(p) { return p.trips ? (p.trips.indexOf(S.tripId) >= 0 || (isFree() && p.trips.indexOf('city') >= 0)) : !isFree(); }
 function refreshPoiMarkers() {
   if (!bigMap) return;
   poiMarkers.forEach(function (m) { if (poiVisible(m._poi)) m.addTo(bigMap); else m.remove(); });
@@ -1271,6 +1284,9 @@ function updateVisibility() {
   var g = document.querySelectorAll('[data-guide]');
   for (var i = 0; i < g.length; i++) g[i].hidden = !hasGuide(g[i].getAttribute('data-guide'));
   $('row-facts').hidden = hasGuide('cdmx'); // already shown beside the journey card
+  var ride = S.active && !!TRIPS[S.tripId].hideBusiness;
+  $('business-row').hidden = ride;
+  $('rate-link').textContent = ride ? t('rateRide') : 'Rate / Calificar ⭐⭐⭐⭐⭐';
   if (!S.active) hideToast();
   if (S.active && miniMap) setTimeout(function () { miniMap.invalidateSize(); fitMini(); }, 50);
 }
