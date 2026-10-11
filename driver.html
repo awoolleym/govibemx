@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoVibeMX Driver Remote</title>
+<!-- Install as an app: phone browser menu → "Add to Home screen" -->
+<link rel="manifest" href="remote.webmanifest">
+<meta name="theme-color" content="#070b10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GoVibe Remote">
+<link rel="apple-touch-icon" href="remote-icon-192.png">
+<link rel="icon" href="remote-icon-192.png">
+<style>
+  /* Phone remote for the rear screen (infotainment.html). Pick today's trip; the tablet switches. */
+  :root {
+    color-scheme: dark;
+    --bg: #070b10;
+    --panel: #121820;
+    --line: #2a313c;
+    --text: #f2f5f8;
+    --muted: #8f9aa8;
+    --route: #FFB300;
+    --ok: #2ecc71;
+    --warn: #f1c40f;
+    --bad: #e74c3c;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  main { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 20px; margin: 4px 0 0; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0; }
+  .tablet { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .tablet .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .tablet .v { font-size: 18px; font-weight: 700; }
+  .tablet .meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); margin-right: 6px; vertical-align: middle; }
+  .dot.ok { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .dot.warn { background: var(--warn); }
+  .dot.bad { background: var(--bad); }
+  #controls { display: flex; flex-direction: column; gap: 14px; }
+  .trips { display: flex; flex-direction: column; gap: 10px; }
+  .trips button { display: flex; align-items: center; gap: 14px; width: 100%; background: var(--panel); color: var(--text); border: 2px solid var(--line); border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .trips button .ico { font-size: 30px; }
+  .trips button small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+  .trips button.on { border-color: var(--route); background: #2a2108; }
+  .trips button:active { transform: scale(.98); }
+  .trips button:disabled { opacity: .5; }
+  .new-ride { width: 100%; background: #0f2a1a; color: #fff; border: 2px solid var(--ok); border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .new-ride small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+  .new-ride:active { transform: scale(.98); }
+  .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  [hidden] { display: none !important; }
+
+  /* PIN lock */
+  .lock { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; }
+  .lock h2 { margin: 0; font-size: 18px; }
+  .lock p { margin: 0; color: var(--muted); font-size: 14px; }
+  .pin-dots { display: flex; gap: 12px; height: 18px; }
+  .pin-dots span { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--muted); }
+  .pin-dots span.on { background: var(--route); border-color: var(--route); }
+  .keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 10px; }
+  .keypad button { height: 60px; border-radius: 14px; border: 1px solid var(--line); background: #1b222c; color: var(--text); font-size: 24px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .keypad button:active { transform: scale(.96); }
+  .keypad .wide { font-size: 15px; }
+  .lock .ok-btn { width: 100%; max-width: 236px; background: var(--route); color: #1a1200; border: none; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .lock .ok-btn:disabled { opacity: .4; }
+  .lock-msg { min-height: 18px; font-size: 13px; color: var(--warn); }
+  .bar { display: flex; gap: 8px; justify-content: flex-end; }
+  .k { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 800; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .guest { width: 100%; background: #0b1016; color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 16px; font-family: inherit; }
+  .screen-top { display: flex; gap: 10px; }
+  .home-btn { flex: 1; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 12px; font-size: 17px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .langs { display: flex; border: 2px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .langs button { background: transparent; color: var(--muted); border: none; padding: 0 18px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .langs button.on { background: #00C9FF; color: #002b36; }
+  .sections { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sections button { display: flex; align-items: center; gap: 8px; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 11px 10px; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .sections button .e { font-size: 20px; }
+  .sections button.on { border-color: #00C9FF; }
+  .sections button:active, .home-btn:active { transform: scale(.97); }
+  .sent { font-size: 12px; color: var(--ok); min-height: 16px; }
+  .bar button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 18px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <h1>🚐 GoVibeMX · Rear screen</h1>
+    <p class="sub">Control the tablet in the back: trip, language and what it shows.</p>
+  </div>
+
+  <section class="lock" id="lock">
+    <h2 id="lock-title">🔒 Enter driver PIN</h2>
+    <p id="lock-hint">Connecting…</p>
+    <div class="pin-dots" id="pin-dots"></div>
+    <div class="keypad" id="keypad"></div>
+    <button class="ok-btn" id="pin-ok" disabled>Unlock</button>
+    <div class="lock-msg" id="lock-msg"></div>
+  </section>
+
+  <section id="controls" hidden>
+  <div class="bar"><button id="change-pin">Change PIN</button><button id="lock-now">🔒 Lock</button></div>
+  <div class="tablet">
+    <div class="k">Tablet</div>
+    <div class="v"><span class="dot" id="dot"></span><span id="tablet-line">Connecting…</span></div>
+    <div class="meta" id="tablet-meta"></div>
+  </div>
+
+  <div class="card">
+    <div class="k">New passenger</div>
+    <input class="guest" id="guest" type="text" maxlength="30" placeholder="Passenger name (optional), e.g. Sarah & Tom" autocomplete="off">
+    <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and show the big welcome</small></button>
+  </div>
+
+  <div class="card">
+    <div class="k">On the tablet</div>
+    <div class="screen-top">
+      <button class="home-btn" data-cmd="home">⬅ Home</button>
+      <div class="langs"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+    </div>
+    <div class="sections" id="sections"></div>
+    <div class="sent" id="sent"></div>
+  </div>
+
+  <div class="k" style="margin-top:4px">Trip</div>
+  <div class="trips" id="trips"></div>
+  </section>
+
+  <p class="note">Van: <b id="van"></b>. You can also change the trip on the tablet itself: press and hold the clock for 1.5 seconds.</p>
+</main>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+  // Must match VAN_ID in infotainment.html. Add ?van=van2 to the link for a second vehicle.
+  const VAN_ID = new URLSearchParams(location.search).get('van') || 'van1';
+
+  // Keep in sync with TRIPS in infotainment.html.
+  const OPTIONS = [
+    { id: 'none',     icon: '🚗', name: 'City ride',                     shows: 'No trip map · entertainment only' },
+    { id: 'ride',     icon: '🚕', name: 'Live Map (Uber / app ride)',    shows: 'Live map, neighborhoods and sights + CDMX Facts' },
+    { id: 'city',     icon: '🗺️', name: 'CDMX City Tour',                shows: 'Live map with neighborhoods, alcaldías and sights + CDMX Facts' },
+    { id: 'balloon',  icon: '🎈', name: 'Hot Air Balloon · Teotihuacán', shows: 'Map to Balloon\'s Paradise + Teotihuacán guide + Balloon 101' },
+    { id: 'pyramids', icon: '🛕', name: 'Pyramids of Teotihuacán',       shows: 'Map to the pyramids + Teotihuacán guide' },
+    { id: 'home',     icon: '🏁', name: 'Back to Mexico City',           shows: 'Map to the Four Seasons + Teotihuacán guide' }
+  ];
+  const NAMES = Object.fromEntries(OPTIONS.map(o => [o.id, o.icon + ' ' + o.name]));
+
+  // Sections the tablet can open (value → tablet screen it shows).
+  const SECTIONS = [
+    { v: 'map', e: '🗺️', n: 'Live map', screen: 'map-screen' },
+    { v: 'welcome', e: '👋', n: 'Welcome screen' },
+    { v: 'teo', e: '🛕', n: 'Teotihuacán guide', screen: 'guide' },
+    { v: 'balloon', e: '🎈', n: 'Balloon 101', screen: 'guide' },
+    { v: 'explorer:hoods', e: '🇲🇽', n: 'CDMX Explorer', screen: 'explorer-screen' },
+    { v: 'explorer:museums', e: '🏛️', n: 'Museums', screen: 'explorer-screen' },
+    { v: 'explorer:quiz', e: '🎯', n: 'CDMX Quiz', screen: 'explorer-screen' },
+    { v: 'explorer:spanish', e: '🗣️', n: 'Spanish 101', screen: 'explorer-screen' },
+    { v: 'eat', e: '🍽️', n: 'Eat & Drink', screen: 'eat-screen' },
+    { v: 'kids:spot', e: '🦎', n: 'Kids: Spot it!', screen: 'kids-screen' },
+    { v: 'transit', e: '🚇', n: 'Getting Around', screen: 'transit-screen' },
+    { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
+    { v: 'services', e: '🚐', n: 'Services' },
+    { v: 'review', e: '⭐', n: 'Ask for a review' }
+  ];
+  const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'GoVibeMX website' };
+
+  const $ = (id) => document.getElementById(id);
+  $('van').textContent = VAN_ID;
+  let current = null, tablet = null;
+
+  // ---- PIN lock ----
+  // The PIN is stored as a SHA-256 hash in rearScreen/<van>/pinHash, so every phone shares it.
+  // It keeps passengers and strangers with the link out; it is not bank-grade security.
+  const MIN_PIN = 4, MAX_PIN = 6;
+  const OK_KEY = 'gv_driver_ok_' + VAN_ID;
+  let pinHash;              // undefined = still loading, null = no PIN yet
+  let entry = '', firstEntry = null, mode = 'unlock', fails = 0, lockedUntil = 0;
+  let savePinHash = null;   // set once Firebase is ready
+
+  async function hashPin(pin) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('govibemx:' + VAN_ID + ':' + pin));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function remembered() { try { return localStorage.getItem(OK_KEY); } catch (e) { return null; } }
+  function remember(h) { try { h ? localStorage.setItem(OK_KEY, h) : localStorage.removeItem(OK_KEY); } catch (e) {} }
+
+  $('keypad').innerHTML = ['1','2','3','4','5','6','7','8','9','⌫','0','Clear']
+    .map(k => `<button data-k="${k}" class="${k.length > 1 ? 'wide' : ''}">${k}</button>`).join('');
+
+  function showLock(m, msg) {
+    mode = m; entry = ''; if (m !== 'confirm' && m !== 'confirm-change') firstEntry = null;
+    $('controls').hidden = true; $('lock').hidden = false;
+    const t = {
+      unlock: ['🔒 Enter driver PIN', 'Enter the PIN to change what the rear screen shows.', 'Unlock'],
+      create: ['🔑 Create a driver PIN', 'First time here: choose a ' + MIN_PIN + '–' + MAX_PIN + ' digit PIN. All your phones will use it.', 'Next'],
+      confirm: ['🔑 Confirm your PIN', 'Enter the same PIN again.', 'Save PIN'],
+      change: ['🔑 New PIN', 'Choose a new ' + MIN_PIN + '–' + MAX_PIN + ' digit PIN. Other phones will need it next time.', 'Next'],
+      'confirm-change': ['🔑 Confirm new PIN', 'Enter the new PIN again.', 'Save PIN']
+    }[m];
+    $('lock-title').textContent = t[0]; $('lock-hint').textContent = t[1]; $('pin-ok').textContent = t[2];
+    $('lock-msg').textContent = msg || '';
+    drawDots();
+  }
+  function showControls() { $('lock').hidden = true; $('controls').hidden = false; }
+  function drawDots() {
+    const n = Math.max(MIN_PIN, entry.length);
+    $('pin-dots').innerHTML = Array.from({ length: n }, (_, i) => `<span class="${i < entry.length ? 'on' : ''}"></span>`).join('');
+    $('pin-ok').disabled = entry.length < MIN_PIN || pinHash === undefined;
+  }
+  // Decide what to show whenever the stored PIN loads or changes.
+  function checkAccess() {
+    if (pinHash === undefined) return;
+    if (pinHash === null) { if (mode !== 'confirm') showLock('create'); return; }
+    if (remembered() === pinHash) { if (mode !== 'change' && mode !== 'confirm-change') showControls(); return; }
+    if (!$('controls').hidden || mode === 'create' || mode === 'confirm') showLock('unlock', $('controls').hidden ? '' : 'The PIN was changed on another phone.');
+  }
+
+  $('keypad').addEventListener('click', (e) => {
+    const k = e.target.closest('button[data-k]'); if (!k) return;
+    const v = k.dataset.k;
+    if (v === '⌫') entry = entry.slice(0, -1);
+    else if (v === 'Clear') entry = '';
+    else if (entry.length < MAX_PIN) entry += v;
+    $('lock-msg').textContent = ''; drawDots();
+  });
+  document.addEventListener('keydown', (e) => {
+    if ($('lock').hidden) return;
+    if (/^[0-9]$/.test(e.key) && entry.length < MAX_PIN) entry += e.key;
+    else if (e.key === 'Backspace') entry = entry.slice(0, -1);
+    else if (e.key === 'Enter') return $('pin-ok').click();
+    else return;
+    drawDots();
+  });
+  $('pin-ok').addEventListener('click', async () => {
+    if (entry.length < MIN_PIN) return;
+    const h = await hashPin(entry);
+    if (mode === 'unlock') {
+      if (Date.now() < lockedUntil) { $('lock-msg').textContent = 'Too many tries. Wait ' + Math.ceil((lockedUntil - Date.now()) / 1000) + ' s.'; return; }
+      if (h === pinHash) { fails = 0; remember(h); showControls(); }
+      else {
+        fails++; entry = ''; drawDots();
+        if (fails >= 5) { lockedUntil = Date.now() + 30000; fails = 0; $('lock-msg').textContent = 'Too many tries. Wait 30 s.'; }
+        else $('lock-msg').textContent = 'Wrong PIN. Try again.';
+      }
+    } else if (mode === 'create' || mode === 'change') {
+      firstEntry = h; showLock(mode === 'create' ? 'confirm' : 'confirm-change');
+    } else {
+      if (h !== firstEntry) { showLock(mode === 'confirm' ? 'create' : 'change', 'The PINs didn\'t match. Start again.'); return; }
+      if (!savePinHash) { $('lock-msg').textContent = 'Not connected yet. Try again in a moment.'; return; }
+      try { await savePinHash(h); remember(h); pinHash = h; mode = 'unlock'; showControls(); }
+      catch (err) { $('lock-msg').textContent = 'Couldn\'t save the PIN: ' + err.message; }
+    }
+  });
+  $('lock-now').addEventListener('click', () => { remember(null); showLock('unlock'); });
+  $('change-pin').addEventListener('click', () => showLock('change'));
+  showLock('unlock');
+
+  function renderTrips() {
+    $('trips').innerHTML = OPTIONS.map(o =>
+      `<button data-id="${o.id}" class="${o.id === current ? 'on' : ''}"><span class="ico">${o.icon}</span><span>${o.name}<small>${o.shows}</small></span></button>`
+    ).join('');
+  }
+
+  function renderTablet() {
+    const dot = $('dot');
+    if (!tablet || !tablet.at) {
+      dot.className = 'dot warn';
+      $('tablet-line').textContent = 'Not seen yet';
+      $('tablet-meta').textContent = 'Open the rear screen on the tablet to connect it.';
+      return;
+    }
+    const ago = Math.max(0, Math.round((Date.now() - tablet.at) / 1000));
+    const fresh = ago < 90;
+    dot.className = 'dot ' + (fresh ? 'ok' : 'bad');
+    $('tablet-line').textContent = (NAMES[tablet.trip] || tablet.trip) + (tablet.trip !== current && current ? ' · switching…' : '');
+    const bits = [];
+    bits.push(fresh ? 'Online · seen ' + ago + ' s ago' : 'Offline · last seen ' + Math.round(ago / 60) + ' min ago');
+    if (tablet.kmLeft != null) bits.push(tablet.kmLeft + ' km to go');
+    if (tablet.gps) bits.push('GPS: ' + ({ ok: 'live', wait: 'searching', denied: 'off', demo: 'demo' }[tablet.gps] || tablet.gps));
+    if (tablet.screen) bits.push('Showing: ' + (SCREEN_NAMES[tablet.screen] || tablet.screen));
+    if (tablet.lang) bits.push(tablet.lang.toUpperCase());
+    document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
+    $('tablet-meta').textContent = bits.join(' · ');
+  }
+
+  $('sections').innerHTML = SECTIONS.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('');
+  renderTrips(); renderTablet();
+  setInterval(renderTablet, 5000);
+
+  try {
+    const app = initializeApp({
+      apiKey: 'AIzaSyAqFnjf1i-8Qm95Xzp98FFO0ABUxb7hzn4',
+      authDomain: 'govibebooking.firebaseapp.com',
+      databaseURL: 'https://govibebooking-default-rtdb.firebaseio.com',
+      projectId: 'govibebooking'
+    });
+    try { await signInAnonymously(getAuth(app)); } catch (e) { /* rules may allow access without login */ }
+    const db = getDatabase(app);
+    const base = 'rearScreen/' + VAN_ID;
+
+    onValue(ref(db, base + '/trip'), snap => { current = snap.val(); renderTrips(); renderTablet(); },
+      err => { $('tablet-line').textContent = 'Can\'t reach the database'; $('tablet-meta').textContent = err.message; });
+    onValue(ref(db, base + '/tablet'), snap => { tablet = snap.val(); renderTablet(); });
+    savePinHash = (h) => set(ref(db, base + '/pinHash'), h);
+    onValue(ref(db, base + '/pinHash'), snap => {
+      pinHash = snap.val() || null;
+      if (mode === 'unlock') $('lock-hint').textContent = 'Enter the PIN to change what the rear screen shows.';
+      drawDots(); checkAccess();
+    }, err => { $('lock-hint').textContent = 'Can\'t reach the database: ' + err.message; });
+
+    $('new-ride').addEventListener('click', async () => {
+      if ($('controls').hidden) return;
+      const b = $('new-ride'); b.disabled = true;
+      try { await set(ref(db, base + '/newRide'), { at: Date.now(), name: $('guest').value.trim() }); b.firstChild.textContent = '✅ Sent: new ride '; $('guest').value = ''; }
+      catch (err) { $('tablet-meta').textContent = 'Couldn\'t send: ' + err.message; }
+      setTimeout(() => { b.firstChild.textContent = '🆕 New ride'; b.disabled = false; }, 2500);
+    });
+
+    // Screen commands: go home, change language, open a section.
+    const sendCmd = async (a, v, label) => {
+      if ($('controls').hidden) return;
+      try { await set(ref(db, base + '/cmd'), { a, v: v || '', at: Date.now() }); $('sent').textContent = '✅ Sent: ' + label; }
+      catch (err) { $('sent').textContent = 'Couldn\'t send: ' + err.message; }
+      setTimeout(() => { $('sent').textContent = ''; }, 2500);
+    };
+    document.querySelector('.home-btn').addEventListener('click', () => sendCmd('home', '', 'Home'));
+    document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => sendCmd('lang', b.dataset.lang, b.dataset.lang === 'es' ? 'Español' : 'English')));
+    $('sections').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-open]'); if (!b) return;
+      const sec = SECTIONS.find(x => x.v === b.dataset.open);
+      sendCmd(sec.v === 'welcome' ? 'welcome' : 'open', sec.v, sec.n);
+    });
+
+    $('trips').addEventListener('click', async (e) => {
+      const b = e.target.closest('button[data-id]');
+      if (!b || $('controls').hidden) return;
+      b.disabled = true;
+      try { await set(ref(db, base + '/trip'), b.dataset.id); }
+      catch (err) { $('tablet-meta').textContent = 'Couldn\'t switch: ' + err.message; }
+      b.disabled = false;
+    });
+  } catch (e) {
+    $('lock-hint').textContent = 'No connection. Check the phone\'s internet and reload.';
+    $('dot').className = 'dot bad';
+    $('tablet-line').textContent = 'No connection';
+    $('tablet-meta').textContent = 'Check the phone\'s internet and reload.';
+  }
+</script>
+</body>
+</html>
