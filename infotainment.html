@@ -548,6 +548,7 @@
   #tv-screen { flex-direction: column; background: radial-gradient(circle at top, #2a0a14 0%, #000 70%); }
   #tv-screen .guide-top { border-bottom-color: #4a1a2a; }
   #tv-screen .guide-top h2 { color: #FF8A80; }
+  #tv-tabs[hidden] { display: none; }
   #tv-screen .tabs button { background: #22080f; color: #ffd0d6; border-color: #4a1a2a; }
   #tv-screen .tabs button.on { background: #ff1744; color: #fff; border-color: #ff1744; }
   .tv-wrap { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 10px 14px 12px; }
@@ -919,11 +920,10 @@
 
   <section class="home-sec">
     <div class="sec-label"><span class="dot" style="--c:#1db954"></span><span data-i18n="secWatch">Watch, listen &amp; play</span></div>
-    <div class="tile-grid g5">
+    <div class="tile-grid g4">
       <div onclick="openModal('spotifyModal')" class="btn spotify"><span class="btn-icon">🎵</span><span class="btn-title">GoVibeMX Jam</span><span class="btn-sub" data-i18n="tSpotSub">Add your songs</span></div>
       <div onclick="openStreaming()" class="btn stream"><span class="btn-icon">🍿</span><span class="btn-title" data-i18n="tStream">Streaming</span><span class="btn-sub" data-i18n="tStreamSub">Netflix · Prime · Disney+ · YouTube</span></div>
       <div onclick="openTV('mx')" class="btn tv"><span class="btn-icon">📺</span><span class="btn-title">GoVibe TV</span><span class="btn-sub" data-i18n="tTvSub">Mexico in videos</span></div>
-      <div onclick="openTV('kids')" class="btn kidstv"><span class="btn-icon">🧸</span><span class="btn-title" data-i18n="tKidsTv">Kids TV</span><span class="btn-sub" data-i18n="tKidsTvSub">Cartoons &amp; songs</span></div>
       <div onclick="openGames()" class="btn games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span><span class="btn-sub" data-i18n="tGamesSub">Arcade · Memory · Quiz</span></div>
     </div>
   </section>
@@ -2148,14 +2148,6 @@ var TV_VIDEOS = {
     { id: 'zOuq6q7p8_s', len: '1:38', t: { en: 'Day of the Dead parade', es: 'Desfile de Día de Muertos' }, by: 'Global News · EN' },
     { id: 'Ka5qabWhmrM', len: '4:12', t: { en: 'Discover Xochimilco', es: 'Descubre Xochimilco' }, by: 'Ruben y El Mundo' },
     { id: 'L1zsP1plkCY', len: '13:01', t: { en: 'Ballet Folklórico: Jalisco', es: 'Ballet Folklórico: Jalisco' }, by: 'Ballet Folklórico México Danza' }
-  ],
-  kids: [
-    { id: 'Xw3-3jQQMBk', len: '1:55:37', t: { en: 'Bluey · 18 full episodes', es: 'Bluey · 18 episodios (inglés)' }, by: 'Bluey · EN' },
-    { id: 'tqAf9tFW00Y', len: '1:34:28', t: { en: 'Pocoyo · Super Babies', es: 'Pocoyo · Super bebés (inglés)' }, by: 'Pocoyo · EN' },
-    { id: 'jtMZl_l4rK4', len: '54:49', t: { en: 'Pocoyó · 4 episodes (Spanish)', es: 'Pocoyó · 4 episodios' }, by: 'Pocoyó · ES' },
-    { id: 'LrAtBtQnvCE', len: '1:10:00', t: { en: 'Five Little Ducks + more songs', es: 'Five Little Ducks y más (inglés)' }, by: 'Super Simple Songs · EN' },
-    { id: '9yJYOsYCPvE', len: '59:16', t: { en: 'Cinco Patitos + more (Spanish)', es: 'Cinco patitos y más canciones' }, by: 'Super Simple Español · ES' },
-    { id: 'B1svxwMuLf4', len: '1:18:15', t: { en: 'La Granja de Zenón · farm songs (Spanish)', es: 'La Granja de Zenón · 35 canciones' }, by: 'El Reino Infantil · ES' }
   ]
 };
 var TV = { id: null, playing: false };
@@ -2165,7 +2157,7 @@ function ytId(u) {
 }
 function lenSecs(l) { return String(l || '0').split(':').reduce(function (a, b) { return a * 60 + (+b || 0); }, 0); }
 function openTV(tab, id) {
-  S.tvTab = tab === 'kids' ? 'kids' : 'mx';
+  S.tvTab = 'mx';
   renderTV();
   showScreen('tv-screen');
   if (id) playTV(id);
@@ -2173,9 +2165,7 @@ function openTV(tab, id) {
 function renderTV() {
   if (!$('tv-tabs')) return;
   var tab = S.tvTab || 'mx';
-  $('tv-tabs').innerHTML = [['mx', t('tvMx')], ['kids', t('tvKids')]].map(function (x) {
-    return '<button class="' + (x[0] === tab ? 'on' : '') + '" onclick="openTV(\'' + x[0] + '\')">' + x[1] + '</button>';
-  }).join('');
+  $('tv-tabs').hidden = true; // one list: Mexico in videos
   $('tv-list').innerHTML = TV_VIDEOS[tab].map(function (v) {
     return '<button class="tv-card' + (v.id === TV.id ? ' on' : '') + '" onclick="playTV(\'' + v.id + '\')"><span class="tv-thumb" style="background-image:url(https://i.ytimg.com/vi/' + v.id + '/mqdefault.jpg)"><i>' + v.len + '</i></span>' +
       '<span><b>' + tr(v.t) + '</b><small>' + v.by + '</small></span></button>';
@@ -2185,7 +2175,7 @@ function renderTV() {
   $('tv-now').innerHTML = cur ? '▶ ' + tr(cur.t) + '<small>' + cur.by + '</small>' : '';
 }
 function findTV(id) {
-  var all = TV_VIDEOS.mx.concat(TV_VIDEOS.kids);
+  var all = TV_VIDEOS.mx;
   for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
   return null;
 }

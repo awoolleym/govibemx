@@ -157,7 +157,7 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - El QR de govibemx.com para reservar otra vez.
   - Se cierra al tocarla o con New ride.
 - **Streaming:** Netflix, Prime Video, Disney+, Max, YouTube y YouTube Kids (abren como apps).
-- **GoVibe TV / TV Niños:** videos elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
+- **GoVibe TV:** videos de México elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
 - **Juegos:**
   - **🕹️ Arcade:** 20 juegos tipo Poki (Moto X3M, Penalty Shooters, billar, burbujas, 2048, sudoku…) de **Famobi**. Están hechos para mostrarse dentro de otra página, y se juegan dentro de la pantalla.
     - Poki no se deja mostrar dentro de otra página, por eso no está.
