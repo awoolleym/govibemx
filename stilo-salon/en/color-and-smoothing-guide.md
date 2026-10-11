@@ -2,8 +2,8 @@
 title: "Balayage, Babylights & Smoothing: the Guide | Stilo Salón"
 description: "Balayage or babylights, how often to touch up roots, and which smoothing suits you: keratin (Brazilian Blowout), nanoplasty or hair botox. Roma Norte, CDMX."
 url: https://stilo-salon.com/en/color-and-smoothing-guide
-date: 2026-10-10
-last_updated: 2026-10-10
+date: 2026-10-11
+last_updated: 2026-10-11
 lang: en
 ---
 Complete guide · Roma Norte

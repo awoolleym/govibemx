@@ -2,8 +2,8 @@
 title: "Portafolio de Trabajos | Stilo Salón Roma Norte, CDMX"
 description: "Trabajos reales de Stilo Salón en Roma Norte: balayage, rubios, alisados, uñas en gel y extensiones de pestañas, cada foto con su precio publicado."
 url: https://stilo-salon.com/portafolio
-date: 2026-10-10
-last_updated: 2026-10-10
+date: 2026-10-11
+last_updated: 2026-10-11
 lang: es-MX
 ---
 Nuestro trabajo

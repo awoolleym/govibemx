@@ -2,8 +2,8 @@
 title: "Corte, Color y Balayage en Roma Norte, CDMX | Stilo Salón"
 description: "Corte dama desde $330, tinte desde $800, balayage desde $2,300, nanoplastia desde $2,500. Precios y duraciones publicados. Guadalajara 70-B, Roma Norte, CDMX."
 url: https://stilo-salon.com/cabello
-date: 2026-10-10
-last_updated: 2026-10-10
+date: 2026-10-11
+last_updated: 2026-10-11
 lang: es-MX
 ---
 Cabello y color · Roma Norte

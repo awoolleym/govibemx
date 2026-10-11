@@ -31,6 +31,7 @@ def main():
     # copiar html + assets
     for f in SRC.rglob("*"):
         if (OUT in f.parents or f == OUT or "_preview" in f.parts
+                or "_dist" in f.parts
                 or any(x.startswith("_fotos") for x in f.parts)
                 or f.name == BANCO.name):
             continue

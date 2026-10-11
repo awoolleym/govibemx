@@ -3250,10 +3250,11 @@ cabecera `Link` con llms.txt y las dos fichas.
         log.append(write(ruta, _mcp))
     log.append(write("_headers",
         # X-Frame-Options impide que otro sitio muestre éste dentro de un
-        # marco: es la defensa contra el clickjacking.  Se quitó un rato
-        # sospechando que impedía a un verificador leer el sitio, pero la
-        # causa era otra —pedían www.stilo-salon.com, que no existía— así
-        # que vuelve a su sitio.
+        # marco: es la defensa contra el clickjacking.  Se abrió un rato a
+        # los dominios de Claude para poder revisar el sitio desde ahí, pero
+        # no servía de nada: el panel de artifacts bloquea por su cuenta
+        # cualquier marco a otro dominio, así que el permiso quedaba abierto
+        # sin que nadie lo usara.  Vuelve a estar cerrado para todos.
         "/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
         "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n"

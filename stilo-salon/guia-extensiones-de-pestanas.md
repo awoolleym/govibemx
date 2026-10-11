@@ -2,8 +2,8 @@
 title: "Extensiones de Pestañas y Cejas: la Biblia | Stilo Salón"
 description: "¿Cuánto duran las extensiones de pestañas? ¿Qué técnica te conviene? ¿Cada cuándo retocar? La guía completa de Stilo Salón, Roma Norte, CDMX."
 url: https://stilo-salon.com/guia-extensiones-de-pestanas
-date: 2026-10-10
-last_updated: 2026-10-10
+date: 2026-10-11
+last_updated: 2026-10-11
 lang: es-MX
 ---
 Guía completa · Roma Norte

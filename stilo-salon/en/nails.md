@@ -2,8 +2,8 @@
 title: "Nails, Manicure & Pedicure in Roma Norte | Stilo Salón"
 description: "Spa manicure from $220, gel from $180, acrylic from $400, sculpted nails from $500 MXN. Mani + pedi gel package $750. Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/nails
-date: 2026-10-10
-last_updated: 2026-10-10
+date: 2026-10-11
+last_updated: 2026-10-11
 lang: en
 ---
 Nails · Roma Norte
