@@ -672,6 +672,33 @@
   .bright-row button.on { border-color: #FFD740; background: #2a2108; }
   .bright-off { width: 100%; margin-top: 12px; flex-direction: row; justify-content: center; gap: 10px; background: #000; }
 
+  /* Side rail (airline-style menu on the left) for Explorer, Eat & Drink and the guide */
+  .rail .rb { display: inline-flex; align-items: center; gap: 8px; }
+  .rail .rb .ri { font-size: 18px; line-height: 1; }
+  .rail .rb b { font-weight: 800; }
+  .rail .rb small { display: none; }
+  @media (min-width: 821px) {
+    #explorer-screen.active, #eat-screen.active, #guide.active { display: grid; grid-template-columns: clamp(185px, 22vw, 260px) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    #explorer-screen > .x-hero, #eat-screen > .guide-top, #guide > .guide-top { grid-column: 1 / -1; }
+    #explorer-body, #eat-screen > .guide-body, #guide-body { grid-column: 2; grid-row: 2; }
+    .tabs.rail { grid-column: 1; grid-row: 2; flex-direction: column; flex-wrap: nowrap; overflow-y: auto; overflow-x: hidden; padding: 12px 0 12px 14px !important; gap: 8px; }
+    .tabs.rail .rb { display: flex; width: 100%; text-align: left; white-space: normal; border-radius: 14px; padding: 10px 12px; min-height: 58px; gap: 12px; flex-shrink: 0; }
+    .tabs.rail .rb .ri { font-size: 26px; width: 32px; text-align: center; flex-shrink: 0; }
+    .tabs.rail .rb .rl { min-width: 0; }
+    .tabs.rail .rb b { display: block; font-size: 15px; line-height: 1.2; }
+    .tabs.rail .rb small { display: block; font-size: 11.5px; font-weight: 600; opacity: .8; margin-top: 2px; line-height: 1.25; }
+    .tabs.rail .rb.on { transform: translateX(4px); }
+    /* Explorer header: one compact row (title + fact of the moment) */
+    .x-hero { display: flex; flex-wrap: wrap; align-items: center; column-gap: 16px; padding-bottom: 8px; }
+    .x-hero .papel { flex-basis: 100%; height: 34px; }
+    .x-hero .papel svg { height: 34px; }
+    .x-head { flex: 0 1 auto; margin-top: 0; }
+    .x-title { font-size: 26px; }
+    .x-fotm { flex: 1 1 300px; margin-top: 0; padding: 7px 12px; min-width: 0; }
+    .x-fotm .e { font-size: 26px; }
+    .x-fotm .p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  }
+
   /* =========================================================
      ADAPTIVE SIZING · everything scales with the screen height,
      so the home screen fits the Lenovo Tab M9 (and other tablets)
@@ -1004,7 +1031,7 @@
     </div>
     <div class="x-fotm" id="x-fotm" onclick="setXTab('facts')"></div>
   </div>
-  <div class="tabs x-tabs" id="explorer-tabs"></div>
+  <div class="tabs x-tabs rail" id="explorer-tabs"></div>
   <div class="guide-body" id="explorer-body"></div>
 </div>
 
@@ -1087,7 +1114,7 @@
     <button class="back-home" id="eat-back" onclick="eatBack()">⬅ Home</button>
     <h2 data-i18n="eatTitle">🍽️ Eat &amp; Drink · Recommended</h2>
   </div>
-  <div class="tabs" id="eat-tabs"></div>
+  <div class="tabs rail" id="eat-tabs"></div>
   <div class="guide-body">
     <div class="cards" id="eat-list"></div>
     <p class="note" data-i18n="eatNote"></p>
@@ -1100,7 +1127,7 @@
     <button class="back-home" id="guide-back" onclick="guideBack()">⬅ Home</button>
     <h2 data-i18n="guideTitle">🛕 Teotihuacán · Pocket Guide</h2>
   </div>
-  <div class="tabs" id="guide-tabs"></div>
+  <div class="tabs rail" id="guide-tabs"></div>
   <div class="guide-body" id="guide-body"></div>
 </div>
 
@@ -1612,12 +1639,12 @@ var I18N = {
    3. TEOTIHUACÁN GUIDE CONTENT
    ===================================================================== */
 var GUIDE_TABS = [
-  { id: 'intro',    label: { en: '👋 Intro', es: '👋 Intro' } },
-  { id: 'map',      label: { en: '🗺️ Site map', es: '🗺️ Mapa del sitio' } },
-  { id: 'sights',   label: { en: '⭐ Highlights', es: '⭐ Imperdibles' } },
-  { id: 'timeline', label: { en: '⏳ Timeline', es: '⏳ Historia' } },
-  { id: 'tips',     label: { en: '🎒 Visit tips', es: '🎒 Consejos' } },
-  { id: 'balloon',  label: { en: '🎈 Balloon 101', es: '🎈 Globo 101' } }
+  { id: 'intro',    label: { en: '👋 Intro', es: '👋 Intro' }, sub: { en: 'The city of the gods', es: 'La ciudad de los dioses' } },
+  { id: 'map',      label: { en: '🗺️ Site map', es: '🗺️ Mapa del sitio' }, sub: { en: 'Tap a pyramid', es: 'Toca una pirámide' } },
+  { id: 'sights',   label: { en: '⭐ Highlights', es: '⭐ Imperdibles' }, sub: { en: 'The must-sees', es: 'Lo imperdible' } },
+  { id: 'timeline', label: { en: '⏳ Timeline', es: '⏳ Historia' }, sub: { en: 'Rise and fall', es: 'Auge y abandono' } },
+  { id: 'tips',     label: { en: '🎒 Visit tips', es: '🎒 Consejos' }, sub: { en: 'Before you go', es: 'Antes de ir' } },
+  { id: 'balloon',  label: { en: '🎈 Balloon 101', es: '🎈 Globo 101' }, sub: { en: 'Before you fly', es: 'Antes de volar' } }
 ];
 
 var GUIDE = {
@@ -1786,6 +1813,12 @@ function openExplorer(from, tab) {
   drawPapel(); renderExplorer(); showScreen('explorer-screen'); $('explorer-body').scrollTop = 0;
 }
 function explorerBack() { showScreen(S.xFrom === 'map' && S.active ? 'map-screen' : 'home'); }
+// Side-rail button: big icon, name and a one-line description (the icon is the label's first emoji)
+function railBtn(label, sub, on, click, icon) {
+  var m = /^(\S+)\s+(.*)$/.exec(label), ic = icon || '•', name = label;
+  if (!icon && m && !/[A-Za-zÀ-ÿ0-9]/.test(m[1])) { ic = m[1]; name = m[2]; }
+  return '<button class="rb' + (on ? ' on' : '') + '" onclick="' + click + '"><span class="ri">' + ic + '</span><span class="rl"><b>' + name + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span></button>';
+}
 function setXTab(tab) { S.xTab = tab; renderExplorer(); $('explorer-body').scrollTop = 0; }
 function zoneOf(ll) { for (var i = 0; i < ZONES.length; i++) if (inRings(ll, ZONES[i].rings)) return ZONES[i]; return null; }
 
@@ -1837,7 +1870,7 @@ function renderExplorer() {
   renderFotm();
   var tabs = [['hoods', 'xHoods'], ['museums', 'xMuseums'], ['facts', 'xFacts'], ['numbers', 'xNumbers'], ['quiz', 'xQuiz'], ['spanish', 'xSpanish']];
   $('explorer-tabs').innerHTML = tabs.map(function (x) {
-    return '<button class="' + (x[0] === S.xTab ? 'on' : '') + '" onclick="setXTab(\'' + x[0] + '\')">' + t(x[1]) + '</button>';
+    return railBtn(t(x[1]), t(x[1] + 'Sub'), x[0] === S.xTab, "setXTab('" + x[0] + "')");
   }).join('');
   var h = '', canMap = S.active && isFree();
   if (S.xTab === 'hoods') {
@@ -2265,6 +2298,8 @@ Object.assign(I18N.en, {
   tvMx: '🇲🇽 Mexico', tvKids: '🧸 Kids', tvPick: 'Pick a video', tvPickSub: 'Tap any video on the right to play it here.',
   memTitle: 'Memorama', memSub: 'Match the pairs, learn Spanish', memNew: '🔄 New game', memMoves: 'Moves: {m} · Pairs: {p}/6',
   memHelp: 'Find the matching pairs. Each pair teaches you a word in Spanish!', memWin: '🏆 You did it in {m} moves! ¡Muy bien!',
+  xHoodsSub: 'Where you are & what\'s around', xMuseumsSub: 'The 14 must-sees', xFactsSub: 'Surprising stories', xNumbersSub: 'The city in numbers', xQuizSub: '5 quick questions', xSpanishSub: 'Handy phrases with audio',
+  eatAllSub: 'Everything we recommend', eatEatSub: 'Michelin & local favorites', eatDrinkSub: 'Cocktails & mezcal', eatClassicSub: 'Tacos & city icons',
   gArcade: '🕹️ Arcade', gInstant: '⚡ Instant', gQuiz: 'CDMX Quiz', gQuizSub: 'Are you a true chilango?', gSpotSub: 'Look out the window'
 });
 Object.assign(I18N.es, {
@@ -2272,6 +2307,8 @@ Object.assign(I18N.es, {
   tvMx: '🇲🇽 México', tvKids: '🧸 Niños', tvPick: 'Elige un video', tvPickSub: 'Toca cualquier video de la derecha para verlo aquí.',
   memTitle: 'Memorama', memSub: 'Encuentra los pares y aprende inglés', memNew: '🔄 Nuevo juego', memMoves: 'Movimientos: {m} · Pares: {p}/6',
   memHelp: 'Encuentra los pares. ¡Cada par te enseña una palabra en inglés!', memWin: '🏆 ¡Lo lograste en {m} movimientos! Very good!',
+  xHoodsSub: 'Dónde estás y qué hay cerca', xMuseumsSub: 'Los 14 imperdibles', xFactsSub: 'Historias sorprendentes', xNumbersSub: 'La ciudad en cifras', xQuizSub: '5 preguntas rápidas', xSpanishSub: 'Frases útiles con audio',
+  eatAllSub: 'Todo lo recomendado', eatEatSub: 'Michelin y favoritos locales', eatDrinkSub: 'Cócteles y mezcal', eatClassicSub: 'Tacos e íconos de la ciudad',
   gArcade: '🕹️ Arcade', gInstant: '⚡ Rápidos', gQuiz: 'Trivia CDMX', gQuizSub: '¿Eres un auténtico chilango?', gSpotSub: 'Mira por la ventana'
 });
 
@@ -2557,7 +2594,7 @@ function renderEat() {
   $('eat-back').textContent = t(S.eatFrom === 'map' ? 'backMap' : 'back');
   var tabs = [['all', 'eatAll'], ['eat', 'eatEat'], ['drink', 'eatDrink'], ['classic', 'eatClassic']];
   $('eat-tabs').innerHTML = tabs.map(function (x) {
-    return '<button class="' + (x[0] === S.eatFilter ? 'on' : '') + '" onclick="setEatFilter(\'' + x[0] + '\')">' + t(x[1]) + '</button>';
+    return railBtn(t(x[1]), t(x[1] + 'Sub'), x[0] === S.eatFilter, "setEatFilter('" + x[0] + "')", x[0] === 'all' ? '✨' : null);
   }).join('');
   // On a City Tour with GPS, nearest first; otherwise in list order.
   var live = S.active && isFree() && S.pos;
@@ -3346,7 +3383,7 @@ function renderGuide() {
   $('guide-tabs').innerHTML = GUIDE_TABS.filter(function (tb) {
     return tb.id !== 'balloon' || hasGuide('balloon');
   }).map(function (tb) {
-    return '<button class="' + (tb.id === S.guideTab ? 'on' : '') + '" onclick="setGuideTab(\'' + tb.id + '\')">' + tr(tb.label) + '</button>';
+    return railBtn(tr(tb.label), tr(tb.sub), tb.id === S.guideTab, "setGuideTab('" + tb.id + "')");
   }).join('');
   var h = '', tab = S.guideTab;
   if (tab === 'intro') {
