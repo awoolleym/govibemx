@@ -2437,8 +2437,9 @@ function newRide(name) {
   try { speechSynthesis.cancel(); } catch (e) {}
   showScreen('home'); $('home').scrollTop = 0;
   updateVisibility(); highlightZone(); render();
-  showWelcome(name);
-  if (S.pos && isFree()) setTimeout(updateZone, 16000);
+  // The welcome screen is shown by hand (remote → Welcome screen); here we only keep the name for it
+  S.guest = name || ''; hideWelcome(); hideBye();
+  if (S.pos && isFree()) setTimeout(updateZone, 1000);
 }
 
 /* ---- Eat & Drink screen ---- */
