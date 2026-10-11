@@ -112,7 +112,7 @@
   .trips > button .ico { font-size: 24px; line-height: 1; }
   .trips > button small { font-size: 11px; line-height: 1.3; }
   .trip-group { grid-column: 1 / -1; }
-  .trip-group .opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .trip-group .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px; }
   .trips .trip-group .opts button { min-height: 40px; padding: 8px 4px; justify-content: center; font-size: 14px; font-weight: 800; border-radius: 20px; text-align: center; border-width: 2px; background: #1b222c; }
   .trips .trip-group .opts button.on { background: var(--route); color: #1a1200; border-color: var(--route); }
   .new-ride { padding: 14px; font-size: 17px; min-height: 56px; }
@@ -169,7 +169,7 @@
   <div class="card">
     <div class="k">New passenger</div>
     <input class="guest" id="guest" type="text" maxlength="30" placeholder="Passenger name (optional), e.g. Sarah & Tom" autocomplete="off" enterkeyhint="go">
-    <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and show the big welcome</small></button>
+    <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen for the next passenger (the name is used on the Welcome screen)</small></button>
   </div>
 
   <div class="card">
@@ -219,12 +219,13 @@
     { id: 'city',     icon: '🗺️', name: 'CDMX City Tour',                shows: 'Live map with neighborhoods, alcaldías and sights + CDMX Facts' },
     { id: 'balloon',  icon: '🎈', name: 'Hot Air Balloon · Teotihuacán', shows: 'Map to Balloon\'s Paradise + Teotihuacán guide + Balloon 101' },
     { id: 'pyramids', icon: '🛕', name: 'Pyramids of Teotihuacán',       shows: 'Map to the pyramids + Teotihuacán guide' },
-    { id: 'home',     icon: '🏁', name: 'Back to Mexico City',           shows: 'Map to the Four Seasons + Teotihuacán guide' },
     { id: 'airport1', icon: '✈️', name: 'Airport · AICM T1', short: 'AICM T1', group: 'airport' },
     { id: 'airport2', icon: '✈️', name: 'Airport · AICM T2', short: 'AICM T2', group: 'airport' },
-    { id: 'aifa',     icon: '✈️', name: 'Airport · AIFA',    short: 'AIFA',    group: 'airport' }
+    { id: 'aifa',     icon: '✈️', name: 'Airport · AIFA',    short: 'AIFA',    group: 'airport' },
+    { id: 'home4s',   icon: '🏨', name: 'Back to the Four Seasons', short: '🏨 Four Seasons', group: 'back' },
+    { id: 'home',     icon: '🏁', name: 'Back to Mexico City',      short: '🌎 Anywhere',     group: 'back' }
   ];
-  const GROUPS = { airport: { icon: '✈️', name: 'Airport', shows: 'Map to the terminal + flight tips' } };
+  const GROUPS = { back: { icon: '🏁', name: 'Back to Mexico City', shows: 'Route from where you are · no guides' }, airport: { icon: '✈️', name: 'Airport', shows: 'Route from where you are to the terminal + flight tips' } };
   const NAMES = Object.fromEntries(OPTIONS.map(o => [o.id, o.icon + ' ' + o.name]));
 
   // Sections the tablet can open (value → tablet screen it shows).
