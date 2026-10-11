@@ -161,8 +161,6 @@
   .web-loading[hidden] { display: none; }
   .spin { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #333c48; border-top-color: var(--accent); animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  /* Tiles that leave the screen (apps and sites that can't be shown inside) */
-  .ext::before { content: '↗'; position: absolute; top: 7px; right: 9px; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: rgba(0,0,0,.35); color: #fff; font-size: 13px; font-weight: 900; z-index: 1; }
   /* Bottom dock */
   .dock { position: relative; display: flex; align-items: center; height: 62px; padding: 0 12px; gap: 6px; flex-shrink: 0;
     background: linear-gradient(0deg, #0a0d13 0%, #121722 100%); border-top: 1px solid #1f2633; }
@@ -174,7 +172,6 @@
   .dock-nav button:active { transform: scale(.95); }
   .dock-side { width: 230px; display: flex; flex-direction: column; gap: 2px; font-size: 11px; color: #7d8794; line-height: 1.3; }
   .dock-side.right { align-items: flex-end; text-align: right; }
-  .secret-settings { position: absolute; bottom: 0; right: 0; width: 60px; height: 40px; z-index: 1000; }
 
   /* MAP SCREEN */
   #map-screen { position: relative; }
@@ -540,6 +537,125 @@
     .view-badge { display: none; }
     .btn-icon { font-size: 30px; }
   }
+  /* GoVibe TV */
+  .tv { background: linear-gradient(135deg,#ff1744,#7b1fa2); }
+  .kidstv { background: linear-gradient(135deg,#FFB300,#FF6D00); }
+  #tv-screen { flex-direction: column; background: radial-gradient(circle at top, #2a0a14 0%, #000 70%); }
+  #tv-screen .guide-top { border-bottom-color: #4a1a2a; }
+  #tv-screen .guide-top h2 { color: #FF8A80; }
+  #tv-screen .tabs button { background: #22080f; color: #ffd0d6; border-color: #4a1a2a; }
+  #tv-screen .tabs button.on { background: #ff1744; color: #fff; border-color: #ff1744; }
+  .tv-wrap { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 10px 14px 12px; }
+  .tv-stage { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .tv-player { position: relative; flex: 1; min-height: 0; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid #3a1420; }
+  .tv-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .tv-idle { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #ffcdd2; text-align: center; padding: 16px; }
+  .tv-idle .big { font-size: clamp(44px, 10vh, 80px); }
+  .tv-idle b { font-size: 20px; color: #fff; }
+  .tv-now { font-size: 15px; font-weight: 800; color: #fff; min-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tv-now small { color: #ffab91; font-weight: 600; margin-left: 8px; }
+  .tv-list { width: clamp(240px, 30%, 360px); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .tv-card { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,.05); border: 1px solid #3a1420; border-radius: 12px; padding: 6px; cursor: pointer; text-align: left; color: #fff; font-family: inherit; }
+  .tv-card.on { border-color: #ff1744; background: rgba(255,23,68,.15); }
+  .tv-card:active { transform: scale(.98); }
+  .tv-thumb { position: relative; width: 112px; flex-shrink: 0; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #1a0a10 center/cover no-repeat; }
+  .tv-thumb i { position: absolute; right: 4px; bottom: 4px; background: rgba(0,0,0,.8); font-style: normal; font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+  .tv-card b { display: block; font-size: 14px; line-height: 1.25; }
+  .tv-card small { display: block; font-size: 11px; color: #ffab91; margin-top: 3px; }
+  @media (max-width: 820px) { .tv-wrap { flex-direction: column; } .tv-list { width: auto; flex: 0 0 38%; } .tv-player { flex: none; aspect-ratio: 16/9; } }
+
+  /* Games */
+  #games-screen { flex-direction: column; background: radial-gradient(circle at top, #1a1040 0%, #000 70%); }
+  #games-screen .guide-top { border-bottom-color: #2e2366; }
+  #games-screen .guide-top h2 { color: #B388FF; }
+  .games-wrap { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 10px 14px 12px; }
+  .game-pick { width: clamp(180px, 22%, 260px); display: flex; flex-direction: column; gap: 8px; }
+  .game-pick button { display: flex; align-items: center; gap: 10px; text-align: left; background: rgba(255,255,255,.05); border: 1px solid #2e2366; color: #fff; border-radius: 14px; padding: 10px 12px; cursor: pointer; font-family: inherit; }
+  .game-pick button.on { background: linear-gradient(90deg,#7C4DFF,#E040FB); border-color: transparent; }
+  .game-pick .e { font-size: 30px; }
+  .game-pick b { display: block; font-size: 15px; }
+  .game-pick small { display: block; font-size: 11px; opacity: .85; }
+  .mem { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .mem-head { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #d1c4e9; }
+  .mem-head b { font-size: 18px; color: #fff; }
+  .mem-new { margin-left: auto; background: #2e2366; color: #fff; border: none; border-radius: 16px; padding: 7px 14px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  .mem-board { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr; gap: 10px; }
+  .mem-card { position: relative; border: none; border-radius: 14px; cursor: pointer; perspective: 600px; background: transparent; padding: 0; font-family: inherit; }
+  .mem-card .in { position: absolute; inset: 0; transition: transform .35s; transform-style: preserve-3d; }
+  .mem-card.up .in { transform: rotateY(180deg); }
+  .mem-card .f, .mem-card .b { position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .mem-card .b { background: linear-gradient(135deg,#7C4DFF,#E040FB); box-shadow: inset 0 0 0 3px rgba(255,255,255,.25); font-size: clamp(22px, 5vh, 36px); }
+  .mem-card .f { background: #fff8e1; color: #3e2723; transform: rotateY(180deg); font-size: clamp(30px, 8vh, 56px); }
+  .mem-card .f small { font-size: 12px; font-weight: 800; margin-top: 2px; }
+  .mem-card.done .f { background: #c8f7c5; }
+  .mem-learn { min-height: 22px; font-size: 15px; color: #fff; text-align: center; }
+  .mem-learn b { color: #FFD740; }
+  @media (max-width: 820px) { .games-wrap { flex-direction: column; } .game-pick { width: auto; flex-direction: row; } .game-pick button { flex: 1; } .game-pick small { display: none; } .mem-board { grid-template-columns: repeat(4, 1fr); } }
+
+  /* =========================================================
+     ADAPTIVE SIZING · everything scales with the screen height,
+     so the home screen fits the Lenovo Tab M9 (and other tablets)
+     ========================================================= */
+  .topbar { height: clamp(50px, 8.5vh, 64px); }
+  .logo-img { height: clamp(32px, 5.6vh, 44px); }
+  .dock { height: clamp(50px, 8vh, 62px); }
+  .tile-grid .btn { min-height: clamp(64px, 13vh, 112px); }
+  .tile-grid.small .btn { min-height: clamp(54px, 10vh, 86px); }
+  .btn-icon { font-size: clamp(24px, 5vh, 42px); }
+  .tile-grid.small .btn-icon { font-size: clamp(22px, 4vh, 32px); }
+  #mini-map { min-height: clamp(96px, 19vh, 170px); }
+  .journey-guides .btn-icon { font-size: clamp(28px, 5.5vh, 44px); }
+  @media (max-height: 700px) {
+    .ticker-wrap { height: 20px; line-height: 20px; font-size: 11px; }
+    #home { gap: 7px; padding: 7px 12px 8px; }
+    .home-sec { gap: 4px; }
+    .sec-label { font-size: 11px; }
+    .tile-grid { gap: 8px; }
+    .tile-grid .btn { padding: 6px 6px; }
+    .btn-title { font-size: 13px; }
+    .btn-sub { font-size: 11px; }
+    .journey { padding: 7px; }
+    .journey-info { gap: 4px; }
+    .journey-title { font-size: 17px; }
+    .jstat { padding: 4px 7px; }
+    .jstat .v { font-size: 16px; }
+    .open-map { padding: 6px 14px; font-size: 12px; }
+    .journey-guides { gap: 6px; }
+    .journey-guides .btn { padding: 6px; }
+    .journey-guides .x-tile .x-tile-flag { font-size: 30px; }
+    .journey-guides .x-tile .x-tile-title { font-size: 15px; }
+    .chip-btn { padding: 5px 11px; font-size: 13px; }
+    #digital-clock { font-size: 22px; }
+    .dock-nav button { font-size: 11px; padding: 4px 8px; }
+    .dock-nav button .i { font-size: 20px; }
+    .guide-top { padding: 7px 14px; }
+    .guide-top h2 { font-size: 18px; }
+  }
+  /* Home: the tile rows share whatever height is left, so the page fits without scrolling */
+  #home > .home-sec { flex: 1 1 auto; min-height: 0; }
+  #home > .home-sec > .tile-grid { flex: 1; grid-auto-rows: 1fr; }
+  #home > .journey-row { flex: 0 0 auto; }
+  .dock-nav button { min-width: clamp(56px, 6.4vw, 84px); }
+  .dock-side { width: clamp(150px, 17vw, 230px); }
+  .dock-review { font-size: 12px; padding: 6px 10px; }
+  @media (max-width: 1000px) and (min-width: 700px) { #dock-left { display: flex; width: 140px; } #dock-left span { display: none; } }
+  @media (max-height: 700px) {
+    .journey-guides .btn-sub { display: none; }
+    .journey-guides .btn-icon { font-size: 28px; margin-bottom: 0; }
+    .tile-grid .btn-icon { margin-bottom: 0; }
+  }
+  @media (max-height: 640px) {
+    .tile-grid .btn-sub { display: none; }
+    .tile-grid .x-tile .btn-sub { display: none; }
+  }
+  @media (max-height: 560px) {
+    .tile-grid .btn-sub, .journey-guides .btn-sub { display: none; }
+    .journey-stats .k { font-size: 9px; }
+  }
+  /* Tall, narrow screens (portrait) */
+  @media (max-width: 820px) and (min-height: 900px) {
+    .tile-grid .btn { min-height: clamp(70px, 9vh, 112px); }
+  }
 </style>
 </head>
 <body>
@@ -677,13 +793,12 @@
   </div>
 
   <section class="home-sec">
-    <div class="sec-label"><span class="dot" style="--c:#1db954"></span><span data-i18n="secWatch">Watch &amp; listen</span></div>
-    <div class="tile-grid g5">
-      <div onclick="openModal('spotifyModal')" class="btn spotify"><span class="btn-icon">🎵</span><span class="btn-title">Spotify</span></div>
-      <div onclick="launchApp('com.netflix.mediaclient')" class="btn ext netflix"><span class="btn-icon">🎬</span><span class="btn-title">Netflix</span></div>
-      <div onclick="launchApp('com.amazon.avod.thirdpartyclient')" class="btn ext prime"><span class="btn-icon">🍿</span><span class="btn-title">Prime</span></div>
-      <a href="https://m.youtube.com" class="btn ext youtube"><span class="btn-icon">📺</span><span class="btn-title">YouTube</span></a>
-      <a href="https://www.youtubekids.com" class="btn ext ytkids"><span class="btn-icon">🧸</span><span class="btn-title">YT Kids</span></a>
+    <div class="sec-label"><span class="dot" style="--c:#1db954"></span><span data-i18n="secWatch">Watch, listen &amp; play</span></div>
+    <div class="tile-grid g4">
+      <div onclick="openModal('spotifyModal')" class="btn spotify"><span class="btn-icon">🎵</span><span class="btn-title">GoVibeMX Jam</span><span class="btn-sub" data-i18n="tSpotSub">Add your songs</span></div>
+      <div onclick="openTV('mx')" class="btn tv"><span class="btn-icon">📺</span><span class="btn-title">GoVibe TV</span><span class="btn-sub" data-i18n="tTvSub">Mexico in videos</span></div>
+      <div onclick="openTV('kids')" class="btn kidstv"><span class="btn-icon">🧸</span><span class="btn-title" data-i18n="tKidsTv">Kids TV</span><span class="btn-sub" data-i18n="tKidsTvSub">Cartoons &amp; songs</span></div>
+      <div onclick="openGames()" class="btn games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span><span class="btn-sub" data-i18n="tGamesSub">Memory · Quiz · Spot it!</span></div>
     </div>
   </section>
 
@@ -697,24 +812,14 @@
     </div>
   </section>
 
-  <div class="sec-pair">
-    <section class="home-sec">
-      <div class="sec-label"><span class="dot" style="--c:#40C4FF"></span><span data-i18n="secMore">More</span></div>
-      <div class="tile-grid g3 small">
-      <a href="https://news.google.com/topstories?hl=es-419&gl=MX" class="btn ext news"><span class="btn-icon">📰</span><span class="btn-title" data-i18n="tNews">News</span></a>
-      <a href="https://poki.com" class="btn ext games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span></a>
-      <a href="https://www.flightaware.com/live/airport/MMMX" class="btn ext flights"><span class="btn-icon">✈️</span><span class="btn-title" data-i18n="tFlights">Flights</span></a>
-      </div>
-    </section>
-    <section class="home-sec">
-      <div class="sec-label"><span class="dot" style="--c:#FFD740"></span><span>GoVibeMX</span></div>
-      <div class="tile-grid g3 small">
-      <a href="https://govibemx.com/experiences" class="btn daytrips"><span class="btn-icon">🌴</span><span class="btn-title" data-i18n="bizTrips">Day Trips</span><span class="btn-sub" data-i18n="bizTripsSub">Private experiences</span></a>
-      <a href="https://govibemx.com/experiences" class="btn livetrips"><span class="btn-icon">📅</span><span class="btn-title" data-i18n="bizUp">Upcoming</span><span class="btn-sub" data-i18n="bizUpSub">Live availability</span></a>
-      <div onclick="openServices()" class="btn private"><span class="btn-icon">🚐</span><span class="btn-title" data-i18n="svcTile">SERVICES</span><span class="btn-sub" data-i18n="svcTileSub">Transfers · Tours · Driver by the hour</span></div>
-      </div>
-    </section>
-  </div>
+  <section class="home-sec">
+    <div class="sec-label"><span class="dot" style="--c:#FFD740"></span><span>GoVibeMX</span></div>
+    <div class="tile-grid g3 small">
+    <a href="https://govibemx.com/experiences" class="btn daytrips"><span class="btn-icon">🌴</span><span class="btn-title" data-i18n="bizTrips">Day Trips</span><span class="btn-sub" data-i18n="bizTripsSub">Private experiences</span></a>
+    <a href="https://govibemx.com/experiences" class="btn livetrips"><span class="btn-icon">📅</span><span class="btn-title" data-i18n="bizUp">Upcoming</span><span class="btn-sub" data-i18n="bizUpSub">Live availability</span></a>
+    <div onclick="openServices()" class="btn private"><span class="btn-icon">🚐</span><span class="btn-title" data-i18n="svcTile">SERVICES</span><span class="btn-sub" data-i18n="svcTileSub">Transfers · Tours · Driver by the hour</span></div>
+    </div>
+  </section>
 </div>
 
 <!-- ======================= LIVE MAP ======================= -->
@@ -739,7 +844,7 @@
       <div class="stat route-only"><div class="k" data-i18n="sunrise">Sunrise</div><div class="v" id="st-sun">—</div><div class="s" data-i18n="atDest">at destination</div></div>
       <div class="stat wide"><div class="k" data-i18n="localTime">Local time · Mexico City</div><div class="v" id="st-clock">—</div></div>
     </div>
-    <a class="airport-box" id="airport-box" hidden href="#"><span>✈️</span><div><b data-i18n="airportBoard">Live departures board</b><small data-i18n="airportBoardSub">Check your flight before you arrive</small></div></a>
+    <div class="airport-box" id="airport-box" hidden><span>✈️</span><div><b data-i18n="airportBoard">Almost at the airport</b><small data-i18n="airportBoardSub">Have your ID and boarding pass handy</small></div></div>
     <div class="city-only">
       <div class="gps-status" style="margin-bottom:4px" data-i18n="nearby">Nearby</div>
       <div class="nearby" id="nearby"></div>
@@ -786,7 +891,39 @@
   </div>
   <div class="web-wrap">
     <div class="web-loading" id="web-loading"><span class="spin"></span><span data-i18n="webLoading">Loading…</span></div>
-    <iframe id="web-frame" title="GoVibeMX" allow="fullscreen; autoplay; encrypted-media; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <iframe id="web-frame" title="GoVibeMX" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allow="fullscreen; autoplay; encrypted-media; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+</div>
+
+<!-- ======================= GOVIBE TV (curated videos, played inside the screen) ======================= -->
+<div id="tv-screen" class="screen">
+  <div class="guide-top">
+    <button class="back-home" onclick="showScreen('home')" data-i18n="back">⬅ Home</button>
+    <h2>📺 GoVibe TV</h2>
+  </div>
+  <div class="tabs" id="tv-tabs"></div>
+  <div class="tv-wrap">
+    <div class="tv-stage">
+      <div class="tv-player" id="tv-player"></div>
+      <div class="tv-now" id="tv-now"></div>
+    </div>
+    <div class="tv-list" id="tv-list"></div>
+  </div>
+</div>
+
+<!-- ======================= GAMES ======================= -->
+<div id="games-screen" class="screen">
+  <div class="guide-top">
+    <button class="back-home" onclick="showScreen('home')" data-i18n="back">⬅ Home</button>
+    <h2>🎮 <span data-i18n="tGames">Games</span></h2>
+  </div>
+  <div class="games-wrap">
+    <div class="game-pick" id="game-pick"></div>
+    <div class="mem">
+      <div class="mem-head"><b data-i18n="memTitle">Memorama</b><span id="mem-stats"></span><button class="mem-new" onclick="newMemory()" data-i18n="memNew">🔄 New game</button></div>
+      <div class="mem-board" id="mem-board"></div>
+      <div class="mem-learn" id="mem-learn"></div>
+    </div>
   </div>
 </div>
 
@@ -844,10 +981,11 @@
     <button data-go="explorer-screen" onclick="openExplorer('home')"><span class="i">🇲🇽</span><span>Explorer</span></button>
     <button data-go="eat-screen" onclick="openEat('home')"><span class="i">🍽️</span><span data-i18n="navEat">Eat</span></button>
     <button data-go="kids-screen" onclick="openKids()"><span class="i">🦎</span><span data-i18n="navKids">Kids</span></button>
+    <button data-go="tv-screen" onclick="openTV(S.tvTab || 'mx')"><span class="i">📺</span><span>TV</span></button>
+    <button data-go="games-screen" onclick="openGames()"><span class="i">🎮</span><span data-i18n="tGames">Games</span></button>
     <button data-go="transit-screen" onclick="openTransit('home')"><span class="i">🚇</span><span data-i18n="navTransit">Transit</span></button>
   </div>
   <div class="dock-side right"></div>
-  <div onclick="launchApp('com.fullykiosk.singleapp')" class="secret-settings"></div>
 </nav>
 
 <script>
@@ -1012,7 +1150,7 @@ var PHRASES = [
   {"es":"Ahorita","say":"ah-oh-REE-tah","en":"\"Right now\"… or later, or never. A Mexican classic!"}
 ];
 // Departure boards shown when the van is near an airport (see the airport POIs).
-var AIRPORT_LINKS = [{"id":"airport-t1","ll":[19.43527,-99.0827],"url":"https://www.flightaware.com/live/airport/MMMX"},{"id":"airport-t2","ll":[19.42264,-99.07777],"url":"https://www.flightaware.com/live/airport/MMMX"},{"id":"airport-aifa","ll":[19.74376,-99.01057],"url":"https://www.flightaware.com/live/airport/MMSM"}];
+var AIRPORT_LINKS = [{"id":"airport-t1","ll":[19.43527,-99.0827]},{"id":"airport-t2","ll":[19.42264,-99.07777]},{"id":"airport-aifa","ll":[19.74376,-99.01057]}];
 
 // Museums tab (CDMX Explorer).
 var MUSEUMS = [
@@ -1276,7 +1414,7 @@ var I18N = {
         amWater: 'Water', webLoading: 'Loading…', wWater: 'Water is on us', wGo: 'Let\'s go! · ¡Vámonos!', wHi: 'Welcome aboard!', wHiName: 'Welcome aboard, {n}!', rvBtn: '⭐ Loved the tour? Leave us a review', rvTitle: 'Loved your experience?', rvLead: 'GoVibeMX is a small local business. A few words from you mean the world to us.', rvScan: 'Scan to review us on Google', rvScanSub: 'It opens our Google page: tap the stars and add a few words.', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
-        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Live departures board', airportBoardSub: 'Check your flight before you arrive', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
+        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Almost at the airport', airportBoardSub: 'Have your ID and boarding pass handy. Don\'t forget anything in the van!', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
         gpsWait: 'Waiting for GPS…', gpsOk: 'Live GPS', gpsDenied: 'GPS off — showing planned route', gpsDemo: 'Demo mode',
@@ -1286,7 +1424,7 @@ var I18N = {
         amWater: 'Agua', webLoading: 'Cargando…', wWater: 'El agua va por nuestra cuenta', wGo: '¡Vámonos! · Let\'s go!', wHi: '¡Bienvenidos a bordo!', wHiName: '¡Bienvenidos a bordo, {n}!', rvBtn: '⭐ ¿Te gustó el tour? Déjanos una reseña', rvTitle: '¿Te gustó la experiencia?', rvLead: 'GoVibeMX es un pequeño negocio local. Unas palabras tuyas significan muchísimo para nosotros.', rvScan: 'Escanea para dejarnos una reseña en Google', rvScanSub: 'Se abre nuestra página de Google: toca las estrellas y escribe unas palabras.', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
-        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Salidas en vivo', airportBoardSub: 'Revisa tu vuelo antes de llegar', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
+        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Ya casi llegamos al aeropuerto', airportBoardSub: 'Ten a la mano tu identificación y pase de abordar. ¡No olvides nada en la camioneta!', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
         gpsWait: 'Buscando GPS…', gpsOk: 'GPS en vivo', gpsDenied: 'Sin GPS — ruta planeada', gpsDemo: 'Modo demo',
@@ -1448,13 +1586,9 @@ function renderServices() {
   }).join('');
 }
 function closeModal(id) { $(id).style.display = 'none'; }
-// Native app launcher for Fully Kiosk (Netflix, Prime, settings)
-function launchApp(pkg) {
-  if (typeof fully !== 'undefined') fully.startApplication(pkg);
-  else alert('This only works on the tablet inside Fully Kiosk.');
-}
 
 function showScreen(id) {
+  if (id !== 'tv-screen' && typeof stopTV === 'function') stopTV();
   var s = document.getElementsByClassName('screen');
   for (var i = 0; i < s.length; i++) s[i].classList.toggle('active', s[i].id === id);
   if (S.booted) setTimeout(reportStatus, 0);
@@ -1794,7 +1928,6 @@ function pickLine(type, l) {
 }
 
 // ---- Web viewer: GoVibeMX pages open inside the screen (the dock stays, so Home is one tap away) ----
-var WEB_INSIDE = /^https:\/\/(www\.)?govibemx\.com(\/|$)/;
 function openWeb(url, title) {
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
@@ -1813,24 +1946,162 @@ function reloadWeb() { var f = $('web-frame'); $('web-loading').hidden = false; 
 document.addEventListener('DOMContentLoaded', function () {
   $('web-frame').addEventListener('load', function () { $('web-loading').hidden = true; });
 });
+// Every link opens inside the screen; nothing leaves the GoVibeMX system
 document.addEventListener('click', function (e) {
   var a = e.target.closest && e.target.closest('a[href]');
-  if (!a || !WEB_INSIDE.test(a.href)) return;
+  if (!a) return;
   e.preventDefault();
+  if (!/^https:\/\//.test(a.href)) return;
   var tEl = a.querySelector('.btn-title, h3'), title = tEl ? tEl.textContent : a.textContent;
   if (tEl && tEl.tagName === 'H3' && tEl.lastChild) title = tEl.lastChild.textContent; // skip the card's emoji
   openWeb(a.href, title.replace(/[→↗]/g, '').trim());
 });
 
+// ---- GoVibe TV: hand-picked videos that play inside the screen (no YouTube app, no browsing away) ----
+var TV_VIDEOS = {
+  mx: [
+    { id: '4KBjBvxgwSU', len: '1:05:34', t: { en: 'Mexico City from above', es: 'La CDMX desde el cielo' }, by: 'Polychronis Film' },
+    { id: 'L6BrmYdowZw', len: '8:37', t: { en: 'Mexico City at night', es: 'La CDMX de noche' }, by: 'Exploropia' },
+    { id: 'ZUHaf7iSe3Q', len: '16:40', t: { en: 'The pyramids of Teotihuacán, explained', es: 'Las pirámides de Teotihuacán, explicadas' }, by: 'Manuel Bravo · EN' },
+    { id: 'nhH363CV_K8', len: '3:01', t: { en: 'Sunrise balloons over Teotihuacán', es: 'Globos al amanecer en Teotihuacán' }, by: 'XplorerFilms' },
+    { id: 'OO9kSxcT9Rg', len: '40:00', t: { en: 'The ultimate street taco tour', es: 'El gran tour de tacos callejeros' }, by: 'Mark Wiens · EN' },
+    { id: 'GAKp-QOa7fo', len: '8:37', t: { en: 'All about tacos al pastor', es: 'Todo sobre los tacos al pastor' }, by: 'Munchies · EN' },
+    { id: 'Ce02T7glGpo', len: '4:04', t: { en: 'Lucha libre: the wildest moves', es: 'Lucha libre: las mejores llaves' }, by: 'CMLL' },
+    { id: 'zOuq6q7p8_s', len: '1:38', t: { en: 'Day of the Dead parade', es: 'Desfile de Día de Muertos' }, by: 'Global News · EN' },
+    { id: 'Ka5qabWhmrM', len: '4:12', t: { en: 'Discover Xochimilco', es: 'Descubre Xochimilco' }, by: 'Ruben y El Mundo' },
+    { id: 'L1zsP1plkCY', len: '13:01', t: { en: 'Ballet Folklórico: Jalisco', es: 'Ballet Folklórico: Jalisco' }, by: 'Ballet Folklórico México Danza' }
+  ],
+  kids: [
+    { id: 'Xw3-3jQQMBk', len: '1:55:37', t: { en: 'Bluey · 18 full episodes', es: 'Bluey · 18 episodios (inglés)' }, by: 'Bluey · EN' },
+    { id: 'tqAf9tFW00Y', len: '1:34:28', t: { en: 'Pocoyo · Super Babies', es: 'Pocoyo · Super bebés (inglés)' }, by: 'Pocoyo · EN' },
+    { id: 'jtMZl_l4rK4', len: '54:49', t: { en: 'Pocoyó · 4 episodes (Spanish)', es: 'Pocoyó · 4 episodios' }, by: 'Pocoyó · ES' },
+    { id: 'LrAtBtQnvCE', len: '1:10:00', t: { en: 'Five Little Ducks + more songs', es: 'Five Little Ducks y más (inglés)' }, by: 'Super Simple Songs · EN' },
+    { id: '9yJYOsYCPvE', len: '59:16', t: { en: 'Cinco Patitos + more (Spanish)', es: 'Cinco patitos y más canciones' }, by: 'Super Simple Español · ES' },
+    { id: 'B1svxwMuLf4', len: '1:18:15', t: { en: 'La Granja de Zenón · farm songs (Spanish)', es: 'La Granja de Zenón · 35 canciones' }, by: 'El Reino Infantil · ES' }
+  ]
+};
+var TV = { id: null, playing: false };
+function ytId(u) {
+  var m = String(u || '').match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+function lenSecs(l) { return String(l || '0').split(':').reduce(function (a, b) { return a * 60 + (+b || 0); }, 0); }
+function openTV(tab, id) {
+  S.tvTab = tab === 'kids' ? 'kids' : 'mx';
+  renderTV();
+  showScreen('tv-screen');
+  if (id) playTV(id);
+}
+function renderTV() {
+  if (!$('tv-tabs')) return;
+  var tab = S.tvTab || 'mx';
+  $('tv-tabs').innerHTML = [['mx', t('tvMx')], ['kids', t('tvKids')]].map(function (x) {
+    return '<button class="' + (x[0] === tab ? 'on' : '') + '" onclick="openTV(\'' + x[0] + '\')">' + x[1] + '</button>';
+  }).join('');
+  $('tv-list').innerHTML = TV_VIDEOS[tab].map(function (v) {
+    return '<button class="tv-card' + (v.id === TV.id ? ' on' : '') + '" onclick="playTV(\'' + v.id + '\')"><span class="tv-thumb" style="background-image:url(https://i.ytimg.com/vi/' + v.id + '/mqdefault.jpg)"><i>' + v.len + '</i></span>' +
+      '<span><b>' + tr(v.t) + '</b><small>' + v.by + '</small></span></button>';
+  }).join('');
+  if (!TV.id) $('tv-player').innerHTML = '<div class="tv-idle"><span class="big">' + (tab === 'kids' ? '🧸' : '📺') + '</span><b>' + t('tvPick') + '</b><span>' + t('tvPickSub') + '</span></div>';
+  var cur = findTV(TV.id);
+  $('tv-now').innerHTML = cur ? '▶ ' + tr(cur.t) + '<small>' + cur.by + '</small>' : '';
+}
+function findTV(id) {
+  var all = TV_VIDEOS.mx.concat(TV_VIDEOS.kids);
+  for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+  return null;
+}
+function playTV(id) {
+  var v = findTV(id);
+  TV.id = id; TV.playing = true;
+  // Idle mode waits until the video should be over (unknown length: 2 hours)
+  TV.until = Date.now() + (v ? lenSecs(v.len) : 7200) * 1000;
+  var src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&hl=' + S.lang;
+  // Sandboxed: the video plays, but nothing in it can open YouTube or another app
+  $('tv-player').innerHTML = '<iframe src="' + src + '" title="GoVibe TV" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  renderTV();
+}
+function stopTV() {
+  if (!TV.id) return;
+  TV.id = null; TV.playing = false;
+  if ($('tv-player')) $('tv-player').innerHTML = '';
+}
+
+// ---- Games: everything is built in (no game sites) ----
+var MEM_ITEMS = [
+  ['🌮', 'Taco', 'Taco'], ['🌵', 'Cactus', 'Nopal'], ['🎈', 'Balloon', 'Globo'], ['🛕', 'Pyramid', 'Pirámide'],
+  ['🥑', 'Avocado', 'Aguacate'], ['🌶️', 'Chili pepper', 'Chile'], ['💀', 'Skull', 'Calavera'], ['🪅', 'Piñata', 'Piñata'],
+  ['🎺', 'Trumpet', 'Trompeta'], ['🦋', 'Butterfly', 'Mariposa'], ['🌽', 'Corn', 'Maíz'], ['🍫', 'Chocolate', 'Chocolate'],
+  ['🌻', 'Sunflower', 'Girasol'], ['🐢', 'Turtle', 'Tortuga'], ['☀️', 'Sun', 'Sol'], ['🌙', 'Moon', 'Luna']
+];
+var MEM = null;
+function openGames() { if (!MEM) newMemory(); else renderGames(); showScreen('games-screen'); }
+function newMemory() {
+  var pool = MEM_ITEMS.slice().sort(function () { return Math.random() - .5; }).slice(0, 6);
+  var cards = pool.concat(pool).map(function (x, i) { return { k: x[0], en: x[1], es: x[2], up: false, done: false, i: i }; })
+    .sort(function () { return Math.random() - .5; });
+  MEM = { cards: cards, open: [], moves: 0, pairs: 0, start: Date.now(), last: null, lock: false };
+  renderGames();
+}
+function renderGames() {
+  if (!$('game-pick')) return;
+  $('game-pick').innerHTML =
+    '<button class="on"><span class="e">🃏</span><span><b>' + t('memTitle') + '</b><small>' + t('memSub') + '</small></span></button>' +
+    '<button onclick="openExplorer(\'home\', \'quiz\')"><span class="e">🎯</span><span><b>' + t('gQuiz') + '</b><small>' + t('gQuizSub') + '</small></span></button>' +
+    '<button onclick="S.kidsTab=\'spot\'; openKids()"><span class="e">🔍</span><span><b>' + t('kSpot').replace(/^\S+\s/, '') + '</b><small>' + t('gSpotSub') + '</small></span></button>';
+  if (!MEM) return;
+  $('mem-board').innerHTML = MEM.cards.map(function (c, i) {
+    return '<button class="mem-card' + (c.up || c.done ? ' up' : '') + (c.done ? ' done' : '') + '" onclick="flipMem(' + i + ')"><span class="in"><span class="b">🇲🇽</span><span class="f">' + c.k + '<small>' + (S.lang === 'es' ? c.es : c.en) + '</small></span></span></button>';
+  }).join('');
+  $('mem-stats').textContent = t('memMoves').replace('{m}', MEM.moves).replace('{p}', MEM.pairs);
+  var l = MEM.last;
+  $('mem-learn').innerHTML = MEM.pairs === 6 ? t('memWin').replace('{m}', MEM.moves)
+    : l ? l.k + ' <b>' + l.en + '</b> = <b>' + l.es + '</b>' : t('memHelp');
+}
+function flipMem(i) {
+  var c = MEM.cards[i];
+  if (MEM.lock || c.up || c.done) return;
+  c.up = true; MEM.open.push(i);
+  if (MEM.open.length === 2) {
+    MEM.moves++;
+    var a = MEM.cards[MEM.open[0]], b = MEM.cards[MEM.open[1]];
+    if (a.k === b.k) {
+      a.done = b.done = true; MEM.pairs++; MEM.last = a; MEM.open = [];
+      if (MEM.pairs === 6) confetti(90);
+    } else {
+      MEM.lock = true;
+      setTimeout(function () { a.up = b.up = false; MEM.open = []; MEM.lock = false; renderGames(); }, 900);
+    }
+  }
+  renderGames();
+}
+Object.assign(I18N.en, {
+  secWatch: 'Watch, listen & play', tSpotSub: 'Add your songs', tTvSub: 'Mexico in videos', tKidsTv: 'Kids TV', tKidsTvSub: 'Cartoons & songs', tGamesSub: 'Memory · Quiz · Spot it!',
+  tvMx: '🇲🇽 Mexico', tvKids: '🧸 Kids', tvPick: 'Pick a video', tvPickSub: 'Tap any video on the right to play it here.',
+  memTitle: 'Memorama', memSub: 'Match the pairs, learn Spanish', memNew: '🔄 New game', memMoves: 'Moves: {m} · Pairs: {p}/6',
+  memHelp: 'Find the matching pairs. Each pair teaches you a word in Spanish!', memWin: '🏆 You did it in {m} moves! ¡Muy bien!',
+  gQuiz: 'CDMX Quiz', gQuizSub: 'Are you a true chilango?', gSpotSub: 'Look out the window'
+});
+Object.assign(I18N.es, {
+  secWatch: 'Ver, escuchar y jugar', tSpotSub: 'Agrega tus canciones', tTvSub: 'México en video', tKidsTv: 'TV Niños', tKidsTvSub: 'Caricaturas y canciones', tGamesSub: 'Memorama · Trivia · ¡Encuéntralo!',
+  tvMx: '🇲🇽 México', tvKids: '🧸 Niños', tvPick: 'Elige un video', tvPickSub: 'Toca cualquier video de la derecha para verlo aquí.',
+  memTitle: 'Memorama', memSub: 'Encuentra los pares y aprende inglés', memNew: '🔄 Nuevo juego', memMoves: 'Movimientos: {m} · Pares: {p}/6',
+  memHelp: 'Encuentra los pares. ¡Cada par te enseña una palabra en inglés!', memWin: '🏆 ¡Lo lograste en {m} movimientos! Very good!',
+  gQuiz: 'Trivia CDMX', gQuizSub: '¿Eres un auténtico chilango?', gSpotSub: 'Mira por la ventana'
+});
+
 // ---- Idle mode: after 3 minutes without a touch, go back to the live map (or home), like a plane's screen ----
 var lastTouch = Date.now();
+document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(function (ev) { document.addEventListener(ev, function () { lastTouch = Date.now(); }, { passive: true }); });
 setInterval(function () {
   if (Date.now() - lastTouch < 180000) return;
+  if ($('tv-screen').classList.contains('active') && TV.playing && Date.now() < TV.until) return; // a video is on: let it play
   lastTouch = Date.now();
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
   if ($('web-screen').classList.contains('active')) $('web-frame').src = 'about:blank';
+  stopTV();
   var target = S.active ? 'map-screen' : 'home';
   if (!$(target).classList.contains('active')) showScreen(target);
   if (target === 'map-screen') { S.cycle = true; S.pauseUntil = 0; $('tool-cycle').classList.add('on'); setView('overview', false); }
@@ -1868,6 +2139,7 @@ function runCommand(c) {
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
   if ($('web-screen').classList.contains('active')) $('web-frame').src = 'about:blank';
+  stopTV();
   if (c.a === 'home') { showScreen('home'); $('home').scrollTop = 0; }
   else if (c.a === 'lang' && (c.v === 'en' || c.v === 'es')) setLang(c.v);
   else if (c.a === 'welcome') showWelcome(S.guest);
@@ -1883,6 +2155,14 @@ function runCommand(c) {
     else if (v === 'spotify') openModal('spotifyModal');
     else if (v === 'services') openServices();
     else if (v === 'review') openModal('reviewModal');
+    else if (parts[0] === 'tv') openTV(parts[1] || 'mx');
+    else if (v === 'games') openGames();
+  }
+  else if (c.a === 'web') {
+    // The driver points the screen at any page (YouTube links play on GoVibe TV)
+    var u = String(c.v || '').trim(), yt = ytId(u);
+    if (yt) openTV(S.tvTab || 'mx', yt);
+    else if (/^https:\/\/[^\s]+$/.test(u)) openWeb(u, c.t || u.replace(/^https:\/\/(www\.)?/, '').split('/')[0]);
   }
   reportStatus();
 }
@@ -1890,7 +2170,7 @@ function runCommand(c) {
 // ---- New ride: reset the screen for the next passenger (driver menu or phone) ----
 function newRide(name) {
   clearTrail();
-  S.shownPois = {}; S.zoneSeen = {}; S.zone = null; S.quiz = null; S.xTab = 'hoods'; S.eatFilter = 'all'; S.spot = {}; S.kidsTab = 'spot';
+  S.shownPois = {}; S.zoneSeen = {}; S.zone = null; S.quiz = null; S.xTab = 'hoods'; S.eatFilter = 'all'; S.spot = {}; S.kidsTab = 'spot'; S.tvTab = 'mx'; MEM = null;
   toastQueue = []; toastBusy = false; hideToast();
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) ms[i].style.display = 'none';
@@ -1944,7 +2224,7 @@ function setLang(l) {
   $('lang-es').classList.toggle('on', l === 'es');
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
-  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); refreshPoiPopups(); render();
+  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); refreshPoiPopups(); render();
   if (S.booted) { updateVisibility(); reportStatus(); }
 }
 
@@ -2500,7 +2780,6 @@ function renderCity() {
       '<div><span>🚌 ' + nb.s[2] + lineBadges(nb.s[3], METROBUS_COLORS) + '</span><span>' + fmtDist(nb.d) + '</span></div>' +
       '<div><span>🚲 Ecobici · ' + ne.s[2] + '</span><span>' + fmtDist(ne.d) + '</span></div>';
   } else $('transit-near').innerHTML = '';
-  if (ap) $('airport-box').href = ap.a.url;
   $('nearby').innerHTML = near.map(function (x) {
     return '<button onclick="focusPoi(\'' + x.p.id + '\')"><span>' + x.p.icon + ' ' + tr(x.p.name) + '</span><span>' + fmtDist(x.d) + '</span></button>';
   }).join('');
