@@ -145,6 +145,50 @@
   .alc-label span { color: #9fb3c8; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
   .zoom-far .zone-label { display: none; }
   .zoom-near .alc-label { display: none; }
+  /* CDMX Explorer */
+  #explorer-screen { flex-direction: column; background: radial-gradient(circle at top, #06302b 0%, #000 70%); }
+  #explorer-screen .guide-top { border-bottom-color: #13524a; }
+  #explorer-screen .guide-top h2 { color: #80CBC4; }
+  #explorer-screen .tabs button { background: #0b2420; color: #c9ece7; border-color: #13524a; }
+  #explorer-screen .tabs button.on { background: #26A69A; color: #00201c; border-color: #26A69A; }
+  .x-card { background: rgba(255,255,255,.04); border: 1px solid #13524a; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .x-card.here { border-color: #FFB300; box-shadow: 0 0 0 1px #FFB300 inset; }
+  .x-card h3 { margin: 0; font-size: 18px; color: #fff; display: flex; gap: 10px; align-items: center; }
+  .x-card h3 .big { font-size: 30px; }
+  .x-card p { margin: 0; font-size: 14px; line-height: 1.5; color: #d7ece9; }
+  .x-sub { font-size: 12px; color: #80CBC4; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+  .x-here { align-self: flex-start; background: #FFB300; color: #1a1200; border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 800; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { background: #0b2420; border: 1px solid #1d5d55; color: #c9ece7; border-radius: 14px; padding: 3px 10px; font-size: 12px; }
+  .chip.eat-chip { border-color: #6a2f73; background: #1f1022; color: #F3B4FF; }
+  .x-card button, .q-next { align-self: flex-start; background: #0f3a35; color: #80CBC4; border: 1px solid #26A69A; border-radius: 16px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .fact-card h3 .big { font-size: 40px; }
+  .num-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .num-tile { background: linear-gradient(160deg, #0f3a35, #071a17); border: 1px solid #13524a; border-radius: 14px; padding: 16px; }
+  .num-tile .v { font-size: 30px; white-space: nowrap; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .num-tile .l { font-size: 13px; color: #a7d8d1; margin-top: 4px; }
+  .quiz { max-width: 720px; display: flex; flex-direction: column; gap: 12px; }
+  .q-progress { font-size: 13px; color: #80CBC4; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .q-dots { display: flex; gap: 6px; }
+  .q-dots span { width: 26px; height: 6px; border-radius: 3px; background: #1d5d55; }
+  .q-dots span.ok { background: #2ecc71; } .q-dots span.bad { background: #e74c3c; } .q-dots span.cur { background: #80CBC4; }
+  .q-text { font-size: 24px; font-weight: 800; color: #fff; line-height: 1.25; }
+  .q-opts { display: flex; flex-direction: column; gap: 8px; }
+  .q-opts button { text-align: left; background: #0b2420; color: #fff; border: 2px solid #1d5d55; border-radius: 12px; padding: 14px 16px; font-size: 17px; font-weight: 700; cursor: pointer; }
+  .q-opts button.right { border-color: #2ecc71; background: #0d3320; }
+  .q-opts button.wrong { border-color: #e74c3c; background: #3a1010; }
+  .q-opts button:disabled { cursor: default; }
+  .q-explain { font-size: 15px; color: #d7ece9; }
+  .q-score { font-size: 56px; font-weight: 800; color: #FFD54F; }
+  .x-card.phrase { flex-direction: row; align-items: center; gap: 12px; }
+  .phrase .es { font-size: 19px; font-weight: 800; color: #fff; }
+  .phrase .say { font-size: 13px; color: #80CBC4; font-style: italic; }
+  .phrase .en { font-size: 14px; color: #d7ece9; }
+  .phrase .speak { margin-left: auto; flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: #26A69A; color: #00201c; border: none; font-size: 20px; cursor: pointer; }
+  .airport-box { display: flex; align-items: center; gap: 10px; background: #0b2440; border: 1px solid #0277BD; border-radius: 10px; padding: 10px 12px; color: #fff; text-decoration: none; }
+  .airport-box > span { font-size: 24px; }
+  .airport-box b { display: block; font-size: 14px; }
+  .airport-box small { display: block; font-size: 11px; color: #9ec7ea; }
   .eat { background: linear-gradient(135deg, #8E24AA 0%, #D81B60 100%); }
   .eat-marker { width: 28px; height: 28px; border-radius: 8px; background: #1a0f1f; border: 2px solid #E040FB; display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 0 2px 6px rgba(0,0,0,.6); }
   #eat-screen { flex-direction: column; background: radial-gradient(circle at top, #2a0f2e 0%, #000 70%); }
@@ -246,13 +290,6 @@
   .svc-phone { font-size: 34px; font-weight: 800; letter-spacing: 1px; color: #fff; font-variant-numeric: tabular-nums; user-select: text; }
   .svc-hint { font-size: 14px; color: #b8e6c8; }
   .svc-more { font-size: 12px; color: #9aa4b2; }
-  .facts-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-  .fact-btn { background: #333; border: 1px solid #555; padding: 12px; color: #fff; border-radius: 10px; font-size: 13px; cursor: pointer; text-align: left; }
-  .fact-display { display: none; text-align: left; }
-  .back-arrow { color: var(--warm); cursor: pointer; font-size: 14px; margin-bottom: 10px; display: inline-block; background: #333; padding: 5px 10px; border-radius: 5px; }
-  .fact-list { list-style: none; padding: 0; margin: 0; text-align: left; }
-  .fact-list li { margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 6px; font-size: 13px; line-height: 1.3; }
-  .fact-list b { color: var(--warm); font-size: 14px; }
 
   /* POI "You are passing…" toast */
   .poi-toast { position: fixed; left: 14px; bottom: 50px; z-index: 1500; width: 380px; max-width: calc(100% - 28px); background: rgba(13,17,23,.97); border: 1px solid var(--warm); border-radius: 14px; padding: 12px 14px; box-shadow: 0 8px 30px rgba(0,0,0,.7); transform: translateY(40px); opacity: 0; visibility: hidden; transition: transform .5s, opacity .5s, visibility .5s; }
@@ -304,13 +341,13 @@
 <div id="waterModal" class="modal"><div class="modal-content" style="background:#111;width:70%;"><h2 style="color:#00C9FF;margin-top:0;">💧 Refreshment / Agua</h2><p style="font-size:18px;line-height:1.5;">The 2 water bottles in the middle rack are <b>up for grabs!</b><br><br>I have more up front—just ask if you need them.</p><hr style="border-color:#333;margin:20px 0;"><p style="font-size:18px;line-height:1.5;color:#ccc;">¡Las 2 aguas en el estante central son para usted!<br><br>Tengo más adelante, solo dígame si necesita.</p></div><div class="close-btn" onclick="closeModal('waterModal')">X</div></div>
 <div id="acModal" class="modal"><div class="modal-content" style="background:#111;width:70%;"><h2 style="color:#00C9FF;margin-top:0;">❄️ Climate / Aire</h2><p style="font-size:18px;line-height:1.4;">Hello! The A/C is set to <b>22°C (72°F)</b> for comfort.<br><br>Feel free to ask me to change it!</p><hr style="border-color:#333;margin:15px 0;"><p style="font-size:18px;line-height:1.4;color:#ccc;">¡Hola! El A/C está a <b>22°C (72°F)</b>.<br><br>¡Dígame si prefiere otra temperatura!</p></div><div class="close-btn" onclick="closeModal('acModal')">X</div></div>
 <div id="wifiModal" class="modal"><div class="modal-content" style="background:#111;width:70%;"><h2 style="color:#2ecc71;margin-top:0;">📶 Wi-Fi Access</h2><p style="font-size:16px;">Connect to: <b>GoVibeMX WiFi</b></p><div style="background:#222;padding:15px;border-radius:10px;margin:20px 0;border:2px dashed #555;"><span style="font-size:32px;font-weight:bold;letter-spacing:3px;font-family:monospace;">87654321</span></div><p style="color:#aaa;font-size:14px;">Password / Contraseña</p></div><div class="close-btn" onclick="closeModal('wifiModal')">X</div></div>
-<div id="factsModal" class="modal"><div class="modal-content"><h2 style="color:#FF9800;margin-top:0;margin-bottom:10px;">🇲🇽 Neighborhood Explorer</h2><div id="factsMenu" class="facts-menu"><button class="fact-btn" onclick="showFact('fact-centro')">🏛️ Centro</button><button class="fact-btn" onclick="showFact('fact-roma')">🌿 Roma</button><button class="fact-btn" onclick="showFact('fact-condesa')">🐕 Condesa</button><button class="fact-btn" onclick="showFact('fact-polanco')">💎 Polanco</button><button class="fact-btn" onclick="showFact('fact-coyoacan')">🎨 Coyoacán</button><button class="fact-btn" onclick="showFact('fact-general')">📍 CDMX</button></div><div id="fact-centro" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Ancient City:</b> Built on Tenochtitlán (1325).</li><li><b>Zócalo:</b> One of the largest squares in the world.</li><li><b>Sinking:</b> Bellas Artes is sinking!</li><li><b>Templo Mayor:</b> Aztec ruins nearby.</li><li><b>Eat:</b> "El Cardenal" breakfast.</li></ul></div><div id="fact-roma" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Oscar:</b> "Roma" movie filmed here.</li><li><b>Style:</b> Art Nouveau architecture.</li><li><b>Food:</b> Top culinary district.</li><li><b>David:</b> Michelangelo replica in plaza.</li><li><b>Bar:</b> Álvaro Obregón nightlife.</li></ul></div><div id="fact-condesa" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Track:</b> Amsterdam Ave was a horse track.</li><li><b>Art Deco:</b> Famous buildings.</li><li><b>Dogs:</b> Parque México dog school.</li><li><b>Green:</b> City "lung".</li><li><b>Einstein:</b> Legend says he stayed here.</li></ul></div><div id="fact-polanco" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Beverly Hills:</b> Luxury shopping.</li><li><b>Soumaya:</b> Free art museum.</li><li><b>Jewish:</b> Delis &amp; bakeries.</li><li><b>Lincoln:</b> Statue in park.</li><li><b>Pujol:</b> World-famous restaurant.</li></ul></div><div id="fact-coyoacan" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Frida:</b> Blue House museum.</li><li><b>Trotsky:</b> Exiled here.</li><li><b>Cortés:</b> First capital.</li><li><b>Market:</b> Tostadas &amp; costumes.</li><li><b>Eat:</b> Churros in plaza.</li></ul></div><div id="fact-general" class="fact-display"><div class="back-arrow" onclick="resetFacts()">⬅ Back</div><ul class="fact-list"><li><b>Altitude:</b> 2,240m (7,350 ft).</li><li><b>People:</b> ~22 Million.</li><li><b>Museums:</b> 150+ (one of the most in the world).</li><li><b>Green:</b> Chapultepec Park.</li><li><b>Name:</b> CDMX (not DF).</li></ul></div></div><div class="close-btn" onclick="closeModal('factsModal')">X</div></div>
 
 <!-- Driver menu: long-press the clock for 1.5 s -->
 <div id="driverModal" class="modal"><div class="modal-content" style="background:#0d1117;max-width:620px;">
   <h2 style="margin:0;color:#FFB300;">🚐 Driver · Today's trip</h2>
   <div class="driver-trips" id="driver-trips"></div>
   <div class="driver-row">
+    <button onclick="newRide(); closeModal('driverModal');">🆕 New ride</button>
     <button onclick="toggleDemo()" id="tool-demo">▶ Demo</button>
     <button onclick="clearTrail()">🧹 Clear trail</button>
   </div>
@@ -370,7 +407,7 @@
   </div>
   <div class="journey-guides">
     <div onclick="openGuide('intro')" class="btn teo" data-guide="teo"><span class="btn-icon">🛕</span><span class="btn-title" data-i18n="tileTeo">Teotihuacán</span><span class="btn-sub" data-i18n="tileTeoSub">Your pocket guide</span></div>
-    <div onclick="openModal('factsModal'); resetFacts();" class="btn cdmx" data-guide="cdmx"><span class="btn-icon">🇲🇽</span><span class="btn-title" data-i18n="tileCdmx">CDMX Facts</span><span class="btn-sub" data-i18n="tileCdmxSub">Neighborhood explorer</span></div>
+    <div onclick="openExplorer('home')" class="btn cdmx" data-guide="cdmx"><span class="btn-icon">🇲🇽</span><span class="btn-title" data-i18n="tileCdmx">CDMX Facts</span><span class="btn-sub" data-i18n="tileCdmxSub">Neighborhood explorer</span></div>
     <div onclick="openGuide('balloon')" class="btn balloon" data-guide="balloon"><span class="btn-icon">🎈</span><span class="btn-title" data-i18n="tileBalloon">Balloon 101</span><span class="btn-sub" data-i18n="tileBalloonSub">Before you fly</span></div>
   </div>
   </div>
@@ -385,7 +422,7 @@
 
   <div class="row">
     <div onclick="openEat('home')" class="btn btn-ent eat"><span class="btn-icon">🍽️</span><span class="btn-title" data-i18n="tileEat">Eat &amp; Drink</span><span class="btn-sub" data-i18n="tileEatSub">Recommended</span></div>
-    <div onclick="openModal('factsModal'); resetFacts();" class="btn btn-ent facts" id="row-facts"><span class="btn-icon">💡</span><span class="btn-title" data-i18n="tileCdmx">CDMX Facts</span></div>
+    <div onclick="openExplorer('home')" class="btn btn-ent facts" id="row-facts"><span class="btn-icon">🇲🇽</span><span class="btn-title" data-i18n="tileCdmx">CDMX Facts</span></div>
     <a href="https://news.google.com/topstories?hl=es-419&gl=MX" class="btn btn-ent news"><span class="btn-icon">📰</span><span class="btn-title">News</span></a>
     <a href="https://poki.com" class="btn btn-ent games"><span class="btn-icon">🎮</span><span class="btn-title">Games</span></a>
     <a href="https://www.flightaware.com/live/airport/MMMX" class="btn btn-ent flights"><span class="btn-icon">✈️</span><span class="btn-title">Flights</span></a>
@@ -420,13 +457,14 @@
       <div class="stat route-only"><div class="k" data-i18n="sunrise">Sunrise</div><div class="v" id="st-sun">—</div><div class="s" data-i18n="atDest">at destination</div></div>
       <div class="stat wide"><div class="k" data-i18n="localTime">Local time · Mexico City</div><div class="v" id="st-clock">—</div></div>
     </div>
+    <a class="airport-box" id="airport-box" hidden href="#"><span>✈️</span><div><b data-i18n="airportBoard">Live departures board</b><small data-i18n="airportBoardSub">Check your flight before you arrive</small></div></a>
     <div class="city-only">
       <div class="gps-status" style="margin-bottom:4px" data-i18n="nearby">Nearby</div>
       <div class="nearby" id="nearby"></div>
     </div>
     <div class="panel-guides">
       <button class="eat city-only" onclick="openEat('map')"><span>🍽️</span><div><span data-i18n="tileEat" style="font-size:14px">Eat &amp; Drink</span><small data-i18n="tileEatSub">Recommended</small></div></button>
-      <button class="cdmx" data-guide="cdmx" onclick="openModal('factsModal'); resetFacts();"><span>🇲🇽</span><div><span data-i18n="tileCdmx" style="font-size:14px">CDMX Facts</span><small data-i18n="tileCdmxSub">Neighborhood explorer</small></div></button>
+      <button class="cdmx" data-guide="cdmx" onclick="openExplorer('map')"><span>🇲🇽</span><div><span data-i18n="tileCdmx" style="font-size:14px">CDMX Facts</span><small data-i18n="tileCdmxSub">Neighborhood explorer</small></div></button>
       <button class="teo" data-guide="teo" onclick="openGuide('intro', 'map')"><span>🛕</span><div><span data-i18n="tileTeo" style="font-size:14px">Teotihuacán</span><small data-i18n="tileTeoSub">Your pocket guide</small></div></button>
       <button class="balloon" data-guide="balloon" onclick="openGuide('balloon', 'map')"><span>🎈</span><div><span data-i18n="tileBalloon" style="font-size:14px">Balloon 101</span><small data-i18n="tileBalloonSub">Before you fly</small></div></button>
     </div>
@@ -438,6 +476,16 @@
       <button id="tool-eat" class="city-only on" onclick="toggleEatLayer()" data-i18n="eatLayer">🍽️ Eat &amp; Drink</button>
     </div>
   </div>
+</div>
+
+<!-- ======================= CDMX EXPLORER ======================= -->
+<div id="explorer-screen" class="screen">
+  <div class="guide-top">
+    <button class="back-home" id="explorer-back" onclick="explorerBack()">⬅ Home</button>
+    <h2 data-i18n="explorerTitle">🇲🇽 CDMX Explorer</h2>
+  </div>
+  <div class="tabs" id="explorer-tabs"></div>
+  <div class="guide-body" id="explorer-body"></div>
 </div>
 
 <!-- ======================= EAT & DRINK ======================= -->
@@ -580,6 +628,59 @@ var SERVICES = [
     url: 'https://govibemx.com/services/private-driver-mexico-city/' }
 ];
 
+// CDMX Explorer content (Did you know?, By the numbers, Quiz, Spanish 101).
+var CDMX_FACTS = [  {"icon":"🌊","t":{"en":"Built on a lake","es":"Construida sobre un lago"},"p":{"en":"The Aztec capital, Tenochtitlán, was an island city on Lake Texcoco, linked to shore by causeways. The Spanish drained the lake over the following centuries.","es":"La capital mexica, Tenochtitlán, era una ciudad-isla en el lago de Texcoco, unida a tierra por calzadas. Los españoles desecaron el lago durante los siglos siguientes."}},
+  {"icon":"📉","t":{"en":"A sinking city","es":"Una ciudad que se hunde"},"p":{"en":"Because water is pumped from the old lakebed, some parts of the city sink by up to about 50 cm a year. Look for leaning churches and tilted sidewalks.","es":"Por el agua que se extrae del antiguo lago, algunas zonas se hunden hasta unos 50 cm al año. Fíjate en iglesias inclinadas y banquetas chuecas."}},
+  {"icon":"🚇","t":{"en":"A Metro you can read without words","es":"Un Metro que se lee sin palabras"},"p":{"en":"Every Metro station has its own little icon, designed in 1969 by Lance Wyman so anyone could find their stop, even without reading.","es":"Cada estación del Metro tiene su propio icono, diseñado en 1969 por Lance Wyman para que cualquiera encontrara su parada, incluso sin saber leer."}},
+  {"icon":"🌳","t":{"en":"Bigger than Central Park","es":"Más grande que Central Park"},"p":{"en":"Bosque de Chapultepec is about twice the size of New York's Central Park, with a castle, a zoo, lakes and several major museums.","es":"El Bosque de Chapultepec mide como el doble que Central Park en Nueva York, con castillo, zoológico, lagos y varios grandes museos."}},
+  {"icon":"🌮","t":{"en":"Tacos al pastor's secret","es":"El secreto del pastor"},"p":{"en":"Tacos al pastor were inspired by the shawarma brought by Lebanese immigrants. The vertical spit, the trompo, gives it away.","es":"Los tacos al pastor se inspiraron en el shawarma que trajeron los inmigrantes libaneses. El trompo vertical lo delata."}},
+  {"icon":"🥑","t":{"en":"Words from Nahuatl","es":"Palabras del náhuatl"},"p":{"en":"\"Tomato\" and \"avocado\" come from the Nahuatl words tomatl and ahuacatl. Corn, chili, vanilla and cacao were all first grown in this part of the world.","es":"\"Tomate\" y \"aguacate\" vienen del náhuatl tomatl y ahuacatl. El maíz, el chile, la vainilla y el cacao se cultivaron primero en esta parte del mundo."}},
+  {"icon":"💀","t":{"en":"A parade from a movie","es":"Un desfile salido del cine"},"p":{"en":"The James Bond film \"Spectre\" (2015) opened with a Day of the Dead parade that didn't exist. The city liked the idea and has held a real one since 2016.","es":"La película de James Bond \"Spectre\" (2015) empezaba con un desfile de Día de Muertos que no existía. A la ciudad le gustó la idea y lo organiza desde 2016."}},
+  {"icon":"🦎","t":{"en":"The axolotl","es":"El ajolote"},"p":{"en":"This salamander keeps its baby features all its life and can regrow limbs. In the wild it lives only in the canals of Xochimilco, and it is critically endangered.","es":"Esta salamandra conserva sus rasgos de cría toda la vida y puede regenerar extremidades. En libertad solo vive en los canales de Xochimilco y está en peligro crítico."}},
+  {"icon":"🚨","t":{"en":"Earthquake early warning","es":"Alerta sísmica"},"p":{"en":"Sirens across the city can sound seconds before an earthquake's shaking arrives. The warning system has run since 1991, and the whole city practices in yearly drills.","es":"Las sirenas de la ciudad pueden sonar segundos antes de que llegue el sismo. El sistema funciona desde 1991 y toda la ciudad practica en simulacros anuales."}},
+  {"icon":"🏟️","t":{"en":"A sports capital","es":"Capital deportiva"},"p":{"en":"Mexico City hosted the 1968 Olympics, World Cup finals in 1970 and 1986, and the opening match of the 2026 World Cup at Estadio Azteca.","es":"La Ciudad de México fue sede de los Juegos Olímpicos de 1968, de las finales de los Mundiales de 1970 y 1986, y del partido inaugural del Mundial 2026 en el Estadio Azteca."}},
+  {"icon":"🔤","t":{"en":"From DF to CDMX","es":"De DF a CDMX"},"p":{"en":"Until 2016 the capital was officially the \"Distrito Federal\" (DF). Now it is Ciudad de México, or CDMX, with 16 alcaldías instead of delegaciones.","es":"Hasta 2016 la capital era oficialmente el \"Distrito Federal\". Hoy es la Ciudad de México, o CDMX, con 16 alcaldías en lugar de delegaciones."}},
+  {"icon":"🎭","t":{"en":"Museums everywhere","es":"Museos por todas partes"},"p":{"en":"With more than 150 museums, Mexico City has one of the largest collections of museums of any city in the world.","es":"Con más de 150 museos, la Ciudad de México tiene una de las mayores cantidades de museos de cualquier ciudad del mundo."}}];
+var CDMX_NUMBERS = [{"v":"1325","l":{"en":"Tenochtitlán is founded","es":"Se funda Tenochtitlán"}},{"v":"2,240 m","l":{"en":"Altitude (7,350 ft)","es":"Altitud (7,350 pies)"}},{"v":"≈ 22 M","l":{"en":"People in the metro area","es":"Habitantes en la zona metropolitana"}},{"v":"9.2 M","l":{"en":"People in the city itself (2020 census)","es":"Habitantes en la ciudad (censo 2020)"}},{"v":"16","l":{"en":"Alcaldías (boroughs)","es":"Alcaldías"}},{"v":"150+","l":{"en":"Museums","es":"Museos"}},{"v":"12 · 195","l":{"en":"Metro lines · stations","es":"Líneas · estaciones del Metro"}},{"v":"≈ 28 km","l":{"en":"Avenida Insurgentes, the city's longest avenue","es":"Avenida Insurgentes, la más larga de la ciudad"}},{"v":"≈ 1,485 km²","l":{"en":"Area of the city","es":"Superficie de la ciudad"}},{"v":"1968","l":{"en":"Summer Olympics","es":"Juegos Olímpicos"}}];
+// Quiz: `a` is the index of the right answer; options are shuffled each game.
+var QUIZ = [
+  {"q":{"en":"What was Mexico City built on?","es":"¿Sobre qué se construyó la Ciudad de México?"},"o":{"en":["An island in a lake","A volcano crater","A desert"],"es":["Una isla en un lago","El cráter de un volcán","Un desierto"]},"a":0,"x":{"en":"Tenochtitlán was an island city on Lake Texcoco.","es":"Tenochtitlán era una ciudad-isla en el lago de Texcoco."}},
+  {"q":{"en":"Which neighborhood's Avenida Ámsterdam follows an old horse-racing track?","es":"¿En qué colonia la Avenida Ámsterdam sigue un antiguo hipódromo?"},"o":{"en":["Condesa","Polanco","Coyoacán"],"es":["Condesa","Polanco","Coyoacán"]},"a":0,"x":{"en":"The oval of Avenida Ámsterdam traces the old racetrack.","es":"El óvalo de Ámsterdam sigue la pista del antiguo hipódromo."}},
+  {"q":{"en":"What does \"Coyoacán\" mean?","es":"¿Qué significa \"Coyoacán\"?"},"o":{"en":["Place of coyotes","Place of flowers","Place of water"],"es":["Lugar de coyotes","Lugar de flores","Lugar del agua"]},"a":0,"x":{"en":"Hence the coyote fountain in its main square.","es":"Por eso la fuente de los coyotes en su plaza."}},
+  {"q":{"en":"What inspired tacos al pastor?","es":"¿Qué inspiró los tacos al pastor?"},"o":{"en":["Lebanese shawarma","Spanish paella","Chinese barbecue"],"es":["El shawarma libanés","La paella española","La barbacoa china"]},"a":0,"x":{"en":"Lebanese immigrants brought the vertical spit.","es":"Los inmigrantes libaneses trajeron el trompo."}},
+  {"q":{"en":"How high above sea level is Mexico City?","es":"¿A qué altura sobre el nivel del mar está la ciudad?"},"o":{"en":["About 2,240 m","About 900 m","About 4,000 m"],"es":["Unos 2,240 m","Unos 900 m","Unos 4,000 m"]},"a":0,"x":{"en":"That's 7,350 ft: drink water and take it easy on stairs!","es":"Son 7,350 pies: ¡toma agua y sube escaleras con calma!"}},
+  {"q":{"en":"Which film inspired the city's Day of the Dead parade?","es":"¿Qué película inspiró el desfile de Día de Muertos?"},"o":{"en":["Spectre (James Bond)","Coco","Frida"],"es":["Spectre (James Bond)","Coco","Frida"]},"a":0,"x":{"en":"The parade in the film didn't exist, so the city created it in 2016.","es":"El desfile de la película no existía, así que la ciudad lo creó en 2016."}},
+  {"q":{"en":"Where do wild axolotls live?","es":"¿Dónde viven los ajolotes en libertad?"},"o":{"en":["The canals of Xochimilco","Chapultepec's lake","The Gulf of Mexico"],"es":["Los canales de Xochimilco","El lago de Chapultepec","El Golfo de México"]},"a":0,"x":{"en":"They are found nowhere else in the wild.","es":"No existen en libertad en ningún otro lugar."}},
+  {"q":{"en":"How many alcaldías (boroughs) does the city have?","es":"¿Cuántas alcaldías tiene la ciudad?"},"o":{"en":["16","9","32"],"es":["16","9","32"]},"a":0,"x":{"en":"Cuauhtémoc, Coyoacán and Miguel Hidalgo are three of them.","es":"Cuauhtémoc, Coyoacán y Miguel Hidalgo son tres de ellas."}},
+  {"q":{"en":"Who lived in Chapultepec Castle?","es":"¿Quién vivió en el Castillo de Chapultepec?"},"o":{"en":["Emperor Maximilian and Carlota","Hernán Cortés","Frida Kahlo"],"es":["El emperador Maximiliano y Carlota","Hernán Cortés","Frida Kahlo"]},"a":0,"x":{"en":"They lived there in the 1860s.","es":"Vivieron ahí en la década de 1860."}},
+  {"q":{"en":"Which museum holds the Aztec Sun Stone?","es":"¿Qué museo tiene la Piedra del Sol?"},"o":{"en":["National Anthropology Museum","Museo Soumaya","Bellas Artes"],"es":["Museo Nacional de Antropología","Museo Soumaya","Bellas Artes"]},"a":0,"x":{"en":"It's the star of the Mexica hall.","es":"Es la estrella de la sala Mexica."}},
+  {"q":{"en":"Which Mexico City bar was named the best in the world in 2024?","es":"¿Qué bar de la CDMX fue nombrado el mejor del mundo en 2024?"},"o":{"en":["Handshake Speakeasy","Salón Tenampa","Bar La Ópera"],"es":["Handshake Speakeasy","Salón Tenampa","Bar La Ópera"]},"a":0,"x":{"en":"It's in Colonia Juárez, check Eat & Drink.","es":"Está en la colonia Juárez; búscalo en Comer y beber."}},
+  {"q":{"en":"Where do mariachi bands gather day and night?","es":"¿Dónde se reúnen los mariachis a toda hora?"},"o":{"en":["Plaza Garibaldi","The Zócalo","Parque México"],"es":["Plaza Garibaldi","El Zócalo","Parque México"]},"a":0,"x":{"en":"Salón Tenampa has been there since 1925.","es":"El Salón Tenampa está ahí desde 1925."}},
+  {"q":{"en":"Which is bigger?","es":"¿Cuál es más grande?"},"o":{"en":["Bosque de Chapultepec","New York's Central Park","They're the same size"],"es":["El Bosque de Chapultepec","Central Park en Nueva York","Miden lo mismo"]},"a":0,"x":{"en":"Chapultepec is about twice the size.","es":"Chapultepec mide como el doble."}},
+  {"q":{"en":"When did \"DF\" officially become \"CDMX\"?","es":"¿Cuándo el \"DF\" pasó a ser oficialmente \"CDMX\"?"},"o":{"en":["2016","1968","1910"],"es":["2016","1968","1910"]},"a":0,"x":{"en":"The delegaciones became alcaldías too.","es":"Las delegaciones también pasaron a ser alcaldías."}},
+  {"q":{"en":"Why does every Metro station have its own icon?","es":"¿Por qué cada estación del Metro tiene un icono?"},"o":{"en":["So anyone can find their stop, even without reading","For advertising","As good-luck charms"],"es":["Para que cualquiera encuentre su parada, aunque no sepa leer","Por publicidad","Como amuletos"]},"a":0,"x":{"en":"Designed by Lance Wyman in 1969.","es":"Los diseñó Lance Wyman en 1969."}},
+  {"q":{"en":"Which neighborhood is famous for Frida Kahlo's Blue House?","es":"¿Qué colonia es famosa por la Casa Azul de Frida Kahlo?"},"o":{"en":["Coyoacán","Roma Norte","Polanco"],"es":["Coyoacán","Roma Norte","Polanco"]},"a":0,"x":{"en":"Book tickets ahead: it sells out.","es":"Compra boletos con anticipación: se agotan."}}
+];
+var PHRASES = [
+  {"es":"Hola, buenos días","say":"OH-lah, BWEH-nohs DEE-ahs","en":"Hello, good morning"},
+  {"es":"Muchas gracias","say":"MOO-chahs GRAH-see-ahs","en":"Thank you very much"},
+  {"es":"Por favor","say":"por fah-VOR","en":"Please"},
+  {"es":"Disculpe","say":"dees-KOOL-peh","en":"Excuse me"},
+  {"es":"¿Cuánto cuesta?","say":"KWAN-toh KWES-tah","en":"How much is it?"},
+  {"es":"La cuenta, por favor","say":"lah KWEN-tah, por fah-VOR","en":"The check, please"},
+  {"es":"¿Dónde está el baño?","say":"DOHN-deh es-TAH el BAH-nyoh","en":"Where is the bathroom?"},
+  {"es":"Sin picante, por favor","say":"seen pee-KAHN-teh","en":"Not spicy, please"},
+  {"es":"Unos tacos al pastor, por favor","say":"OO-nohs TAH-kohs ahl pahs-TOR","en":"Some tacos al pastor, please"},
+  {"es":"¿Qué me recomienda?","say":"keh meh reh-koh-mee-EN-dah","en":"What do you recommend?"},
+  {"es":"Está muy rico","say":"es-TAH mooy REE-koh","en":"It's delicious"},
+  {"es":"¡Salud!","say":"sah-LOOD","en":"Cheers!"},
+  {"es":"¿Me puede tomar una foto?","say":"meh PWEH-deh toh-MAR OO-nah FOH-toh","en":"Could you take a photo of me?"},
+  {"es":"¡Qué padre!","say":"keh PAH-dreh","en":"How cool! (Mexican slang)"},
+  {"es":"Ahorita","say":"ah-oh-REE-tah","en":"\"Right now\"… or later, or never. A Mexican classic!"}
+];
+// Departure boards shown when the van is near an airport (see the airport POIs).
+var AIRPORT_LINKS = [{"id":"airport-t1","ll":[19.43527,-99.0827],"url":"https://www.flightaware.com/live/airport/MMMX"},{"id":"airport-t2","ll":[19.42264,-99.07777],"url":"https://www.flightaware.com/live/airport/MMMX"},{"id":"airport-aifa","ll":[19.74376,-99.01057],"url":"https://www.flightaware.com/live/airport/MMSM"}];
+
 // Phone remote: the tablet and driver.html share this id in Firebase (rearScreen/<VAN_ID>).
 var VAN_ID = 'van1';
 
@@ -629,6 +730,10 @@ var TRIPS = {
 // a "Now passing…" card pops up for the passengers. `trips` limits a POI to certain trips.
 var POIS = [
   // ---- CDMX City Tour (trips: ['city']) ----
+  // Airports: cards with terminal tips when the van gets close.
+  {"id":"airport-t1","icon":"✈️","ll":[19.43527,-99.0827],"r":900,"trips":["city"],"name":{"en":"Airport · Terminal 1 (AICM)","es":"Aeropuerto · Terminal 1 (AICM)"},"text":{"en":"Check your boarding pass or airline app for your terminal: T1 and T2 are separate buildings. The Aerotrén shuttle links them for passengers with a boarding pass. Allow at least 2 hours for domestic and 3 for international flights.","es":"Revisa en tu pase de abordar o en la app de tu aerolínea cuál es tu terminal: la T1 y la T2 son edificios separados. El Aerotrén las conecta para pasajeros con pase de abordar. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
+  {"id":"airport-t2","icon":"✈️","ll":[19.42264,-99.07777],"r":900,"trips":["city"],"name":{"en":"Airport · Terminal 2 (AICM)","es":"Aeropuerto · Terminal 2 (AICM)"},"text":{"en":"Check your boarding pass or airline app for your terminal: T1 and T2 are separate buildings. The Aerotrén shuttle links them for passengers with a boarding pass. Allow at least 2 hours for domestic and 3 for international flights.","es":"Revisa en tu pase de abordar o en la app de tu aerolínea cuál es tu terminal: la T1 y la T2 son edificios separados. El Aerotrén las conecta para pasajeros con pase de abordar. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
+  {"id":"airport-aifa","icon":"✈️","ll":[19.74376,-99.01057],"r":3000,"trips":["city"],"name":{"en":"Felipe Ángeles Airport (AIFA)","es":"Aeropuerto Felipe Ángeles (AIFA)"},"text":{"en":"Opened in 2022, about 45 km north of the city center. Allow at least 2 hours for domestic and 3 for international flights.","es":"Inaugurado en 2022, a unos 45 km al norte del centro. Llega al menos 2 horas antes en vuelos nacionales y 3 en internacionales."}},
   { id: "zocalo", icon: "🇲🇽", ll: [19.43265, -99.1332], r: 200, trips: ['city'],
     name: {"en": "Zócalo", "es": "Zócalo"},
     text: {"en": "The main square, one of the largest in the world, built over the heart of the Aztec capital. Soldiers raise and lower the giant flag every day.", "es": "La plaza principal, una de las más grandes del mundo, construida sobre el corazón de la capital mexica. Cada día los soldados izan y arrían la bandera monumental."} },
@@ -784,10 +889,10 @@ var POIS = [
    ===================================================================== */
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
-        tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Facts',
+        tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Explorer',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
-        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhood explorer', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
+        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Quiz · Spanish', explorerTitle: '🇲🇽 CDMX Explorer', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Live departures board', airportBoardSub: 'Check your flight before you arrive', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
         gpsWait: 'Waiting for GPS…', gpsOk: 'Live GPS', gpsDenied: 'GPS off — showing planned route', gpsDemo: 'Demo mode',
@@ -796,7 +901,7 @@ var I18N = {
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
-        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Explora las colonias', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
+        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Trivia · Español', explorerTitle: '🇲🇽 Explora la CDMX', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Salidas en vivo', airportBoardSub: 'Revisa tu vuelo antes de llegar', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
         gpsWait: 'Buscando GPS…', gpsOk: 'GPS en vivo', gpsDenied: 'Sin GPS — ruta planeada', gpsDemo: 'Modo demo',
@@ -890,7 +995,7 @@ var S = {
   temp: null, elevation: null, sunrise: null,
   view: 'overview', cycle: true, cycleTimer: null, pauseUntil: 0,
   demo: null, shownPois: {}, satellite: false,
-  guideTab: 'intro', guideFrom: 'home', eatFilter: 'all', eatFrom: 'home', eatLayer: true, siteSel: 'sun'
+  guideTab: 'intro', guideFrom: 'home', xTab: 'hoods', xFrom: 'home', quiz: null, eatFilter: 'all', eatFrom: 'home', eatLayer: true, siteSel: 'sun'
 };
 
 function store(k, v) { try { localStorage.setItem('gv_' + k, JSON.stringify(v)); } catch (e) {} }
@@ -958,17 +1063,6 @@ function renderServices() {
   }).join('');
 }
 function closeModal(id) { $(id).style.display = 'none'; }
-function showFact(id) {
-  $('factsMenu').style.display = 'none';
-  var f = document.getElementsByClassName('fact-display');
-  for (var i = 0; i < f.length; i++) f[i].style.display = 'none';
-  $(id).style.display = 'block';
-}
-function resetFacts() {
-  $('factsMenu').style.display = 'grid';
-  var f = document.getElementsByClassName('fact-display');
-  for (var i = 0; i < f.length; i++) f[i].style.display = 'none';
-}
 // Native app launcher for Fully Kiosk (Netflix, Prime, settings)
 function launchApp(pkg) {
   if (typeof fully !== 'undefined') fully.startApplication(pkg);
@@ -983,6 +1077,114 @@ function showScreen(id) {
     if (bigMap) setTimeout(function () { bigMap.invalidateSize(); setView(S.view, false); }, 50);
   }
   if (id === 'home' && miniMap) setTimeout(function () { miniMap.invalidateSize(); fitMini(); }, 50);
+}
+
+/* ---- CDMX Explorer ---- */
+function openExplorer(from, tab) {
+  S.xFrom = from || 'home'; if (tab) S.xTab = tab;
+  renderExplorer(); showScreen('explorer-screen'); $('explorer-body').scrollTop = 0;
+}
+function explorerBack() { showScreen(S.xFrom === 'map' && S.active ? 'map-screen' : 'home'); }
+function setXTab(tab) { S.xTab = tab; renderExplorer(); $('explorer-body').scrollTop = 0; }
+function zoneOf(ll) { for (var i = 0; i < ZONES.length; i++) if (inRings(ll, ZONES[i].rings)) return ZONES[i]; return null; }
+function renderExplorer() {
+  $('explorer-back').textContent = t(S.xFrom === 'map' ? 'backMap' : 'back');
+  var tabs = [['hoods', 'xHoods'], ['facts', 'xFacts'], ['numbers', 'xNumbers'], ['quiz', 'xQuiz'], ['spanish', 'xSpanish']];
+  $('explorer-tabs').innerHTML = tabs.map(function (x) {
+    return '<button class="' + (x[0] === S.xTab ? 'on' : '') + '" onclick="setXTab(\'' + x[0] + '\')">' + t(x[1]) + '</button>';
+  }).join('');
+  var h = '', live = S.active && isFree();
+  if (S.xTab === 'hoods') {
+    // Every featured neighborhood with the sights and places to eat inside it; yours first.
+    var zs = ZONES.slice().sort(function (a, b) { return (S.zone && b.id === S.zone.id) - (S.zone && a.id === S.zone.id); });
+    h = '<div class="cards">' + zs.map(function (z) {
+      var zi = ZONE_INFO[z.id], here = S.zone && S.zone.id === z.id;
+      var sights = POIS.filter(function (p) { return p.trips && p.trips.indexOf('city') >= 0 && p.id.indexOf('airport') < 0 && inRings(p.ll, z.rings); });
+      var eats = EAT.filter(function (e) { return inRings(e.ll, z.rings); });
+      var alc = locate(z.label).alc;
+      return '<div class="x-card' + (here ? ' here' : '') + '">' + (here ? '<span class="x-here">' + t('xHere') + '</span>' : '') +
+        '<h3><span class="big">' + zi.icon + '</span>' + tr(zi.name) + '</h3>' + (alc ? '<div class="x-sub">' + alc + '</div>' : '') +
+        '<p>' + tr(zi.text) + '</p>' +
+        (sights.length ? '<div class="x-sub">' + t('xSights') + '</div><div class="chips">' + sights.map(function (p) { return '<span class="chip">' + p.icon + ' ' + tr(p.name) + '</span>'; }).join('') + '</div>' : '') +
+        (eats.length ? '<div class="x-sub">' + t('xEat') + '</div><div class="chips">' + eats.map(function (e) { return '<span class="chip eat-chip">' + e.icon + ' ' + e.name + '</span>'; }).join('') + '</div>' : '') +
+        (live ? '<button onclick="showZoneOnMap(\'' + z.id + '\')">' + t('xShowMap') + '</button>' : '') + '</div>';
+    }).join('') + '</div>';
+  } else if (S.xTab === 'facts') {
+    h = '<div class="cards">' + CDMX_FACTS.map(function (f) {
+      return '<div class="x-card fact-card"><h3><span class="big">' + f.icon + '</span>' + tr(f.t) + '</h3><p>' + tr(f.p) + '</p></div>';
+    }).join('') + '</div>';
+  } else if (S.xTab === 'numbers') {
+    h = '<div class="num-grid">' + CDMX_NUMBERS.map(function (n) {
+      return '<div class="num-tile"><div class="v">' + n.v + '</div><div class="l">' + tr(n.l) + '</div></div>';
+    }).join('') + '</div>';
+  } else if (S.xTab === 'quiz') {
+    h = quizHtml();
+  } else if (S.xTab === 'spanish') {
+    var canSpeak = 'speechSynthesis' in window;
+    h = '<p class="lead" style="font-size:15px">' + t('phraseIntro') + '</p><div class="cards">' + PHRASES.map(function (x, i) {
+      return '<div class="x-card phrase"><div><div class="es">' + x.es + '</div><div class="say">' + x.say + '</div><div class="en">' + x.en + '</div></div>' +
+        (canSpeak ? '<button class="speak" onclick="speak(' + i + ')" aria-label="Play">🔊</button>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+  $('explorer-body').innerHTML = h;
+}
+function showZoneOnMap(id) {
+  var z = ZONES.filter(function (x) { return x.id === id; })[0];
+  showScreen('map-screen');
+  setTimeout(function () { if (z && bigMap) { S.pauseUntil = Date.now() + 60000; bigMap.flyToBounds(L_.latLngBounds(z.rings[0]), { padding: [30, 30], duration: 1.2 }); } }, 150);
+}
+function speak(i) {
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(PHRASES[i].es);
+    u.lang = 'es-MX'; u.rate = 0.85;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+// ---- Quiz: 5 random questions, options shuffled ----
+function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+function newQuiz() {
+  var qs = shuffle(QUIZ.map(function (q, i) { return i; })).slice(0, 5).map(function (qi) {
+    return { qi: qi, order: shuffle([0, 1, 2]), picked: null };
+  });
+  S.quiz = { qs: qs, i: 0 };
+}
+function quizHtml() {
+  if (!S.quiz) newQuiz();
+  var Q = S.quiz, n = Q.qs.length;
+  var score = Q.qs.filter(function (x) { return x.picked !== null && x.picked === QUIZ[x.qi].a; }).length;
+  var dots = '<div class="q-dots">' + Q.qs.map(function (x, k) {
+    return '<span class="' + (x.picked === null ? (k === Q.i ? 'cur' : '') : (x.picked === QUIZ[x.qi].a ? 'ok' : 'bad')) + '"></span>';
+  }).join('') + '</div>';
+  if (Q.i >= n) {
+    var msg = score >= 5 ? t('qGreat') : score >= 3 ? t('qGood') : t('qTry');
+    return '<div class="quiz">' + dots + '<div class="q-score">' + score + ' / ' + n + '</div><div class="q-text">' + t('qScore').replace('{s}', score).replace('{n}', n) + '</div><div class="q-explain">' + msg + '</div>' +
+      '<button class="q-next" onclick="S.quiz=null; renderExplorer();">' + t('qAgain') + '</button></div>';
+  }
+  var cur = Q.qs[Q.i], q = QUIZ[cur.qi], opts = tr(q.o), done = cur.picked !== null;
+  var h = '<div class="quiz"><div class="q-progress">' + t('qOf').replace('{i}', Q.i + 1).replace('{n}', n) + '</div>' + dots +
+    '<div class="q-text">' + tr(q.q) + '</div><div class="q-opts">' + cur.order.map(function (oi) {
+      var cls = done ? (oi === q.a ? 'right' : (oi === cur.picked ? 'wrong' : '')) : '';
+      return '<button class="' + cls + '"' + (done ? ' disabled' : '') + ' onclick="pickAnswer(' + oi + ')">' + opts[oi] + '</button>';
+    }).join('') + '</div>';
+  if (done) h += '<div class="q-explain"><b>' + (cur.picked === q.a ? t('qRight') : t('qWrong')) + '</b> ' + tr(q.x) + '</div>' +
+    '<button class="q-next" onclick="S.quiz.i++; renderExplorer();">' + (Q.i + 1 >= n ? t('qSeeScore') : t('qNext')) + '</button>';
+  return h + '</div>';
+}
+function pickAnswer(oi) { var cur = S.quiz.qs[S.quiz.i]; if (cur.picked === null) { cur.picked = oi; renderExplorer(); } }
+
+// ---- New ride: reset the screen for the next passenger (driver menu or phone) ----
+function newRide() {
+  clearTrail();
+  S.shownPois = {}; S.zoneSeen = {}; S.zone = null; S.quiz = null; S.xTab = 'hoods'; S.eatFilter = 'all';
+  toastQueue = []; toastBusy = false; hideToast();
+  var ms = document.querySelectorAll('.modal');
+  for (var i = 0; i < ms.length; i++) ms[i].style.display = 'none';
+  try { speechSynthesis.cancel(); } catch (e) {}
+  showScreen('home'); $('home').scrollTop = 0;
+  updateVisibility(); highlightZone(); render();
+  showToast({ icon: '👋', name: { en: t('welcome'), es: t('welcome') }, text: { en: t('welcomeText'), es: t('welcomeText') } }, t('welcomeKick'));
+  if (S.pos && isFree()) setTimeout(updateZone, 16000);
 }
 
 /* ---- Eat & Drink screen ---- */
@@ -1028,7 +1230,7 @@ function setLang(l) {
   $('lang-es').classList.toggle('on', l === 'es');
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
-  renderTripPicker(); renderGuide(); renderEat(); renderServices(); refreshPoiPopups(); render();
+  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); refreshPoiPopups(); render();
   if (S.booted) updateVisibility();
 }
 
@@ -1516,6 +1718,10 @@ function renderCity() {
   $('home-zone').textContent = zone; $('home-alc').textContent = alc;
   var near = nearbyPois(3);
   $('home-near').textContent = near.length ? near[0].p.icon + ' ' + tr(near[0].p.name) : '—';
+  var ap = null;
+  if (S.pos) AIRPORT_LINKS.forEach(function (a) { var d = haversine(S.pos, a.ll); if (d < 4000 && (!ap || d < ap.d)) ap = { a: a, d: d }; });
+  $('airport-box').hidden = !ap;
+  if (ap) $('airport-box').href = ap.a.url;
   $('nearby').innerHTML = near.map(function (x) {
     return '<button onclick="focusPoi(\'' + x.p.id + '\')"><span>' + x.p.icon + ' ' + tr(x.p.name) + '</span><span>' + fmtDist(x.d) + '</span></button>';
   }).join('');
@@ -1698,6 +1904,13 @@ document.addEventListener('DOMContentLoaded', function () {
       setRemoteStatus('ok');
       if (snap.val()) applyTrip(snap.val(), true);
     }, () => setRemoteStatus('error'));
+    // "New ride" from the phone: act on changes after the first value we see.
+    let lastRide;
+    onValue(ref(db, base + '/newRide'), (snap) => {
+      const v = snap.val();
+      if (lastRide !== undefined && v && v !== lastRide) newRide();
+      lastRide = v;
+    });
     window.pushRemoteTrip = (trip) => set(ref(db, base + '/trip'), trip).catch(() => {});
     window.pushTabletStatus = (st) => set(ref(db, base + '/tablet'), Object.assign({}, st, { at: serverTimestamp() })).catch(() => {});
     reportStatus();

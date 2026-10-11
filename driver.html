@@ -39,6 +39,9 @@
   .trips button.on { border-color: var(--route); background: #2a2108; }
   .trips button:active { transform: scale(.98); }
   .trips button:disabled { opacity: .5; }
+  .new-ride { width: 100%; background: #0f2a1a; color: #fff; border: 2px solid var(--ok); border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .new-ride small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+  .new-ride:active { transform: scale(.98); }
   .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
   [hidden] { display: none !important; }
 
@@ -85,6 +88,7 @@
   </div>
 
   <div class="trips" id="trips"></div>
+  <button class="new-ride" id="new-ride">🆕 New ride<small>Clear the screen and greet the next passenger</small></button>
   </section>
 
   <p class="note">Van: <b id="van"></b>. You can also change the trip on the tablet itself: press and hold the clock for 1.5 seconds.</p>
@@ -248,6 +252,14 @@
       if (mode === 'unlock') $('lock-hint').textContent = 'Enter the PIN to change what the rear screen shows.';
       drawDots(); checkAccess();
     }, err => { $('lock-hint').textContent = 'Can\'t reach the database: ' + err.message; });
+
+    $('new-ride').addEventListener('click', async () => {
+      if ($('controls').hidden) return;
+      const b = $('new-ride'); b.disabled = true;
+      try { await set(ref(db, base + '/newRide'), Date.now()); b.firstChild.textContent = '✅ Sent: new ride '; }
+      catch (err) { $('tablet-meta').textContent = 'Couldn\'t send: ' + err.message; }
+      setTimeout(() => { b.firstChild.textContent = '🆕 New ride'; b.disabled = false; }, 2500);
+    });
 
     $('trips').addEventListener('click', async (e) => {
       const b = e.target.closest('button[data-id]');
