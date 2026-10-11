@@ -82,6 +82,8 @@
   .sections button { display: flex; align-items: center; gap: 8px; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 11px 10px; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
   .sections button .e { font-size: 20px; }
   .sections button.on { border-color: #00C9FF; }
+  .sec-h { grid-column: 1 / -1; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin: 6px 0 -2px 2px; }
+  .sec-h:first-child { margin-top: 0; }
   .sections button:active, .home-btn:active { transform: scale(.97); }
   .url-row { display: flex; gap: 8px; }
   .url-row button { background: #00C9FF; color: #002b36; border: none; border-radius: 10px; padding: 0 16px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; }
@@ -247,27 +249,38 @@
   const NAMES = Object.fromEntries(OPTIONS.map(o => [o.id, o.icon + ' ' + o.name]));
 
   // Sections the tablet can open (value → tablet screen it shows).
-  const SECTIONS = [
-    { v: 'map', e: '🗺️', n: 'Live map', screen: 'map-screen' },
-    { v: 'welcome', e: '👋', n: 'Welcome screen' },
-    { v: 'teo', e: '🛕', n: 'Teotihuacán guide', screen: 'guide' },
-    { v: 'balloon', e: '🎈', n: 'Balloon 101', screen: 'guide' },
-    { v: 'explorer:hoods', e: '🇲🇽', n: 'CDMX Explorer', screen: 'explorer-screen' },
-    { v: 'explorer:museums', e: '🏛️', n: 'Museums', screen: 'explorer-screen' },
-    { v: 'explorer:quiz', e: '🎯', n: 'CDMX Quiz', screen: 'explorer-screen' },
-    { v: 'explorer:spanish', e: '🗣️', n: 'Spanish 101', screen: 'explorer-screen' },
-    { v: 'eat', e: '🍽️', n: 'Eat & Drink', screen: 'eat-screen' },
-    { v: 'kids:spot', e: '🦎', n: 'Kids: Spot it!', screen: 'kids-screen' },
-    { v: 'transit', e: '🚇', n: 'Getting Around', screen: 'transit-screen' },
-    { v: 'tv:mx', e: '📺', n: 'GoVibe TV', screen: 'tv-screen' },
-    { v: 'arcade', e: '🕹️', n: 'Arcade games', screen: 'games-screen' },
-    { v: 'games', e: '🎮', n: 'Games', screen: 'games-screen' },
-    { v: 'streaming', e: '🍿', n: 'Streaming apps' },
-    { v: 'host', e: '🧑‍✈️', n: 'Host + Wi-Fi info', screen: 'welcome' },
-    { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
-    { v: 'services', e: '🚐', n: 'Services' },
-    { v: 'review', e: '⭐', n: 'Ask for a review' }
+  // Sections the tablet can open (value → tablet screen it shows), grouped in the order you use them on a ride.
+  const SECTION_GROUPS = [
+    { g: '🙋 Passenger', items: [
+      { v: 'welcome', e: '🎉', n: 'Welcome screen', screen: 'welcome' },
+      { v: 'host', e: '🧑‍✈️', n: 'Host & Wi-Fi', screen: 'welcome' },
+      { v: 'review', e: '⭐', n: 'Ask for a review' },
+      { v: 'bye', e: '👋', n: 'Goodbye', screen: 'bye' },
+      { v: 'services', e: '🚐', n: 'Services' }
+    ] },
+    { g: '🗺️ Trip & guides', items: [
+      { v: 'map', e: '🗺️', n: 'Live map', screen: 'map-screen' },
+      { v: 'teo', e: '🛕', n: 'Teotihuacán guide', screen: 'guide' },
+      { v: 'balloon', e: '🎈', n: 'Balloon 101', screen: 'guide' }
+    ] },
+    { g: '🇲🇽 Explore CDMX', items: [
+      { v: 'explorer:hoods', e: '🏘️', n: 'CDMX Explorer', screen: 'explorer-screen' },
+      { v: 'explorer:museums', e: '🏛️', n: 'Museums', screen: 'explorer-screen' },
+      { v: 'eat', e: '🍽️', n: 'Eat & Drink', screen: 'eat-screen' },
+      { v: 'transit', e: '🚇', n: 'Getting Around', screen: 'transit-screen' },
+      { v: 'explorer:spanish', e: '🗣️', n: 'Spanish 101', screen: 'explorer-screen' }
+    ] },
+    { g: '🎉 Fun', items: [
+      { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
+      { v: 'streaming', e: '🍿', n: 'Streaming apps' },
+      { v: 'tv:mx', e: '📺', n: 'GoVibe TV', screen: 'tv-screen' },
+      { v: 'arcade', e: '🕹️', n: 'Arcade games', screen: 'games-screen' },
+      { v: 'games', e: '🎮', n: 'Memory game', screen: 'games-screen' },
+      { v: 'explorer:quiz', e: '🎯', n: 'CDMX Quiz', screen: 'explorer-screen' },
+      { v: 'kids:spot', e: '🦎', n: 'Kids: Spot it!', screen: 'kids-screen' }
+    ] }
   ];
+  const SECTIONS = SECTION_GROUPS.flatMap(x => x.items);
   const SCREEN_NAMES = { 'home': 'Home', 'map-screen': 'Live map', 'guide': 'Teotihuacán guide', 'explorer-screen': 'CDMX Explorer', 'eat-screen': 'Eat & Drink', 'kids-screen': 'Kids Zone', 'transit-screen': 'Getting Around', 'web-screen': 'Web page', 'tv-screen': 'GoVibe TV', 'games-screen': 'Games', 'welcome': 'Welcome screen', 'bye': 'Goodbye screen' };
 
   const $ = (id) => document.getElementById(id);
@@ -413,10 +426,13 @@
     else if (tablet.bright != null && tablet.bright < 1) bits.push('Brightness ' + Math.round(tablet.bright * 100) + '%');
     document.querySelectorAll('#bright button').forEach(b => b.classList.toggle('cur', b.dataset.p === 'off' ? !!tablet.off : (!tablet.off && b.dataset.b != null && Math.abs(+b.dataset.b - (tablet.bright || 1)) < 0.01)));
     document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
+    // Light up what the tablet is showing right now
+    const shown = SECTIONS.find(y => y.screen && y.screen === tablet.screen); // one button per screen
+    document.querySelectorAll('#sections button[data-open]').forEach(b => b.classList.toggle('on', !!shown && b.dataset.open === shown.v));
     $('tablet-meta').textContent = bits.join(' · ');
   }
 
-  $('sections').innerHTML = SECTIONS.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('');
+  $('sections').innerHTML = SECTION_GROUPS.map(grp => `<div class="sec-h">${grp.g}</div>` + grp.items.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('')).join('');
   renderTrips(); renderTablet();
   setInterval(renderTablet, 5000);
 
@@ -486,7 +502,7 @@
     $('sections').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);
-      sendCmd(sec.v === 'welcome' ? 'welcome' : 'open', sec.v, sec.n);
+      sendCmd(sec.v === 'welcome' || sec.v === 'bye' ? sec.v : 'open', sec.v, sec.n);
     });
 
     $('trips').addEventListener('click', async (e) => {
