@@ -76,6 +76,7 @@
   /* Journey hero (airline "flight info" card) */
   .journey-row { display: flex; gap: 8px; width: 100%; flex-shrink: 0; }
   .journey-guides { display: flex; flex-direction: column; gap: 8px; width: 22%; flex-shrink: 0; }
+  .journey-guides[hidden] { display: none; }
   .journey-guides .btn { flex: 1; width: 100%; padding: 10px 6px; }
   .journey-guides .btn-icon { font-size: 44px; }
   .journey-guides .btn-title { font-size: 14px; }
@@ -1334,34 +1335,49 @@ var TRIPS = {
     to:   { en: 'Teotihuacán', es: 'Teotihuacán' },
     dest: TEO_DEST, route: ROUTE_TEO, seconds: ROUTE_TEO_SECONDS
   },
+  // Back to the city: no fixed address. The route goes from the van to the CDMX city limits;
+  // once inside, the map switches to the live city view (neighborhoods and sights).
   home: {
-    icon: '🏁', guides: ['teo'], guided: true,
+    icon: '🏁', guides: [], guided: true, fromHere: true, toCity: true,
     name: { en: 'Back to Mexico City', es: 'Regreso a CDMX' },
-    from: { en: 'Teotihuacán', es: 'Teotihuacán' },
+    from: { en: 'Pickup', es: 'Recogida' },
+    to:   { en: 'Mexico City', es: 'CDMX' },
+    dest: FOUR_SEASONS, route: ROUTE_HOME, seconds: ROUTE_HOME_SECONDS,
+    sample: ROUTE_HOME, sampleSeconds: ROUTE_HOME_SECONDS // demo only (from Teotihuacán)
+  },
+  // Back to the hotel: route from wherever the van is to the Four Seasons
+  home4s: {
+    icon: '🏨', guides: [], guided: true, fromHere: true,
+    name: { en: 'Back to the Four Seasons', es: 'Regreso al Four Seasons' },
+    from: { en: 'Pickup', es: 'Recogida' },
     to:   { en: 'Four Seasons', es: 'Four Seasons' },
-    dest: FOUR_SEASONS, route: ROUTE_HOME, seconds: ROUTE_HOME_SECONDS
+    dest: FOUR_SEASONS, route: ROUTE_HOME, seconds: ROUTE_HOME_SECONDS,
+    sample: ROUTE_HOME, sampleSeconds: ROUTE_HOME_SECONDS // demo only (from Teotihuacán)
   },
   // Airport transfers: one trip per terminal, so the map and arrival time are right
   airport1: {
-    icon: '✈️', guides: ['cdmx'], guided: true, airport: true,
+    icon: '✈️', guides: ['cdmx'], guided: true, airport: true, fromHere: true,
     name: { en: 'Airport · AICM Terminal 1', es: 'Aeropuerto · AICM Terminal 1' },
-    from: { en: 'Mexico City', es: 'CDMX' },
+    from: { en: 'Pickup', es: 'Recogida' },
     to:   { en: 'AICM T1', es: 'AICM T1' },
-    dest: ROUTE_AIRPORT_T1[ROUTE_AIRPORT_T1.length - 1], route: ROUTE_AIRPORT_T1, seconds: ROUTE_AIRPORT_T1_SECONDS
+    dest: ROUTE_AIRPORT_T1[ROUTE_AIRPORT_T1.length - 1], route: ROUTE_AIRPORT_T1, seconds: ROUTE_AIRPORT_T1_SECONDS,
+    sample: ROUTE_AIRPORT_T1, sampleSeconds: ROUTE_AIRPORT_T1_SECONDS // demo only; real trips route from the van
   },
   airport2: {
-    icon: '✈️', guides: ['cdmx'], guided: true, airport: true,
+    icon: '✈️', guides: ['cdmx'], guided: true, airport: true, fromHere: true,
     name: { en: 'Airport · AICM Terminal 2', es: 'Aeropuerto · AICM Terminal 2' },
-    from: { en: 'Mexico City', es: 'CDMX' },
+    from: { en: 'Pickup', es: 'Recogida' },
     to:   { en: 'AICM T2', es: 'AICM T2' },
-    dest: ROUTE_AIRPORT_T2[ROUTE_AIRPORT_T2.length - 1], route: ROUTE_AIRPORT_T2, seconds: ROUTE_AIRPORT_T2_SECONDS
+    dest: ROUTE_AIRPORT_T2[ROUTE_AIRPORT_T2.length - 1], route: ROUTE_AIRPORT_T2, seconds: ROUTE_AIRPORT_T2_SECONDS,
+    sample: ROUTE_AIRPORT_T2, sampleSeconds: ROUTE_AIRPORT_T2_SECONDS // demo only; real trips route from the van
   },
   aifa: {
-    icon: '✈️', guides: ['cdmx'], guided: true, airport: true,
+    icon: '✈️', guides: ['cdmx'], guided: true, airport: true, fromHere: true,
     name: { en: 'Airport · AIFA (Felipe Ángeles)', es: 'Aeropuerto · AIFA (Felipe Ángeles)' },
-    from: { en: 'Mexico City', es: 'CDMX' },
+    from: { en: 'Pickup', es: 'Recogida' },
     to:   { en: 'AIFA', es: 'AIFA' },
-    dest: ROUTE_AIRPORT_AIFA[ROUTE_AIRPORT_AIFA.length - 1], route: ROUTE_AIRPORT_AIFA, seconds: ROUTE_AIRPORT_AIFA_SECONDS
+    dest: ROUTE_AIRPORT_AIFA[ROUTE_AIRPORT_AIFA.length - 1], route: ROUTE_AIRPORT_AIFA, seconds: ROUTE_AIRPORT_AIFA_SECONDS,
+    sample: ROUTE_AIRPORT_AIFA, sampleSeconds: ROUTE_AIRPORT_AIFA_SECONDS // demo only; real trips route from the van
   }
 };
 
@@ -1532,7 +1548,7 @@ var I18N = {
         amWater: 'Water', webLoading: 'Loading…', wWater: 'Water is on us', wGo: 'Let\'s go! · ¡Vámonos!', wHi: 'Welcome aboard!', wHiName: 'Welcome aboard, {n}!', rvBtn: '⭐ Loved the tour? Leave us a review', rvTitle: 'Loved your experience?', rvLead: 'GoVibeMX is a small local business. A few words from you mean the world to us.', rvScan: 'Scan to review us on Google', rvScanSub: 'It opens our Google page: tap the stars and add a few words.', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
-        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportTrip: 'On the way to your flight', airportTripSub: 'Check your terminal on your boarding pass. Arrive 2 h (domestic) or 3 h (international) before your flight.', airportBoard: 'Almost at the airport', airportBoardSub: 'Have your ID and boarding pass handy. Don\'t forget anything in the van!', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
+        back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', planning: 'Planning route…', planWait: 'Waiting for GPS', airportTrip: 'On the way to your flight', airportTripSub: 'Check your terminal on your boarding pass. Arrive 2 h (domestic) or 3 h (international) before your flight.', airportBoard: 'Almost at the airport', airportBoardSub: 'Have your ID and boarding pass handy. Don\'t forget anything in the van!', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
         localTime: 'Local time · Mexico City', autoView: '🔁 Auto view', overview: '🗺️ Overview', follow: '🎯 Follow', satellite: '🛰️ Satellite', clearTrail: '🧹 Clear trail',
         guideTitle: '🛕 Teotihuacán · Pocket Guide', passing: 'Now passing',
         gpsWait: 'Waiting for GPS…', gpsOk: 'Live GPS', gpsDenied: 'GPS off — showing planned route', gpsDemo: 'Demo mode',
@@ -1542,7 +1558,7 @@ var I18N = {
         amWater: 'Agua', webLoading: 'Cargando…', wWater: 'El agua va por nuestra cuenta', wGo: '¡Vámonos! · Let\'s go!', wHi: '¡Bienvenidos a bordo!', wHiName: '¡Bienvenidos a bordo, {n}!', rvBtn: '⭐ ¿Te gustó el tour? Déjanos una reseña', rvTitle: '¿Te gustó la experiencia?', rvLead: 'GoVibeMX es un pequeño negocio local. Unas palabras tuyas significan muchísimo para nosotros.', rvScan: 'Escanea para dejarnos una reseña en Google', rvScanSub: 'Se abre nuestra página de Google: toca las estrellas y escribe unas palabras.', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
-        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportTrip: 'Rumbo a tu vuelo', airportTripSub: 'Revisa tu terminal en el pase de abordar. Llega 2 h (nacional) o 3 h (internacional) antes de tu vuelo.', airportBoard: 'Ya casi llegamos al aeropuerto', airportBoardSub: 'Ten a la mano tu identificación y pase de abordar. ¡No olvides nada en la camioneta!', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
+        back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', planning: 'Calculando ruta…', planWait: 'Esperando GPS', airportTrip: 'Rumbo a tu vuelo', airportTripSub: 'Revisa tu terminal en el pase de abordar. Llega 2 h (nacional) o 3 h (internacional) antes de tu vuelo.', airportBoard: 'Ya casi llegamos al aeropuerto', airportBoardSub: 'Ten a la mano tu identificación y pase de abordar. ¡No olvides nada en la camioneta!', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
         localTime: 'Hora local · CDMX', autoView: '🔁 Vista auto', overview: '🗺️ General', follow: '🎯 Seguir', satellite: '🛰️ Satélite', clearTrail: '🧹 Borrar ruta',
         guideTitle: '🛕 Teotihuacán · Guía de bolsillo', passing: 'Estás pasando por',
         gpsWait: 'Buscando GPS…', gpsOk: 'GPS en vivo', gpsDenied: 'Sin GPS — ruta planeada', gpsDemo: 'Modo demo',
@@ -2549,10 +2565,10 @@ function highlightZone() {
     ZONES.forEach(function (z) { o.zones._polys[z.id].setStyle(zoneStyle(z, S.zone && S.zone.id === z.id)); });
   });
 }
-function isFree() { return !!TRIPS[S.tripId].freeRoam; }
+function isFree() { var tp = TRIPS[S.tripId]; return !!tp.freeRoam || (!!tp.toCity && !!S.inCity); }
 // City sights show on every live-map trip (City Tour and Ride).
-// POIs without a trips list belong to the Teotihuacán road (balloon, pyramids, back home)
-function poiVisible(p) { return p.trips ? (p.trips.indexOf(S.tripId) >= 0 || (isFree() && p.trips.indexOf('city') >= 0)) : !isFree() && !TRIPS[S.tripId].airport; }
+// POIs without a trips list belong to the Teotihuacán road: only on trips with the Teotihuacán guide
+function poiVisible(p) { return p.trips ? (p.trips.indexOf(S.tripId) >= 0 || (isFree() && p.trips.indexOf('city') >= 0)) : !isFree() && TRIPS[S.tripId].guides.indexOf('teo') >= 0; }
 function refreshPoiMarkers() {
   if (!bigMap) return;
   poiMarkers.forEach(function (m) { if (poiVisible(m._poi)) m.addTo(bigMap); else m.remove(); });
@@ -2671,8 +2687,9 @@ function drawRoute() {
     if (!o.route) return;
     var map = o === mini ? miniMap : bigMap;
     // City Tour: no planned line or destination, show neighborhoods instead.
-    o.route.setLatLngs(free ? [] : S.route);
-    o.routeGlow.setLatLngs(free ? [] : S.route);
+    var hide = free || S.planPending;
+    o.route.setLatLngs(hide ? [] : S.route);
+    o.routeGlow.setLatLngs(hide ? [] : S.route);
     o.trail.setLatLngs(S.trail);
     o.dest.setLatLng(TRIPS[S.tripId].dest);
     o.dest.setIcon(destIcon());
@@ -2726,12 +2743,79 @@ function setRoute(route, seconds, fromGps) {
   S.seconds = seconds; S.fromGps = fromGps;
   drawRoute();
 }
+// Trips with fromHere (airports, back to the city) get their route when the driver starts them:
+// from wherever the van is to the terminal / the city. resume = page reload, keep today's plan.
+var CITY_TARGET = [19.42702, -99.16771]; // Ángel de la Independencia: just a target to route toward
+function inCdmx(p) { for (var j = 0; j < CDMX_ALCALDIAS.length; j++) if (inRings(p, CDMX_ALCALDIAS[j].rings)) return true; return false; }
+// Cut a route where it first enters Mexico City; returns the part before the city limits
+function cutAtCity(route) {
+  for (var i = 1; i < route.length; i++) if (inCdmx(route[i])) return route.slice(0, i + 1);
+  return route;
+}
+function loadTripRoute(resume) {
+  var tp = TRIPS[S.tripId];
+  S.planPending = false; S.inCity = false; S.planning = false;
+  if (!tp.fromHere) { setRoute(tp.route, tp.seconds, false); return; }
+  if (tp.toCity && !tp.sampleCut) {
+    var cut = cutAtCity(tp.sample), full = cumulative(tp.sample);
+    tp.sampleSeconds = Math.round(tp.sampleSeconds * cumulative(cut)[cut.length - 1] / full[full.length - 1]);
+    tp.sample = cut; tp.sampleCut = true;
+  }
+  var saved = resume ? load('plan', null) : null;
+  if (saved && saved.trip === S.tripId && Date.now() - saved.at < 8 * 3600000) { applyPlan(tp, saved.route, saved.seconds, true); return; }
+  // Until we know where the van is, keep a placeholder (not drawn) so the maps have something to frame
+  tp.route = tp.sample; tp.cum = null; tp.seconds = tp.sampleSeconds; tp.dest = tp.sample[tp.sample.length - 1];
+  S.planPending = true;
+  setRoute(tp.route, tp.seconds, false);
+  planFromHere();
+}
+function applyPlan(tp, route, seconds, quiet) {
+  tp.route = route; tp.cum = null; tp.seconds = seconds; tp.dest = route[route.length - 1];
+  S.planPending = false;
+  setRoute(route, seconds, true);
+  if (S.pos) S.progress = project(S.pos);
+  store('plan', { trip: S.tripId, route: route, seconds: seconds, at: Date.now() });
+  if (!quiet) { fitMini(); setView('overview', false); }
+  render();
+}
+function planFromHere() {
+  var tp = TRIPS[S.tripId], id = S.tripId;
+  if (!S.active || !tp.fromHere || !S.planPending || S.planning || !S.pos) return; // no GPS yet: the first fix calls this again
+  if (tp.toCity && inCdmx(S.pos)) { S.inCity = true; S.planPending = false; drawRoute(); updateZone(); render(); return; } // already in the city
+  if (S.gpsState === 'demo') { applyPlan(tp, tp.sample, tp.sampleSeconds); return; }
+  var target = tp.toCity ? CITY_TARGET : tp.dest, token = {};
+  S.planning = token; render();
+  // Give the routing server 12 s; after that, fall back to a straight line and re-route later
+  var ctl = window.AbortController ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 12000);
+  fetch('https://router.project-osrm.org/route/v1/driving/' + S.pos[1] + ',' + S.pos[0] + ';' + target[1] + ',' + target[0] + '?overview=full&geometries=geojson', ctl ? { signal: ctl.signal } : {})
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (S.tripId !== id || !S.planPending) return;
+      if (!res.routes || !res.routes[0]) throw new Error('no route');
+      var coords = res.routes[0].geometry.coordinates.map(function (c) { return [c[1], c[0]]; }), secs = res.routes[0].duration;
+      if (tp.toCity) {
+        var cut = cutAtCity(coords), all = cumulative(coords);
+        secs = secs * cumulative(cut)[cut.length - 1] / (all[all.length - 1] || 1); coords = cut;
+      }
+      applyPlan(tp, coords, secs);
+    })
+    .catch(function () {
+      // Offline: a straight line at city speed until the next re-route
+      if (S.tripId !== id || !S.planPending || !S.pos) return;
+      var line = [];
+      for (var k = 0; k <= 40; k++) line.push([S.pos[0] + (target[0] - S.pos[0]) * k / 40, S.pos[1] + (target[1] - S.pos[1]) * k / 40]);
+      if (tp.toCity) line = cutAtCity(line);
+      applyPlan(tp, line, haversine(line[0], line[line.length - 1]) / 8.3);
+      S.lastReroute = 0; // try a real route again on the next GPS update
+    })
+    .then(function () { clearTimeout(timer); if (S.planning === token) S.planning = false; });
+}
 function selectTrip(id) {
   S.tripId = id; store('trip', id);
-  var tp = TRIPS[id];
-  setRoute(tp.route, tp.seconds, false);
   S.shownPois = {}; S.lastReroute = 0; S.zone = null; S.alc = null; S.zoneSeen = {};
-  if (S.pos) { if (isFree()) updateZone(); else maybeReroute(true); }
+  loadTripRoute(false);
+  if (S.pos) { if (isFree()) updateZone(); else if (!S.planPending) maybeReroute(true); }
   renderTripPicker(); fitMini(); setView('overview', false); render();
   fetchWeather();
 }
@@ -2759,6 +2843,7 @@ function applyTrip(id, fromRemote) {
 }
 function updateVisibility() {
   $('journey-row').hidden = !S.active;
+  document.querySelector('.journey-guides').hidden = !S.active || !TRIPS[S.tripId].guides.length;
   $('nav-map').hidden = !S.active;
   var g = document.querySelectorAll('[data-guide]');
   for (var i = 0; i < g.length; i++) g[i].hidden = !hasGuide(g[i].getAttribute('data-guide'));
@@ -2774,7 +2859,7 @@ function renderTripPicker() {
   var opts = [['none', CITY_RIDE.icon, tr(CITY_RIDE.name), tr(CITY_RIDE.note)]];
   Object.keys(TRIPS).forEach(function (id) {
     var guideNames = TRIPS[id].guides.map(function (g) { return t({ teo: 'tileTeo', balloon: 'tileBalloon', cdmx: 'tileCdmx' }[g]); }).join(' + ');
-    opts.push([id, TRIPS[id].icon, tr(TRIPS[id].name), '🗺️ + ' + guideNames]);
+    opts.push([id, TRIPS[id].icon, tr(TRIPS[id].name), '🗺️' + (guideNames ? ' + ' + guideNames : '')]);
   });
   $('driver-trips').innerHTML = opts.map(function (o) {
     return '<button class="' + (o[0] === currentMode() ? 'on' : '') + '" onclick="applyTrip(\'' + o[0] + '\')">' + o[1] + ' ' + o[2] + '<small>' + o[3] + '</small></button>';
@@ -2861,8 +2946,17 @@ function onPosition(p) {
   if (!prev) { fitMini(); if (bigMap) setView(S.view, false); fetchWeather(); }
   else if (bigMap && S.view === 'follow' && Date.now() > S.pauseUntil && $('map-screen').classList.contains('active')) bigMap.panTo(ll, { animate: true });
 
+  var tp = TRIPS[S.tripId];
+  if (S.planPending) planFromHere();
+  if (tp.toCity && !S.planPending) {
+    var inside = inCdmx(ll);
+    if (inside !== S.inCity) {
+      S.inCity = inside; drawRoute();
+      if (inside && prev && S.active) showToast({ icon: '🏙️', name: { en: 'Mexico City', es: 'Ciudad de México' }, text: { en: 'Welcome back to the city! The map now shows the neighborhoods and sights around you.', es: '¡Bienvenidos de vuelta a la ciudad! El mapa ahora muestra las colonias y lugares a tu alrededor.' } }, t('entering'));
+    }
+  }
   if (isFree()) updateZone();
-  else { S.progress = project(ll); if (S.progress.off > 700) maybeReroute(false); }
+  else if (!S.planPending) { S.progress = project(ll); if (S.progress.off > 700) maybeReroute(false); }
   checkPois();
   render();
 }
@@ -3046,7 +3140,7 @@ function render() {
   var tp = TRIPS[S.tripId];
   $('home-trip-title').textContent = tr(tp.name);
   $('panel-trip-title').textContent = tr(tp.name);
-  if (tp.freeRoam) { S.remaining = 0; renderCity(); }
+  if (isFree()) { S.remaining = 0; renderCity(); }
   else { $('airport-box').hidden = !tp.airport; if (tp.airport) setAirportBox(S.remaining < 3000); }
   $('prog-from').textContent = S.fromGps ? t('you') : tr(tp.from);
   $('prog-to').textContent = tr(tp.to);
@@ -3069,10 +3163,13 @@ function render() {
   var distTxt = arrived ? '🏁' : (km < 10 ? km.toFixed(1) : Math.round(km)) + ' km';
   var timeTxt = arrived ? t('arrived') : fmtDuration(secs);
   var etaTxt = arrived ? '✔' : fmtClock(new Date(Date.now() + secs * 1000));
+  if (S.planPending) { // waiting for GPS / the route from here
+    distTxt = '…'; timeTxt = t(S.pos ? 'planning' : 'planWait'); etaTxt = '—'; pct = 0; mi = NaN;
+  }
 
-  $('st-dist').textContent = distTxt; $('st-dist2').textContent = arrived ? '' : mi.toFixed(1) + ' mi';
+  $('st-dist').textContent = distTxt; $('st-dist2').textContent = arrived || isNaN(mi) ? '' : mi.toFixed(1) + ' mi';
   $('st-time').textContent = timeTxt; $('st-time2').textContent = arrived ? '' : t('arrival') + ' ' + etaTxt;
-  $('home-dist').innerHTML = distTxt + (arrived ? '' : ' <small>' + mi.toFixed(mi < 10 ? 1 : 0) + ' mi</small>'); $('home-time').textContent = timeTxt; $('home-eta').textContent = etaTxt;
+  $('home-dist').innerHTML = distTxt + (arrived || isNaN(mi) ? '' : ' <small>' + mi.toFixed(mi < 10 ? 1 : 0) + ' mi</small>'); $('home-time').textContent = timeTxt; $('home-eta').textContent = etaTxt;
 
   if (S.speed != null && S.pos) {
     var kmh = S.speed * 3.6;
@@ -3180,9 +3277,8 @@ document.addEventListener('DOMContentLoaded', function () {
   S.tripId = TRIPS[tripId] ? tripId : 'balloon';
   S.active = load('mode', S.tripId) !== 'none';
   S.trail = load('trail', []);
-  var tp = TRIPS[S.tripId];
   buildZones();
-  setRoute(tp.route, tp.seconds, false);
+  loadTripRoute(true);
 
   updateClock(); setInterval(updateClock, 1000);
   initMiniMap();
