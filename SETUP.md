@@ -184,7 +184,7 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - Temperatura en °C y °F.
   - Velocidad en km/h y mph.
 - Los mapas tienen escala en km y millas.
-- Las fechas históricas usan **CE / BCE** en inglés y **e.c. / a.e.c.** (era común) en español. Ejemplos: *1325 CE*, *~100 a.e.c.*
+- Las fechas antiguas usan **antes / después de Cristo**: **BC / AD** en inglés y **a.C. / d.C.** en español. Ejemplos: *~100 a.C.*, *200 d.C.*, *1325 AD*.
 
 ### 2.4 Tamaño de pantalla
 La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la altura: la pantalla de inicio cabe completa sin desplazarse en 1340×800, 1072×640, 1005×600 y 893×533, y también funciona en vertical. Si quieres todo más grande o más chico, cambia **Initial Scale** (p. ej. 90 o 110).

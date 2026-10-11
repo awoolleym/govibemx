@@ -42,7 +42,7 @@
   .topbar { display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 16px; flex-shrink: 0;
     background: linear-gradient(180deg, #111621 0%, #070a10 100%); border-bottom: 1px solid #1f2633; }
   .logo-img { height: 44px; width: auto; object-fit: contain; }
-  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chips { display: flex; gap: 8px; flex-wrap: nowrap; }
   .chip-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); color: #e8edf3; border-radius: 18px; padding: 7px 13px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .chip-btn:active { transform: scale(.96); }
   .wifi-chip .pw { font-family: monospace; font-size: 15px; letter-spacing: 1px; color: #69F0AE; }
@@ -143,7 +143,7 @@
   .wchip[hidden] { display: none; }
   .wchip .i { font-size: 24px; }
   .welcome-go { margin-top: 6px; background: linear-gradient(90deg, #FF4081, #FF9100); color: #fff; border: none; border-radius: 34px; padding: 16px 44px; font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 26px rgba(255,64,129,.45); }
-  @media (max-width: 820px) { .welcome-hi { font-size: 42px; } .welcome-es { font-size: 22px; } }
+  @media (max-width: 820px) and (orientation: portrait) { .welcome-hi { font-size: 42px; } .welcome-es { font-size: 22px; } }
   /* Review prompt */
   .review-panel { background: radial-gradient(ellipse at 50% 0%, #4a3a0a 0%, #121212 60%); width: 90%; max-width: 680px; border: 1px solid #FFD740; }
   .review-stars { font-size: 40px; letter-spacing: 4px; }
@@ -524,7 +524,7 @@
     .chips .chip-btn span { display: none; }
     .dock-side { display: none; }
   }
-  @media (max-width: 820px) {
+  @media (max-width: 820px) and (orientation: portrait) {
     .topbar { height: auto; padding: 8px 12px; flex-wrap: wrap; }
     .g5 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(2, 1fr); }
     .sec-pair { grid-template-columns: 1fr; }
@@ -565,7 +565,7 @@
   .tv-thumb i { position: absolute; right: 4px; bottom: 4px; background: rgba(0,0,0,.8); font-style: normal; font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
   .tv-card b { display: block; font-size: 14px; line-height: 1.25; }
   .tv-card small { display: block; font-size: 11px; color: #ffab91; margin-top: 3px; }
-  @media (max-width: 820px) { .tv-wrap { flex-direction: column; } .tv-list { width: auto; flex: 0 0 38%; } .tv-player { flex: none; aspect-ratio: 16/9; } }
+  @media (max-width: 820px) and (orientation: portrait) { .tv-wrap { flex-direction: column; } .tv-list { width: auto; flex: 0 0 38%; } .tv-player { flex: none; aspect-ratio: 16/9; } }
 
   /* Games */
   #games-screen { flex-direction: column; background: radial-gradient(circle at top, #1a1040 0%, #000 70%); }
@@ -593,7 +593,7 @@
   .mem-card.done .f { background: #c8f7c5; }
   .mem-learn { min-height: 22px; font-size: 15px; color: #fff; text-align: center; }
   .mem-learn b { color: #FFD740; }
-  @media (max-width: 820px) { .games-wrap { flex-direction: column; } .game-pick { width: auto; flex-direction: row; } .game-pick button { flex: 1; } .game-pick small { display: none; } .mem-board { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 820px) and (orientation: portrait) { .games-wrap { flex-direction: column; } .game-pick { width: auto; flex-direction: row; } .game-pick button { flex: 1; } .game-pick small { display: none; } .mem-board { grid-template-columns: repeat(4, 1fr); } }
 
   /* Welcome page 2: host + essentials */
   .welcome-body[hidden] { display: none; }
@@ -613,7 +613,7 @@
   .w2-card.belt { border-color: #FFD740; background: rgba(255,215,64,.12); }
   .w2-card.belt b { color: #FFE082; }
   .w2-card .pw { font-family: monospace; font-size: clamp(18px, 3.4vh, 26px); font-weight: 800; letter-spacing: 2px; color: #69F0AE; }
-  @media (max-width: 820px) { .w2-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 820px) and (orientation: portrait) { .w2-grid { grid-template-columns: repeat(2, 1fr); } }
   /* Host chip (always on top) */
   .host-chip { display: flex; align-items: center; gap: 7px; background: rgba(255,64,129,.12); border: 1px solid rgba(255,64,129,.4); color: #fff; border-radius: 18px; padding: 5px 12px 5px 5px; font-size: 13px; cursor: pointer; font-family: inherit; }
   .host-chip .av { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #FF4081, #FF9100); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
@@ -697,7 +697,7 @@
   .games-body { flex: 1; display: flex; flex-direction: column; padding: 10px 14px 12px; }
   .games-body .arc-grid, .games-body .mem { flex: 1; }
   .games-body [hidden] { display: none !important; }
-  @media (min-width: 821px) {
+  @media (min-width: 821px), (orientation: landscape) and (min-width: 560px) {
     .screen.has-rail.active { display: grid; grid-template-columns: clamp(185px, 22vw, 260px) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
     .screen.has-rail > :first-child { grid-column: 1 / -1; }
     .screen.has-rail > .tabs.rail { grid-column: 1; grid-row: 2; flex-direction: column; flex-wrap: nowrap; overflow-y: auto; overflow-x: hidden; padding: 12px 0 12px 14px !important; }
@@ -723,8 +723,8 @@
     .kids-hero { padding-bottom: 8px; }
     .kids-hero .axo { width: 76px; height: 58px; }
   }
-  @media (max-width: 820px) { .tabs.rail { flex-wrap: nowrap; overflow-x: auto; } }
-  @media (min-width: 821px) { #home .tile-grid { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); } }
+  @media (max-width: 820px) and (orientation: portrait) { .tabs.rail { flex-wrap: nowrap; overflow-x: auto; } }
+  @media (min-width: 821px), (orientation: landscape) and (min-width: 560px) { #home .tile-grid { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); } }
 
   /* =========================================================
      ADAPTIVE SIZING · everything scales with the screen height,
@@ -766,7 +766,7 @@
     .guide-top h2 { font-size: 18px; }
   }
   /* Home: the tile rows share whatever height is left, so the page fits without scrolling */
-  #home > .home-sec { flex: 1 1 auto; min-height: 0; }
+  #home > .home-sec { flex: 1 0 auto; } /* grow to fill; never squeeze tiles (scroll instead) */
   #home > .home-sec > .tile-grid { flex: 1; grid-auto-rows: 1fr; }
   #home > .journey-row { flex: 0 0 auto; }
   .dock-nav button { min-width: clamp(56px, 6.4vw, 84px); }
@@ -804,7 +804,6 @@
     <a href="https://govibemx.com/experiences" data-i18n="svcExp">Full-day experiences →</a>
   </div>
   <div class="svc-contact">
-    <div class="svc-vcard"><img class="svc-qr vcard-qr" alt="Contact QR code"><small id="svc-save"></small></div>
     <div class="svc-vcard"><img class="svc-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://wa.me/525549017902?text=Hola!%20Me%20interesa%20un%20viaje%20privado" alt="WhatsApp QR code"><small>💬 WhatsApp</small></div>
     <div class="svc-wa">
       <div class="svc-wa-row"><svg class="wa-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4C13 4 4 12.6 4 23.3c0 3.8 1.1 7.3 3.1 10.3L4.6 43l9.7-2.5c2.9 1.5 6.2 2.3 9.7 2.3 11 0 20-8.6 20-19.3S35 4 24 4z" fill="#25D366"/><path d="M33.6 28.9c-.5-.3-3-1.5-3.5-1.6-.5-.2-.8-.3-1.1.2-.3.5-1.3 1.6-1.6 1.9-.3.3-.6.4-1.1.1-.5-.3-2.1-.8-4-2.5-1.5-1.3-2.5-2.9-2.8-3.4-.3-.5 0-.8.2-1 .2-.2.5-.6.8-.9.3-.3.3-.5.5-.9.2-.3.1-.7 0-.9-.1-.3-1.1-2.7-1.5-3.7-.4-1-.8-.8-1.1-.8h-.9c-.3 0-.8.1-1.3.6-.4.5-1.7 1.6-1.7 4s1.7 4.6 2 4.9c.2.3 3.4 5.2 8.2 7.3 1.1.5 2 .8 2.7 1 1.1.4 2.2.3 3 .2.9-.1 2.8-1.1 3.2-2.2.4-1.1.4-2 .3-2.2-.1-.2-.4-.3-.9-.6z" fill="#fff"/></svg><span>WhatsApp</span></div>
@@ -1218,7 +1217,7 @@ var ROUTE_AIRPORT_AIFA_SECONDS = 3123;
 // Coyoacán Centro has no outline there, so it uses an approximate oval (`approx`, in metres).
 // Polanco and Lomas de Chapultepec are their numbered sections (1ª–5ª, 1ª–8ª) merged.
 var ZONE_INFO = {
-  "centro": {"icon": "🏛️", "name": {"en": "Centro Histórico", "es": "Centro Histórico"}, "text": {"en": "Built on top of Tenochtitlán, the Aztec capital founded in 1325 CE. The historic center is a UNESCO World Heritage Site packed with palaces, churches and museums.", "es": "Construido sobre Tenochtitlán, la capital mexica fundada en 1325 e.c. El Centro Histórico es Patrimonio de la Humanidad y está lleno de palacios, iglesias y museos."}},
+  "centro": {"icon": "🏛️", "name": {"en": "Centro Histórico", "es": "Centro Histórico"}, "text": {"en": "Built on top of Tenochtitlán, the Aztec capital founded in 1325 AD. The historic center is a UNESCO World Heritage Site packed with palaces, churches and museums.", "es": "Construido sobre Tenochtitlán, la capital mexica fundada en 1325 d.C. El Centro Histórico es Patrimonio de la Humanidad y está lleno de palacios, iglesias y museos."}},
   "roma-norte": {"icon": "🌿", "name": {"en": "Roma Norte", "es": "Roma Norte"}, "text": {"en": "Art Nouveau mansions, tree-lined streets and some of the city's best restaurants and cafés. Alfonso Cuarón's Oscar-winning film \"Roma\" is set here.", "es": "Casonas Art Nouveau, calles arboladas y algunos de los mejores restaurantes y cafés de la ciudad. Aquí se ambienta \"Roma\", la película ganadora del Óscar de Alfonso Cuarón."}},
   "roma-sur": {"icon": "🥑", "name": {"en": "Roma Sur", "es": "Roma Sur"}, "text": {"en": "The quieter side of Roma, home to the Mercado de Medellín, known for ingredients from all over Latin America.", "es": "El lado más tranquilo de la Roma, donde está el Mercado de Medellín, famoso por productos de toda Latinoamérica."}},
   "condesa": {"icon": "🐕", "name": {"en": "Condesa", "es": "Condesa"}, "text": {"en": "Built around an old horse-racing track: Avenida Ámsterdam is an oval that follows it. Famous for Art Deco buildings, Parque México and dogs everywhere.", "es": "Se construyó alrededor de un antiguo hipódromo: la Avenida Ámsterdam es un óvalo que sigue la pista. Famosa por su Art Déco, el Parque México y los perros en todas partes."}},
@@ -1303,7 +1302,7 @@ var CDMX_FACTS = [  {"icon":"🌊","t":{"en":"Built on a lake","es":"Construida 
   {"icon":"🏟️","t":{"en":"A sports capital","es":"Capital deportiva"},"p":{"en":"Mexico City hosted the 1968 Olympics, World Cup finals in 1970 and 1986, and the opening match of the 2026 World Cup at Estadio Azteca.","es":"La Ciudad de México fue sede de los Juegos Olímpicos de 1968, de las finales de los Mundiales de 1970 y 1986, y del partido inaugural del Mundial 2026 en el Estadio Azteca."}},
   {"icon":"🔤","t":{"en":"From DF to CDMX","es":"De DF a CDMX"},"p":{"en":"Until 2016 the capital was officially the \"Distrito Federal\" (DF). Now it is Ciudad de México, or CDMX, with 16 alcaldías instead of delegaciones.","es":"Hasta 2016 la capital era oficialmente el \"Distrito Federal\". Hoy es la Ciudad de México, o CDMX, con 16 alcaldías en lugar de delegaciones."}},
   {"icon":"🎭","t":{"en":"Museums everywhere","es":"Museos por todas partes"},"p":{"en":"With more than 150 museums, Mexico City has one of the largest collections of museums of any city in the world.","es":"Con más de 150 museos, la Ciudad de México tiene una de las mayores cantidades de museos de cualquier ciudad del mundo."}}];
-var CDMX_NUMBERS = [{"v":"1325","u":{"en":"CE","es":"e.c."},"l":{"en":"Tenochtitlán is founded","es":"Se funda Tenochtitlán"}},{"v":"2,240 m","u":{"en":"7,350 ft","es":"7,350 pies"},"l":{"en":"Altitude","es":"Altitud"}},{"v":"≈ 22 M","l":{"en":"People in the metro area","es":"Habitantes en la zona metropolitana"}},{"v":"9.2 M","l":{"en":"People in the city itself (2020 census)","es":"Habitantes en la ciudad (censo 2020)"}},{"v":"16","l":{"en":"Alcaldías (boroughs)","es":"Alcaldías"}},{"v":"150+","l":{"en":"Museums","es":"Museos"}},{"v":"12 · 195","l":{"en":"Metro lines · stations","es":"Líneas · estaciones del Metro"}},{"v":"≈ 28 km","u":{"en":"17 mi","es":"17 mi"},"l":{"en":"Avenida Insurgentes, the city's longest avenue","es":"Avenida Insurgentes, la más larga de la ciudad"}},{"v":"≈ 1,485 km²","u":{"en":"573 sq mi","es":"573 mi²"},"l":{"en":"Area of the city","es":"Superficie de la ciudad"}},{"v":"1968","l":{"en":"Summer Olympics","es":"Juegos Olímpicos"}}];
+var CDMX_NUMBERS = [{"v":"1325","u":{"en":"AD","es":"d.C."},"l":{"en":"Tenochtitlán is founded","es":"Se funda Tenochtitlán"}},{"v":"2,240 m","u":{"en":"7,350 ft","es":"7,350 pies"},"l":{"en":"Altitude","es":"Altitud"}},{"v":"≈ 22 M","l":{"en":"People in the metro area","es":"Habitantes en la zona metropolitana"}},{"v":"9.2 M","l":{"en":"People in the city itself (2020 census)","es":"Habitantes en la ciudad (censo 2020)"}},{"v":"16","l":{"en":"Alcaldías (boroughs)","es":"Alcaldías"}},{"v":"150+","l":{"en":"Museums","es":"Museos"}},{"v":"12 · 195","l":{"en":"Metro lines · stations","es":"Líneas · estaciones del Metro"}},{"v":"≈ 28 km","u":{"en":"17 mi","es":"17 mi"},"l":{"en":"Avenida Insurgentes, the city's longest avenue","es":"Avenida Insurgentes, la más larga de la ciudad"}},{"v":"≈ 1,485 km²","u":{"en":"573 sq mi","es":"573 mi²"},"l":{"en":"Area of the city","es":"Superficie de la ciudad"}},{"v":"1968","l":{"en":"Summer Olympics","es":"Juegos Olímpicos"}}];
 // Quiz: `a` is the index of the right answer; options are shuffled each game.
 var QUIZ = [
   {"q":{"en":"What was Mexico City built on?","es":"¿Sobre qué se construyó la Ciudad de México?"},"o":{"en":["An island in a lake","A volcano crater","A desert"],"es":["Una isla en un lago","El cráter de un volcán","Un desierto"]},"a":0,"x":{"en":"Tenochtitlán was an island city on Lake Texcoco.","es":"Tenochtitlán era una ciudad-isla en el lago de Texcoco."}},
@@ -1488,7 +1487,7 @@ var POIS = [
     text: {"en": "The main square, one of the largest in the world, built over the heart of the Aztec capital. Soldiers raise and lower the giant flag every day.", "es": "La plaza principal, una de las más grandes del mundo, construida sobre el corazón de la capital mexica. Cada día los soldados izan y arrían la bandera monumental."} },
   { id: "catedral", icon: "⛪", ll: [19.43438, -99.13307], r: 150, trips: ['city'],
     name: {"en": "Metropolitan Cathedral", "es": "Catedral Metropolitana"},
-    text: {"en": "One of the largest cathedrals in the Americas, built over about 250 years (1573–1813 CE), partly with stones from Aztec temples. It sinks unevenly into the old lakebed.", "es": "Una de las catedrales más grandes de América, construida durante unos 250 años (1573–1813 e.c.), en parte con piedras de templos mexicas. Se hunde de forma desigual en el antiguo lago."} },
+    text: {"en": "One of the largest cathedrals in the Americas, built over about 250 years (1573–1813), partly with stones from Aztec temples. It sinks unevenly into the old lakebed.", "es": "Una de las catedrales más grandes de América, construida durante unos 250 años (1573–1813), en parte con piedras de templos mexicas. Se hunde de forma desigual en el antiguo lago."} },
   { id: "templo-mayor", icon: "🗿", ll: [19.43432, -99.13177], r: 150, trips: ['city'],
     name: {"en": "Templo Mayor", "es": "Templo Mayor"},
     text: {"en": "The great temple of Tenochtitlán, dedicated to Huitzilopochtli and Tláloc. It was rediscovered in 1978 when electricians dug up the giant Coyolxauhqui stone.", "es": "El gran templo de Tenochtitlán, dedicado a Huitzilopochtli y Tláloc. Se redescubrió en 1978, cuando trabajadores de la luz encontraron la enorme piedra de Coyolxauhqui."} },
@@ -1506,7 +1505,7 @@ var POIS = [
     text: {"en": "An 18th-century palace covered in blue-and-white tiles from Puebla. Today it is a Sanborns restaurant.", "es": "Palacio del siglo XVIII cubierto de azulejos poblanos. Hoy es un restaurante Sanborns."} },
   { id: "alameda", icon: "🌳", ll: [19.43572, -99.14399], r: 250, trips: ['city'],
     name: {"en": "Alameda Central", "es": "Alameda Central"},
-    text: {"en": "Created in 1592 CE, it is often called the oldest public park in the Americas.", "es": "Creada en 1592 e.c., suele considerarse el parque público más antiguo de América."} },
+    text: {"en": "Created in 1592, it is often called the oldest public park in the Americas.", "es": "Creada en 1592, suele considerarse el parque público más antiguo de América."} },
   { id: "correos", icon: "📮", ll: [19.43566, -99.14028], r: 120, trips: ['city'],
     name: {"en": "Postal Palace", "es": "Palacio Postal"},
     text: {"en": "An ornate post office opened in 1907, with a gilded Italian-style interior. It still works as a post office.", "es": "Un ornamentado edificio de correos inaugurado en 1907, con interiores dorados de estilo italiano. Sigue funcionando como oficina postal."} },
@@ -1673,8 +1672,8 @@ var GUIDE_TABS = [
 
 var GUIDE = {
   intro: {
-    lead: { en: 'About 50 km (31 mi) northeast of Mexico City lies Teotihuacán — once one of the largest cities on Earth. Around 500 CE it was home to perhaps 100,000 people or more, with avenues, apartment compounds, temples and murals. Then it was abandoned, and by the time the Aztecs found it, centuries later, its builders had been forgotten. The Aztecs named it Teotihuacán: "the place where the gods were created."',
-            es: 'A unos 50 km (31 mi) al noreste de la Ciudad de México está Teotihuacán, que fue una de las ciudades más grandes del mundo. Hacia el año 500 e.c. vivían aquí quizá 100,000 personas o más, entre avenidas, conjuntos habitacionales, templos y murales. Luego fue abandonada, y cuando los mexicas la encontraron siglos después, sus constructores ya habían sido olvidados. Ellos la llamaron Teotihuacán: "el lugar donde fueron creados los dioses".' },
+    lead: { en: 'About 50 km (31 mi) northeast of Mexico City lies Teotihuacán — once one of the largest cities on Earth. Around 500 AD it was home to perhaps 100,000 people or more, with avenues, apartment compounds, temples and murals. Then it was abandoned, and by the time the Aztecs found it, centuries later, its builders had been forgotten. The Aztecs named it Teotihuacán: "the place where the gods were created."',
+            es: 'A unos 50 km (31 mi) al noreste de la Ciudad de México está Teotihuacán, que fue una de las ciudades más grandes del mundo. Hacia el año 500 d.C. vivían aquí quizá 100,000 personas o más, entre avenidas, conjuntos habitacionales, templos y murales. Luego fue abandonada, y cuando los mexicas la encontraron siglos después, sus constructores ya habían sido olvidados. Ellos la llamaron Teotihuacán: "el lugar donde fueron creados los dioses".' },
     cards: [
       { icon: '❓', t: { en: 'A mystery city', es: 'Una ciudad misteriosa' }, p: { en: 'Nobody knows what its builders called themselves, what language they spoke, or what the city\'s original name was.', es: 'Nadie sabe cómo se llamaban sus constructores, qué idioma hablaban ni cuál era el nombre original de la ciudad.' } },
       { icon: '🌞', t: { en: 'Birth of the Fifth Sun', es: 'El nacimiento del Quinto Sol' }, p: { en: 'Aztec legend says the gods gathered here to create the sun. The humble god Nanahuatzin leapt into a sacred fire and rose as the Sun; Tecciztécatl followed and became the Moon.', es: 'Según la leyenda mexica, los dioses se reunieron aquí para crear el sol. El humilde Nanahuatzin se lanzó a la hoguera y se convirtió en el Sol; Tecciztécatl lo siguió y se volvió la Luna.' } },
@@ -1684,15 +1683,15 @@ var GUIDE = {
   },
   sights: [
     { id: 'sun', icon: '🌞', t: { en: 'Pyramid of the Sun', es: 'Pirámide del Sol' }, n: '≈ 65 m · 213 ft',
-      p: { en: 'The giant of the site and one of the largest pyramids in the world, built around 200 CE. Its base is about 225 m (740 ft) per side — nearly as wide as the Great Pyramid of Giza. In 1971 archaeologists found a man-made cave running underneath it.',
-           es: 'La gigante del sitio y una de las pirámides más grandes del mundo, construida hacia el 200 e.c. Su base mide unos 225 m (740 pies) por lado, casi tanto como la Gran Pirámide de Guiza. En 1971 se descubrió una cueva artificial debajo de ella.' } },
+      p: { en: 'The giant of the site and one of the largest pyramids in the world, built around 200 AD. Its base is about 225 m (740 ft) per side — nearly as wide as the Great Pyramid of Giza. In 1971 archaeologists found a man-made cave running underneath it.',
+           es: 'La gigante del sitio y una de las pirámides más grandes del mundo, construida hacia el 200 d.C. Su base mide unos 225 m (740 pies) por lado, casi tanto como la Gran Pirámide de Guiza. En 1971 se descubrió una cueva artificial debajo de ella.' } },
     { id: 'moon', icon: '🌙', t: { en: 'Pyramid of the Moon', es: 'Pirámide de la Luna' }, n: '≈ 43 m · 141 ft',
       p: { en: 'Closes the north end of the Avenue of the Dead. It is smaller than the Sun, but because it sits on higher ground its top is almost level. It was rebuilt in at least seven stages, each one covering the last. The view down the avenue from its plaza is the classic Teotihuacán photo.',
            es: 'Cierra el extremo norte de la Calzada de los Muertos. Es más pequeña que la del Sol, pero al estar en terreno más alto su cima queda casi a la misma altura. Se reconstruyó en al menos siete etapas, una encima de otra. La vista de la calzada desde su plaza es la foto clásica.' } },
     { id: 'avenue', icon: '🛤️', t: { en: 'Avenue of the Dead', es: 'Calzada de los Muertos' }, n: '≈ 40 m · 130 ft wide',
       p: { en: 'The city\'s grand central axis. The Aztecs named it "Miccaotli" (Avenue of the Dead) because they thought the platforms lining it were tombs — they were actually temples and palaces.',
            es: 'El gran eje central de la ciudad. Los mexicas la llamaron "Miccaotli" porque creyeron que las plataformas a sus lados eran tumbas; en realidad eran templos y palacios.' } },
-    { id: 'citadel', icon: '🐍', t: { en: 'Citadel & Feathered Serpent', es: 'Ciudadela y Serpiente Emplumada' }, n: '≈ 200 CE',
+    { id: 'citadel', icon: '🐍', t: { en: 'Citadel & Feathered Serpent', es: 'Ciudadela y Serpiente Emplumada' }, n: '≈ 200 AD',
       p: { en: 'A huge sunken plaza holding the Temple of the Feathered Serpent, decorated with carved serpent heads that still carry traces of paint. Over 200 sacrificial burials were found beneath it, and a tunnel discovered in 2003 even contained pools of liquid mercury.',
            es: 'Una enorme plaza hundida con el Templo de la Serpiente Emplumada, decorado con cabezas de serpiente talladas que aún conservan pintura. Bajo él se hallaron más de 200 entierros de sacrificio, y un túnel descubierto en 2003 contenía incluso mercurio líquido.' } },
     { id: 'quetzal', icon: '🦋', t: { en: 'Palace of Quetzalpapálotl', es: 'Palacio de Quetzalpapálotl' }, n: '🦜',
@@ -1703,10 +1702,10 @@ var GUIDE = {
            es: 'Un conjunto habitacional al este de la Pirámide del Sol con el famoso mural "Tlalocan": pequeñas figuras que juegan, nadan y cantan alrededor del dios de la lluvia.' } }
   ],
   timeline: [
-    { w: { en: '~100 BCE', es: '~100 a.e.c.' }, d: { en: 'Small villages grow into a city in the Teotihuacán valley.', es: 'Pequeñas aldeas del valle se convierten en ciudad.' } },
-    { w: { en: '~200 CE', es: '~200 e.c.' }, d: { en: 'Pyramid of the Sun and Temple of the Feathered Serpent are built.', es: 'Se construyen la Pirámide del Sol y el Templo de la Serpiente Emplumada.' } },
-    { w: { en: '~450 CE', es: '~450 e.c.' }, d: { en: 'Peak of power. Trade in obsidian and influence reaching the Maya cities of Guatemala.', es: 'Apogeo. Comercio de obsidiana e influencia hasta las ciudades mayas de Guatemala.' } },
-    { w: { en: '~550 CE', es: '~550 e.c.' }, d: { en: 'Fire destroys the city centre; the population gradually leaves.', es: 'Un incendio destruye el centro; la población se va poco a poco.' } },
+    { w: { en: '~100 BC', es: '~100 a.C.' }, d: { en: 'Small villages grow into a city in the Teotihuacán valley.', es: 'Pequeñas aldeas del valle se convierten en ciudad.' } },
+    { w: { en: '~200 AD', es: '~200 d.C.' }, d: { en: 'Pyramid of the Sun and Temple of the Feathered Serpent are built.', es: 'Se construyen la Pirámide del Sol y el Templo de la Serpiente Emplumada.' } },
+    { w: { en: '~450 AD', es: '~450 d.C.' }, d: { en: 'Peak of power. Trade in obsidian and influence reaching the Maya cities of Guatemala.', es: 'Apogeo. Comercio de obsidiana e influencia hasta las ciudades mayas de Guatemala.' } },
+    { w: { en: '~550 AD', es: '~550 d.C.' }, d: { en: 'Fire destroys the city centre; the population gradually leaves.', es: 'Un incendio destruye el centro; la población se va poco a poco.' } },
     { w: { en: '1300s', es: 'Siglo XIV' }, d: { en: 'The Aztecs discover the ruins, name the city and make pilgrimages here.', es: 'Los mexicas descubren las ruinas, le dan nombre y peregrinan aquí.' } },
     { w: { en: '1905–1910', es: '1905–1910' }, d: { en: 'Leopoldo Batres restores the Pyramid of the Sun for the centennial of independence.', es: 'Leopoldo Batres restaura la Pirámide del Sol para el centenario de la Independencia.' } },
     { w: { en: '1987', es: '1987' }, d: { en: 'Declared a UNESCO World Heritage Site.', es: 'Declarada Patrimonio de la Humanidad por la UNESCO.' } },
