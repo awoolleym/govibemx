@@ -22,7 +22,21 @@ Son solo para pruebas: pueden tardar unos minutos en mostrar cambios nuevos. Par
 
 ---
 
-## 1. Publicar en Cloudflare Pages (gratis)
+## 1. Dejarlo en GitHub (recomendado): GitHub Pages, gratis
+
+1. En GitHub abre el repositorio **awoolleym/govibemx** → **Settings** → **Pages**.
+2. **Source:** *Deploy from a branch*. **Branch:** `ccr-b19bbd16-2su3kq` (o `main` cuando unas los cambios), carpeta **/ (root)** → **Save**.
+3. En 1–2 minutos quedan listas (con HTTPS):
+   - **Tablet:** `https://awoolleym.github.io/govibemx/infotainment.html`
+   - **Celular:** `https://awoolleym.github.io/govibemx/driver.html`
+4. En Firebase → Authentication → Settings → **Authorized domains**, agrega `awoolleym.github.io`.
+
+Cada cambio que se suba a esa rama se publica solo en uno o dos minutos.
+(`index.html`, el widget de reservaciones, queda en `https://awoolleym.github.io/govibemx/`.)
+
+---
+
+## 1b. Alternativa: Cloudflare Pages (gratis)
 
 1. Entra a **dash.cloudflare.com** → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
 2. Elige el repositorio **awoolleym/govibemx**.
@@ -44,9 +58,12 @@ Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones c
 
 ## 2. La tablet (Fully Kiosk)
 
-1. **Start URL:** `https://TU-DOMINIO/pantalla`
+1. **Start URL:** la dirección de la tablet (GitHub Pages arriba, o `https://TU-DOMINIO/pantalla` en Cloudflare)
 2. **Web Content Settings → Enable Geolocation Access:** activado (y permiso de ubicación para Fully en Android).
-3. Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.
+3. **Para que siempre regresen a la pantalla:** las páginas de GoVibeMX abren *dentro* de la pantalla (con botón ⬅ Inicio). YouTube, Noticias, Juegos, Vuelos, Netflix y Prime (marcados con ↗) abren aparte porque no permiten mostrarse dentro de otra página. En Fully:
+   - **Web Auto Reload → Auto Reload on Idle:** p. ej. 300 segundos, para que vuelva sola a la pantalla de inicio.
+   - **Toolbars & Appearance:** activa la barra de navegación o el botón de inicio de Fully, para regresar con un toque.
+4. Para probar sin manejar: abre el menú del conductor (mantén presionado el reloj 1.5 s) → **▶ Demo**.
 
 ---
 

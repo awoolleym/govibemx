@@ -119,6 +119,19 @@
   .btn-biz .btn-sub { font-size: 10px; }
 
   /* FOOTER */
+  /* Web viewer */
+  #web-screen { flex-direction: column; background: #05070b; }
+  .web-bar { display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: #0d1117; border-bottom: 1px solid #1f2633; flex-shrink: 0; }
+  .web-title { flex: 1; min-width: 0; font-size: 16px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .web-btn { width: 42px; height: 38px; border-radius: 12px; background: #1b222c; color: #fff; border: 1px solid #333c48; font-size: 20px; cursor: pointer; }
+  .web-wrap { position: relative; flex: 1; min-height: 0; }
+  #web-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+  .web-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12px; color: #aab4c0; font-weight: 700; background: #05070b; z-index: 1; }
+  .web-loading[hidden] { display: none; }
+  .spin { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #333c48; border-top-color: var(--accent); animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* Tiles that leave the screen (apps and sites that can't be shown inside) */
+  .ext::before { content: '↗'; position: absolute; top: 7px; right: 9px; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: rgba(0,0,0,.35); color: #fff; font-size: 13px; font-weight: 900; z-index: 1; }
   /* Bottom dock */
   .dock { position: relative; display: flex; align-items: center; height: 62px; padding: 0 12px; gap: 6px; flex-shrink: 0;
     background: linear-gradient(0deg, #0a0d13 0%, #121722 100%); border-top: 1px solid #1f2633; }
@@ -603,10 +616,10 @@
     <div class="sec-label"><span class="dot" style="--c:#1db954"></span><span data-i18n="secWatch">Watch &amp; listen</span></div>
     <div class="tile-grid g5">
       <div onclick="openModal('spotifyModal')" class="btn spotify"><span class="btn-icon">🎵</span><span class="btn-title">Spotify</span></div>
-      <div onclick="launchApp('com.netflix.mediaclient')" class="btn netflix"><span class="btn-icon">🎬</span><span class="btn-title">Netflix</span></div>
-      <div onclick="launchApp('com.amazon.avod.thirdpartyclient')" class="btn prime"><span class="btn-icon">🍿</span><span class="btn-title">Prime</span></div>
-      <a href="https://m.youtube.com" class="btn youtube"><span class="btn-icon">📺</span><span class="btn-title">YouTube</span></a>
-      <a href="https://www.youtubekids.com" class="btn ytkids"><span class="btn-icon">🧸</span><span class="btn-title">YT Kids</span></a>
+      <div onclick="launchApp('com.netflix.mediaclient')" class="btn ext netflix"><span class="btn-icon">🎬</span><span class="btn-title">Netflix</span></div>
+      <div onclick="launchApp('com.amazon.avod.thirdpartyclient')" class="btn ext prime"><span class="btn-icon">🍿</span><span class="btn-title">Prime</span></div>
+      <a href="https://m.youtube.com" class="btn ext youtube"><span class="btn-icon">📺</span><span class="btn-title">YouTube</span></a>
+      <a href="https://www.youtubekids.com" class="btn ext ytkids"><span class="btn-icon">🧸</span><span class="btn-title">YT Kids</span></a>
     </div>
   </section>
 
@@ -624,9 +637,9 @@
     <section class="home-sec">
       <div class="sec-label"><span class="dot" style="--c:#40C4FF"></span><span data-i18n="secMore">More</span></div>
       <div class="tile-grid g3 small">
-      <a href="https://news.google.com/topstories?hl=es-419&gl=MX" class="btn news"><span class="btn-icon">📰</span><span class="btn-title" data-i18n="tNews">News</span></a>
-      <a href="https://poki.com" class="btn games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span></a>
-      <a href="https://www.flightaware.com/live/airport/MMMX" class="btn flights"><span class="btn-icon">✈️</span><span class="btn-title" data-i18n="tFlights">Flights</span></a>
+      <a href="https://news.google.com/topstories?hl=es-419&gl=MX" class="btn ext news"><span class="btn-icon">📰</span><span class="btn-title" data-i18n="tNews">News</span></a>
+      <a href="https://poki.com" class="btn ext games"><span class="btn-icon">🎮</span><span class="btn-title" data-i18n="tGames">Games</span></a>
+      <a href="https://www.flightaware.com/live/airport/MMMX" class="btn ext flights"><span class="btn-icon">✈️</span><span class="btn-title" data-i18n="tFlights">Flights</span></a>
       </div>
     </section>
     <section class="home-sec">
@@ -698,6 +711,19 @@
   </div>
   <div class="tabs x-tabs" id="explorer-tabs"></div>
   <div class="guide-body" id="explorer-body"></div>
+</div>
+
+<!-- ======================= WEB VIEWER (govibemx.com pages inside the screen) ======================= -->
+<div id="web-screen" class="screen">
+  <div class="web-bar">
+    <button class="back-home" onclick="closeWeb()" data-i18n="back">⬅ Home</button>
+    <div class="web-title" id="web-title"></div>
+    <button class="web-btn" onclick="reloadWeb()" aria-label="Reload">↻</button>
+  </div>
+  <div class="web-wrap">
+    <div class="web-loading" id="web-loading"><span class="spin"></span><span data-i18n="webLoading">Loading…</span></div>
+    <iframe id="web-frame" title="GoVibeMX" allow="fullscreen; autoplay; encrypted-media; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
 </div>
 
 <!-- ======================= KIDS ZONE ======================= -->
@@ -1183,7 +1209,7 @@ var POIS = [
 var I18N = {
   en: { yourJourney: 'Your journey', toGo: 'To go', timeLeft: 'Time left', arrival: 'Arrival', openMap: '🗺️ Open live map',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Your pocket guide', tileBalloon: 'Balloon 101', tileBalloonSub: 'Before you fly', tileCdmx: 'CDMX Explorer',
-        amWater: 'Water', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
+        amWater: 'Water', webLoading: 'Loading…', amAC: 'A/C', secWatch: 'Watch & listen', secExplore: 'Explore Mexico City', secMore: 'More', tNews: 'News', tGames: 'Games', tFlights: 'Flights', bizTrips: 'Day Trips', bizTripsSub: 'Private experiences', bizUp: 'Upcoming', bizUpSub: 'Live availability', navHome: 'Home', navMap: 'Map', navEat: 'Eat', navKids: 'Kids', navTransit: 'Transit', spTitle: 'Join the Jam!', spLead: 'Add your favorite songs to the ride\'s music.', sp1: 'Open Spotify on your phone.', sp2: 'Ask the driver for the GoVibeMX Jam QR code.', sp3: 'Scan it and add your songs!', spNote: 'The Jam link changes often, so the driver will show you the current code.',
         rateRide: 'Enjoying the ride? A ⭐⭐⭐⭐⭐ rating in the app means a lot. Thank you!',
         svcTile: 'SERVICES', svcTileSub: 'Transfers · Tours · Driver by the hour', svcTitle: '🚐 GoVibeMX Services', svcLead: 'The same private vehicle and host as today\'s ride, whenever you need to get around the city.', svcScan: 'Scan the code with your phone camera to chat with us, or just ask your driver.', svcView: 'View service →', svcAll: 'See all services on govibemx.com →', svcExp: 'Full-day experiences →',
         back: '⬅ Home', backMap: '⬅ Map', neighborhood: 'Neighborhood', alcaldia: 'Alcaldía (borough)', nearby: 'Nearby', nearest: 'Nearest', entering: 'Now entering', tileCdmxSub: 'Neighborhoods · Museums · Quiz · Spanish', xMuseums: '🏛️ Museums', museumNote: 'Most museums close on Mondays. Check hours before you go.', dontMiss: 'Don\'t miss:', tileKids: 'Kids Zone', tileKidsSub: 'Spot it! · Fun places', kSpot: '🔍 Spot it!', kPlaces: '🎡 Fun places', kFound: '{n} of {t} found', kWin: '🏆 You found everything! You\'re an official CDMX Explorer!', kReset: '🔄 Start over', kAxo: 'Axo says', kSpotHelp: 'Look out the window and tap each thing when you see it!', tileTransit: 'Getting Around', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Getting Around', tmapHint: 'Solid lines: Metro · dashed lines: Metrobús. Tap a line below to highlight it.', nearMB: 'Nearest Metrobús', mbLines: 'Metrobús lines', nearMetro: 'Nearest Metro', nearEco: 'Nearest Ecobici', walk: 'min walk', nearNone: 'Your nearest Metro, Metrobús and Ecobici stops show up here during a live-map ride.', metroLines: 'Metro lines', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Line', explorerTitle: 'CDMX Explorer', xFotm: 'Fact of the moment', xFlip: 'Tap to reveal', xCount: '{s} sights · {e} places to eat & drink', qStartTitle: 'Are you a true chilango?', qStartSub: '5 quick questions about Mexico City. Let\'s see what you know!', qStart: '▶ Start the quiz', qStreak: 'streak', xHoods: '🏘️ Neighborhoods', xFacts: '💡 Did you know?', xNumbers: '📊 By the numbers', xQuiz: '🎯 Quiz', xSpanish: '🗣️ Spanish 101', xSights: 'Sights', xEat: 'Eat & drink', xHere: '📍 You are here', xShowMap: '🗺️ Show on map', qOf: 'Question {i} of {n}', qNext: 'Next →', qSeeScore: 'See my score →', qRight: '✅ Correct!', qWrong: '❌ Not quite.', qAgain: '🔁 Play again', qScore: 'You got {s} of {n}', qGreat: 'Local expert! 🎉', qGood: 'Nice! You know your CDMX.', qTry: 'Now you know a few more facts. Try again!', phraseIntro: 'Handy Spanish for your trip. Tap 🔊 to hear it.', airportBoard: 'Live departures board', airportBoardSub: 'Check your flight before you arrive', welcome: 'Welcome aboard!', welcomeText: 'Free Wi-Fi, water and A/C details are at the top of the screen. Tap the map to follow your ride, or try the CDMX quiz!', welcomeKick: 'GoVibeMX', tileEat: 'Eat & Drink', tileEatSub: 'Recommended', eatTitle: '🍽️ Eat & Drink · Recommended', eatAll: 'All', eatEat: '🍽️ Restaurants', eatDrink: '🍸 Bars', eatClassic: '🌮 Classics & street food', showOnMap: '📍 Show on map', away: 'away', eatNote: 'Awards: MICHELIN Guide Mexico 2026 and North America\'s 50 Best Bars 2026. Hours and booking rules change, so ask your driver before you go.', eatLayer: '🍽️ Eat & Drink', outsideZones: 'Mexico City', outsideCity: 'Outside CDMX', speed: 'Speed', altitude: 'Altitude', outside: 'Outside', sunrise: 'Sunrise', atDest: 'at destination',
@@ -1193,7 +1219,7 @@ var I18N = {
         overviewBadge: 'Overview', followBadge: 'Live position', arrived: 'Arrived!', min: 'min', you: 'You are here' },
   es: { yourJourney: 'Tu viaje', toGo: 'Faltan', timeLeft: 'Tiempo', arrival: 'Llegada', openMap: '🗺️ Ver mapa en vivo',
         tileTeo: 'Teotihuacán', tileTeoSub: 'Tu guía de bolsillo', tileBalloon: 'Globo 101', tileBalloonSub: 'Antes de volar', tileCdmx: 'Datos CDMX',
-        amWater: 'Agua', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
+        amWater: 'Agua', webLoading: 'Cargando…', amAC: 'Aire', secWatch: 'Ver y escuchar', secExplore: 'Explora la CDMX', secMore: 'Más', tNews: 'Noticias', tGames: 'Juegos', tFlights: 'Vuelos', bizTrips: 'Excursiones', bizTripsSub: 'Experiencias privadas', bizUp: 'Próximas salidas', bizUpSub: 'Disponibilidad en vivo', navHome: 'Inicio', navMap: 'Mapa', navEat: 'Comer', navKids: 'Niños', navTransit: 'Moverte', spTitle: '¡Únete al Jam!', spLead: 'Agrega tus canciones favoritas a la música del viaje.', sp1: 'Abre Spotify en tu celular.', sp2: 'Pídele al conductor el código QR del Jam GoVibeMX.', sp3: '¡Escanéalo y agrega tus canciones!', spNote: 'El enlace del Jam cambia seguido; el conductor te mostrará el código del momento.',
         rateRide: '¿Te gustó el viaje? Una calificación de ⭐⭐⭐⭐⭐ en la app ayuda mucho. ¡Gracias!',
         svcTile: 'SERVICIOS', svcTileSub: 'Traslados · Tours · Chofer por hora', svcTitle: '🚐 Servicios GoVibeMX', svcLead: 'El mismo vehículo privado y anfitrión de este viaje, cuando necesites moverte por la ciudad.', svcScan: 'Escanea el código con la cámara de tu celular para escribirnos, o pregúntale a tu conductor.', svcView: 'Ver servicio →', svcAll: 'Ver todos los servicios en govibemx.com →', svcExp: 'Experiencias de día completo →',
         back: '⬅ Inicio', backMap: '⬅ Mapa', neighborhood: 'Colonia', alcaldia: 'Alcaldía', nearby: 'Cerca de ti', nearest: 'Más cerca', entering: 'Entrando a', tileCdmxSub: 'Colonias · Museos · Trivia · Español', xMuseums: '🏛️ Museos', museumNote: 'La mayoría de los museos cierran en lunes. Revisa horarios antes de ir.', dontMiss: 'No te pierdas:', tileKids: 'Zona Niños', tileKidsSub: '¡Encuéntralo! · Lugares divertidos', kSpot: '🔍 ¡Encuéntralo!', kPlaces: '🎡 Lugares divertidos', kFound: '{n} de {t} encontrados', kWin: '🏆 ¡Encontraste todo! ¡Eres un Explorador oficial de la CDMX!', kReset: '🔄 Empezar de nuevo', kAxo: 'Axo dice', kSpotHelp: '¡Mira por la ventana y toca cada cosa cuando la veas!', tileTransit: 'Cómo moverte', tileTransitSub: 'Metro · Metrobús · Ecobici', transitTitle: 'Cómo moverte', tmapHint: 'Líneas sólidas: Metro · punteadas: Metrobús. Toca una línea abajo para resaltarla.', nearMB: 'Metrobús más cercano', mbLines: 'Líneas del Metrobús', nearMetro: 'Metro más cercano', nearEco: 'Ecobici más cercana', walk: 'min a pie', nearNone: 'Tus estaciones de Metro, Metrobús y Ecobici más cercanas aparecen aquí durante un viaje con mapa en vivo.', metroLines: 'Líneas del Metro', transitLayer: '🚇 Metro · Metrobús · Ecobici', line: 'Línea', explorerTitle: 'Explora la CDMX', xFotm: 'Dato del momento', xFlip: 'Toca para descubrir', xCount: '{s} lugares · {e} para comer y beber', qStartTitle: '¿Eres un auténtico chilango?', qStartSub: '5 preguntas rápidas sobre la CDMX. ¡A ver cuánto sabes!', qStart: '▶ Empezar la trivia', qStreak: 'racha', xHoods: '🏘️ Colonias', xFacts: '💡 ¿Sabías que…?', xNumbers: '📊 En números', xQuiz: '🎯 Trivia', xSpanish: '🗣️ Español básico', xSights: 'Qué ver', xEat: 'Comer y beber', xHere: '📍 Estás aquí', xShowMap: '🗺️ Ver en el mapa', qOf: 'Pregunta {i} de {n}', qNext: 'Siguiente →', qSeeScore: 'Ver mi resultado →', qRight: '✅ ¡Correcto!', qWrong: '❌ Casi.', qAgain: '🔁 Jugar otra vez', qScore: 'Acertaste {s} de {n}', qGreat: '¡Todo un chilango! 🎉', qGood: '¡Bien! Conoces la CDMX.', qTry: 'Ahora sabes un poco más. ¡Inténtalo de nuevo!', phraseIntro: 'Frases útiles en español para turistas. Toca 🔊 para escucharlas.', airportBoard: 'Salidas en vivo', airportBoardSub: 'Revisa tu vuelo antes de llegar', welcome: '¡Bienvenido a bordo!', welcomeText: 'Wi-Fi, agua y A/C están arriba en la pantalla. Toca el mapa para seguir tu viaje, ¡o prueba la trivia de la CDMX!', welcomeKick: 'GoVibeMX', tileEat: 'Comer y beber', tileEatSub: 'Recomendados', eatTitle: '🍽️ Comer y beber · Recomendados', eatAll: 'Todos', eatEat: '🍽️ Restaurantes', eatDrink: '🍸 Bares', eatClassic: '🌮 Clásicos y antojitos', showOnMap: '📍 Ver en el mapa', away: 'de aquí', eatNote: 'Reconocimientos: Guía MICHELIN México 2026 y North America\'s 50 Best Bars 2026. Horarios y reservaciones cambian: pregunta a tu conductor antes de ir.', eatLayer: '🍽️ Comer y beber', outsideZones: 'Ciudad de México', outsideCity: 'Fuera de la CDMX', speed: 'Velocidad', altitude: 'Altitud', outside: 'Exterior', sunrise: 'Amanecer', atDest: 'en el destino',
@@ -1702,6 +1728,35 @@ function pickLine(type, l) {
   $('transit-map').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+// ---- Web viewer: GoVibeMX pages open inside the screen (the dock stays, so Home is one tap away) ----
+var WEB_INSIDE = /^https:\/\/(www\.)?govibemx\.com(\/|$)/;
+function openWeb(url, title) {
+  var ms = document.querySelectorAll('.modal');
+  for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
+  S.webFrom = document.querySelector('.screen.active') ? document.querySelector('.screen.active').id : 'home';
+  if (S.webFrom === 'web-screen') S.webFrom = 'home';
+  $('web-title').textContent = title || 'GoVibeMX';
+  $('web-loading').hidden = false;
+  $('web-frame').src = url;
+  showScreen('web-screen');
+}
+function closeWeb() {
+  $('web-frame').src = 'about:blank';
+  showScreen(S.webFrom && S.webFrom !== 'web-screen' ? S.webFrom : 'home');
+}
+function reloadWeb() { var f = $('web-frame'); $('web-loading').hidden = false; f.src = f.src; }
+document.addEventListener('DOMContentLoaded', function () {
+  $('web-frame').addEventListener('load', function () { $('web-loading').hidden = true; });
+});
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[href]');
+  if (!a || !WEB_INSIDE.test(a.href)) return;
+  e.preventDefault();
+  var tEl = a.querySelector('.btn-title, h3'), title = tEl ? tEl.textContent : a.textContent;
+  if (tEl && tEl.tagName === 'H3' && tEl.lastChild) title = tEl.lastChild.textContent; // skip the card's emoji
+  openWeb(a.href, title.replace(/[→↗]/g, '').trim());
+});
+
 // ---- Idle mode: after 3 minutes without a touch, go back to the live map (or home), like a plane's screen ----
 var lastTouch = Date.now();
 ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(function (ev) { document.addEventListener(ev, function () { lastTouch = Date.now(); }, { passive: true }); });
@@ -1710,6 +1765,7 @@ setInterval(function () {
   lastTouch = Date.now();
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
+  if ($('web-screen').classList.contains('active')) $('web-frame').src = 'about:blank';
   var target = S.active ? 'map-screen' : 'home';
   if (!$(target).classList.contains('active')) showScreen(target);
   if (target === 'map-screen') { S.cycle = true; S.pauseUntil = 0; $('tool-cycle').classList.add('on'); setView('overview', false); }
