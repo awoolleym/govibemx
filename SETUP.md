@@ -146,7 +146,7 @@ Si no usas alguna app, no la instales: el botón simplemente no abre nada.
 Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predeterminadas → App de inicio → Fully Kiosk**. Así el botón de Inicio siempre regresa a la pantalla.
 
 ### 2.3 Qué ven los pasajeros
-- **Bienvenida (New ride):** primero el saludo grande con el nombre del pasajero. A los 15 s (o al tocar) sale la segunda página: **"¡Hola! Soy Alan, tu anfitrión y conductor"**, abróchate el cinturón, Wi-Fi con contraseña, agua y A/C.
+- **Bienvenida (se abre a mano desde el remoto con *Welcome screen*):** primero el saludo grande con el nombre del pasajero. A los 15 s (o al tocar) sale la segunda página: **"¡Hola! Soy Alan, tu anfitrión y conductor"**, abróchate el cinturón, Wi-Fi con contraseña, agua y A/C.
 - **"Tu anfitrión · Alan"** siempre está arriba en la pantalla; al tocarlo vuelve a salir la info de Wi-Fi, agua y cinturón.
   - Para cambiar el nombre (otro conductor u otra camioneta), agrega `?host=Nombre` al final del Start URL. Ejemplo: `…/infotainment.html?host=Luis`.
   - El nombre y contraseña del Wi-Fi están en `infotainment.html` (busca `var WIFI`).
@@ -191,7 +191,7 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
      - Al entrar a la ciudad sale "¡Bienvenidos de vuelta!" y el mapa cambia a colonias y lugares cercanos, como en el City Tour.
      - Sirve igual desde Teotihuacán, desde el aeropuerto o desde cualquier lado.
    - Abajo siempre tienes **🏠 Home**, **EN/ES** y **👋 Goodbye**, al alcance del pulgar.
-   - **🆕 New ride**: limpia la pantalla y saluda al siguiente pasajero.
+   - **🆕 New ride**: limpia la pantalla para el siguiente pasajero y guarda su nombre. **No** abre la bienvenida sola: ábrela tú con **Welcome screen** cuando quieras.
    - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
    - **👋 Goodbye**: pantalla de despedida al final del viaje.
    - **Show a page or video**: pega cualquier dirección y la tablet la abre dentro de la pantalla. Un enlace de YouTube se reproduce en GoVibe TV. Algunos sitios (Google, Netflix, etc.) no se dejan mostrar dentro de otra página.
