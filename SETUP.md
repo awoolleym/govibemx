@@ -11,6 +11,17 @@ Dos páginas:
 
 ---
 
+## 0. Probar en la tablet hoy mismo (sin Cloudflare)
+
+Como el repositorio es público, estas direcciones sirven las páginas directo de GitHub con HTTPS (necesario para el GPS):
+
+- **Tablet:** `https://raw.githack.com/awoolleym/govibemx/ccr-b19bbd16-2su3kq/infotainment.html`
+- **Celular (remoto):** `https://raw.githack.com/awoolleym/govibemx/ccr-b19bbd16-2su3kq/driver.html`
+
+Son solo para pruebas: pueden tardar unos minutos en mostrar cambios nuevos. Para el uso diario, usa Cloudflare (abajo).
+
+---
+
 ## 1. Publicar en Cloudflare Pages (gratis)
 
 1. Entra a **dash.cloudflare.com** → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
@@ -24,6 +35,7 @@ Dos páginas:
 5. (Opcional) **Custom domains** → agrega algo como `pantalla.govibemx.com`.
 
 Cada vez que se actualice `main` en GitHub, Cloudflare publica la nueva versión sola en ~1 minuto.
+Además, cada rama que no es `main` recibe su propia dirección de prueba (en Cloudflare: tu proyecto → **Deployments**), así puedes probar cambios en la tablet antes de publicarlos.
 Los archivos `_redirects` y `_headers` ya están listos: crean las direcciones cortas y hacen que la tablet siempre cargue la versión más nueva.
 
 > **Firebase:** en la consola de Firebase → Authentication → Settings → **Authorized domains**, agrega tu dominio de Cloudflare (`govibemx.pages.dev` y tu dominio propio si lo usas).
