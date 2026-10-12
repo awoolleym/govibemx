@@ -7,7 +7,7 @@
 // - Map tiles: the ones already seen are kept (up to MAX_TILES), so the map still shows offline.
 // - Anything else (Firebase live data, videos, games, the booking widget) is not touched.
 
-const VERSION = 'govibe-v1';
+const VERSION = 'govibe-v2';
 const PAGES = VERSION + '-pages';
 const STATIC = VERSION + '-static';
 const TILES = VERSION + '-tiles';
@@ -37,7 +37,9 @@ function isPage(url) {
 // Network first, with a time limit so a "half connected" network doesn't leave the screen blank
 function networkFirst(req) {
   return caches.open(PAGES).then((cache) => {
-    const fromNet = fetch(req).then((res) => {
+    // cache: 'no-cache' = always ask GitHub if there's a newer version (its pages say "keep for 10 min")
+    // (a page load can't take options directly, so ask for the same address again)
+    const fromNet = fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then((res) => {
       if (res && res.ok) cache.put(req, res.clone());
       return res;
     });
