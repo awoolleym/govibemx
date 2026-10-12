@@ -82,6 +82,7 @@
   .sections button { display: flex; align-items: center; gap: 8px; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 11px 10px; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
   .sections button .e { font-size: 20px; }
   .sections button.on { border-color: #00C9FF; }
+  button.pressed { filter: brightness(1.45); transform: scale(.97); transition: none; }
   .sec-h { grid-column: 1 / -1; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin: 6px 0 -2px 2px; }
   .sec-h:first-child { margin-top: 0; }
   .sections button:active, .home-btn:active { transform: scale(.97); }
@@ -304,7 +305,7 @@
 
   const $ = (id) => document.getElementById(id);
   $('van').textContent = VAN_ID;
-  let current = null, tablet = null;
+  let current = null, tablet = null, lastTap = 0;
 
   // ---- PIN lock ----
   // The PIN is stored as a SHA-256 hash in rearScreen/<van>/pinHash, so every phone shares it.
@@ -445,10 +446,12 @@
     if (tablet.off) bits.push('Screen OFF');
     else if (tablet.bright != null && tablet.bright < 1) bits.push('Brightness ' + Math.round(tablet.bright * 100) + '%');
     document.querySelectorAll('#bright button').forEach(b => b.classList.toggle('cur', b.dataset.p === 'off' ? !!tablet.off : (!tablet.off && b.dataset.b != null && Math.abs(+b.dataset.b - (tablet.bright || 1)) < 0.01)));
-    document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
+    // Right after a tap, keep what was tapped highlighted until the tablet's new status arrives
+    const fresh_tap = Date.now() - lastTap < 4000;
+    if (!fresh_tap) document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
     // Light up what the tablet is showing right now
     const shown = SECTIONS.find(y => y.screen && y.screen === tablet.screen); // one button per screen
-    document.querySelectorAll('#sections button[data-open]').forEach(b => b.classList.toggle('on', !!shown && b.dataset.open === shown.v));
+    if (!fresh_tap) document.querySelectorAll('#sections button[data-open]').forEach(b => b.classList.toggle('on', !!shown && b.dataset.open === shown.v));
     $('tablet-meta').textContent = bits.join(' · ');
   }
 
@@ -502,20 +505,34 @@
     $('new-ride').addEventListener('click', async () => {
       if ($('controls').hidden) return;
       const b = $('new-ride'); b.disabled = true;
+      b.firstChild.textContent = '⏳ New ride… ';
       try { await set(ref(db, base + '/newRide'), { at: Date.now(), name: $('guest').value.trim() }); b.firstChild.textContent = '✅ Sent: new ride '; $('guest').value = ''; }
       catch (err) { $('tablet-meta').textContent = 'Couldn\'t send: ' + err.message; }
       setTimeout(() => { b.firstChild.textContent = '🆕 New ride'; b.disabled = false; }, 2500);
     });
 
     // Screen commands: go home, change language, open a section.
-    const sendCmd = async (a, v, label) => {
+    // Feedback right away (don't wait for the round trip through Firebase / Starlink), ✅ when it's confirmed
+    let sentTimer = null;
+    const sent = (txt) => { clearTimeout(sentTimer); $('sent').textContent = txt; sentTimer = setTimeout(() => { $('sent').textContent = ''; }, 2500); };
+    const sendCmd = (a, v, label) => {
       if ($('controls').hidden) return;
-      try { await set(ref(db, base + '/cmd'), { a, v: v || '', at: Date.now() }); $('sent').textContent = '✅ Sent: ' + label; }
-      catch (err) { $('sent').textContent = 'Couldn\'t send: ' + err.message; }
-      setTimeout(() => { $('sent').textContent = ''; }, 2500);
+      lastTap = Date.now();
+      sent('⏳ ' + label + '…');
+      set(ref(db, base + '/cmd'), { a, v: v || '', at: Date.now() })
+        .then(() => sent('✅ ' + label))
+        .catch((err) => sent('Couldn\'t send: ' + err.message));
     };
+    // A short flash on whatever was tapped
+    document.addEventListener('pointerdown', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      b.classList.add('pressed'); setTimeout(() => b.classList.remove('pressed'), 250);
+    });
     document.querySelector('.home-btn').addEventListener('click', () => sendCmd('home', '', 'Home'));
-    document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => sendCmd('lang', b.dataset.lang, b.dataset.lang === 'es' ? 'Español' : 'English')));
+    document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('.langs button').forEach(x => x.classList.toggle('on', x === b)); // show it now
+      sendCmd('lang', b.dataset.lang, b.dataset.lang === 'es' ? 'Español' : 'English');
+    }));
     // Point the screen at any page (it opens inside the tablet's viewer; YouTube links play on GoVibe TV)
     const PRESETS = [
       { n: '🏠 govibemx.com', u: 'https://govibemx.com/' },
@@ -552,16 +569,18 @@
     $('sections').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);
+      if (sec.screen) document.querySelectorAll('#sections button[data-open]').forEach(x => x.classList.toggle('on', x === b));
       sendCmd(sec.v === 'welcome' || sec.v === 'bye' ? sec.v : 'open', sec.v, sec.n);
     });
 
     $('trips').addEventListener('click', async (e) => {
       const b = e.target.closest('button[data-id]');
       if (!b || $('controls').hidden) return;
-      b.disabled = true;
-      try { await set(ref(db, base + '/trip'), b.dataset.id); }
-      catch (err) { $('tablet-meta').textContent = 'Couldn\'t switch: ' + err.message; }
-      b.disabled = false;
+      // Select it on the remote right away; Firebase confirms in the background
+      const before = current; current = b.dataset.id; renderTrips();
+      sent('⏳ ' + (NAMES[current] || current) + '…');
+      try { await set(ref(db, base + '/trip'), current); sent('✅ ' + (NAMES[current] || current)); }
+      catch (err) { current = before; renderTrips(); $('tablet-meta').textContent = 'Couldn\'t switch: ' + err.message; }
     });
   } catch (e) {
     $('lock-hint').textContent = 'No connection. Check the phone\'s internet and reload.';

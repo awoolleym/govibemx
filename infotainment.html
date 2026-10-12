@@ -1861,6 +1861,7 @@ function railBtn(label, sub, on, click, icon) {
   if (!icon && m && !/[A-Za-zÀ-ÿ0-9]/.test(m[1])) { ic = m[1]; name = m[2]; }
   return '<button class="rb' + (on ? ' on' : '') + '" onclick="' + click + '"><span class="ri">' + ic + '</span><span class="rl"><b>' + name + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span></button>';
 }
+var HOOD_CACHE = {};
 function setXTab(tab) { S.xTab = tab; renderExplorer(); $('explorer-body').scrollTop = 0; }
 function zoneOf(ll) { for (var i = 0; i < ZONES.length; i++) if (inRings(ll, ZONES[i].rings)) return ZONES[i]; return null; }
 
@@ -1920,11 +1921,15 @@ function renderExplorer() {
     var zs = ZONES.slice().sort(function (a, b) { return (S.zone && b.id === S.zone.id) - (S.zone && a.id === S.zone.id); });
     h = '<div class="cards">' + zs.map(function (z) {
       var zi = ZONE_INFO[z.id], here = S.zone && S.zone.id === z.id, col = X_COLORS[ZONES.indexOf(z) % X_COLORS.length];
-      var sights = POIS.filter(function (p) { return p.trips && p.trips.indexOf('city') >= 0 && p.id.indexOf('airport') < 0 && inRings(p.ll, z.rings); });
-      var eats = EAT.filter(function (e) { return inRings(e.ll, z.rings); });
-      var alc = locate(z.label).alc;
+      // Which sights / places fall inside each neighborhood never changes: work it out once
+      var hc = HOOD_CACHE[z.id] || (HOOD_CACHE[z.id] = {
+        sights: POIS.filter(function (p) { return p.trips && p.trips.indexOf('city') >= 0 && p.id.indexOf('airport') < 0 && inRings(p.ll, z.rings); }),
+        eats: EAT.filter(function (e) { return inRings(e.ll, z.rings); }),
+        alc: locate(z.label).alc, svg: zoneSvg(z, col)
+      });
+      var sights = hc.sights, eats = hc.eats, alc = hc.alc;
       return '<div class="x-card hood' + (here ? ' here' : '') + '" style="--zc:' + col + '">' +
-        '<div class="hood-top">' + (here ? '<span class="x-here">' + t('xHere') + '</span>' : '') + zoneSvg(z, col) +
+        '<div class="hood-top">' + (here ? '<span class="x-here">' + t('xHere') + '</span>' : '') + hc.svg +
         '<span class="em">' + zi.icon + '</span><div style="max-width:60%"><h3>' + tr(zi.name) + '</h3>' + (alc ? '<div class="alc">' + alc + '</div>' : '') + '</div></div>' +
         '<div class="hood-body"><p>' + tr(zi.text) + '</p>' +
         (sights.length + eats.length ? '<div class="hood-count">' + t('xCount').replace('{s}', sights.length).replace('{e}', eats.length) + '</div>' : '') +
@@ -2136,7 +2141,9 @@ function renderTransit() {
     return '<span class="pick" data-k="b' + l + '" onclick="pickLine(\'b\',\'' + l + '\')"><span class="lb" style="background:' + METROBUS_COLORS[l] + ';margin:0">' + l + '</span>Metrobús ' + l + '</span>';
   }).join('') + '</div>';
   $('transit-body').innerHTML = h;
-  if ($('transit-screen').classList.contains('active')) initTransitMap(); else if (tMap) { tMap.remove(); tMap = null; tLines = {}; }
+  // Show the screen first, draw the (heavy) transit map right after, so the tap feels instant
+  if ($('transit-screen').classList.contains('active')) setTimeout(function () { if ($('transit-map') && $('transit-screen').classList.contains('active')) initTransitMap(); }, 30);
+  else if (tMap) { tMap.remove(); tMap = null; tLines = {}; }
 }
 
 function trSpy() {
@@ -2398,7 +2405,16 @@ var MUSEUM_HOURS = {
   'anahuacalli': [[0, 2, 3, 4, 5, 6], '11:00', '17:30'], 'arte-popular': [[0, 2, 3, 4, 5, 6], '10:00', '18:00'],
   'diego-frida': [[0, 2, 3, 4, 5, 6], '10:00', '18:00'], 'muac': [[0, 3, 4, 5, 6], '10:00', '18:00']
 };
-function cdmxNow() { try { return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' })); } catch (e) { return new Date(); } }
+// Mexico City time. The time-zone conversion is slow on the tablet, so work out the offset once a minute
+var CDMX_OFS = { at: 0, ms: 0 };
+function cdmxNow() {
+  var now = Date.now();
+  if (now - CDMX_OFS.at > 60000) {
+    try { CDMX_OFS.ms = new Date(new Date(now).toLocaleString('en-US', { timeZone: 'America/Mexico_City' })).getTime() - now; } catch (e) { CDMX_OFS.ms = 0; }
+    CDMX_OFS.at = now;
+  }
+  return new Date(now + CDMX_OFS.ms);
+}
 function museumStatus(id) {
   var h = MUSEUM_HOURS[id]; if (!h) return null;
   var now = cdmxNow(), dow = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
