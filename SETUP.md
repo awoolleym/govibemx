@@ -209,6 +209,7 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
    - **🆕 New ride**: limpia la pantalla para el siguiente pasajero y guarda su nombre. **No** abre la bienvenida sola: ábrela tú con **Welcome screen** cuando quieras.
    - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
    - **👋 Goodbye**: pantalla de despedida al final del viaje.
+   - **〰️ Traveled path on the map** (tarjeta *Screen*): prende o apaga la línea del camino ya recorrido. Apagada, el mapa solo muestra la camioneta y la ruta, ideal para viajes de Uber. El camino se sigue guardando, así que al prenderla vuelve a salir.
    - **Show a page or video**: pega cualquier dirección y la tablet la abre dentro de la pantalla. Un enlace de YouTube se reproduce en GoVibe TV. Algunos sitios (Google, Netflix, etc.) no se dejan mostrar dentro de otra página.
    - Arriba ves si la tablet está **en línea**, los km que faltan y el GPS.
 
