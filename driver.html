@@ -138,6 +138,14 @@
   .quick-row > button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 56px; border-radius: 16px; font-size: 16px; font-weight: 800; border: 2px solid var(--line); background: #1b222c; color: #fff; cursor: pointer; font-family: inherit; }
   .quick-row > button span { font-size: 22px; }
   .quick-row .bye-btn { background: #2a1a05; border-color: #FFB300; }
+  .quick-row .welcome-btn { background: #2a0a1f; border-color: #FF4081; }
+  /* Four buttons on a phone: icon above the name so they fit */
+  @media (max-width: 480px) {
+    .quick-row { gap: 6px; }
+    .quick-row > button { flex-direction: column; gap: 1px; font-size: 12px; min-height: 58px; padding: 4px 2px; }
+    .quick-row > button span { font-size: 20px; }
+    .quick-row .langs button { padding: 0 11px; font-size: 15px; }
+  }
   .quick-row .langs { border-radius: 16px; }
   .quick-row .langs button { padding: 0 14px; min-height: 52px; }
   .bar { flex-wrap: wrap; justify-content: center; }
@@ -226,6 +234,7 @@
     <div class="quick-row">
       <button class="home-btn" data-cmd="home"><span>🏠</span>Home</button>
       <div class="langs"><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+      <button class="welcome-btn" id="welcome-btn"><span>🎉</span>Welcome</button>
       <button class="bye-btn" id="bye-btn"><span>👋</span>Goodbye</button>
     </div>
   </nav>
@@ -526,6 +535,7 @@
     $('web-url').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('web-go').click(); });
     $('presets').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) sendWeb(PRESETS[+b.dataset.i].u, PRESETS[+b.dataset.i].n); });
     $('bye-btn').addEventListener('click', () => sendCmd('bye', '', 'Goodbye screen'));
+    $('welcome-btn').addEventListener('click', () => sendCmd('welcome', 'welcome', 'Welcome screen'));
     // Reconnect this phone and ask the tablet to report in
     $('reconnect').addEventListener('click', () => { kick(true); setTimeout(() => sendCmd('ping', '', 'Reconnect · waiting for the tablet'), 1500); });
     $('trail-btn').addEventListener('click', () => {
