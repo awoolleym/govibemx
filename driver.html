@@ -126,6 +126,12 @@
   .bright button.cur { border-color: #FFD740; background: #2a2108; }
   .bright button.off { background: #000; }
   .bright button.off.cur { border-color: var(--bad); }
+  .toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; background: #1b222c; color: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit; }
+  .toggle small { display: block; font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+  .toggle .sw { flex-shrink: 0; width: 48px; height: 28px; border-radius: 14px; background: #3a4350; position: relative; transition: background .2s; }
+  .toggle .sw i { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: left .2s; }
+  .toggle.on .sw { background: var(--ok); }
+  .toggle.on .sw i { left: 23px; }
   .quick { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 6px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(180deg, rgba(7,11,16,0), rgba(7,11,16,.96) 30%); }
   .quick .sent { text-align: center; min-height: 16px; margin-bottom: 4px; }
   .quick-row { max-width: 520px; margin: 0 auto; display: flex; gap: 8px; }
@@ -198,6 +204,7 @@
       <button data-p="off" class="off">⏻<small>Off</small></button>
       <button data-p="on" class="on-btn">💡<small>On</small></button>
     </div>
+    <button class="toggle on" id="trail-btn"><span class="tg-l">〰️ Traveled path on the map<small>Off = only the van and the route (best for Uber rides)</small></span><span class="sw"><i></i></span></button>
   </div>
 
   <div class="card">
@@ -425,6 +432,7 @@
     if (tablet.gps) bits.push('GPS: ' + ({ ok: 'live', wait: 'searching', denied: 'off', demo: 'demo' }[tablet.gps] || tablet.gps));
     if (tablet.screen) bits.push('Showing: ' + (SCREEN_NAMES[tablet.screen] || tablet.screen));
     if (tablet.lang) bits.push(tablet.lang.toUpperCase());
+    $('trail-btn').classList.toggle('on', tablet.trail !== false);
     if (tablet.off) bits.push('Screen OFF');
     else if (tablet.bright != null && tablet.bright < 1) bits.push('Brightness ' + Math.round(tablet.bright * 100) + '%');
     document.querySelectorAll('#bright button').forEach(b => b.classList.toggle('cur', b.dataset.p === 'off' ? !!tablet.off : (!tablet.off && b.dataset.b != null && Math.abs(+b.dataset.b - (tablet.bright || 1)) < 0.01)));
@@ -520,6 +528,11 @@
     $('bye-btn').addEventListener('click', () => sendCmd('bye', '', 'Goodbye screen'));
     // Reconnect this phone and ask the tablet to report in
     $('reconnect').addEventListener('click', () => { kick(true); setTimeout(() => sendCmd('ping', '', 'Reconnect · waiting for the tablet'), 1500); });
+    $('trail-btn').addEventListener('click', () => {
+      const on = !$('trail-btn').classList.contains('on');
+      $('trail-btn').classList.toggle('on', on); // show it right away; the tablet's status confirms it
+      sendCmd('trail', on ? 'on' : 'off', on ? 'Traveled path: on' : 'Traveled path: off');
+    });
     $('bright').addEventListener('click', (e) => {
       const b = e.target.closest('button'); if (!b) return;
       if (b.dataset.p === 'off') sendCmd('off', '', 'Screen off');

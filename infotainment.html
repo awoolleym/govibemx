@@ -853,6 +853,7 @@
     <button onclick="closeModal('driverModal'); showBye();">👋 Goodbye</button>
     <button onclick="toggleDemo()" id="tool-demo">▶ Demo</button>
     <button onclick="clearTrail()">🧹 Clear trail</button>
+    <button onclick="setTrail(S.showTrail === false)" id="tool-trail">〰️ Trail: on</button>
   </div>
   <p class="driver-note" id="remote-status">Phone remote: connecting…</p>
 </div><div class="close-btn" onclick="closeModal('driverModal')">X</div></div>
@@ -2602,7 +2603,7 @@ function showBye() {
 function hideBye() { $('bye').hidden = true; if (S.booted) reportStatus(); }
 
 Object.assign(I18N.en, {
-  netReconnect: '📡 Reconnecting…', netNoSignal: '📡 No signal', brTitle: 'Screen brightness', brOff: 'Turn off the screen', brWake: 'Tap to turn on · Toca para encender',
+  trailOn: '〰️ Trail: on', trailOff: '〰️ Trail: off', netReconnect: '📡 Reconnecting…', netNoSignal: '📡 No signal', brTitle: 'Screen brightness', brOff: 'Turn off the screen', brWake: 'Tap to turn on · Toca para encender',
   stTitle: 'Streaming', stLead: 'Long ride? Pick an app.', tStream: 'Streaming', tStreamSub: 'Netflix · Prime · Disney+ · YouTube',
   stNote: 'Opens the app. Press ◯ Home on the tablet to come back to GoVibeMX.', stNoFully: 'Apps open only on the tablet (Fully Kiosk).',
   hostLbl: 'Your host', hostHi: 'Hi! I\'m {n}, your host & driver', w2Belt: 'Buckle up', w2BeltSub: 'Seatbelts on, every seat, every ride. Thank you!',
@@ -2614,7 +2615,7 @@ Object.assign(I18N.en, {
   byeBook: 'Book your next trip', byeGo: 'Bye! · ¡Hasta pronto! 👋'
 });
 Object.assign(I18N.es, {
-  netReconnect: '📡 Reconectando…', netNoSignal: '📡 Sin señal', brTitle: 'Brillo de la pantalla', brOff: 'Apagar la pantalla', brWake: 'Toca para encender · Tap to turn on',
+  trailOn: '〰️ Recorrido: sí', trailOff: '〰️ Recorrido: no', netReconnect: '📡 Reconectando…', netNoSignal: '📡 Sin señal', brTitle: 'Brillo de la pantalla', brOff: 'Apagar la pantalla', brWake: 'Toca para encender · Tap to turn on',
   stTitle: 'Streaming', stLead: '¿Viaje largo? Elige una app.', tStream: 'Streaming', tStreamSub: 'Netflix · Prime · Disney+ · YouTube',
   stNote: 'Se abre la app. Presiona ◯ Inicio en la tablet para volver a GoVibeMX.', stNoFully: 'Las apps solo abren en la tablet (Fully Kiosk).',
   hostLbl: 'Tu anfitrión', hostHi: '¡Hola! Soy {n}, tu anfitrión y conductor', w2Belt: 'Abróchate el cinturón', w2BeltSub: 'Todos con cinturón, en cada asiento y cada viaje. ¡Gracias!',
@@ -2678,6 +2679,7 @@ function runCommand(c) {
   if (c.a === 'bright') { screenOn(); setBrightness(c.v); return; }
   if (c.a === 'off') { screenOff(); return; }
   if (c.a === 'ping') { reportStatus(); return; }
+  if (c.a === 'trail') { setTrail(c.v === true || c.v === 'on'); return; }
   if (c.a === 'lang' && (c.v === 'en' || c.v === 'es')) { setLang(c.v); if (!$('welcome').hidden) { fillWelcome(); renderHost(); } if (!$('bye').hidden) showBye(); reportStatus(); return; }
   if (c.a === 'on') { screenOn(); return; }
   if (!$('screen-off').hidden) screenOn();
@@ -2776,7 +2778,7 @@ function setLang(l) {
   $('lang-es').classList.toggle('on', l === 'es');
   var els = document.querySelectorAll('[data-i18n]');
   for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute('data-i18n'));
-  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); renderHost(); renderStreaming(); renderBright(); updateCompass(); refreshPoiPopups(); render();
+  renderTripPicker(); renderGuide(); renderEat(); renderServices(); renderExplorer(); renderKids(); renderTransit(); renderTV(); renderGames(); renderHost(); renderStreaming(); renderBright(); updateCompass(); if ($('tool-trail')) $('tool-trail').textContent = t(S.showTrail === false ? 'trailOff' : 'trailOn'); refreshPoiPopups(); render();
   if (S.booted) { updateVisibility(); reportStatus(); }
 }
 
@@ -2982,7 +2984,7 @@ function drawRoute() {
     var hide = free || S.planPending;
     o.route.setLatLngs(hide ? [] : S.route);
     o.routeGlow.setLatLngs(hide ? [] : S.route);
-    o.trail.setLatLngs(S.trail);
+    o.trail.setLatLngs(trailPts());
     o.dest.setLatLng(TRIPS[S.tripId].dest);
     o.dest.setIcon(destIcon());
     if (free) { o.dest.remove(); o.zones.addTo(map); } else { o.dest.addTo(map); o.zones.remove(); }
@@ -3167,7 +3169,7 @@ function reportStatus() {
   if (!window.pushTabletStatus) return;
   var scr = document.querySelector('.screen.active');
   var shown = !$('bye').hidden ? 'bye' : !$('welcome').hidden ? 'welcome' : scr ? scr.id : 'home';
-  window.pushTabletStatus({ lang: S.lang, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+  window.pushTabletStatus({ lang: S.lang, trail: S.showTrail !== false, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
 }
 function setRemoteStatus(state) {
   var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };
@@ -3238,7 +3240,7 @@ function onPosition(p) {
     o.van.setLatLng(ll);
     var el = o.van.getElement && o.van.getElement();
     if (el) { var a = el.querySelector('.arrow'); if (a) a.style.transform = 'rotate(' + S.heading + 'deg)'; }
-    o.trail.setLatLngs(S.trail);
+    o.trail.setLatLngs(trailPts());
   });
   if (!prev) { fitMini(); if (bigMap) setView(S.view, false); fetchWeather(); }
   else if (bigMap && S.view === 'follow' && Date.now() > S.pauseUntil && $('map-screen').classList.contains('active')) bigMap.panTo(ll, { animate: true });
@@ -3288,6 +3290,14 @@ function toggleDemo() {
     onPosition({ coords: { latitude: ll[0], longitude: ll[1], speed: 16 + Math.random() * 6, heading: bearing(a, b), altitude: 2240 + 60 * (dist / S.total) } });
     if (dist >= S.total) { clearInterval(S.demo); S.demo = null; $('tool-demo').classList.remove('on'); $('tool-demo').textContent = '▶ Demo'; }
   }, 1000);
+}
+// Traveled path on the maps: on/off from the remote or the driver menu (Uber riders expect to see only the van)
+function trailPts() { return S.showTrail === false ? [] : S.trail; }
+function setTrail(on) {
+  S.showTrail = !!on; store('showTrail', S.showTrail);
+  [mini, big].forEach(function (o) { if (o.trail) o.trail.setLatLngs(trailPts()); });
+  if ($('tool-trail')) $('tool-trail').textContent = t(S.showTrail ? 'trailOn' : 'trailOff');
+  if (S.booted) reportStatus();
 }
 function clearTrail() { S.trail = []; store('trail', []); drawRoute(); }
 
@@ -3591,6 +3601,7 @@ document.addEventListener('DOMContentLoaded', function () {
   buildZones();
   loadTripRoute(true);
   S.bright = load('bright', 1); applyBright(S.bright);
+  setTrail(load('showTrail', true));
   $('chip-pw').textContent = WIFI.pass;
 
   updateClock(); setInterval(updateClock, 1000);
