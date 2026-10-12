@@ -205,7 +205,7 @@ La Tab M9 (1340×800) muestra la página como ~1005×600. Todo se ajusta a la al
      - Traza la ruta desde donde estés hasta la entrada a la Ciudad de México.
      - Al entrar a la ciudad sale "¡Bienvenidos de vuelta!" y el mapa cambia a colonias y lugares cercanos, como en el City Tour.
      - Sirve igual desde Teotihuacán, desde el aeropuerto o desde cualquier lado.
-   - Abajo siempre tienes **🏠 Home**, **EN/ES** y **👋 Goodbye**, al alcance del pulgar.
+   - Abajo siempre tienes **🏠 Home**, **EN/ES**, **🎉 Welcome** y **👋 Goodbye**, al alcance del pulgar.
    - **🆕 New ride**: limpia la pantalla para el siguiente pasajero y guarda su nombre. **No** abre la bienvenida sola: ábrela tú con **Welcome screen** cuando quieras.
    - **On the tablet**: Inicio, idioma, abrir una sección (guías, TV, juegos…).
    - **👋 Goodbye**: pantalla de despedida al final del viaje.
