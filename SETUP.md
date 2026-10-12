@@ -147,7 +147,7 @@ Si no usas alguna app, no la instales: el botón simplemente no abre nada.
 Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predeterminadas → App de inicio → Fully Kiosk**. Así el botón de Inicio siempre regresa a la pantalla.
 
 ### 2.3 Qué ven los pasajeros
-- **Bienvenida (se abre a mano desde el remoto con *Welcome screen*):** primero el saludo grande con el nombre del pasajero. A los 15 s (o al tocar) sale la segunda página: **"¡Hola! Soy Alan, tu anfitrión y conductor"**, abróchate el cinturón, Wi-Fi con contraseña, agua y A/C.
+- **Bienvenida (se abre a mano desde el remoto con *Welcome screen*):** se queda en pantalla hasta que alguien la toca o tú la cambias desde el remoto; ya no se va sola. Primero sale el saludo grande con el nombre del pasajero. Al tocar sale la segunda página: **"¡Hola! Soy Alan, tu anfitrión y conductor"**, abróchate el cinturón, Wi-Fi con contraseña, agua y A/C.
 - **"Tu anfitrión · Alan"** siempre está arriba en la pantalla; al tocarlo vuelve a salir la info de Wi-Fi, agua y cinturón.
   - Para cambiar el nombre (otro conductor u otra camioneta), agrega `?host=Nombre` al final del Start URL. Ejemplo: `…/infotainment.html?host=Luis`.
   - El nombre y contraseña del Wi-Fi están en `infotainment.html` (busca `var WIFI`).
@@ -275,4 +275,22 @@ La pantalla y el remoto ya inician sesión de forma anónima, así que puedes ce
 5. **Publish**. Después prueba en el celular: tocar un viaje debe cambiar la tablet.
 
 `bookings` e `inquiries` guardan datos de tus clientes. Conviene protegerlos también, pero depende de cómo inicia sesión el widget de reservaciones. Revísalo antes de cerrarlos para no romper las reservaciones.
+
+---
+
+## 6. Cuando se cae la señal (Starlink)
+
+- **La tablet se reconecta sola:**
+  - Si pierde la conexión con el remoto por más de ~20 s, la fuerza de nuevo sin recargar la página (el video y el juego siguen).
+  - Arriba, junto al reloj, sale **📡 Reconectando…** o **📡 Sin señal** y desaparece cuando vuelve.
+- **Último recurso:**
+  - Si en 3 minutos no logra reconectar, recarga la página, solo cuando nadie la está usando (sin video, sin bienvenida ni despedida en pantalla, y nadie la ha tocado en el último minuto).
+  - Lo hace como máximo una vez cada 10 minutos.
+- **Siempre abre:** la tablet y el remoto guardan una copia (`sw.js`). Si se recarga sin internet, abre igual, en vez de la página de error. El mapa también guarda las zonas que ya vio.
+- **Remoto:**
+  - Si tu celular pierde señal, sale **📡 Phone reconnecting…**.
+  - Con el botón **🔄 Reconnect** (abajo) reconectas tu celular y le pides a la tablet que se reporte.
+- **Comandos viejos no se ejecutan:** si mandas algo mientras la tablet no tenía señal, al reconectar solo se ejecuta si tiene menos de 2 minutos. Un *New ride* vale hasta 10 minutos.
+- **Recomendado en Fully:** Web Auto Reload → **Reload on Internet Reconnect** activado.
+- **Respaldo de internet:** guarda en la tablet la red de Starlink **y** el hotspot de tu celular. Android cambia solo a la que tenga señal.
 
