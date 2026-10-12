@@ -2584,17 +2584,19 @@ function welcomeNext() {
   if (!$('w-page2').hidden) return hideWelcome();
   $('w-page1').hidden = true; $('w-page2').hidden = false;
   renderHost();
+  rememberOverlay();
 }
 function showHostInfo() {
   // Tapping the host chip shows the essentials again (no confetti)
   $('w-page1').hidden = true; $('w-page2').hidden = false; renderHost();
   if (!$('welcome-papel').firstChild) $('welcome-papel').innerHTML = papelSvg(20, true);
   $('welcome').hidden = false;
+  rememberOverlay();
   if (S.booted) reportStatus();
 }
 
 // ---- Goodbye screen ----
-function showBye() {
+function showBye(quiet) {
   hideWelcome();
   var ms = document.querySelectorAll('.modal');
   for (var i = 0; i < ms.length; i++) if (ms[i].id !== 'driverModal') ms[i].style.display = 'none';
@@ -2613,10 +2615,11 @@ function showBye() {
   $('bye-book').textContent = t('byeSave').replace('{n}', HOST); $('bye-book2').textContent = t('byeSaveSub');
   $('bye-go').textContent = t('byeGo');
   $('bye').hidden = false;
-  confetti(80);
+  if (!quiet) confetti(80);
+  rememberOverlay();
   reportStatus();
 }
-function hideBye() { $('bye').hidden = true; if (S.booted) reportStatus(); }
+function hideBye() { var was = !$('bye').hidden; $('bye').hidden = true; if (was) rememberOverlay(); if (S.booted) reportStatus(); }
 
 Object.assign(I18N.en, {
   trailOn: '〰️ Trail: on', trailOff: '〰️ Trail: off', netReconnect: '📡 Reconnecting…', netNoSignal: '📡 No signal', brTitle: 'Screen brightness', brOff: 'Turn off the screen', brWake: 'Tap to turn on · Toca para encender',
@@ -2649,6 +2652,8 @@ document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(function (ev) { document.addEventListener(ev, function () { lastTouch = Date.now(); }, { passive: true }); });
 setInterval(function () {
   if (Date.now() - lastTouch < 180000) return;
+  // The welcome, the goodbye and a turned-off screen stay exactly as they are until someone touches them
+  if (!$('welcome').hidden || !$('bye').hidden || !$('screen-off').hidden) return;
   if ($('tv-screen').classList.contains('active') && TV.playing && Date.now() < TV.until) return; // a video is on: let it play
   lastTouch = Date.now();
   var ms = document.querySelectorAll('.modal');
@@ -2671,7 +2676,24 @@ function showWelcome(name) {
   hideBye();
   $('welcome').hidden = false;
   confetti(120);
+  rememberOverlay();
   if (S.booted) reportStatus();
+}
+// What's on top (welcome page 1/2, goodbye) is saved, so if the page reloads (Fully, signal drops) it comes back
+function rememberOverlay() {
+  var k = !$('bye').hidden ? 'bye' : !$('welcome').hidden ? ($('w-page2').hidden ? 'w1' : 'w2') : '';
+  store('overlay', k ? { k: k, at: Date.now() } : null);
+  store('guest', S.guest || '');
+}
+function restoreOverlay() {
+  S.guest = load('guest', '');
+  var o = load('overlay', null);
+  if (!o || !o.k || Date.now() - o.at > 3 * 3600000) return;
+  if (o.k === 'bye') { showBye(true); return; }
+  if (!$('welcome-papel').firstChild) $('welcome-papel').innerHTML = papelSvg(20, true);
+  fillWelcome(); renderHost();
+  $('w-page1').hidden = o.k !== 'w1'; $('w-page2').hidden = o.k !== 'w2';
+  $('welcome').hidden = false;
 }
 function fillWelcome() {
   if (!$('welcome-papel').firstChild) $('welcome-papel').innerHTML = papelSvg(20, true);
@@ -2687,7 +2709,7 @@ function fillWelcome() {
   $('welcome-wx-chip').hidden = S.temp == null;
   if (S.temp != null) { $('welcome-wx-i').textContent = wxIcon(S.wcode, S.isDay); $('welcome-wx').textContent = Math.round(S.temp) + '°C · ' + Math.round(S.temp * 9 / 5 + 32) + '°F'; }
 }
-function hideWelcome() { clearTimeout(welcomeTimer); var was = !$('welcome').hidden; $('welcome').hidden = true; if (was && S.booted) reportStatus(); }
+function hideWelcome() { clearTimeout(welcomeTimer); var was = !$('welcome').hidden; $('welcome').hidden = true; if (was) rememberOverlay(); if (was && S.booted) reportStatus(); }
 
 // ---- Commands from the phone remote: go home, change language, open a section ----
 function runCommand(c) {
@@ -2747,7 +2769,7 @@ function newRide(name) {
   showScreen('home'); $('home').scrollTop = 0;
   updateVisibility(); highlightZone(); render();
   // The welcome screen is shown by hand (remote → Welcome screen); here we only keep the name for it
-  S.guest = name || ''; hideWelcome(); hideBye(); screenOn();
+  S.guest = name || ''; store('guest', S.guest); hideWelcome(); hideBye(); screenOn();
   if (S.pos && isFree()) setTimeout(updateZone, 1000);
 }
 
@@ -3618,6 +3640,7 @@ document.addEventListener('DOMContentLoaded', function () {
   loadTripRoute(true);
   S.bright = load('bright', 1); applyBright(S.bright);
   setTrail(load('showTrail', true));
+  restoreOverlay();
   $('chip-pw').textContent = WIFI.pass;
 
   updateClock(); setInterval(updateClock, 1000);

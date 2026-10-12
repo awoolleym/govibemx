@@ -88,7 +88,7 @@ Los nombres pueden variar un poco según la versión.
 | Web Browsing Settings | Enable Pull to Refresh | ❌ |
 | | Enable Back Button | ❌ |
 | | Open URLs in other apps / Intent URLs | ❌ |
-| Web Auto Reload | **Auto Reload on Idle** | 600 s (vuelve a la pantalla de inicio si algo se atora) |
+| Web Auto Reload | **Auto Reload on Idle** | **Apagado** (0). La pantalla ya se reconecta sola; si Fully recarga, quitaría lo que esté viendo el pasajero |
 | | Reload on Internet Reconnect | ✅ |
 | Toolbars & Appearance | Show Status Bar / Navigation Bar / Action Bar / Address Bar | ❌ todas |
 | | Fullscreen / Immersive mode | ✅ |
@@ -292,6 +292,6 @@ La pantalla y el remoto ya inician sesión de forma anónima, así que puedes ce
   - Si tu celular pierde señal, sale **📡 Phone reconnecting…**.
   - Con el botón **🔄 Reconnect** (abajo) reconectas tu celular y le pides a la tablet que se reporte.
 - **Comandos viejos no se ejecutan:** si mandas algo mientras la tablet no tenía señal, al reconectar solo se ejecuta si tiene menos de 2 minutos. Un *New ride* vale hasta 10 minutos.
-- **Recomendado en Fully:** Web Auto Reload → **Reload on Internet Reconnect** activado.
+- **Recomendado en Fully:** Web Auto Reload → **Reload on Internet Reconnect** activado y **Auto Reload on Idle apagado**. Si algo recarga la página, la bienvenida o la despedida vuelven a aparecer solas.
 - **Respaldo de internet:** guarda en la tablet la red de Starlink **y** el hotspot de tu celular. Android cambia solo a la que tenga señal.
 
