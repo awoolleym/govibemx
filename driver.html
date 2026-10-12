@@ -588,8 +588,11 @@
     $('tablet-line').textContent = 'No connection';
     $('tablet-meta').textContent = 'Check the phone\'s internet and reload.';
   }
-  // Offline cache (sw.js): the remote opens even without signal and reconnects when it's back
-  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+<script>
+  // Offline cache (sw.js): the remote opens even without signal and reconnects when it's back.
+  // Its own script, so it installs even if Firebase can't load.
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(function () {});
 </script>
 </body>
 </html>
