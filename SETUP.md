@@ -162,7 +162,10 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - Canales 4K de larga duración (se repiten solos y empiezan sin sonido):
     - 🌆 CDMX de día (3 h) · 🌃 CDMX de noche (1 h) · 🚶 Recorrido a pie por la CDMX (4 h 40)
     - 🇲🇽 Volando sobre México (12 h) · 🏝️ Cancún y Tulum (3 h 40) · 🌊 Costa de Oaxaca (2 h 39) · 🏘️ Pueblos mágicos (1 h 23)
-  - Se eligen en la tablet o desde el remoto (grupo **📺 GoVibe TV**), con el interruptor **🔊 TV sound** para silenciar o activar el sonido.
+  - Se eligen en la tablet o desde el remoto (grupo **📺 GoVibe TV**).
+  - **Desde el remoto, el canal se abre en pantalla completa.** Si un pasajero toca la pantalla, aparece una barra con volumen, sonido y ✕ Salir, que se esconde sola.
+  - En el remoto: **🔉 − / 🔊 +** (volumen en pasos de 10%), **⛶ Full screen** y el interruptor **🔊 TV sound**. Deja el volumen de la tablet alto; el del remoto ajusta el del video.
+  - Mientras hay un video en pantalla completa, no salen los avisos de "Estás pasando por…".
   - Si un canal en vivo cambia de video (pasa cuando reinician su transmisión), la pantalla cambia sola a lo que ese canal esté transmitiendo en vivo.
 - **GoVibe TV · Videos:** videos de México elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
 - **Juegos:**
