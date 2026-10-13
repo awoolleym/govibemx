@@ -301,6 +301,7 @@ La pantalla y el remoto ya inician sesión de forma anónima, así que puedes ce
 - **Remoto:**
   - Si tu celular pierde señal, sale **📡 Phone reconnecting…**.
   - Con el botón **🔄 Reconnect** (abajo) reconectas tu celular y le pides a la tablet que se reporte.
+- **Versión de la tablet:** si la tablet tiene una versión más vieja que el remoto, el remoto muestra **⚠️ The tablet is on an older version** con el botón **🔄 Reload tablet**, que la recarga desde tu celular.
 - **Comandos viejos no se ejecutan:** si mandas algo mientras la tablet no tenía señal, al reconectar solo se ejecuta si tiene menos de 2 minutos. Un *New ride* vale hasta 10 minutos.
 - **Recomendado en Fully:** Web Auto Reload → **Reload on Internet Reconnect** activado y **Auto Reload on Idle apagado**. Si algo recarga la página, la bienvenida o la despedida vuelven a aparecer solas.
 - **Respaldo de internet:** guarda en la tablet la red de Starlink **y** el hotspot de tu celular. Android cambia solo a la que tenga señal.
