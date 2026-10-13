@@ -157,7 +157,12 @@ Para el bloqueo más fuerte, ve a **Android → Ajustes → Apps → Apps predet
   - El QR de govibemx.com para reservar otra vez.
   - Se cierra al tocarla o con New ride.
 - **Streaming:** Netflix, Prime Video, Disney+, Max, YouTube y YouTube Kids (abren como apps).
-- **GoVibe TV:** videos de México elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
+- **GoVibe TV · Canales:**
+  - 🇲🇽 **Milenio Noticias** y 🇺🇸 **CBS News**, en vivo 24/7.
+  - 🌆 **CDMX 4K de día** y 🌃 **CDMX 4K de noche**: videos largos que se repiten; empiezan sin sonido.
+  - Se eligen en la tablet o desde el remoto (grupo **📺 GoVibe TV**), con el interruptor **🔊 TV sound** para silenciar o activar el sonido.
+  - Si un canal en vivo cambia de video (pasa cuando reinician su transmisión), la pantalla cambia sola a lo que ese canal esté transmitiendo en vivo.
+- **GoVibe TV · Videos:** videos de México elegidos que se reproducen dentro. No pueden abrir YouTube ni buscar otros.
 - **Juegos:**
   - **🕹️ Arcade:** 20 juegos tipo Poki (Moto X3M, Penalty Shooters, billar, burbujas, 2048, sudoku…) de **Famobi**. Están hechos para mostrarse dentro de otra página, y se juegan dentro de la pantalla.
     - Poki no se deja mostrar dentro de otra página, por eso no está.

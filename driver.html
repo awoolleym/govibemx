@@ -85,6 +85,7 @@
   button.pressed { filter: brightness(1.45); transform: scale(.97); transition: none; }
   .sec-h { grid-column: 1 / -1; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin: 6px 0 -2px 2px; }
   .sec-h:first-child { margin-top: 0; }
+  .sections .mute-tg { grid-column: 1 / -1; flex-direction: row; text-align: left; }
   .sections button:active, .home-btn:active { transform: scale(.97); }
   .url-row { display: flex; gap: 8px; }
   .url-row button { background: #00C9FF; color: #002b36; border: none; border-radius: 10px; padding: 0 16px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; }
@@ -283,6 +284,13 @@
       { v: 'teo', e: '🛕', n: 'Teotihuacán guide', screen: 'guide' },
       { v: 'balloon', e: '🎈', n: 'Balloon 101', screen: 'guide' }
     ] },
+    { g: '📺 GoVibe TV', items: [
+      { v: 'tvch:milenio', e: '🇲🇽', n: 'Milenio News · live', screen: 'tv-screen', tvch: 'milenio' },
+      { v: 'tvch:cbs', e: '🇺🇸', n: 'CBS News · live', screen: 'tv-screen', tvch: 'cbs' },
+      { v: 'tvch:cdmx-day', e: '🌆', n: 'CDMX 4K · day', screen: 'tv-screen', tvch: 'cdmx-day' },
+      { v: 'tvch:cdmx-night', e: '🌃', n: 'CDMX 4K · night', screen: 'tv-screen', tvch: 'cdmx-night' },
+      { v: 'tv:mx', e: '🎬', n: 'All videos', screen: 'tv-screen' }
+    ] },
     { g: '🇲🇽 Explore CDMX', items: [
       { v: 'explorer:hoods', e: '🏘️', n: 'CDMX Explorer', screen: 'explorer-screen' },
       { v: 'explorer:museums', e: '🏛️', n: 'Museums', screen: 'explorer-screen' },
@@ -293,7 +301,6 @@
     { g: '🎉 Fun', items: [
       { v: 'spotify', e: '🎵', n: 'Spotify Jam' },
       { v: 'streaming', e: '🍿', n: 'Streaming apps' },
-      { v: 'tv:mx', e: '📺', n: 'GoVibe TV', screen: 'tv-screen' },
       { v: 'arcade', e: '🕹️', n: 'Arcade games', screen: 'games-screen' },
       { v: 'games', e: '🎮', n: 'Memory game', screen: 'games-screen' },
       { v: 'explorer:quiz', e: '🎯', n: 'CDMX Quiz', screen: 'explorer-screen' },
@@ -443,6 +450,7 @@
     if (tablet.screen) bits.push('Showing: ' + (SCREEN_NAMES[tablet.screen] || tablet.screen));
     if (tablet.lang) bits.push(tablet.lang.toUpperCase());
     $('trail-btn').classList.toggle('on', tablet.trail !== false);
+    if (Date.now() - lastTap > 4000) $('sound-btn').classList.toggle('on', !tablet.muted);
     if (tablet.off) bits.push('Screen OFF');
     else if (tablet.bright != null && tablet.bright < 1) bits.push('Brightness ' + Math.round(tablet.bright * 100) + '%');
     document.querySelectorAll('#bright button').forEach(b => b.classList.toggle('cur', b.dataset.p === 'off' ? !!tablet.off : (!tablet.off && b.dataset.b != null && Math.abs(+b.dataset.b - (tablet.bright || 1)) < 0.01)));
@@ -450,12 +458,14 @@
     const fresh_tap = Date.now() - lastTap < 4000;
     if (!fresh_tap) document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === tablet.lang));
     // Light up what the tablet is showing right now
-    const shown = SECTIONS.find(y => y.screen && y.screen === tablet.screen); // one button per screen
+    const shown = (tablet.screen === 'tv-screen' && tablet.tvch && SECTIONS.find(y => y.tvch === tablet.tvch)) ||
+      SECTIONS.find(y => y.screen && y.screen === tablet.screen && !y.tvch); // one button per screen
     if (!fresh_tap) document.querySelectorAll('#sections button[data-open]').forEach(b => b.classList.toggle('on', !!shown && b.dataset.open === shown.v));
     $('tablet-meta').textContent = bits.join(' · ');
   }
 
-  $('sections').innerHTML = SECTION_GROUPS.map(grp => `<div class="sec-h">${grp.g}</div>` + grp.items.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('')).join('');
+  $('sections').innerHTML = SECTION_GROUPS.map(grp => `<div class="sec-h">${grp.g}</div>` + grp.items.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('') +
+    (grp.g.indexOf('TV') >= 0 ? `<button class="toggle on mute-tg" id="sound-btn"><span class="tg-l">🔊 TV sound<small>Off = muted (the 4K channels start muted)</small></span><span class="sw"><i></i></span></button>` : '')).join('');
   renderTrips(); renderTablet();
   setInterval(renderTablet, 5000);
 
@@ -555,6 +565,12 @@
     $('welcome-btn').addEventListener('click', () => sendCmd('welcome', 'welcome', 'Welcome screen'));
     // Reconnect this phone and ask the tablet to report in
     $('reconnect').addEventListener('click', () => { kick(true); setTimeout(() => sendCmd('ping', '', 'Reconnect · waiting for the tablet'), 1500); });
+    $('sound-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const on = !$('sound-btn').classList.contains('on');
+      $('sound-btn').classList.toggle('on', on);
+      sendCmd('mute', on ? 'off' : 'on', on ? 'TV sound on' : 'TV muted');
+    });
     $('trail-btn').addEventListener('click', () => {
       const on = !$('trail-btn').classList.contains('on');
       $('trail-btn').classList.toggle('on', on); // show it right away; the tablet's status confirms it
@@ -570,6 +586,7 @@
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);
       if (sec.screen) document.querySelectorAll('#sections button[data-open]').forEach(x => x.classList.toggle('on', x === b));
+      if (sec.tvch) $('sound-btn').classList.toggle('on', sec.tvch.indexOf('cdmx') < 0); // 4K channels start muted
       sendCmd(sec.v === 'welcome' || sec.v === 'bye' ? sec.v : 'open', sec.v, sec.n);
     });
 

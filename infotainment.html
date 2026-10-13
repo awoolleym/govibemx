@@ -571,6 +571,13 @@
   .tv-idle { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #ffcdd2; text-align: center; padding: 16px; }
   .tv-idle .big { font-size: clamp(44px, 10vh, 80px); }
   .tv-idle b { font-size: 20px; color: #fff; }
+  .tv-h { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #ffab91; margin: 4px 2px 0; }
+  .tv-thumb i.live, .tv-now em.live { background: #e53935; color: #fff; font-style: normal; }
+  .tv-now em.live { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-right: 4px; }
+  .tv-card.ch b { font-size: 15px; }
+  .tv-now { display: flex; align-items: center; gap: 10px; }
+  .tv-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tv-mute { flex-shrink: 0; background: #22080f; color: #fff; border: 1px solid #ff1744; border-radius: 16px; padding: 6px 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; }
   .tv-now { font-size: 15px; font-weight: 800; color: #fff; min-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tv-now small { color: #ffab91; font-weight: 600; margin-left: 8px; }
   .tv-list { width: clamp(240px, 30%, 360px); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -2251,7 +2258,15 @@ var TV_VIDEOS = {
     { id: 'L1zsP1plkCY', len: '13:01', t: { en: 'Ballet Folklórico: Jalisco', es: 'Ballet Folklórico: Jalisco' }, by: 'Ballet Folklórico México Danza' }
   ]
 };
-var TV = { id: null, playing: false };
+var TV = { id: null, ch: null, playing: false, muted: false };
+// Channels: two live news broadcasts and two looping CDMX 4K videos. Live ones fall back to the channel's
+// current live broadcast if YouTube changes the video (it happens when a channel restarts its stream).
+var TV_CHANNELS = [
+  { id: 'milenio', vid: 'oPy8a-TCjzA', chan: 'UCFxHplbcoJK9m70c4VyTIxg', live: true, icon: '🇲🇽', t: { en: 'Milenio News · Mexico', es: 'Milenio Noticias · México' }, by: 'MILENIO · 24/7' },
+  { id: 'cbs', vid: 'cKsksEjZY64', chan: 'UC8p1vwvWtl6T73JiExfWs1g', live: true, icon: '🇺🇸', t: { en: 'CBS News · USA', es: 'CBS News · EE. UU.' }, by: 'CBS News · 24/7' },
+  { id: 'cdmx-day', vid: 'ffenMNdrS6g', loop: true, muted: true, icon: '🌆', t: { en: 'Mexico City 4K · Day', es: 'CDMX 4K · De día' }, by: 'Polychronis Film · 3 h' },
+  { id: 'cdmx-night', vid: 'oxZBX-e84O8', loop: true, muted: true, icon: '🌃', t: { en: 'Mexico City 4K · Night', es: 'CDMX 4K · De noche' }, by: 'J Utah · night drive' }
+];
 function ytId(u) {
   var m = String(u || '').match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
@@ -2263,37 +2278,85 @@ function openTV(tab, id) {
   showScreen('tv-screen');
   if (id) playTV(id);
 }
+function findChannel(id) { for (var i = 0; i < TV_CHANNELS.length; i++) if (TV_CHANNELS[i].id === id) return TV_CHANNELS[i]; return null; }
 function renderTV() {
   if (!$('tv-tabs')) return;
-  var tab = S.tvTab || 'mx';
-  $('tv-tabs').hidden = true; // one list: Mexico in videos
-  $('tv-list').innerHTML = TV_VIDEOS[tab].map(function (v) {
-    return '<button class="tv-card' + (v.id === TV.id ? ' on' : '') + '" onclick="playTV(\'' + v.id + '\')"><span class="tv-thumb" style="background-image:url(https://i.ytimg.com/vi/' + v.id + '/mqdefault.jpg)"><i>' + v.len + '</i></span>' +
+  $('tv-tabs').hidden = true;
+  $('tv-list').innerHTML = '<div class="tv-h">📡 ' + t('tvChannels') + '</div>' + TV_CHANNELS.map(function (c) {
+    return '<button class="tv-card ch' + (c.id === TV.ch ? ' on' : '') + '" onclick="playChannel(\'' + c.id + '\')"><span class="tv-thumb" style="background-image:url(https://i.ytimg.com/vi/' + c.vid + '/mqdefault.jpg)">' +
+      (c.live ? '<i class="live">● ' + t('tvLive') + '</i>' : '<i>4K</i>') + '</span><span><b>' + c.icon + ' ' + tr(c.t) + '</b><small>' + c.by + '</small></span></button>';
+  }).join('') + '<div class="tv-h">🎬 ' + t('tvVideos') + '</div>' + TV_VIDEOS.mx.map(function (v) {
+    return '<button class="tv-card' + (v.id === TV.id && !TV.ch ? ' on' : '') + '" onclick="playTV(\'' + v.id + '\')"><span class="tv-thumb" style="background-image:url(https://i.ytimg.com/vi/' + v.id + '/mqdefault.jpg)"><i>' + v.len + '</i></span>' +
       '<span><b>' + tr(v.t) + '</b><small>' + v.by + '</small></span></button>';
   }).join('');
-  if (!TV.id) $('tv-player').innerHTML = '<div class="tv-idle"><span class="big">' + (tab === 'kids' ? '🧸' : '📺') + '</span><b>' + t('tvPick') + '</b><span>' + t('tvPickSub') + '</span></div>';
-  var cur = findTV(TV.id);
-  $('tv-now').innerHTML = cur ? '▶ ' + tr(cur.t) + '<small>' + cur.by + '</small>' : '';
+  if (!TV.id) $('tv-player').innerHTML = '<div class="tv-idle"><span class="big">📺</span><b>' + t('tvPick') + '</b><span>' + t('tvPickSub') + '</span></div>';
+  var cur = TV.ch ? findChannel(TV.ch) : findTV(TV.id);
+  $('tv-now').innerHTML = cur ? '<span class="tv-title">' + (TV.ch ? (cur.live ? '<em class="live">● ' + t('tvLive') + '</em> ' : '') + cur.icon + ' ' : '▶ ') + tr(cur.t) + '<small>' + cur.by + '</small></span>' +
+    '<button class="tv-mute" onclick="setMute(!TV.muted)">' + (TV.muted ? '🔇 ' + t('tvUnmute') : '🔊 ' + t('tvMute')) + '</button>' : '';
 }
 function findTV(id) {
   var all = TV_VIDEOS.mx;
   for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
   return null;
 }
+// One player for videos and channels; enablejsapi lets us mute / unmute and hear about errors
+function ytSrc(path, extra) {
+  var o = location.protocol === 'https:' ? '&origin=' + encodeURIComponent(location.origin) : '';
+  return 'https://www.youtube-nocookie.com/embed/' + path + (path.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&enablejsapi=1&hl=' + S.lang + '&mute=' + (TV.muted ? 1 : 0) + o + (extra || '');
+}
+function loadPlayer(src) {
+  // Sandboxed: the video plays, but nothing in it can open YouTube or another app
+  $('tv-player').innerHTML = '<iframe id="tv-frame" src="' + src + '" title="GoVibe TV" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  var f = $('tv-frame');
+  f.addEventListener('load', function () {
+    // Ask the player to send us its events (errors, state)
+    try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); } catch (e) {}
+  });
+}
 function playTV(id) {
   var v = findTV(id);
-  TV.id = id; TV.playing = true;
+  TV.id = id; TV.ch = null; TV.playing = true; TV.fellBack = false;
   // Idle mode waits until the video should be over (unknown length: 2 hours)
   TV.until = Date.now() + (v ? lenSecs(v.len) : 7200) * 1000;
-  var src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&hl=' + S.lang;
-  // Sandboxed: the video plays, but nothing in it can open YouTube or another app
-  $('tv-player').innerHTML = '<iframe src="' + src + '" title="GoVibe TV" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
-  renderTV();
+  loadPlayer(ytSrc(id));
+  renderTV(); if (S.booted) reportStatus();
 }
+function playChannel(id) {
+  var c = findChannel(id); if (!c) return;
+  if (!$('tv-screen').classList.contains('active')) { renderTV(); showScreen('tv-screen'); }
+  TV.id = c.vid; TV.ch = id; TV.playing = true; TV.fellBack = false;
+  if (c.muted != null && TV.chMuteSet !== id) TV.muted = !!c.muted; // 4K channels start muted
+  TV.chMuteSet = id;
+  TV.until = Date.now() + 6 * 3600000; // a channel can play for hours
+  loadPlayer(ytSrc(c.vid, c.loop ? '&loop=1&playlist=' + c.vid : ''));
+  renderTV(); if (S.booted) reportStatus();
+}
+function ytCmd(func, args) {
+  var f = $('tv-frame');
+  if (f && f.contentWindow) try { f.contentWindow.postMessage(JSON.stringify({ event: 'command', func: func, args: args || [] }), '*'); } catch (e) {}
+}
+function setMute(m) {
+  TV.muted = !!m;
+  ytCmd(TV.muted ? 'mute' : 'unMute');
+  if (!TV.muted) ytCmd('setVolume', [100]);
+  renderTV(); if (S.booted) reportStatus();
+}
+// Player events: if a live channel's video is gone, switch to whatever that channel is broadcasting live now
+window.addEventListener('message', function (e) {
+  if (!/youtube(-nocookie)?\.com$/.test((e.origin || '').replace(/^https?:\/\//, ''))) return;
+  var d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+  if (!d || d.event !== 'onError') return;
+  var c = TV.ch && findChannel(TV.ch);
+  if (c && c.live && !TV.fellBack) {
+    TV.fellBack = true;
+    loadPlayer('https://www.youtube.com/embed/live_stream?channel=' + c.chan + '&autoplay=1&playsinline=1&enablejsapi=1&mute=' + (TV.muted ? 1 : 0));
+  }
+});
 function stopTV() {
   if (!TV.id) return;
-  TV.id = null; TV.playing = false;
+  TV.id = null; TV.ch = null; TV.playing = false;
   if ($('tv-player')) $('tv-player').innerHTML = '';
+  if (S.booted) reportStatus();
 }
 
 // ---- Games: everything is built in (no game sites) ----
@@ -2364,7 +2427,8 @@ function flipMem(i) {
 }
 Object.assign(I18N.en, {
   secWatch: 'Watch, listen & play', tSpotSub: 'Add your songs', tTvSub: 'Mexico in videos', tKidsTv: 'Kids TV', tKidsTvSub: 'Cartoons & songs', tGamesSub: 'Arcade · Memory · Quiz',
-  tvMx: '🇲🇽 Mexico', tvKids: '🧸 Kids', tvPick: 'Pick a video', tvPickSub: 'Tap any video on the right to play it here.',
+  tvChannels: 'Channels', tvVideos: 'Mexico in videos', tvLive: 'LIVE', tvMute: 'Mute', tvUnmute: 'Sound on',
+  tvMx: '🇲🇽 Mexico', tvKids: '🧸 Kids', tvPick: 'Pick a video', tvPickSub: 'Pick a channel (live news or Mexico City in 4K) or a video on the right.',
   memTitle: 'Memorama', memSub: 'Match the pairs, learn Spanish', memNew: '🔄 New game', memMoves: 'Moves: {m} · Pairs: {p}/6',
   memHelp: 'Find the matching pairs. Each pair teaches you a word in Spanish!', memWin: '🏆 You did it in {m} moves! ¡Muy bien!',
   kSpotSub: 'Look out the window', kPlacesSub: 'Places kids love', kGames: 'Kid games', kGamesSub: 'Arcade for kids',
@@ -2378,7 +2442,8 @@ Object.assign(I18N.en, {
 });
 Object.assign(I18N.es, {
   secWatch: 'Ver, escuchar y jugar', tSpotSub: 'Agrega tus canciones', tTvSub: 'México en video', tKidsTv: 'TV Niños', tKidsTvSub: 'Caricaturas y canciones', tGamesSub: 'Arcade · Memorama · Trivia',
-  tvMx: '🇲🇽 México', tvKids: '🧸 Niños', tvPick: 'Elige un video', tvPickSub: 'Toca cualquier video de la derecha para verlo aquí.',
+  tvChannels: 'Canales', tvVideos: 'México en video', tvLive: 'EN VIVO', tvMute: 'Silenciar', tvUnmute: 'Con sonido',
+  tvMx: '🇲🇽 México', tvKids: '🧸 Niños', tvPick: 'Elige un video', tvPickSub: 'Elige un canal (noticias en vivo o la CDMX en 4K) o un video de la derecha.',
   memTitle: 'Memorama', memSub: 'Encuentra los pares y aprende inglés', memNew: '🔄 Nuevo juego', memMoves: 'Movimientos: {m} · Pares: {p}/6',
   memHelp: 'Encuentra los pares. ¡Cada par te enseña una palabra en inglés!', memWin: '🏆 ¡Lo lograste en {m} movimientos! Very good!',
   kSpotSub: 'Mira por la ventana', kPlacesSub: 'Lugares que les encantan', kGames: 'Juegos para niños', kGamesSub: 'Arcade para niños',
@@ -2717,6 +2782,7 @@ function runCommand(c) {
   if (c.a === 'bright') { screenOn(); setBrightness(c.v); return; }
   if (c.a === 'off') { screenOff(); return; }
   if (c.a === 'ping') { reportStatus(); return; }
+  if (c.a === 'mute') { setMute(c.v === 'on' || c.v === true); return; }
   if (c.a === 'trail') { setTrail(c.v === true || c.v === 'on'); return; }
   if (c.a === 'lang' && (c.v === 'en' || c.v === 'es')) { setLang(c.v); if (!$('welcome').hidden) { fillWelcome(); renderHost(); } if (!$('bye').hidden) showBye(); reportStatus(); return; }
   if (c.a === 'on') { screenOn(); return; }
@@ -2744,6 +2810,7 @@ function runCommand(c) {
     else if (v === 'services') openServices();
     else if (v === 'review') openModal('reviewModal');
     else if (parts[0] === 'tv') openTV(parts[1] || 'mx');
+    else if (parts[0] === 'tvch') playChannel(parts[1]);
     else if (v === 'games') openGames('mem');
     else if (v === 'arcade') openGames('arc:all');
     else if (v === 'streaming') openStreaming();
@@ -3207,7 +3274,7 @@ function reportStatus() {
   if (!window.pushTabletStatus) return;
   var scr = document.querySelector('.screen.active');
   var shown = !$('bye').hidden ? 'bye' : !$('welcome').hidden ? 'welcome' : scr ? scr.id : 'home';
-  window.pushTabletStatus({ lang: S.lang, trail: S.showTrail !== false, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+  window.pushTabletStatus({ lang: S.lang, tvch: TV.ch || null, muted: !!TV.muted, trail: S.showTrail !== false, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
 }
 function setRemoteStatus(state) {
   var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };
