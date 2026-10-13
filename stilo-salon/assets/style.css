@@ -1105,6 +1105,29 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 .foto-local-mapa { margin: 0 0 1rem; }
 .foto-local-mapa figcaption { text-align: right; }
 
+/* En el teléfono la sección de contacto se apila entera y mide 2,103 px:
+   dos pantallas y media.  La foto y el mapa escalan bien —350x263 cada
+   uno— pero quedan como dos bloques seguidos de 590 px, y el formulario
+   de cita, que es lo único que hay que hacer aquí, empezaba recién al
+   píxel 1,489.  Medido en Chromium a 390 px.
+
+   Así que en pantalla angosta el formulario sube antes que la foto y el
+   mapa, que son material de consulta y no pierden nada por ir debajo.  En
+   escritorio no cambia: ahí las dos columnas caben de lado a lado y el
+   orden del HTML ya está bien. */
+@media (max-width: 899px) {
+  .contacto-der { display: flex; flex-direction: column; }
+  .contacto-der .cita       { order: 1; margin-top: 0; }
+  .contacto-der .foto-local { order: 2; margin-top: 1.6rem; }
+  .contacto-der .mapa       { order: 3; }
+  .contacto-der .mapa-cred  { order: 4; }
+  /* El mapa en un teléfono es de consulta, no de navegación: para eso
+     están los botones de "Cómo llegar" y "Abrir en Google Maps" que
+     quedan arriba.  Como tira ancha sigue situando el barrio y deja de
+     costar un tercio de pantalla. */
+  .mapa { aspect-ratio: 16 / 9; }
+}
+
 /* ── Formulario de cita ──────────────────────────────────────────────
    Va debajo del mapa, en la misma columna.  No manda nada a ningún
    servidor: arma el texto y abre WhatsApp (ver formulario() en build.py).

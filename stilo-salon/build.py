@@ -1848,7 +1848,7 @@ def home_body(lang):
     <a class="btn btn-wa" href="{WA}" rel="noopener">WhatsApp</a>
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
   </div>
-  <div>
+  <div class="contacto-der">
     {foto_local("fachada", lang, " foto-local-mapa")}
     <a class="mapa" href="{GMB}" target="_blank" rel="noopener"
        aria-label="{'Abrir en Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte' if lang=='es' else 'Open in Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte'}">
