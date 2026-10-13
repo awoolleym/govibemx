@@ -122,7 +122,7 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 
 # Contenido completo del sitio
 
-Lo que sigue es el texto íntegro de las 20 páginas, español e inglés, tal como lo lee una visitante. Generado el 2026-10-11.
+Lo que sigue es el texto íntegro de las 20 páginas, español e inglés, tal como lo lee una visitante. Generado el 2026-10-13.
 
 
 ---
@@ -181,6 +181,8 @@ Cabello y color · Roma Norte
 Todo el trabajo de cabello que hacemos, con su precio y su duración real. Sin cotizaciones por mensaje privado y sin ajustes de último momento.
 
 Corte, color y tratamiento. Los precios marcados “desde” aplican de hombro hacia arriba; si tu cabello es más largo, el ajuste te lo decimos antes de empezar, nunca al cobrar.
+
+Las estaciones de corte y color.
 
 ## Trabajos hechos aquí
 
@@ -371,6 +373,8 @@ All the hair work we do, with its real price and duration. No quotes by private 
 
 Cutting, color and treatment. Prices marked “from” apply at shoulder length and above; if your hair is longer, we tell you the adjustment before we start, never at the register.
 
+The cutting and colour stations.
+
 ## Work done here
 
 Balayage · 3 hours · from $2,300
@@ -537,6 +541,8 @@ Monday to Friday 9:00 – 20:00 Saturday 9:00 – 19:00 Sunday closed
 - Pet friendly
 - Complimentary drink
 
+What to look for: the black awning and 70B beside the door.
+
 Map © OpenStreetMap
 
 ### Book in one message
@@ -567,6 +573,8 @@ Lashes & brows · Roma Norte
 Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.
 
 Five techniques, from classic 1x1 to Russian volume. All are full sets, filled every two to three weeks, and none damage your natural lashes. All prices below.
+
+The lash room, separate from the cutting floor.
 
 ## Work done here
 
@@ -681,6 +689,8 @@ Nails · Roma Norte
 From a simple polish to sculpted gel nails. The whole list with prices, so you can choose without asking.
 
 Spa manicure and pedicure, gel, acrylic and sculpted nails, plus treatments for weak nails. Every price below.
+
+The pedicure chairs.
 
 ## Work done here
 
@@ -1470,6 +1480,8 @@ Lunes a viernes 9:00 – 20:00 Sábado 9:00 – 19:00 Domingo cerrado
 - Pet friendly
 - Bebida de cortesía
 
+Así se ve la entrada: toldo negro y el 70B junto a la puerta.
+
 Mapa © colaboradores de OpenStreetMap
 
 ### Pide tu cita en un mensaje
@@ -1500,6 +1512,8 @@ Pestañas y cejas · Roma Norte
 ¿Quieres saber cuánto cuestan? ¿Qué técnicas existen? ¿Cuál es apta para ti? ¿Cuánto duran? Aquí está toda la información detallada de esta maravillosa forma de lucir unos ojos y unas cejas de impacto.
 
 Cinco técnicas, de la clásica 1x1 al volumen ruso. Todas son set completo, se retocan cada dos o tres semanas y no maltratan tu pestaña natural. Abajo están los precios de todas.
+
+La cabina de pestañas, separada del área de corte.
 
 ## Trabajos hechos aquí
 
@@ -1968,6 +1982,8 @@ Uñas · Roma Norte
 Desde un esmalte sencillo hasta esculturales con gel. Toda la lista con precio, para que elijas sin preguntar.
 
 Manicure y pedicure spa, gel, acrílico y esculturales, más vitaminas para uña débil. Todo con su precio abajo.
+
+Los sillones de pedicure.
 
 ## Trabajos hechos aquí
 

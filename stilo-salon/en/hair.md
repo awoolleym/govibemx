@@ -2,8 +2,8 @@
 title: "Haircuts, Color & Balayage in Roma Norte | Stilo Salón"
 description: "Women's cut from $330, color from $800, balayage from $2,300, nanoplasty from $2,500 MXN. Published prices and durations. Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/hair
-date: 2026-10-11
-last_updated: 2026-10-11
+date: 2026-10-13
+last_updated: 2026-10-13
 lang: en
 ---
 Hair & color · Roma Norte
@@ -13,6 +13,8 @@ Hair & color · Roma Norte
 All the hair work we do, with its real price and duration. No quotes by private message, and no last-minute adjustments.
 
 Cutting, color and treatment. Prices marked “from” apply at shoulder length and above; if your hair is longer, we tell you the adjustment before we start, never at the register.
+
+The cutting and colour stations.
 
 ## Work done here
 

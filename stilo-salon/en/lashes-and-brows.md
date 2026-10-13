@@ -2,8 +2,8 @@
 title: "Eyelash Extensions & Brows in Roma Norte | Stilo Salón"
 description: "Eyelash extensions from $750 MXN: classic 1x1, flat, YY, hybrid and Russian volume. Lash lift $450, brow lamination $500. Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/lashes-and-brows
-date: 2026-10-11
-last_updated: 2026-10-11
+date: 2026-10-13
+last_updated: 2026-10-13
 lang: en
 ---
 Lashes & brows · Roma Norte
@@ -13,6 +13,8 @@ Lashes & brows · Roma Norte
 Want to know what they cost? Which techniques exist? Which one suits you? How long they last? Here is everything you need to know about this wonderful way to get eyes and brows with real impact.
 
 Five techniques, from classic 1x1 to Russian volume. All are full sets, filled every two to three weeks, and none damage your natural lashes. All prices below.
+
+The lash room, separate from the cutting floor.
 
 ## Work done here
 

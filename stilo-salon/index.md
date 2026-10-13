@@ -2,8 +2,8 @@
 title: "Stilo Salón | Salón de Belleza en Roma Norte, CDMX"
 description: "Salón de belleza en Roma Norte, CDMX. Corte desde $330, balayage desde $2,300, pestañas desde $750. Precios publicados, sin sorpresas. Reserva en línea."
 url: https://stilo-salon.com/
-date: 2026-10-11
-last_updated: 2026-10-11
+date: 2026-10-13
+last_updated: 2026-10-13
 lang: es-MX
 ---
 Roma Norte · Ciudad de México
@@ -120,6 +120,8 @@ Lunes a viernes 9:00 – 20:00 Sábado 9:00 – 19:00 Domingo cerrado
 - WiFi gratis
 - Pet friendly
 - Bebida de cortesía
+
+Así se ve la entrada: toldo negro y el 70B junto a la puerta.
 
 Mapa © colaboradores de OpenStreetMap
 

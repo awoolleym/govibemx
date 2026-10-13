@@ -1849,6 +1849,7 @@ def home_body(lang):
     <a class="btn btn-ghost" href="https://maps.google.com/?q=Guadalajara+70-B,+Roma+Norte,+CDMX" rel="noopener">{t['directions']}</a></div>
   </div>
   <div>
+    {foto_local("fachada", lang, " foto-local-mapa")}
     <a class="mapa" href="{GMB}" target="_blank" rel="noopener"
        aria-label="{'Abrir en Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte' if lang=='es' else 'Open in Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte'}">
       <img src="/assets/mapa-roma-norte.jpg" width="1200" height="900" loading="lazy"
@@ -1862,6 +1863,55 @@ def home_body(lang):
   </div>
 </div></section>
 """
+
+# ── Fotos del local ───────────────────────────────────────────────────
+# Distintas de las del portafolio: ésas enseñan el trabajo, éstas el sitio
+# donde se hace.  El sitio tenía 128 fotos de trabajos y ninguna del salón,
+# y para un negocio de barrio eso es un hueco: quien elige salón en la Roma
+# está decidiendo si entra por una puerta que no conoce.
+#
+# Cada una va en la página que le toca —las estaciones en Cabello, la
+# cabina en Pestañas, los sillones en Uñas— y la fachada junto al mapa,
+# que es donde de verdad sirve: "Guadalajara 70-B" es una dirección, la
+# foto del toldo con el número es lo que hace que la reconozcas parada en
+# la banqueta.
+LOCAL = {
+ "fachada": {
+   "alt": ("Fachada de Stilo Salón en Calle Guadalajara 70-B, Roma Norte, CDMX: "
+           "toldo negro con el nombre del salón y el número 70B junto a la puerta",
+           "Stilo Salón's storefront at Calle Guadalajara 70-B, Roma Norte, Mexico City: "
+           "a black awning with the salon's name and 70B beside the door"),
+   "pie": ("Así se ve la entrada: toldo negro y el 70B junto a la puerta.",
+           "What to look for: the black awning and 70B beside the door.")},
+ "estaciones": {
+   "alt": ("Estaciones de corte y color de Stilo Salón, con espejos de arco y "
+           "piso de damero blanco y negro",
+           "Cutting and colour stations at Stilo Salón, with arched mirrors and a "
+           "black and white chequered floor"),
+   "pie": ("Las estaciones de corte y color.",
+           "The cutting and colour stations.")},
+ "cabina-pestanas": {
+   "alt": ("Cabina de pestañas de Stilo Salón: camilla, lámpara de aro y pared rosa, "
+           "separada del área de corte",
+           "The lash room at Stilo Salón: a treatment bed, a ring light and a pink wall, "
+           "separate from the cutting floor"),
+   "pie": ("La cabina de pestañas, separada del área de corte.",
+           "The lash room, separate from the cutting floor.")},
+ "pedicure": {
+   "alt": ("Sillones de pedicure de Stilo Salón, con tinas y espejos, Roma Norte, CDMX",
+           "Pedicure chairs at Stilo Salón, with foot baths and mirrors, Roma Norte, Mexico City"),
+   "pie": ("Los sillones de pedicure.",
+           "The pedicure chairs.")},
+}
+
+
+def foto_local(nombre, lang, clase=""):
+    d = LOCAL[nombre]
+    i = 0 if lang == "es" else 1
+    return (f'<figure class="foto-local{clase}">'
+            f'{img("local-" + nombre, 1200, 900, e(d["alt"][i]), TARDE)}'
+            f'<figcaption>{e(d["pie"][i])}</figcaption></figure>')
+
 
 def svc_body(lang, eyebrow, h1, intro, paras, keys, note="", extra="", banner="", alt_foto="", nivel=3):
     t = T[lang]
@@ -2695,7 +2745,10 @@ def main():
             d = sp[lang]
             slug = sp["es_slug"] if lang == "es" else sp["en_slug"]
             alt  = SITE + (sp["en_slug"] if lang == "es" else sp["es_slug"])
-            extra = galeria_html(sp["key"], lang) + enlace_guia(sp["key"], lang)
+            local = {"hair": "estaciones", "nails": "pedicure",
+                     "lashes": "cabina-pestanas"}[sp["key"]]
+            extra = (foto_local(local, lang)
+                     + galeria_html(sp["key"], lang) + enlace_guia(sp["key"], lang))
             bnr = {"hair":"h-cabello.jpg","nails":"h-unas.jpg","lashes":"h-pestanas.jpg"}[sp["key"]]
             alt_f = {"hair":  ("Balayage rubio ceniza hecho en Stilo Salón, Roma Norte, CDMX",
                                "Ash blonde balayage done at Stilo Salón, Roma Norte, Mexico City"),

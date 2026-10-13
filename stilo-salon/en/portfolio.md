@@ -2,8 +2,8 @@
 title: "Portfolio | Stilo Salón Roma Norte, Mexico City"
 description: "Real work from Stilo Salón in Roma Norte: balayage, blondes, smoothing, gel nails and lash extensions, every photo with its published price."
 url: https://stilo-salon.com/en/portfolio
-date: 2026-10-11
-last_updated: 2026-10-11
+date: 2026-10-13
+last_updated: 2026-10-13
 lang: en
 ---
 Our work

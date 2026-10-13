@@ -1087,6 +1087,24 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 }
 .mapa-cred a { color: var(--muted); }
 
+/* ── Fotos del local ─────────────────────────────────────────────────
+   Las cuatro son 4:3 nativas, así que el aspect-ratio es el suyo y no
+   recorta nada: en la de la fachada eso importa, porque el número de la
+   puerta vive en una esquina y cualquier recorte se lo come. */
+.foto-local { margin: 2.2rem 0 0; }
+.foto-local img {
+  width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  display: block; border-radius: var(--r);
+  box-shadow: 0 1px 2px rgba(21,25,29,.05), 0 14px 34px rgba(21,25,29,.10);
+}
+.foto-local figcaption {
+  font-size: .8rem; color: var(--muted); margin-top: .6rem; line-height: 1.5;
+}
+/* Junto al mapa va arriba y sin aire de más: las dos piezas se leen como
+   una sola respuesta a "dónde es". */
+.foto-local-mapa { margin: 0 0 1rem; }
+.foto-local-mapa figcaption { text-align: right; }
+
 /* ── Formulario de cita ──────────────────────────────────────────────
    Va debajo del mapa, en la misma columna.  No manda nada a ningún
    servidor: arma el texto y abre WhatsApp (ver formulario() en build.py).

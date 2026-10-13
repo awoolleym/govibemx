@@ -2,8 +2,8 @@
 title: "Full Price List | Stilo Salón Roma Norte, Mexico City"
 description: "Full price list for Stilo Salón: hair, treatments, nails, lashes, brows and waxing. Over 60 services with price and duration. Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/pricing
-date: 2026-10-11
-last_updated: 2026-10-11
+date: 2026-10-13
+last_updated: 2026-10-13
 lang: en
 ---
 Roma Norte · Mexico City
