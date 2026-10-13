@@ -158,6 +158,9 @@
   .bar { flex-wrap: wrap; justify-content: center; }
   .phone-net { font-size: 12px; font-weight: 700; color: var(--warn); }
   .phone-net[hidden] { display: none; }
+  .tab-update { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 700; color: var(--warn); }
+  .tab-update[hidden] { display: none; }
+  .tab-update button { background: #2a2108; color: #fff; border: 2px solid var(--warn); border-radius: 10px; padding: 6px 10px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
   .bar button.on { color: var(--ok); border-color: var(--ok); }
   button:active { filter: brightness(1.25); }
   /* Wider phones and unfolded / landscape: three columns of sections */
@@ -196,6 +199,7 @@
     <div class="v"><span class="dot" id="dot"></span><span id="tablet-line">Connecting…</span></div>
     <div class="meta" id="tablet-meta"></div>
     <div class="phone-net" id="phone-net" hidden></div>
+    <div class="tab-update" id="tab-update" hidden>⚠️ The tablet is on an older version <button id="reload-tab">🔄 Reload tablet</button></div>
   </div>
 
   <div class="card">
@@ -257,6 +261,8 @@
 
   // Must match VAN_ID in infotainment.html. Add ?van=van2 to the link for a second vehicle.
   const VAN_ID = new URLSearchParams(location.search).get('van') || 'van1';
+  // Must match APP_VERSION in infotainment.html (bumped on every publish)
+  const APP_VERSION = 20261013.2;
 
   // Keep in sync with TRIPS in infotainment.html.
   const OPTIONS = [
@@ -466,6 +472,8 @@
       $('full-btn').classList.toggle('on', !!tablet.tvfull);
       $('full-btn').textContent = tablet.tvfull ? '✕ Exit full screen' : '⛶ Full screen';
     }
+    // Tablet still on an older version (it needs a reload to know the newest buttons)
+    $('tab-update').hidden = !fresh || (tablet.ver || 0) >= APP_VERSION;
     if (tablet.off) bits.push('Screen OFF');
     else if (tablet.bright != null && tablet.bright < 1) bits.push('Brightness ' + Math.round(tablet.bright * 100) + '%');
     document.querySelectorAll('#bright button').forEach(b => b.classList.toggle('cur', b.dataset.p === 'off' ? !!tablet.off : (!tablet.off && b.dataset.b != null && Math.abs(+b.dataset.b - (tablet.bright || 1)) < 0.01)));
@@ -577,6 +585,7 @@
     $('web-url').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('web-go').click(); });
     $('presets').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) sendWeb(PRESETS[+b.dataset.i].u, PRESETS[+b.dataset.i].n); });
     $('bye-btn').addEventListener('click', () => sendCmd('bye', '', 'Goodbye screen'));
+    $('reload-tab').addEventListener('click', () => sendCmd('reload', '', 'Reloading the tablet'));
     $('welcome-btn').addEventListener('click', () => sendCmd('welcome', 'welcome', 'Welcome screen'));
     // Reconnect this phone and ask the tablet to report in
     $('reconnect').addEventListener('click', () => { kick(true); setTimeout(() => sendCmd('ping', '', 'Reconnect · waiting for the tablet'), 1500); });
