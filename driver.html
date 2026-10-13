@@ -289,6 +289,11 @@
       { v: 'tvch:cbs', e: '🇺🇸', n: 'CBS News · live', screen: 'tv-screen', tvch: 'cbs' },
       { v: 'tvch:cdmx-day', e: '🌆', n: 'CDMX 4K · day', screen: 'tv-screen', tvch: 'cdmx-day' },
       { v: 'tvch:cdmx-night', e: '🌃', n: 'CDMX 4K · night', screen: 'tv-screen', tvch: 'cdmx-night' },
+      { v: 'tvch:cdmx-walk', e: '🚶', n: 'CDMX 4K · walk', screen: 'tv-screen', tvch: 'cdmx-walk' },
+      { v: 'tvch:mexico', e: '🇲🇽', n: 'Mexico 4K · 12 h', screen: 'tv-screen', tvch: 'mexico' },
+      { v: 'tvch:caribe', e: '🏝️', n: 'Cancún & Tulum 4K', screen: 'tv-screen', tvch: 'caribe' },
+      { v: 'tvch:oaxaca', e: '🌊', n: 'Oaxaca coast 4K', screen: 'tv-screen', tvch: 'oaxaca' },
+      { v: 'tvch:pueblos', e: '🏘️', n: 'Magic towns', screen: 'tv-screen', tvch: 'pueblos' },
       { v: 'tv:mx', e: '🎬', n: 'All videos', screen: 'tv-screen' }
     ] },
     { g: '🇲🇽 Explore CDMX', items: [
@@ -465,7 +470,7 @@
   }
 
   $('sections').innerHTML = SECTION_GROUPS.map(grp => `<div class="sec-h">${grp.g}</div>` + grp.items.map(x => `<button data-open="${x.v}"><span class="e">${x.e}</span>${x.n}</button>`).join('') +
-    (grp.g.indexOf('TV') >= 0 ? `<button class="toggle on mute-tg" id="sound-btn"><span class="tg-l">🔊 TV sound<small>Off = muted (the 4K channels start muted)</small></span><span class="sw"><i></i></span></button>` : '')).join('');
+    (grp.g.indexOf('TV') >= 0 ? `<button class="toggle on mute-tg" id="sound-btn"><span class="tg-l">🔊 TV sound<small>Off = muted (only the news channels start with sound)</small></span><span class="sw"><i></i></span></button>` : '')).join('');
   renderTrips(); renderTablet();
   setInterval(renderTablet, 5000);
 
@@ -586,7 +591,7 @@
       const b = e.target.closest('button[data-open]'); if (!b) return;
       const sec = SECTIONS.find(x => x.v === b.dataset.open);
       if (sec.screen) document.querySelectorAll('#sections button[data-open]').forEach(x => x.classList.toggle('on', x === b));
-      if (sec.tvch) $('sound-btn').classList.toggle('on', sec.tvch.indexOf('cdmx') < 0); // 4K channels start muted
+      if (sec.tvch) $('sound-btn').classList.toggle('on', sec.tvch === 'milenio' || sec.tvch === 'cbs'); // 4K channels start muted
       sendCmd(sec.v === 'welcome' || sec.v === 'bye' ? sec.v : 'open', sec.v, sec.n);
     });
 
