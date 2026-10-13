@@ -571,6 +571,19 @@
   .tv-idle { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #ffcdd2; text-align: center; padding: 16px; }
   .tv-idle .big { font-size: clamp(44px, 10vh, 80px); }
   .tv-idle b { font-size: 20px; color: #fff; }
+  .tv-ctl { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .tv-ctl button { width: 34px; height: 32px; border-radius: 10px; background: #22080f; color: #fff; border: 1px solid #ff1744; font-size: 20px; font-weight: 800; cursor: pointer; line-height: 1; }
+  .tv-ctl b { min-width: 64px; text-align: center; font-size: 13px; }
+  .tv-stage { position: relative; }
+  .tv-bar, .tv-tap { display: none; }
+  /* Full screen TV: only the video, controls on tap */
+  body.tv-full #tv-screen .guide-top, body.tv-full #tv-screen .tv-list, body.tv-full #tv-screen .tv-now { display: none; }
+  body.tv-full .topbar, body.tv-full .dock, body.tv-full .poi-toast { display: none; } /* like a plane: nothing interrupts a full-screen video */
+  body.tv-full #tv-screen .tv-wrap { padding: 0; gap: 0; }
+  body.tv-full #tv-screen .tv-player { border-radius: 0; border: 0; }
+  body.tv-full .tv-tap { display: block; position: absolute; inset: 0; z-index: 3; }
+  body.tv-full .tv-bar { display: flex; position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 4; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; background: rgba(10,4,8,.88); color: #fff; font-weight: 800; opacity: 0; pointer-events: none; transform: translateY(10px); transition: opacity .3s, transform .3s; }
+  body.tv-full .tv-bar.show { opacity: 1; pointer-events: auto; transform: none; }
   .tv-h { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #ffab91; margin: 4px 2px 0; }
   .tv-thumb i.live, .tv-now em.live { background: #e53935; color: #fff; font-style: normal; }
   .tv-now em.live { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-right: 4px; }
@@ -1110,6 +1123,8 @@
   <div class="tv-wrap">
     <div class="tv-stage">
       <div class="tv-player" id="tv-player"></div>
+      <div class="tv-bar" id="tv-bar" onclick="event.stopPropagation()"></div>
+      <div class="tv-tap" id="tv-tap" onclick="showTvBar()"></div>
       <div class="tv-now" id="tv-now"></div>
     </div>
     <div class="tv-list" id="tv-list"></div>
@@ -2258,7 +2273,7 @@ var TV_VIDEOS = {
     { id: 'L1zsP1plkCY', len: '13:01', t: { en: 'Ballet Folklórico: Jalisco', es: 'Ballet Folklórico: Jalisco' }, by: 'Ballet Folklórico México Danza' }
   ]
 };
-var TV = { id: null, ch: null, playing: false, muted: false };
+var TV = { id: null, ch: null, playing: false, muted: false, vol: 80, full: false };
 // Channels: two live news broadcasts and two looping CDMX 4K videos. Live ones fall back to the channel's
 // current live broadcast if YouTube changes the video (it happens when a channel restarts its stream).
 var TV_CHANNELS = [
@@ -2297,7 +2312,36 @@ function renderTV() {
   if (!TV.id) $('tv-player').innerHTML = '<div class="tv-idle"><span class="big">📺</span><b>' + t('tvPick') + '</b><span>' + t('tvPickSub') + '</span></div>';
   var cur = TV.ch ? findChannel(TV.ch) : findTV(TV.id);
   $('tv-now').innerHTML = cur ? '<span class="tv-title">' + (TV.ch ? (cur.live ? '<em class="live">● ' + t('tvLive') + '</em> ' : '') + cur.icon + ' ' : '▶ ') + tr(cur.t) + '<small>' + cur.by + '</small></span>' +
-    '<button class="tv-mute" onclick="setMute(!TV.muted)">' + (TV.muted ? '🔇 ' + t('tvUnmute') : '🔊 ' + t('tvMute')) + '</button>' : '';
+    tvControls() : '';
+  renderTvFull();
+}
+function tvControls() {
+  return '<span class="tv-ctl"><button onclick="setVol(TV.vol - 10)" aria-label="Volume down">−</button><b>' + (TV.muted ? '🔇' : '🔊 ' + TV.vol + '%') + '</b><button onclick="setVol(TV.vol + 10)" aria-label="Volume up">+</button></span>' +
+    '<button class="tv-mute" onclick="setMute(!TV.muted)">' + (TV.muted ? t('tvUnmute') : t('tvMute')) + '</button>' +
+    '<button class="tv-mute" onclick="setTvFull(!TV.full)">' + (TV.full ? '✕ ' + t('tvExitFull') : '⛶ ' + t('tvFull')) + '</button>';
+}
+// Full screen: only the video; a tap shows a small control bar that hides itself again
+var tvBarTimer = null;
+function setTvFull(on) {
+  TV.full = !!on && !!TV.id;
+  document.body.classList.toggle('tv-full', TV.full);
+  renderTV(); if (TV.full) showTvBar(); if (S.booted) reportStatus();
+}
+function renderTvFull() {
+  if (!$('tv-bar')) return;
+  var cur = TV.ch ? findChannel(TV.ch) : findTV(TV.id);
+  $('tv-bar').innerHTML = cur ? '<span class="tv-title">' + (TV.ch && cur.live ? '<em class="live">● ' + t('tvLive') + '</em> ' : '') + (cur.icon || '▶') + ' ' + tr(cur.t) + '</span>' + tvControls() : '';
+}
+function showTvBar() {
+  $('tv-bar').classList.add('show'); clearTimeout(tvBarTimer);
+  tvBarTimer = setTimeout(function () { $('tv-bar').classList.remove('show'); }, 4000);
+}
+function setVol(v) {
+  TV.vol = Math.max(0, Math.min(100, Math.round(v / 10) * 10));
+  if (TV.vol > 0 && TV.muted) { TV.muted = false; ytCmd('unMute'); }
+  ytCmd('setVolume', [TV.vol]);
+  store('tvVol', TV.vol);
+  renderTV(); if (TV.full) showTvBar(); if (S.booted) reportStatus();
 }
 function findTV(id) {
   var all = TV_VIDEOS.mx;
@@ -2316,6 +2360,8 @@ function loadPlayer(src) {
   f.addEventListener('load', function () {
     // Ask the player to send us its events (errors, state)
     try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); } catch (e) {}
+    // Apply the chosen volume once the player is up (twice, in case it's slow to start)
+    [1500, 4000].forEach(function (ms) { setTimeout(function () { ytCmd('setVolume', [TV.vol]); ytCmd(TV.muted ? 'mute' : 'unMute'); }, ms); });
   });
 }
 function playTV(id) {
@@ -2343,7 +2389,7 @@ function ytCmd(func, args) {
 function setMute(m) {
   TV.muted = !!m;
   ytCmd(TV.muted ? 'mute' : 'unMute');
-  if (!TV.muted) ytCmd('setVolume', [100]);
+  if (!TV.muted) ytCmd('setVolume', [TV.vol]);
   renderTV(); if (S.booted) reportStatus();
 }
 // Player events: if a live channel's video is gone, switch to whatever that channel is broadcasting live now
@@ -2358,6 +2404,7 @@ window.addEventListener('message', function (e) {
   }
 });
 function stopTV() {
+  if (TV.full) { TV.full = false; document.body.classList.remove('tv-full'); }
   if (!TV.id) return;
   TV.id = null; TV.ch = null; TV.playing = false;
   if ($('tv-player')) $('tv-player').innerHTML = '';
@@ -2432,7 +2479,7 @@ function flipMem(i) {
 }
 Object.assign(I18N.en, {
   secWatch: 'Watch, listen & play', tSpotSub: 'Add your songs', tTvSub: 'Mexico in videos', tKidsTv: 'Kids TV', tKidsTvSub: 'Cartoons & songs', tGamesSub: 'Arcade · Memory · Quiz',
-  tvChannels: 'Channels', tvVideos: 'Mexico in videos', tvLive: 'LIVE', tvMute: 'Mute', tvUnmute: 'Sound on',
+  tvChannels: 'Channels', tvVideos: 'Mexico in videos', tvLive: 'LIVE', tvMute: 'Mute', tvUnmute: 'Sound on', tvFull: 'Full screen', tvExitFull: 'Exit',
   tvMx: '🇲🇽 Mexico', tvKids: '🧸 Kids', tvPick: 'Pick a video', tvPickSub: 'Pick a channel (live news or Mexico City in 4K) or a video on the right.',
   memTitle: 'Memorama', memSub: 'Match the pairs, learn Spanish', memNew: '🔄 New game', memMoves: 'Moves: {m} · Pairs: {p}/6',
   memHelp: 'Find the matching pairs. Each pair teaches you a word in Spanish!', memWin: '🏆 You did it in {m} moves! ¡Muy bien!',
@@ -2447,7 +2494,7 @@ Object.assign(I18N.en, {
 });
 Object.assign(I18N.es, {
   secWatch: 'Ver, escuchar y jugar', tSpotSub: 'Agrega tus canciones', tTvSub: 'México en video', tKidsTv: 'TV Niños', tKidsTvSub: 'Caricaturas y canciones', tGamesSub: 'Arcade · Memorama · Trivia',
-  tvChannels: 'Canales', tvVideos: 'México en video', tvLive: 'EN VIVO', tvMute: 'Silenciar', tvUnmute: 'Con sonido',
+  tvChannels: 'Canales', tvVideos: 'México en video', tvLive: 'EN VIVO', tvMute: 'Silenciar', tvUnmute: 'Con sonido', tvFull: 'Pantalla completa', tvExitFull: 'Salir',
   tvMx: '🇲🇽 México', tvKids: '🧸 Niños', tvPick: 'Elige un video', tvPickSub: 'Elige un canal (noticias en vivo o la CDMX en 4K) o un video de la derecha.',
   memTitle: 'Memorama', memSub: 'Encuentra los pares y aprende inglés', memNew: '🔄 Nuevo juego', memMoves: 'Movimientos: {m} · Pares: {p}/6',
   memHelp: 'Encuentra los pares. ¡Cada par te enseña una palabra en inglés!', memWin: '🏆 ¡Lo lograste en {m} movimientos! Very good!',
@@ -2788,6 +2835,8 @@ function runCommand(c) {
   if (c.a === 'off') { screenOff(); return; }
   if (c.a === 'ping') { reportStatus(); return; }
   if (c.a === 'mute') { setMute(c.v === 'on' || c.v === true); return; }
+  if (c.a === 'vol') { setVol(c.v === 'up' ? TV.vol + 10 : c.v === 'down' ? TV.vol - 10 : +c.v); return; }
+  if (c.a === 'tvfull') { setTvFull(c.v === 'on'); return; }
   if (c.a === 'trail') { setTrail(c.v === true || c.v === 'on'); return; }
   if (c.a === 'lang' && (c.v === 'en' || c.v === 'es')) { setLang(c.v); if (!$('welcome').hidden) { fillWelcome(); renderHost(); } if (!$('bye').hidden) showBye(); reportStatus(); return; }
   if (c.a === 'on') { screenOn(); return; }
@@ -2815,7 +2864,7 @@ function runCommand(c) {
     else if (v === 'services') openServices();
     else if (v === 'review') openModal('reviewModal');
     else if (parts[0] === 'tv') openTV(parts[1] || 'mx');
-    else if (parts[0] === 'tvch') playChannel(parts[1]);
+    else if (parts[0] === 'tvch') { playChannel(parts[1]); setTvFull(true); }
     else if (v === 'games') openGames('mem');
     else if (v === 'arcade') openGames('arc:all');
     else if (v === 'streaming') openStreaming();
@@ -3279,7 +3328,7 @@ function reportStatus() {
   if (!window.pushTabletStatus) return;
   var scr = document.querySelector('.screen.active');
   var shown = !$('bye').hidden ? 'bye' : !$('welcome').hidden ? 'welcome' : scr ? scr.id : 'home';
-  window.pushTabletStatus({ lang: S.lang, tvch: TV.ch || null, muted: !!TV.muted, trail: S.showTrail !== false, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
+  window.pushTabletStatus({ lang: S.lang, tvch: TV.ch || null, muted: !!TV.muted, vol: TV.vol, tvfull: !!TV.full, trail: S.showTrail !== false, bright: S.bright || 1, off: !$('screen-off').hidden, screen: shown, trip: currentMode(), kmLeft: S.active && !isFree() ? Math.round(S.remaining / 100) / 10 : null, gps: S.gpsState });
 }
 function setRemoteStatus(state) {
   var txt = { ok: '📱 Phone remote connected (' + VAN_ID + ')', error: '📱 Phone remote unavailable — use this menu', off: '📱 Phone remote offline — use this menu' };
@@ -3712,6 +3761,7 @@ document.addEventListener('DOMContentLoaded', function () {
   loadTripRoute(true);
   S.bright = load('bright', 1); applyBright(S.bright);
   setTrail(load('showTrail', true));
+  TV.vol = load('tvVol', 80);
   restoreOverlay();
   $('chip-pw').textContent = WIFI.pass;
 
