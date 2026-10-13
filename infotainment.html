@@ -2264,8 +2264,13 @@ var TV = { id: null, ch: null, playing: false, muted: false };
 var TV_CHANNELS = [
   { id: 'milenio', vid: 'oPy8a-TCjzA', chan: 'UCFxHplbcoJK9m70c4VyTIxg', live: true, icon: '🇲🇽', t: { en: 'Milenio News · Mexico', es: 'Milenio Noticias · México' }, by: 'MILENIO · 24/7' },
   { id: 'cbs', vid: 'cKsksEjZY64', chan: 'UC8p1vwvWtl6T73JiExfWs1g', live: true, icon: '🇺🇸', t: { en: 'CBS News · USA', es: 'CBS News · EE. UU.' }, by: 'CBS News · 24/7' },
-  { id: 'cdmx-day', vid: 'ffenMNdrS6g', loop: true, muted: true, icon: '🌆', t: { en: 'Mexico City 4K · Day', es: 'CDMX 4K · De día' }, by: 'Polychronis Film · 3 h' },
-  { id: 'cdmx-night', vid: 'oxZBX-e84O8', loop: true, muted: true, icon: '🌃', t: { en: 'Mexico City 4K · Night', es: 'CDMX 4K · De noche' }, by: 'J Utah · night drive' }
+  { id: 'cdmx-day', vid: 'ffenMNdrS6g', loop: true, muted: true, icon: '🌆', t: { en: 'Mexico City 4K · Day', es: 'CDMX 4K · De día' }, by: 'Drone · 3 h' },
+  { id: 'cdmx-night', vid: 'fT04jmn57F4', loop: true, muted: true, icon: '🌃', t: { en: 'Mexico City 4K · Night', es: 'CDMX 4K · De noche' }, by: 'Night walk · 1 h' },
+  { id: 'cdmx-walk', vid: 'to7siLP-q5A', loop: true, muted: true, icon: '🚶', t: { en: 'Mexico City 4K · Walking tour', es: 'CDMX 4K · Recorrido a pie' }, by: 'Centro, Condesa · 4 h 40' },
+  { id: 'mexico', vid: 'qkET0kBNnxE', loop: true, muted: true, icon: '🇲🇽', t: { en: 'Flying over Mexico 4K', es: 'Volando sobre México 4K' }, by: 'Landscapes · 12 h' },
+  { id: 'caribe', vid: '-bHThB6bYRI', loop: true, muted: true, icon: '🏝️', t: { en: 'Caribbean 4K · Cancún & Tulum', es: 'Caribe 4K · Cancún y Tulum' }, by: 'Drone · 3 h 40' },
+  { id: 'oaxaca', vid: 'FMN78PJKMuA', loop: true, muted: true, icon: '🌊', t: { en: 'Oaxaca coast 4K · Huatulco', es: 'Costa de Oaxaca 4K · Huatulco' }, by: 'Drone · 2 h 39' },
+  { id: 'pueblos', vid: '53JazFCVfg4', loop: true, muted: true, icon: '🏘️', t: { en: 'Mexico\'s magic towns', es: 'Pueblos mágicos de México' }, by: 'Top 50 · 1 h 23' }
 ];
 function ytId(u) {
   var m = String(u || '').match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
