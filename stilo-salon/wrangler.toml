@@ -1,0 +1,27 @@
+# Despliegue del sitio a Cloudflare Workers.
+#
+# El sitio no tiene código de servidor: es sólo archivos.  Por eso no hay
+# "main" y todo cuelga de [assets] — Workers los sirve directo, sin que
+# corra nada nuestro en cada petición.
+#
+#   python3 build.py && python3 publicar.py     # genera _dist/
+#   CLOUDFLARE_ACCOUNT_ID=... CLOUDFLARE_API_TOKEN=... npx wrangler deploy
+#
+# Subir por aquí en vez de arrastrar el zip al panel tiene una ventaja que
+# importa: wrangler dice cuántos archivos subió y falla con un error si algo
+# sale mal.  El panel puede dejar el despliegue anterior en pie sin avisar.
+#
+# El dominio (stilo-salon.com y www) está puesto en el Worker, no aquí: se
+# queda como está entre despliegues y no hace falta declararlo.
+name = "mute-mountain-b0e4"
+compatibility_date = "2026-09-24"
+
+[assets]
+directory = "./_dist"
+# Cualquier ruta que no exista devuelve nuestra 404.html con código 404.
+# Sin esto, Workers responde un 404 pelón sin diseño ni enlaces de vuelta.
+not_found_handling = "404-page"
+# Las direcciones públicas no llevan .html: /precios sirve precios.html.
+# "auto-trailing-slash" es además lo que ya está en producción, así que no
+# cambia ninguna URL ni rompe lo que Google ya indexó.
+html_handling = "auto-trailing-slash"
