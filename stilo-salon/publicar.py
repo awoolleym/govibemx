@@ -101,6 +101,8 @@ def main():
         sys.exit("ABORTADO, se coló algo que no debe ser público:\n  "
                  + "\n  ".join(prohibido))
 
+    huella = sellar(DIST)
+
     peso = sum(f.stat().st_size for f in DIST.rglob("*") if f.is_file())
     # El zip se arma aquí y no a mano: escrito a mano se cuela
     # "zip -x '.*'", que excluye todo lo que empieza con punto y se lleva la
@@ -122,8 +124,98 @@ def main():
 
     print(f"_dist/ listo — {n} páginas y archivos de config, {a} assets, "
           f"{peso/1e6:.1f} MB")
+    print(f"  {huella} assets renombrados con su huella (caché de un año sin riesgo)")
     print(f"_dist.zip — {len(dentro)} archivos, {zipf.stat().st_size/1e6:.1f} MB")
     print("Subir el zip al Worker, o:  npx wrangler pages deploy _dist")
+
+
+# Extensiones de archivos de texto donde puede haber una ruta a assets/.
+TEXTO = {".html", ".css", ".xml", ".txt", ".json", ".md", ".webmanifest"}
+
+
+def sellar(dist):
+    """Renombra cada archivo de assets/ con la huella de su contenido.
+
+    Por qué hace falta: _headers sirve /assets/* con
+    "max-age=31536000, immutable".  Un año, e "immutable" le dice al
+    navegador que ni siquiera pregunte si cambió.  Eso está bien para un
+    archivo cuyo nombre cambia cuando cambia su contenido —como
+    app.<hash>.js— y está MAL para todo lo demás: con nombre fijo, quien
+    ya visitó el sitio se queda con el style.css y las fotos viejas hasta
+    un año, y lo único que lo arregla es un Shift+F5 que nadie hace.
+
+    Pasó de verdad: el salón reportó que los cambios se veían con
+    Shift+F5 y se deshacían al recargar normal.
+
+    Se hace aquí y no en build.py para que el preview siga teniendo
+    nombres legibles y para que la huella salga del archivo tal como se
+    publica.  Dos pasadas porque el CSS referencia imágenes: primero se
+    sellan las imágenes y se reescriben las referencias dentro del CSS,
+    y sólo entonces se sella el CSS, que ya no va a volver a cambiar.
+    """
+    import hashlib, re
+
+    def hashear(rutas):
+        mapa = {}
+        for f in sorted(rutas):
+            rel = f.relative_to(dist).as_posix()
+            # app.<hash>.js ya trae su huella puesta por build.py.
+            if re.search(r"\.[0-9a-f]{8}\.[a-z0-9]+$", rel):
+                continue
+            h = hashlib.sha1(f.read_bytes()).hexdigest()[:8]
+            nuevo = f"{f.stem}.{h}{f.suffix}"
+            f.rename(f.with_name(nuevo))
+            mapa["/" + rel] = "/" + (f.parent / nuevo).relative_to(dist).as_posix()
+        return mapa
+
+    def reescribir(mapa):
+        if not mapa:
+            return
+        # De la ruta más larga a la más corta: si una fuera prefijo de
+        # otra, reemplazar primero la corta partiría la larga.
+        pares = sorted(mapa.items(), key=lambda kv: -len(kv[0]))
+        for f in dist.rglob("*"):
+            if not f.is_file() or (f.suffix not in TEXTO and f.name not in ("_headers", "_redirects")):
+                continue
+            try:
+                txt = f.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                continue
+            orig = txt
+            for viejo, nuevo in pares:
+                if viejo in txt:
+                    txt = txt.replace(viejo, nuevo)
+            if txt != orig:
+                f.write_text(txt, encoding="utf-8")
+
+    def reescribir_css_relativo(mapa):
+        """El CSS vive dentro de assets/ y se refiere a sus vecinos por el
+        nombre pelado: url("flor-marca.png"), no "/assets/flor-marca.png".
+        La reescritura de arriba no los ve, así que al renombrar los
+        archivos esas tres referencias —la tipografía y las dos flores—
+        quedaban rotas.  Pasó: la primera versión de esto las rompió y lo
+        cazó la revisión."""
+        vecinos = {viejo.rsplit("/", 1)[-1]: nuevo.rsplit("/", 1)[-1]
+                   for viejo, nuevo in mapa.items()
+                   if viejo.count("/") == 2}          # /assets/x.png
+        for f in assets.rglob("*.css"):
+            txt = orig = f.read_text(encoding="utf-8")
+            for v, n in sorted(vecinos.items(), key=lambda kv: -len(kv[0])):
+                for comilla in ('"', "'", ""):
+                    txt = txt.replace(f"url({comilla}{v}{comilla})",
+                                      f"url({comilla}{n}{comilla})")
+            if txt != orig:
+                f.write_text(txt, encoding="utf-8")
+
+    assets = dist / "assets"
+    imagenes = [f for f in assets.rglob("*") if f.is_file() and f.suffix != ".css"]
+    mapa = hashear(imagenes)
+    reescribir(mapa)
+    reescribir_css_relativo(mapa)
+    hojas = [f for f in assets.rglob("*.css") if f.is_file()]
+    mapa2 = hashear(hojas)
+    reescribir(mapa2)
+    return len(mapa) + len(mapa2)
 
 if __name__ == "__main__":
     main()

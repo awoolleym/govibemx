@@ -32,14 +32,25 @@ DESTINO = RAIZ / "assets"
 ANCHO, ALTO = 1200, 800
 
 # El prefijo "local-" las separa de las fotos de trabajos en assets/.
-FOTOS = ["fachada", "estaciones", "cabina-pestanas", "pedicure"]
+#
+# El segundo número es de dónde sale el recorte vertical: 0 conserva el
+# borde de arriba, 1 el de abajo, 0.5 reparte.  Casi todas se reparten,
+# pero en las estaciones de corte lo bueno está arriba —los espejos de
+# arco— y lo que sobra abajo es piso y el carrito de brochas, así que ahí
+# el recorte se corre hacia arriba.
+FOTOS = {
+    "fachada":         0.5,
+    "estaciones":      0.15,
+    "cabina-pestanas": 0.5,
+    "pedicure":        0.5,
+}
 
 
 def main():
     if not FUENTE.exists():
         raise SystemExit(f"No está {FUENTE.name}/. Los originales no entran a "
                          "git: cópialos ahí antes de correr esto.")
-    for nombre in FOTOS:
+    for nombre, centro_y in FOTOS.items():
         origen = FUENTE / f"{nombre}.jpg"
         if not origen.exists():
             raise SystemExit(f"Falta {origen}")
@@ -49,7 +60,8 @@ def main():
         im = ImageOps.exif_transpose(im).convert("RGB")
         # ImageOps.fit recorta centrado a la proporción pedida en vez de
         # deformar.  Como las cuatro ya son 4:3, no recorta nada.
-        im = ImageOps.fit(im, (ANCHO, ALTO), Image.LANCZOS)
+        im = ImageOps.fit(im, (ANCHO, ALTO), Image.LANCZOS,
+                          centering=(0.5, centro_y))
         base = DESTINO / f"local-{nombre}"
         im.save(base.with_suffix(".jpg"), quality=82, optimize=True, progressive=True)
         im.save(base.with_suffix(".webp"), quality=80, method=6)
