@@ -122,7 +122,7 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 
 # Contenido completo del sitio
 
-Lo que sigue es el texto íntegro de las 20 páginas, español e inglés, tal como lo lee una visitante. Generado el 2026-10-13.
+Lo que sigue es el texto íntegro de las 20 páginas, español e inglés, tal como lo lee una visitante. Generado el 2026-10-16.
 
 
 ---
@@ -543,7 +543,7 @@ Monday to Friday 9:00 – 20:00 Saturday 9:00 – 19:00 Sunday closed
 
 What to look for: the black awning and 70B beside the door.
 
-Map © OpenStreetMap
+Open in Google Maps Map © OpenStreetMap
 
 ### Book in one message
 
@@ -1482,7 +1482,7 @@ Lunes a viernes 9:00 – 20:00 Sábado 9:00 – 19:00 Domingo cerrado
 
 Así se ve la entrada: toldo negro y el 70B junto a la puerta.
 
-Mapa © colaboradores de OpenStreetMap
+Abrir en Google Maps Mapa © colaboradores de OpenStreetMap
 
 ### Pide tu cita en un mensaje
 

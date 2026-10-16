@@ -2,8 +2,8 @@
 title: "The Eyelash Extension & Brow Bible | Stilo Salón"
 description: "How long do eyelash extensions last? Which technique suits you? How often to get a fill? The complete guide from Stilo Salón, Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/eyelash-extensions-guide
-date: 2026-10-13
-last_updated: 2026-10-13
+date: 2026-10-16
+last_updated: 2026-10-16
 lang: en
 ---
 Complete guide · Roma Norte

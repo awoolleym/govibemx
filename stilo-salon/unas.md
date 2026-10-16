@@ -2,8 +2,8 @@
 title: "Uñas, Manicure y Pedicure en Roma Norte, CDMX | Stilo Salón"
 description: "Manicure spa desde $220, gel desde $180, acrílico desde $400, esculturales desde $500. Paquete mani + pedi con gel $750. Roma Norte, CDMX."
 url: https://stilo-salon.com/unas
-date: 2026-10-13
-last_updated: 2026-10-13
+date: 2026-10-16
+last_updated: 2026-10-16
 lang: es-MX
 ---
 Uñas · Roma Norte

@@ -1091,9 +1091,13 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
    Las cuatro son 4:3 nativas, así que el aspect-ratio es el suyo y no
    recorta nada: en la de la fachada eso importa, porque el número de la
    puerta vive en una esquina y cualquier recorte se lo come. */
-.foto-local { margin: 2.2rem 0 0; }
+/* 3:2 y no 4:3: estas fotos acompañan al texto, no lo interrumpen, y en
+   las cuatro lo que sobra es techo y piso.  El ancho máximo es por lo
+   mismo — a lo ancho de la columna de 74ch quedaban en 760x570, que en
+   una pantalla de computadora es un bloque que se come la lectura. */
+.foto-local { margin: 2.2rem 0 0; max-width: 560px; }
 .foto-local img {
-  width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover;
   display: block; border-radius: var(--r);
   box-shadow: 0 1px 2px rgba(21,25,29,.05), 0 14px 34px rgba(21,25,29,.10);
 }
@@ -1102,7 +1106,10 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
 }
 /* Junto al mapa va arriba y sin aire de más: las dos piezas se leen como
    una sola respuesta a "dónde es". */
-.foto-local-mapa { margin: 0 0 1rem; }
+.foto-local-mapa { margin: 0 0 1rem; max-width: none; }
+/* El mapa en la misma proporción que la foto de arriba: las dos
+   piezas contestan "dónde es" y se leen como una sola. */
+.mapa { aspect-ratio: 3 / 2; }
 .foto-local-mapa figcaption { text-align: right; }
 
 /* En el teléfono la sección de contacto se apila entera y mide 2,103 px:
@@ -1121,11 +1128,6 @@ h2 + .lede, .sec-head .lede { margin-top: .9rem; }
   .contacto-der .foto-local { order: 2; margin-top: 1.6rem; }
   .contacto-der .mapa       { order: 3; }
   .contacto-der .mapa-cred  { order: 4; }
-  /* El mapa en un teléfono es de consulta, no de navegación: para eso
-     están los botones de "Cómo llegar" y "Abrir en Google Maps" que
-     quedan arriba.  Como tira ancha sigue situando el barrio y deja de
-     costar un tercio de pantalla. */
-  .mapa { aspect-ratio: 16 / 9; }
 }
 
 /* ── Formulario de cita ──────────────────────────────────────────────

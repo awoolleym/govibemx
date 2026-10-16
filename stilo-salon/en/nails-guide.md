@@ -2,8 +2,8 @@
 title: "Acrylic, Gel or Sculpted: the Nail Guide | Stilo Salón"
 description: "What suits you between acrylic, gel and sculpted nails, how often to fill without damaging the natural nail, and what to do if your nails are weak."
 url: https://stilo-salon.com/en/nails-guide
-date: 2026-10-13
-last_updated: 2026-10-13
+date: 2026-10-16
+last_updated: 2026-10-16
 lang: en
 ---
 Complete guide · Roma Norte

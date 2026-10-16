@@ -23,10 +23,13 @@ RAIZ    = pathlib.Path(__file__).parent
 FUENTE  = RAIZ / "_fotos-salon"
 DESTINO = RAIZ / "assets"
 
-# 4:3, la proporción nativa de las cuatro: así no hay que recortar nada y
-# nadie pierde la cabeza ni el número de la puerta.  1200x900 es el mismo
-# tamaño del mapa, que es el hueco más ancho del sitio.
-ANCHO, ALTO = 1200, 900
+# Las cuatro vienen 4:3 de la cámara, pero el sitio las muestra en 3:2:
+# acompañan al texto y no lo interrumpen, y lo que sobra en las cuatro es
+# techo y piso.  Se recortan aquí en vez de dejar que el navegador recorte
+# con object-fit, para no mandar píxeles que nadie va a ver.  1200 de ancho
+# es el doble del hueco más grande (560), que es lo que piden las pantallas
+# de alta densidad.
+ANCHO, ALTO = 1200, 800
 
 # El prefijo "local-" las separa de las fotos de trabajos en assets/.
 FOTOS = ["fachada", "estaciones", "cabina-pestanas", "pedicure"]

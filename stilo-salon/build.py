@@ -1852,8 +1852,13 @@ def home_body(lang):
     {foto_local("fachada", lang, " foto-local-mapa")}
     <a class="mapa" href="{GMB}" target="_blank" rel="noopener"
        aria-label="{'Abrir en Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte' if lang=='es' else 'Open in Google Maps: Stilo Salón, Calle Guadalajara 70-B, Roma Norte'}">
-      <img src="/assets/mapa-roma-norte.jpg" width="1200" height="900" loading="lazy"
-           alt="{'Mapa de Roma Norte con la ubicación de Stilo Salón en Calle Guadalajara 70-B, entre Durango y Colima' if lang=='es' else 'Map of Roma Norte showing Stilo Salón at Calle Guadalajara 70-B, between Durango and Colima'}">
+      <picture>
+        <source media="(max-width: 600px)" srcset="/assets/mapa-roma-norte-cerca.webp" type="image/webp">
+        <source media="(max-width: 600px)" srcset="/assets/mapa-roma-norte-cerca.jpg">
+        <source srcset="/assets/mapa-roma-norte.webp" type="image/webp">
+        <img src="/assets/mapa-roma-norte.jpg" width="1200" height="900" loading="lazy"
+             alt="{'Mapa de Roma Norte con la ubicación de Stilo Salón en Calle Guadalajara 70-B, entre Durango y Colima' if lang=='es' else 'Map of Roma Norte showing Stilo Salón at Calle Guadalajara 70-B, between Durango and Colima'}">
+      </picture>
       <span class="mapa-pie">{'Abrir en Google Maps' if lang=='es' else 'Open in Google Maps'}</span>
     </a>
     <p class="mapa-cred">{'Mapa © colaboradores de' if lang=='es' else 'Map © '}
