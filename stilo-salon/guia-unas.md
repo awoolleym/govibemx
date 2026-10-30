@@ -12,9 +12,19 @@ Guía completa · Roma Norte
 
 Qué técnica te conviene, por qué el retoque a tiempo protege tu uña natural, y qué hacer si la traes débil.
 
-## Acrílico, gel y escultural: qué te conviene
+## Acrílico, gel, escultural y soft gel: qué te conviene
 
-La diferencia no es de precio, es de para qué. El gel (desde $180) va sobre tu uña natural y le da color y resistencia: dura de dos a tres semanas y es lo más noble con la uña. El acrílico ($400) construye estructura encima: aguanta más y permite largo, pero pide retoque puntual. La uña escultural con gel (desde $500) construye largo con gel en lugar de acrílico — queda más ligera y flexible, y suele sentirse más natural.
+La diferencia no es de precio, es de para qué. El gel (desde $180) va sobre tu uña natural y le da color y resistencia: dura de dos a tres semanas y es lo más noble con la uña. El acrílico ($400) construye estructura encima: aguanta más y permite largo, pero pide retoque puntual. La uña escultural con gel (desde $500) construye largo con gel en lugar de acrílico — queda más ligera y flexible, y suele sentirse más natural. Y el soft gel ($600) llega al mismo largo por otro camino, que explicamos abajo.
+
+## Soft gel: qué es y cuándo conviene
+
+El soft gel ($600) no se esculpe ni se construye con acrílico: es una punta de gel ya formada que se adhiere sobre tu uña y se cura con lámpara. Eso cambia tres cosas que se notan.
+
+- Pesa menos. De las opciones que dan largo es la más ligera, y la que menos se siente puesta.
+- No huele. El acrílico lleva monómero y su olor se queda en el aire un rato; el soft gel no lo usa.
+- Se quita ablandándolo, no desbastándolo entero. Ahí es donde se salva uña natural: el retiro es el momento en que más se daña, y éste es el más amable de los tres.
+
+Lo que cede a cambio: la forma viene hecha. Si buscas una curva o un largo muy particular, la escultural con gel sigue siendo la que se adapta a tu mano. El soft gel es para quien quiere largo parejo, ligero y sin olor, sin pedir nada a la medida.
 
 ## Por qué el retoque se hace a tiempo
 

@@ -12,9 +12,19 @@ Complete guide · Roma Norte
 
 Which technique suits you, why fills on schedule protect your natural nail, and what to do if yours are weak.
 
-## Acrylic, gel and sculpted: what suits you
+## Acrylic, gel, sculpted and soft gel: what suits you
 
-The difference is not price, it is purpose. Gel (from $180) goes over your natural nail for color and resistance: it lasts two to three weeks and is the gentlest option. Acrylic ($400) builds structure on top: it holds up longer and allows length, but needs fills on schedule. Sculpted gel nails (from $500) build length with gel instead of acrylic — lighter and more flexible, and they usually feel more natural.
+The difference is not price, it is purpose. Gel (from $180) goes over your natural nail for color and resistance: it lasts two to three weeks and is the gentlest option. Acrylic ($400) builds structure on top: it holds up longer and allows length, but needs fills on schedule. Sculpted gel nails (from $500) build length with gel instead of acrylic — lighter and more flexible, and they usually feel more natural. And soft gel ($600) reaches the same length a different way, explained below.
+
+## Soft gel: what it is and when it suits you
+
+Soft gel ($600) is neither sculpted nor built with acrylic: it is a pre-shaped gel tip bonded onto your nail and cured under the lamp. That changes three things you can feel.
+
+- It weighs less. Of the options that add length it is the lightest, and the least noticeable to wear.
+- No smell. Acrylic uses monomer and its smell lingers in the air; soft gel does not use it.
+- It comes off by softening, not by filing the whole thing down. That is where natural nail is saved: removal is when most damage happens, and this is the gentlest of the three.
+
+What it gives up: the shape comes ready-made. If you want a particular curve or length, sculpted gel is still the one that adapts to your hand. Soft gel is for anyone who wants even length, light and odourless, without asking for anything custom.
 
 ## Why fills matter on schedule
 

@@ -2307,16 +2307,49 @@ def hair_guide(lang):
 def nails_guide(lang):
     es = lang == "es"
     o = []
-    o.append(f'<h2>{"Acrílico, gel y escultural: qué te conviene" if es else "Acrylic, gel and sculpted: what suits you"}</h2>')
+    o.append(f'<h2>{"Acrílico, gel, escultural y soft gel: qué te conviene" if es else "Acrylic, gel, sculpted and soft gel: what suits you"}</h2>')
     o.append('<p>' + ("La diferencia no es de precio, es de para qué. El <strong>gel</strong> (desde $180) va sobre tu uña natural "
       "y le da color y resistencia: dura de dos a tres semanas y es lo más noble con la uña. El <strong>acrílico</strong> ($400) "
       "construye estructura encima: aguanta más y permite largo, pero pide retoque puntual. La <strong>uña escultural con gel</strong> "
-      "(desde $500) construye largo con gel en lugar de acrílico — queda más ligera y flexible, y suele sentirse más natural."
+      "(desde $500) construye largo con gel en lugar de acrílico — queda más ligera y flexible, y suele sentirse más natural. "
+      "Y el <strong>soft gel</strong> ($600) llega al mismo largo por otro camino, que explicamos abajo."
       if es else
       "The difference is not price, it is purpose. <strong>Gel</strong> (from $180) goes over your natural nail for color and "
       "resistance: it lasts two to three weeks and is the gentlest option. <strong>Acrylic</strong> ($400) builds structure on top: "
       "it holds up longer and allows length, but needs fills on schedule. <strong>Sculpted gel nails</strong> (from $500) build length "
-      "with gel instead of acrylic — lighter and more flexible, and they usually feel more natural.") + '</p>')
+      "with gel instead of acrylic — lighter and more flexible, and they usually feel more natural. "
+      "And <strong>soft gel</strong> ($600) reaches the same length a different way, explained below.") + '</p>')
+    # ── Soft gel ────────────────────────────────────────────────────────
+    # Lo que distingue al soft gel no es el precio sino el material y, sobre
+    # todo, cómo se quita: eso es lo que de verdad decide cuánta uña queda
+    # después de meses. No se le pone duración porque el salón no nos la
+    # dio, y el apartado del retoque de arriba ya cubre cada cuándo volver.
+    o.append(f'<h2 id="soft-gel">{"Soft gel: qué es y cuándo conviene" if es else "Soft gel: what it is and when it suits you"}</h2>')
+    o.append('<p>' + ("El <strong>soft gel</strong> ($600) no se esculpe ni se construye con acrílico: es una "
+      "<strong>punta de gel ya formada</strong> que se adhiere sobre tu uña y se cura con lámpara. "
+      "Eso cambia tres cosas que se notan."
+      if es else
+      "<strong>Soft gel</strong> ($600) is neither sculpted nor built with acrylic: it is a "
+      "<strong>pre-shaped gel tip</strong> bonded onto your nail and cured under the lamp. "
+      "That changes three things you can feel.") + '</p>')
+    o.append("<ul>" + "".join(f"<li>{c}</li>" for c in ([
+      "<strong>Pesa menos.</strong> De las opciones que dan largo es la más ligera, y la que menos se siente puesta.",
+      "<strong>No huele.</strong> El acrílico lleva monómero y su olor se queda en el aire un rato; el soft gel no lo usa.",
+      "<strong>Se quita ablandándolo, no desbastándolo entero.</strong> Ahí es donde se salva uña natural: el retiro es "
+      "el momento en que más se daña, y éste es el más amable de los tres.",
+     ] if es else [
+      "<strong>It weighs less.</strong> Of the options that add length it is the lightest, and the least noticeable to wear.",
+      "<strong>No smell.</strong> Acrylic uses monomer and its smell lingers in the air; soft gel does not use it.",
+      "<strong>It comes off by softening, not by filing the whole thing down.</strong> That is where natural nail is saved: "
+      "removal is when most damage happens, and this is the gentlest of the three.",
+     ])) + "</ul>")
+    o.append('<p>' + ("Lo que cede a cambio: <strong>la forma viene hecha</strong>. Si buscas una curva o un largo muy "
+      "particular, la escultural con gel sigue siendo la que se adapta a tu mano. El soft gel es para quien quiere largo "
+      "parejo, ligero y sin olor, sin pedir nada a la medida."
+      if es else
+      "What it gives up: <strong>the shape comes ready-made</strong>. If you want a particular curve or length, sculpted gel "
+      "is still the one that adapts to your hand. Soft gel is for anyone who wants even length, light and odourless, without "
+      "asking for anything custom.") + '</p>')
     o.append(f'<h2>{"Por qué el retoque se hace a tiempo" if es else "Why fills matter on schedule"}</h2>')
     o.append('<p>' + ("El retoque va cada <strong>tres o cuatro semanas</strong>. No es por vender más: conforme la uña crece, el "
       "material se despega de la raíz y queda una cámara de aire donde entra humedad. Ahí es donde se daña la uña natural — "
