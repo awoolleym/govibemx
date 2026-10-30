@@ -9,7 +9,7 @@
     {
       "uri": "https://stilo-salon.com/llms.txt",
       "name": "Resumen y lista de precios",
-      "description": "Los 67 servicios con precio y duración, horario, dirección y garantías.",
+      "description": "Los 72 servicios con precio y duración, horario, dirección y garantías.",
       "mimeType": "text/plain"
     },
     {
@@ -60,7 +60,7 @@
     {
       "name": "get_prices",
       "title": "Consultar precios",
-      "description": "Los 67 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.",
+      "description": "Los 72 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.",
       "url": "https://stilo-salon.com/llms.txt",
       "inputSchema": {
         "type": "object",

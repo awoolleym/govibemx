@@ -2,8 +2,8 @@
 title: "Uñas, Manicure y Pedicure en Roma Norte, CDMX | Stilo Salón"
 description: "Manicure spa desde $220, gel desde $180, acrílico desde $400, esculturales desde $500. Paquete mani + pedi con gel $750. Roma Norte, CDMX."
 url: https://stilo-salon.com/unas
-date: 2026-10-16
-last_updated: 2026-10-16
+date: 2026-10-30
+last_updated: 2026-10-30
 lang: es-MX
 ---
 Uñas · Roma Norte
@@ -32,9 +32,11 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
+| Manicure Express · sin gel | $180 | — |
 | Manicure Spa · sales, exfoliación, masaje y esmalte | $220 | — |
 | Manicure Express con Gel · drill, limado y gel hasta 2 tonos lisos | $250 | — |
 | Manicure Spa + Gel · spa completo con gel hasta 2 tonos | $350 | — |
+| Pedicure Ruso | $330 | — |
 | Pedicure Spa · tina con sales, limado de talón, masaje y esmalte | $360 | — |
 | Pedicure Spa + Gel · spa completo con gel hasta 2 tonos | $450 | — |
 | Paquete Mani Spa + Pedi Spa con Gel · ambos servicios con gel hasta 2 tonos lisos | $750 | — |
@@ -62,8 +64,11 @@ Precios en pesos mexicanos (MXN).
 | Retoque Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $400 | — |
 | Uña Tip con Gel · hasta el #2, hasta 2 tonos lisos | desde $450 | — |
 | Retoque de Uña Tip con Gel · hasta el #3, hasta 2 tonos lisos | desde $350 | — |
+| Soft Gel · hasta 2 tonos lisos | $600 | — |
 | Acripie | desde $380 | — |
 | Retiro de Acrílico | $100 | — |
+| Retiro de Soft Gel + Aplicación Nueva · con nueva aplicación | $100 | — |
+| Retiro de Soft Gel · sin nueva aplicación | $150 | — |
 
 ## Sitemap
 

@@ -1,6 +1,6 @@
 # Stilo Salón
 
-> Salón de belleza en Roma Norte, Ciudad de México. Cabello, uñas, extensiones de pestañas y diseño de cejas. La lista de precios completa está publicada: 67 servicios con precio y duración.
+> Salón de belleza en Roma Norte, Ciudad de México. Cabello, uñas, extensiones de pestañas y diseño de cejas. La lista de precios completa está publicada: 72 servicios con precio y duración.
 
 - Dirección: Calle Guadalajara 70-B, Roma Norte, Cuauhtémoc, 06700, Ciudad de México, México.
 - Citas: 55 2299 3258 · 55 5256 2137 · WhatsApp 55 2299 3258.
@@ -40,9 +40,11 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 
 ## Manicure y Pedicure
 
+- Manicure Express: $180 · sin gel
 - Manicure Spa: $220 · sales, exfoliación, masaje y esmalte
 - Manicure Express con Gel: $250 · drill, limado y gel hasta 2 tonos lisos
 - Manicure Spa + Gel: $350 · spa completo con gel hasta 2 tonos
+- Pedicure Ruso: $330
 - Pedicure Spa: $360 · tina con sales, limado de talón, masaje y esmalte
 - Pedicure Spa + Gel: $450 · spa completo con gel hasta 2 tonos
 - Paquete Mani Spa + Pedi Spa con Gel: $750 · ambos servicios con gel hasta 2 tonos lisos
@@ -66,8 +68,11 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 - Retoque Escultural con Gel: desde $400 · hasta el #2, hasta 2 tonos lisos
 - Uña Tip con Gel: desde $450 · hasta el #2, hasta 2 tonos lisos
 - Retoque de Uña Tip con Gel: desde $350 · hasta el #3, hasta 2 tonos lisos
+- Soft Gel: $600 · hasta 2 tonos lisos
 - Acripie: desde $380
 - Retiro de Acrílico: $100
+- Retiro de Soft Gel + Aplicación Nueva: $100 · con nueva aplicación
+- Retiro de Soft Gel: $150 · sin nueva aplicación
 
 ## Extensiones de Pestañas
 
@@ -105,7 +110,7 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 
 ## Páginas
 
-- [Precios](https://stilo-salon.com/precios): los 67 servicios con precio y duración.
+- [Precios](https://stilo-salon.com/precios): los 72 servicios con precio y duración.
 - [Cabello](https://stilo-salon.com/cabello): corte, color, balayage, babylights y alisados.
 - [Uñas](https://stilo-salon.com/unas): acrílico, gel, escultural, manicure y pedicure.
 - [Pestañas y cejas](https://stilo-salon.com/pestanas-y-cejas): extensiones en cinco técnicas, lifting y diseño de ceja.
@@ -122,7 +127,7 @@ Todos los precios están en pesos mexicanos (MXN) y son los vigentes. Los marcad
 
 # Contenido completo del sitio
 
-Lo que sigue es el texto íntegro de las 20 páginas, español e inglés, tal como lo lee una visitante. Generado el 2026-10-16.
+Lo que sigue es el texto íntegro de las 20 páginas, español e inglés, tal como lo lee una visitante. Generado el 2026-10-30.
 
 
 ---
@@ -492,7 +497,7 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
-| Women's Haircut · with wash and style | $420 | 30 min |
+| Women's Haircut · with blow-dry shaping | $330 | 30 min |
 | Men's Haircut | $230 | 30 min |
 | Balayage · shoulder length and up | from $2,300 | 3 h |
 | Nanoplasty · formaldehyde-free smoothing | from $2,500 | 2 h |
@@ -708,9 +713,11 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
+| Express Manicure · without gel | $180 | — |
 | Spa Manicure · salts, exfoliation, massage and polish | $220 | — |
 | Express Manicure with Gel · drill, file and gel up to 2 solid shades | $250 | — |
 | Spa Manicure + Gel · full spa with gel up to 2 shades | $350 | — |
+| Russian Pedicure | $330 | — |
 | Spa Pedicure · salt soak, heel filing, massage and polish | $360 | — |
 | Spa Pedicure + Gel · full spa with gel up to 2 shades | $450 | — |
 | Spa Mani + Pedi Package with Gel · both services with gel up to 2 solid shades | $750 | — |
@@ -738,8 +745,11 @@ Prices in Mexican pesos (MXN).
 | Sculpted Gel Fill · up to length #2, up to 2 solid shades | from $400 | — |
 | Gel Tip Nail · up to length #2, up to 2 solid shades | from $450 | — |
 | Gel Tip Fill · up to length #3, up to 2 solid shades | from $350 | — |
+| Soft Gel Extensions · up to 2 solid shades | $600 | — |
 | Acrylic — Toes | from $380 | — |
 | Acrylic Removal | $100 | — |
+| Soft Gel Removal + New Set · with a new application | $100 | — |
+| Soft Gel Removal · without a new application | $150 | — |
 
 
 ---
@@ -1067,9 +1077,11 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
+| Express Manicure · without gel | $180 | — |
 | Spa Manicure · salts, exfoliation, massage and polish | $220 | — |
 | Express Manicure with Gel · drill, file and gel up to 2 solid shades | $250 | — |
 | Spa Manicure + Gel · full spa with gel up to 2 shades | $350 | — |
+| Russian Pedicure | $330 | — |
 | Spa Pedicure · salt soak, heel filing, massage and polish | $360 | — |
 | Spa Pedicure + Gel · full spa with gel up to 2 shades | $450 | — |
 | Spa Mani + Pedi Package with Gel · both services with gel up to 2 solid shades | $750 | — |
@@ -1097,8 +1109,11 @@ Prices in Mexican pesos (MXN).
 | Sculpted Gel Fill · up to length #2, up to 2 solid shades | from $400 | — |
 | Gel Tip Nail · up to length #2, up to 2 solid shades | from $450 | — |
 | Gel Tip Fill · up to length #3, up to 2 solid shades | from $350 | — |
+| Soft Gel Extensions · up to 2 solid shades | $600 | — |
 | Acrylic — Toes | from $380 | — |
 | Acrylic Removal | $100 | — |
+| Soft Gel Removal + New Set · with a new application | $100 | — |
+| Soft Gel Removal · without a new application | $150 | — |
 
 ## Eyelash Extensions
 
@@ -1431,7 +1446,7 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
-| Corte Dama · con lavado y peinado | $420 | 30 min |
+| Corte Dama · con moldeado | $330 | 30 min |
 | Corte Caballero | $230 | 30 min |
 | Balayage · a partir del hombro | desde $2,300 | 3 h |
 | Nanoplastia · alisado sin formol | desde $2,500 | 2 h |
@@ -1893,9 +1908,11 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
+| Manicure Express · sin gel | $180 | — |
 | Manicure Spa · sales, exfoliación, masaje y esmalte | $220 | — |
 | Manicure Express con Gel · drill, limado y gel hasta 2 tonos lisos | $250 | — |
 | Manicure Spa + Gel · spa completo con gel hasta 2 tonos | $350 | — |
+| Pedicure Ruso | $330 | — |
 | Pedicure Spa · tina con sales, limado de talón, masaje y esmalte | $360 | — |
 | Pedicure Spa + Gel · spa completo con gel hasta 2 tonos | $450 | — |
 | Paquete Mani Spa + Pedi Spa con Gel · ambos servicios con gel hasta 2 tonos lisos | $750 | — |
@@ -1923,8 +1940,11 @@ Precios en pesos mexicanos (MXN).
 | Retoque Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $400 | — |
 | Uña Tip con Gel · hasta el #2, hasta 2 tonos lisos | desde $450 | — |
 | Retoque de Uña Tip con Gel · hasta el #3, hasta 2 tonos lisos | desde $350 | — |
+| Soft Gel · hasta 2 tonos lisos | $600 | — |
 | Acripie | desde $380 | — |
 | Retiro de Acrílico | $100 | — |
+| Retiro de Soft Gel + Aplicación Nueva · con nueva aplicación | $100 | — |
+| Retiro de Soft Gel · sin nueva aplicación | $150 | — |
 
 ## Extensiones de Pestañas
 
@@ -2001,9 +2021,11 @@ Precios en pesos mexicanos (MXN).
 
 | Servicio | Precio | Duración |
 | --- | --- | --- |
+| Manicure Express · sin gel | $180 | — |
 | Manicure Spa · sales, exfoliación, masaje y esmalte | $220 | — |
 | Manicure Express con Gel · drill, limado y gel hasta 2 tonos lisos | $250 | — |
 | Manicure Spa + Gel · spa completo con gel hasta 2 tonos | $350 | — |
+| Pedicure Ruso | $330 | — |
 | Pedicure Spa · tina con sales, limado de talón, masaje y esmalte | $360 | — |
 | Pedicure Spa + Gel · spa completo con gel hasta 2 tonos | $450 | — |
 | Paquete Mani Spa + Pedi Spa con Gel · ambos servicios con gel hasta 2 tonos lisos | $750 | — |
@@ -2031,5 +2053,8 @@ Precios en pesos mexicanos (MXN).
 | Retoque Escultural con Gel · hasta el #2, hasta 2 tonos lisos | desde $400 | — |
 | Uña Tip con Gel · hasta el #2, hasta 2 tonos lisos | desde $450 | — |
 | Retoque de Uña Tip con Gel · hasta el #3, hasta 2 tonos lisos | desde $350 | — |
+| Soft Gel · hasta 2 tonos lisos | $600 | — |
 | Acripie | desde $380 | — |
 | Retiro de Acrílico | $100 | — |
+| Retiro de Soft Gel + Aplicación Nueva · con nueva aplicación | $100 | — |
+| Retiro de Soft Gel · sin nueva aplicación | $150 | — |

@@ -22,7 +22,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="mcp" content="/.well-known/mcp.json">
 <meta name="webmcp" content="/.well-known/mcp.json">
-<script type="application/json" id="webmcp-tools">[{"name": "book_appointment", "title": "Pedir cita", "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {"nombre": {"type": "string", "description": "Nombre de la clienta."}, "tel": {"type": "string", "description": "WhatsApp a diez dígitos."}, "servicio": {"type": "string", "description": "Qué servicio quiere."}, "cuando": {"type": "string", "description": "Día y hora que le queda, en texto libre."}}, "required": ["nombre", "tel"]}}, {"name": "get_prices", "title": "Consultar precios", "description": "Los 67 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.", "url": "https://stilo-salon.com/llms.txt", "inputSchema": {"type": "object", "properties": {}}}, {"name": "get_location_and_hours", "title": "Ubicación y horario", "description": "Dirección en Roma Norte, teléfonos y horario de la semana.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {}}}]</script>
+<script type="application/json" id="webmcp-tools">[{"name": "book_appointment", "title": "Pedir cita", "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {"nombre": {"type": "string", "description": "Nombre de la clienta."}, "tel": {"type": "string", "description": "WhatsApp a diez dígitos."}, "servicio": {"type": "string", "description": "Qué servicio quiere."}, "cuando": {"type": "string", "description": "Día y hora que le queda, en texto libre."}}, "required": ["nombre", "tel"]}}, {"name": "get_prices", "title": "Consultar precios", "description": "Los 72 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.", "url": "https://stilo-salon.com/llms.txt", "inputSchema": {"type": "object", "properties": {}}}, {"name": "get_location_and_hours", "title": "Ubicación y horario", "description": "Dirección en Roma Norte, teléfonos y horario de la semana.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {}}}]</script>
 <link rel="llms" type="text/plain" href="/llms.txt">
 <link rel="llms-txt" type="text/plain" href="/llms.txt">
 <link rel="agents" type="application/json" href="/.well-known/agents.json">
@@ -79,9 +79,11 @@
 <h3>Manicure &amp; Pedicure</h3>
 <table class="price">
 <thead><tr><th>Service</th><th style="text-align:right">Price</th><th style="text-align:right">Duration</th></tr></thead><tbody>
+<tr><td class="svc">Express Manicure<small>without gel</small></td><td class="amt">$180</td><td class="dur">—</td></tr>
 <tr><td class="svc">Spa Manicure<small>salts, exfoliation, massage and polish</small></td><td class="amt">$220</td><td class="dur">—</td></tr>
 <tr><td class="svc">Express Manicure with Gel<small>drill, file and gel up to 2 solid shades</small></td><td class="amt">$250</td><td class="dur">—</td></tr>
 <tr><td class="svc">Spa Manicure + Gel<small>full spa with gel up to 2 shades</small></td><td class="amt">$350</td><td class="dur">—</td></tr>
+<tr><td class="svc">Russian Pedicure</td><td class="amt">$330</td><td class="dur">—</td></tr>
 <tr><td class="svc">Spa Pedicure<small>salt soak, heel filing, massage and polish</small></td><td class="amt">$360</td><td class="dur">—</td></tr>
 <tr><td class="svc">Spa Pedicure + Gel<small>full spa with gel up to 2 shades</small></td><td class="amt">$450</td><td class="dur">—</td></tr>
 <tr><td class="svc">Spa Mani + Pedi Package with Gel<small>both services with gel up to 2 solid shades</small></td><td class="amt">$750</td><td class="dur">—</td></tr>
@@ -109,8 +111,11 @@
 <tr><td class="svc">Sculpted Gel Fill<small>up to length #2, up to 2 solid shades</small></td><td class="amt">from $400</td><td class="dur">—</td></tr>
 <tr><td class="svc">Gel Tip Nail<small>up to length #2, up to 2 solid shades</small></td><td class="amt">from $450</td><td class="dur">—</td></tr>
 <tr><td class="svc">Gel Tip Fill<small>up to length #3, up to 2 solid shades</small></td><td class="amt">from $350</td><td class="dur">—</td></tr>
+<tr><td class="svc">Soft Gel Extensions<small>up to 2 solid shades</small></td><td class="amt">$600</td><td class="dur">—</td></tr>
 <tr><td class="svc">Acrylic — Toes</td><td class="amt">from $380</td><td class="dur">—</td></tr>
 <tr><td class="svc">Acrylic Removal</td><td class="amt">$100</td><td class="dur">—</td></tr>
+<tr><td class="svc">Soft Gel Removal + New Set<small>with a new application</small></td><td class="amt">$100</td><td class="dur">—</td></tr>
+<tr><td class="svc">Soft Gel Removal<small>without a new application</small></td><td class="amt">$150</td><td class="dur">—</td></tr>
 </tbody></table></div>
   <div class="btn-row"><a class="btn btn-primary" href="https://stilo-salon.versum.com/?trade=598440" target="_blank" rel="noopener">Book online</a>
   <a class="btn btn-wa" href="https://wa.me/525522993258?text=Hola%2C%20quiero%20agendar%20una%20cita%20en%20Stilo%20Sal%C3%B3n" rel="noopener">WhatsApp</a>

@@ -22,7 +22,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="mcp" content="/.well-known/mcp.json">
 <meta name="webmcp" content="/.well-known/mcp.json">
-<script type="application/json" id="webmcp-tools">[{"name": "book_appointment", "title": "Pedir cita", "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {"nombre": {"type": "string", "description": "Nombre de la clienta."}, "tel": {"type": "string", "description": "WhatsApp a diez dígitos."}, "servicio": {"type": "string", "description": "Qué servicio quiere."}, "cuando": {"type": "string", "description": "Día y hora que le queda, en texto libre."}}, "required": ["nombre", "tel"]}}, {"name": "get_prices", "title": "Consultar precios", "description": "Los 67 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.", "url": "https://stilo-salon.com/llms.txt", "inputSchema": {"type": "object", "properties": {}}}, {"name": "get_location_and_hours", "title": "Ubicación y horario", "description": "Dirección en Roma Norte, teléfonos y horario de la semana.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {}}}]</script>
+<script type="application/json" id="webmcp-tools">[{"name": "book_appointment", "title": "Pedir cita", "description": "Abre WhatsApp con la cita ya redactada. El salón confirma por ese mismo chat; el sitio no reserva horarios por su cuenta.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {"nombre": {"type": "string", "description": "Nombre de la clienta."}, "tel": {"type": "string", "description": "WhatsApp a diez dígitos."}, "servicio": {"type": "string", "description": "Qué servicio quiere."}, "cuando": {"type": "string", "description": "Día y hora que le queda, en texto libre."}}, "required": ["nombre", "tel"]}}, {"name": "get_prices", "title": "Consultar precios", "description": "Los 72 servicios con precio en pesos y duración. Los que dicen «desde» son precio de partida, no fijo.", "url": "https://stilo-salon.com/llms.txt", "inputSchema": {"type": "object", "properties": {}}}, {"name": "get_location_and_hours", "title": "Ubicación y horario", "description": "Dirección en Roma Norte, teléfonos y horario de la semana.", "url": "https://stilo-salon.com/#contacto", "inputSchema": {"type": "object", "properties": {}}}]</script>
 <link rel="llms" type="text/plain" href="/llms.txt">
 <link rel="llms-txt" type="text/plain" href="/llms.txt">
 <link rel="agents" type="application/json" href="/.well-known/agents.json">
@@ -109,9 +109,11 @@
 <h2>Manicure y Pedicure</h2>
 <table class="price">
 <thead><tr><th>Servicio</th><th style="text-align:right">Precio</th><th style="text-align:right">Duración</th></tr></thead><tbody>
+<tr><td class="svc">Manicure Express<small>sin gel</small></td><td class="amt">$180</td><td class="dur">—</td></tr>
 <tr><td class="svc">Manicure Spa<small>sales, exfoliación, masaje y esmalte</small></td><td class="amt">$220</td><td class="dur">—</td></tr>
 <tr><td class="svc">Manicure Express con Gel<small>drill, limado y gel hasta 2 tonos lisos</small></td><td class="amt">$250</td><td class="dur">—</td></tr>
 <tr><td class="svc">Manicure Spa + Gel<small>spa completo con gel hasta 2 tonos</small></td><td class="amt">$350</td><td class="dur">—</td></tr>
+<tr><td class="svc">Pedicure Ruso</td><td class="amt">$330</td><td class="dur">—</td></tr>
 <tr><td class="svc">Pedicure Spa<small>tina con sales, limado de talón, masaje y esmalte</small></td><td class="amt">$360</td><td class="dur">—</td></tr>
 <tr><td class="svc">Pedicure Spa + Gel<small>spa completo con gel hasta 2 tonos</small></td><td class="amt">$450</td><td class="dur">—</td></tr>
 <tr><td class="svc">Paquete Mani Spa + Pedi Spa con Gel<small>ambos servicios con gel hasta 2 tonos lisos</small></td><td class="amt">$750</td><td class="dur">—</td></tr>
@@ -139,8 +141,11 @@
 <tr><td class="svc">Retoque Escultural con Gel<small>hasta el #2, hasta 2 tonos lisos</small></td><td class="amt">desde $400</td><td class="dur">—</td></tr>
 <tr><td class="svc">Uña Tip con Gel<small>hasta el #2, hasta 2 tonos lisos</small></td><td class="amt">desde $450</td><td class="dur">—</td></tr>
 <tr><td class="svc">Retoque de Uña Tip con Gel<small>hasta el #3, hasta 2 tonos lisos</small></td><td class="amt">desde $350</td><td class="dur">—</td></tr>
+<tr><td class="svc">Soft Gel<small>hasta 2 tonos lisos</small></td><td class="amt">$600</td><td class="dur">—</td></tr>
 <tr><td class="svc">Acripie</td><td class="amt">desde $380</td><td class="dur">—</td></tr>
 <tr><td class="svc">Retiro de Acrílico</td><td class="amt">$100</td><td class="dur">—</td></tr>
+<tr><td class="svc">Retiro de Soft Gel + Aplicación Nueva<small>con nueva aplicación</small></td><td class="amt">$100</td><td class="dur">—</td></tr>
+<tr><td class="svc">Retiro de Soft Gel<small>sin nueva aplicación</small></td><td class="amt">$150</td><td class="dur">—</td></tr>
 </tbody></table></div>
 <div class="price-block" id="pestanas">
 <h2>Extensiones de Pestañas</h2>

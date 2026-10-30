@@ -11,7 +11,7 @@ La fuente de los precios es una sola y se publica entera.
 
 ## Datos legibles por máquina
 
-- `https://stilo-salon.com/llms.txt` — resumen, datos del negocio y los 67 servicios con precio.
+- `https://stilo-salon.com/llms.txt` — resumen, datos del negocio y los 72 servicios con precio.
 - `https://stilo-salon.com/llms-full.txt` — el texto completo de las 20 páginas.
 - `https://stilo-salon.com/sitemap.md` — el mapa del sitio con enlaces y descripciones.
 - `https://stilo-salon.com/sitemap.xml` — el mismo mapa en XML.
@@ -21,7 +21,7 @@ La fuente de los precios es una sola y se publica entera.
 
 ## Qué se puede hacer
 
-- `get_prices` — leer los 67 servicios con precio y duración.
+- `get_prices` — leer los 72 servicios con precio y duración.
 - `get_location_and_hours` — dirección, teléfonos y horario.
 - `book_appointment` — dejar pedida una cita. No reserva un hueco: redacta
   el mensaje y lo manda por WhatsApp al salón, que confirma por ese chat.
@@ -62,7 +62,7 @@ Nada que configurar, pero conviene saber cuatro cosas:
 
 Todo se lee con un GET, sin llave ni registro:
 
-    curl https://stilo-salon.com/llms.txt          # resumen y los 67 precios
+    curl https://stilo-salon.com/llms.txt          # resumen y los 72 precios
     curl https://stilo-salon.com/llms-full.txt     # el texto de las 20 páginas
     curl https://stilo-salon.com/precios.md        # una página suelta, en Markdown
     curl https://stilo-salon.com/.well-known/mcp.json

@@ -2,8 +2,8 @@
 title: "Acrílico, Gel o Escultural: la Guía de Uñas | Stilo Salón"
 description: "Qué conviene entre acrílico, gel y escultural, cada cuándo retocar sin dañar la uña natural, y qué hacer si traes la uña débil. Roma Norte, CDMX."
 url: https://stilo-salon.com/guia-unas
-date: 2026-10-16
-last_updated: 2026-10-16
+date: 2026-10-30
+last_updated: 2026-10-30
 lang: es-MX
 ---
 Guía completa · Roma Norte

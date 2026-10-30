@@ -137,9 +137,11 @@ PRICES = {
 "mani-pedi": {
   "es": "Manicure y Pedicure", "en": "Manicure & Pedicure",
   "items": [
+    ("Manicure Express", "Express Manicure", "180", "", "sin gel", "without gel"),
     ("Manicure Spa", "Spa Manicure", "220", "", "sales, exfoliación, masaje y esmalte", "salts, exfoliation, massage and polish"),
     ("Manicure Express con Gel", "Express Manicure with Gel", "250", "", "drill, limado y gel hasta 2 tonos lisos", "drill, file and gel up to 2 solid shades"),
     ("Manicure Spa + Gel", "Spa Manicure + Gel", "350", "", "spa completo con gel hasta 2 tonos", "full spa with gel up to 2 shades"),
+    ("Pedicure Ruso", "Russian Pedicure", "330", "", "", ""),
     ("Pedicure Spa", "Spa Pedicure", "360", "", "tina con sales, limado de talón, masaje y esmalte", "salt soak, heel filing, massage and polish"),
     ("Pedicure Spa + Gel", "Spa Pedicure + Gel", "450", "", "spa completo con gel hasta 2 tonos", "full spa with gel up to 2 shades"),
     ("Paquete Mani Spa + Pedi Spa con Gel", "Spa Mani + Pedi Package with Gel", "750", "", "ambos servicios con gel hasta 2 tonos lisos", "both services with gel up to 2 solid shades")]},
@@ -163,8 +165,11 @@ PRICES = {
     ("Retoque Escultural con Gel", "Sculpted Gel Fill", "~400", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
     ("Uña Tip con Gel", "Gel Tip Nail", "~450", "", "hasta el #2, hasta 2 tonos lisos", "up to length #2, up to 2 solid shades"),
     ("Retoque de Uña Tip con Gel", "Gel Tip Fill", "~350", "", "hasta el #3, hasta 2 tonos lisos", "up to length #3, up to 2 solid shades"),
+    ("Soft Gel", "Soft Gel Extensions", "600", "", "hasta 2 tonos lisos", "up to 2 solid shades"),
     ("Acripie", "Acrylic — Toes", "~380", "", "", ""),
-    ("Retiro de Acrílico", "Acrylic Removal", "100", "", "", "")]},
+    ("Retiro de Acrílico", "Acrylic Removal", "100", "", "", ""),
+    ("Retiro de Soft Gel + Aplicación Nueva", "Soft Gel Removal + New Set", "100", "", "con nueva aplicación", "with a new application"),
+    ("Retiro de Soft Gel", "Soft Gel Removal", "150", "", "sin nueva aplicación", "without a new application")]},
 "pestanas": {
   "es": "Extensiones de Pestañas", "en": "Eyelash Extensions",
   "items": [
@@ -1126,9 +1131,15 @@ def salon_ld(lang):
 # lista los ocho pasaron a mentir a la vez, sin que nada avisara. Se cuenta.
 N_SERVICIOS = sum(len(g["items"]) for g in PRICES.values())
 
+# Los seis servicios que se asoman en la portada.  Van por NOMBRE y no por
+# número de posición: antes era ("mani-pedi", 2), y bastaba con insertar un
+# servicio más arriba en esa lista para que la portada empezara a enseñar
+# otro sin que nada avisara.  Con el nombre, si alguien lo cambia o lo
+# borra, la compilación se detiene y lo dice.
 FEATURED = [
-  ("cabello", 1), ("cabello", 2), ("cabello", 8),
-  ("tratamientos", 0), ("pestanas", 0), ("mani-pedi", 2)]
+  ("cabello", "Corte Dama"), ("cabello", "Corte Caballero"), ("cabello", "Balayage"),
+  ("tratamientos", "Nanoplastia"), ("pestanas", "Extensiones 1x1"),
+  ("mani-pedi", "Manicure Spa + Gel")]
 
 
 # ── Amenidades ────────────────────────────────────────────────────────
@@ -1557,11 +1568,26 @@ def adornos():
             '<span class="d-flor3"></span>'
             '</div>')
 
+def busca_servicio(grupo, nombre):
+    """El servicio de PRICES que se llama así, o un error que lo dice.
+
+    Fallar aquí, al compilar, es mucho mejor que seguir y publicar en la
+    portada un servicio distinto del que alguien quiso poner.
+    """
+    for it in PRICES[grupo]["items"]:
+        if it[0] == nombre:
+            return it
+    disponibles = ", ".join(x[0] for x in PRICES[grupo]["items"])
+    raise SystemExit(f'FEATURED apunta a "{nombre}" en el grupo "{grupo}", '
+                     f'y ahí no hay ningún servicio con ese nombre.\n'
+                     f'Los que hay: {disponibles}')
+
+
 def featured_table(lang):
     t = T[lang]
     rows = []
-    for key, idx in FEATURED:
-        it = PRICES[key]["items"][idx]
+    for key, nombre in FEATURED:
+        it = busca_servicio(key, nombre)
         name = it[0] if lang == "es" else it[1]
         note = it[4] if lang == "es" else it[5]
         pre, amt = money(it[2])

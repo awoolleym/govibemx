@@ -2,8 +2,8 @@
 title: "Full Price List | Stilo Salón Roma Norte, Mexico City"
 description: "Full price list for Stilo Salón: hair, treatments, nails, lashes, brows and waxing. Over 60 services with price and duration. Roma Norte, Mexico City."
 url: https://stilo-salon.com/en/pricing
-date: 2026-10-16
-last_updated: 2026-10-16
+date: 2026-10-30
+last_updated: 2026-10-30
 lang: en
 ---
 Roma Norte · Mexico City
@@ -48,9 +48,11 @@ Prices in Mexican pesos (MXN).
 
 | Service | Price | Duration |
 | --- | --- | --- |
+| Express Manicure · without gel | $180 | — |
 | Spa Manicure · salts, exfoliation, massage and polish | $220 | — |
 | Express Manicure with Gel · drill, file and gel up to 2 solid shades | $250 | — |
 | Spa Manicure + Gel · full spa with gel up to 2 shades | $350 | — |
+| Russian Pedicure | $330 | — |
 | Spa Pedicure · salt soak, heel filing, massage and polish | $360 | — |
 | Spa Pedicure + Gel · full spa with gel up to 2 shades | $450 | — |
 | Spa Mani + Pedi Package with Gel · both services with gel up to 2 solid shades | $750 | — |
@@ -78,8 +80,11 @@ Prices in Mexican pesos (MXN).
 | Sculpted Gel Fill · up to length #2, up to 2 solid shades | from $400 | — |
 | Gel Tip Nail · up to length #2, up to 2 solid shades | from $450 | — |
 | Gel Tip Fill · up to length #3, up to 2 solid shades | from $350 | — |
+| Soft Gel Extensions · up to 2 solid shades | $600 | — |
 | Acrylic — Toes | from $380 | — |
 | Acrylic Removal | $100 | — |
+| Soft Gel Removal + New Set · with a new application | $100 | — |
+| Soft Gel Removal · without a new application | $150 | — |
 
 ## Eyelash Extensions
 
